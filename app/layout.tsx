@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Playfair_Display, Lora, Fraunces } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import CommandMenu from "@/components/CommandMenu";
+import PostHogProvider from "./providers/PostHogProvider";
 import { Toaster } from "sonner";
 import "./globals.css";
 
@@ -43,21 +44,23 @@ export default function RootLayout({
       <body
         className={`${playfair.variable} ${lora.variable} ${fraunces.variable} antialiased`}
       >
-        <Navbar />
-        {children}
-        <CommandMenu />
-        <Toaster
-          position="bottom-right"
-          toastOptions={{
-            classNames: {
-              toast:       "!bg-parchment !border !border-moss-200 !shadow-card !rounded-2xl !font-body !text-espresso",
-              title:       "!font-body !font-semibold !text-espresso !text-sm",
-              description: "!font-body !text-forest/70 !text-xs",
-              success:     "!border-moss-300",
-              error:       "!border-red-200",
-            },
-          }}
-        />
+        <PostHogProvider>
+          <Navbar />
+          {children}
+          <CommandMenu />
+          <Toaster
+            position="bottom-right"
+            toastOptions={{
+              classNames: {
+                toast:       "!bg-parchment !border !border-moss-200 !shadow-card !rounded-2xl !font-body !text-espresso",
+                title:       "!font-body !font-semibold !text-espresso !text-sm",
+                description: "!font-body !text-forest/70 !text-xs",
+                success:     "!border-moss-300",
+                error:       "!border-red-200",
+              },
+            }}
+          />
+        </PostHogProvider>
       </body>
     </html>
   );

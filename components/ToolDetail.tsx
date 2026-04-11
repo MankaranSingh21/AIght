@@ -5,6 +5,7 @@ import { useState, useTransition } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { motion, type Variants } from "framer-motion";
 import { toast } from "sonner";
+import posthog from "posthog-js";
 import { createClient } from "@/utils/supabase/client";
 import { addToolToRoadmap } from "@/app/actions/roadmap";
 import Button from "./Button";
@@ -391,6 +392,7 @@ export default function ToolDetail({ tool }: { tool: ToolDetailData }) {
                   if (result?.error) {
                     toast.error("Couldn't add tool", { description: result.error });
                   } else {
+                    posthog.capture("tool_added_to_canvas", { tool_slug: tool.slug });
                     setPickerOpen(false);
                     toast.success(`${tool.name} added to your roadmap ✦`);
                     router.push(`/roadmaps/${roadmapId}`);

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Wand2 } from "lucide-react";
 import { toast } from "sonner";
+import posthog from "posthog-js";
 import { createRoadmap } from "@/app/actions/roadmap";
 import { generateRoadmapFromPrompt } from "@/app/actions/ai-curator";
 
@@ -48,6 +49,7 @@ function AICuratorBar() {
         return;
       }
 
+      posthog.capture("roadmap_generated", { prompt: prompt.trim() });
       toast.success(`"${result.title}" is ready ✦`, { id: toastId });
       router.push(`/roadmaps/${result.roadmapId}`);
     });

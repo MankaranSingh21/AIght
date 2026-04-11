@@ -2,6 +2,7 @@
 
 import "@xyflow/react/dist/style.css";
 
+import posthog from "posthog-js";
 import Link from "next/link";
 import { useState, useEffect, useCallback, useTransition } from "react";
 import NodeDrawer from "./NodeDrawer";
@@ -205,6 +206,7 @@ export default function RoadmapCanvas({
   const handleNodeClick = useCallback(
     (_: React.MouseEvent, node: Node<ToolNodeData>) => {
       setSelectedNodeId((prev) => (prev === node.id ? null : node.id));
+      posthog.capture("node_clicked", { tool: node.data.label });
     },
     []
   );
