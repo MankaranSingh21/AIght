@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { motion, type Variants } from "framer-motion";
 import { toast } from "sonner";
+import { createClient } from "@/utils/supabase/client";
 import { addToolToRoadmap } from "@/app/actions/roadmap";
 import Button from "./Button";
 import RoadmapPicker from "./RoadmapPicker";
@@ -154,7 +155,8 @@ function UseCaseCard({ useCase }: { useCase: UseCase }) {
 export default function ToolDetail({ tool }: { tool: ToolDetailData }) {
   const [isPending, startTransition] = useTransition();
   const [pickerOpen, setPickerOpen]  = useState(false);
-  const router = useRouter();
+  const router   = useRouter();
+  const pathname = usePathname();
   return (
     <main className="min-h-screen bg-parchment">
       <div className="max-w-4xl mx-auto px-6 md:px-10 py-10 space-y-16">
@@ -354,7 +356,15 @@ export default function ToolDetail({ tool }: { tool: ToolDetailData }) {
               variant="primary"
               size="lg"
               disabled={isPending}
-              onClick={() => setPickerOpen(true)}
+              onClick={async () => {
+                const supabase = createClient();
+                const { data: { user } } = await supabase.auth.getUser();
+                if (!user) {
+                  router.push(`/login?next=${encodeURIComponent(pathname)}`);
+                  return;
+                }
+                setPickerOpen(true);
+              }}
             >
               {isPending ? "Adding…" : "+ Add to Roadmap"}
             </Button>

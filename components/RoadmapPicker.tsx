@@ -24,14 +24,21 @@ export default function RoadmapPicker({ open, isPending, onClose, onSelect }: Pr
     if (!open) return;
     setLoading(true);
     const supabase = createClient();
-    supabase
-      .from("roadmaps")
-      .select("id, title")
-      .order("created_at", { ascending: true })
-      .then(({ data }) => {
-        setRoadmaps(data ?? []);
+    (async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        setRoadmaps([]);
         setLoading(false);
-      });
+        return;
+      }
+      const { data } = await supabase
+        .from("roadmaps")
+        .select("id, title")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: true });
+      setRoadmaps(data ?? []);
+      setLoading(false);
+    })();
   }, [open]);
 
   function handleCreateAndAdd(e: React.FormEvent) {
