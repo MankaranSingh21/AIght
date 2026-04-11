@@ -2,26 +2,98 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #F5EFE0;
+    --foreground: #2C1A0E;
   }
-}
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  html {
+    background-color: #F5EFE0;
+    color: #2C1A0E;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-lora), Palatino, serif;
+    background-color: var(--background);
+    color: var(--foreground);
+    min-height: 100vh;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-playfair), Georgia, serif;
+  }
+
+  /* Nice smooth scrolling */
+  * {
+    scroll-behavior: smooth;
+  }
+
+  /* Custom selection color */
+  ::selection {
+    background-color: #B4D4A3;
+    color: #1C3A2E;
+  }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  /* Scrollbars: gone, but not forgotten */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* ── React Flow overrides ── */
+  /* Controls panel */
+  .react-flow__controls {
+    box-shadow: 0 2px 16px 0 rgba(44, 26, 14, 0.10);
+    border-radius: 0.875rem;
+    border: 1px solid #D9EAD0; /* moss-200 */
+    overflow: hidden;
+  }
+  .react-flow__controls-button {
+    background: #F5EFE0; /* parchment */
+    border: none;
+    border-bottom: 1px solid #D9EAD0;
+    color: #1C3A2E; /* forest */
+    width: 28px;
+    height: 28px;
+    transition: background 0.15s;
+  }
+  .react-flow__controls-button:last-child {
+    border-bottom: none;
+  }
+  .react-flow__controls-button:hover {
+    background: #D9EAD0; /* moss-100 */
+  }
+  .react-flow__controls-button svg {
+    fill: #1C3A2E;
+  }
+  /* Selection box */
+  .react-flow__selection {
+    background: rgba(61, 138, 43, 0.06);
+    border: 1.5px solid #3D8A2B;
+  }
+  /* Animated edge dashes */
+  .react-flow__edge-path {
+    stroke-linecap: round;
+  }
+
+  /* Paper texture overlay */
+  .texture-grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events: none;
+    border-radius: inherit;
   }
 }

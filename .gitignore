@@ -25,11 +25,18 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# local env files
+# local env files — exclude ALL .env variants
+.env
+.env.*
 .env*.local
 
 # vercel
 .vercel
+
+# AI agent workspaces — never commit
+.claude/
+.cursor/
+.aider*
 
 # typescript
 *.tsbuildinfo

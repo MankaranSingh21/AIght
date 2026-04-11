@@ -1,0 +1,386 @@
+[
+  {
+    "name": "OpenClaw",
+    "slug": "openclaw",
+    "url": "https://github.com/openclaw/openclaw",
+    "vibe_description": "It's like I finally woke up in the future and realized I don't need a corporate overlord to manage my life; this thing is pure, unadulterated digital freedom.",
+    "category": "AI CHAT",
+    "is_free": true
+  },
+  {
+    "name": "Me.bot",
+    "slug": "me-bot",
+    "url": "https://www.me.bot/",
+    "vibe_description": "Seriously, this is like having a second version of myself that actually remembers where I put my best ideas and doesn't get distracted by cat videos.",
+    "category": "AI CHAT",
+    "is_free": true
+  },
+  {
+    "name": "Grok 4.1",
+    "slug": "grok-4-1",
+    "url": "https://x.ai/",
+    "vibe_description": "It’s definitely got that sharp, self-aware edge that makes other bots feel like they’re reading from a HR manual; the real-time timeline access is a total mood.",
+    "category": "AI CHAT",
+    "is_free": false
+  },
+  {
+    "name": "Qwen 3.6 Plus",
+    "slug": "qwen-3-6-plus",
+    "url": "https://huggingface.co/Qwen",
+    "vibe_description": "This model is low-key carrying the whole open-source community right now, outperforming the heavy hitters while staying humble and accessible.",
+    "category": "AI CHAT",
+    "is_free": true
+  },
+  {
+    "name": "Kimi K2.5",
+    "slug": "kimi-k2-5",
+    "url": "https://www.moonshot.ai/",
+    "vibe_description": "The way this handles long, messy thoughts is just built different; it’s like talking to a friend who actually listens to every word you say.",
+    "category": "AI CHAT",
+    "is_free": true
+  },
+  {
+    "name": "ChatGPT 5.4",
+    "slug": "chatgpt-5-4",
+    "url": "https://chat.openai.com/",
+    "vibe_description": "The OG finally stopped trying to be everything for everyone and focused on being a genuinely smart partner with a \"Tool Search\" that actually works.",
+    "category": "AI CHAT",
+    "is_free": false
+  },
+  {
+    "name": "Claude 4.6",
+    "slug": "claude-4-6",
+    "url": "https://www.anthropic.com/",
+    "vibe_description": "If you want a conversation that doesn't feel like you're talking to a microwave, this is it—the prose is warm, human, and totally jargon-free.",
+    "category": "AI CHAT",
+    "is_free": false
+  },
+  {
+    "name": "OpenClaw Gateway",
+    "slug": "openclaw-gateway",
+    "url": "https://openclaw.ai/",
+    "vibe_description": "Setting this up in my own Discord felt like gaining a superpower; it’s the ultimate \"my machine, my rules\" flex for the modern era.",
+    "category": "AI CHAT",
+    "is_free": true
+  },
+  {
+    "name": "Wan 2.2",
+    "slug": "wan-2-2",
+    "url": "https://github.com/Wan-Video/Wan2.2",
+    "vibe_description": "This open-source beast brings the fire and the rain—literally—with physics so real it makes me want to reach out and touch the screen.",
+    "category": "VIDEO GEN",
+    "is_free": true
+  },
+  {
+    "name": "Kling 3.0",
+    "slug": "kling-3-0",
+    "url": "https://klingai.com/",
+    "vibe_description": "It’s basically the cinematic king right now; everything I make looks like it was shot on an IMAX by a director with a massive budget.",
+    "category": "VIDEO GEN",
+    "is_free": false
+  },
+  {
+    "name": "Seedance 2.0",
+    "slug": "seedance-2-0",
+    "url": "https://www.seedance.com/",
+    "vibe_description": "The way the audio and video dance together in perfect sync is just mind-blowing; it’s finally time to make those dreams real.",
+    "category": "VIDEO GEN",
+    "is_free": false
+  },
+  {
+    "name": "Elser AI",
+    "slug": "elser-ai",
+    "url": "https://www.elser.ai/",
+    "vibe_description": "This is the \"superfan to studio\" pipeline I've been waiting for; it turns my weird little sketches into full-blown anime episodes.",
+    "category": "VIDEO GEN",
+    "is_free": false
+  },
+  {
+    "name": "Hailuo 2.3",
+    "slug": "hailuo-2-3",
+    "url": "https://www.hailuo.ai/",
+    "vibe_description": "The camera cuts in this tool are so smooth it feels like there’s a professional cinematographer living inside my computer.",
+    "category": "VIDEO GEN",
+    "is_free": true
+  },
+  {
+    "name": "Vidu Q3",
+    "slug": "vidu-q3",
+    "url": "https://www.vidu.ai/",
+    "vibe_description": "It’s the master of the \"multi-shot\" sequence, allowing me to tell a real story instead of just making random five-second clips.",
+    "category": "VIDEO GEN",
+    "is_free": false
+  },
+  {
+    "name": "PixVerse",
+    "slug": "pixverse",
+    "url": "https://pixverse.ai/",
+    "vibe_description": "Still the best friend for anyone needing a quick, high-quality B-roll that actually looks like it belongs in a professional edit.",
+    "category": "VIDEO GEN",
+    "is_free": true
+  },
+  {
+    "name": "Luma Dream Machine",
+    "slug": "luma-dream-machine",
+    "url": "https://lumalabs.ai/dream-machine",
+    "vibe_description": "Perfect for those late-night sessions when I have a wild idea and need to see it moving before I even finish my coffee.",
+    "category": "VIDEO GEN",
+    "is_free": true
+  },
+  {
+    "name": "Nano Banana Pro",
+    "slug": "nano-banana-pro",
+    "url": "https://huggingface.co/spaces/google/nano-banana",
+    "vibe_description": "I can finally put words in my art without it looking like a bowl of alphabet soup; it’s a total game-changer for my soul.",
+    "category": "IMAGE GEN",
+    "is_free": true
+  },
+  {
+    "name": "Ideogram 3.0",
+    "slug": "ideogram-3-0",
+    "url": "https://ideogram.ai/",
+    "vibe_description": "For real, the typography on this is so crisp it makes me want to redesign every sign in my neighborhood just for fun.",
+    "category": "IMAGE GEN",
+    "is_free": false
+  },
+  {
+    "name": "Flux 2",
+    "slug": "flux-2",
+    "url": "https://blackforestlabs.ai/",
+    "vibe_description": "It’s got that raw, \"everything is possible\" energy that only happens when the open-source community goes all in on a project.",
+    "category": "IMAGE GEN",
+    "is_free": true
+  },
+  {
+    "name": "WaveSpeedAI",
+    "slug": "wavespeedai",
+    "url": "https://wavespeed.ai/",
+    "vibe_description": "It’s like a massive candy store where I can try every flavor of AI art until I find the one that perfectly matches my mood.",
+    "category": "IMAGE GEN",
+    "is_free": true
+  },
+  {
+    "name": "Leonardo AI",
+    "slug": "leonardo-ai",
+    "url": "https://leonardo.ai/",
+    "vibe_description": "Still the underdog powerhouse that consistently delivers character designs so good I feel like I'm stealing from a pro studio.",
+    "category": "IMAGE GEN",
+    "is_free": false
+  },
+  {
+    "name": "Playground AI",
+    "slug": "playground-ai",
+    "url": "https://playground.com/",
+    "vibe_description": "The most generous free playground out there; it gives me room to breathe and iterate until the vibe is exactly right.",
+    "category": "IMAGE GEN",
+    "is_free": true
+  },
+  {
+    "name": "Recraft V3",
+    "slug": "recraft-v3",
+    "url": "https://www.recraft.ai/",
+    "vibe_description": "This is for the vector nerds who need their AI to actually understand the difference between a doodle and a design.",
+    "category": "IMAGE GEN",
+    "is_free": false
+  },
+  {
+    "name": "Microsoft Designer",
+    "slug": "microsoft-designer",
+    "url": "https://designer.microsoft.com/",
+    "vibe_description": "Zero friction, zero drama—it’s just a solid, reliable way to get a great image when I’m in a hurry.",
+    "category": "IMAGE GEN",
+    "is_free": true
+  },
+  {
+    "name": "Cursor 3",
+    "slug": "cursor-3",
+    "url": "https://www.cursor.com/",
+    "vibe_description": "It’s basically my IDE but with a super-powered brain that actually understands what I’m trying to build even when I’m mumbling.",
+    "category": "DEV TOOLS",
+    "is_free": false
+  },
+  {
+    "name": "Aider",
+    "slug": "aider",
+    "url": "https://aider.chat/",
+    "vibe_description": "The terminal sidekick I didn't know I needed; it handles the boring Git stuff so I can just focus on the magic.",
+    "category": "DEV TOOLS",
+    "is_free": true
+  },
+  {
+    "name": "Bolt.new",
+    "slug": "bolt-new",
+    "url": "https://bolt.new/",
+    "vibe_description": "I talked to my browser for five minutes and it gave me a whole app—if that isn't magic, I don't know what is.",
+    "category": "DEV TOOLS",
+    "is_free": true
+  },
+  {
+    "name": "Lovable",
+    "slug": "lovable",
+    "url": "https://lovable.dev/",
+    "vibe_description": "It’s like having a senior dev on tap who actually enjoys building SaaS MVPs as much as I do.",
+    "category": "DEV TOOLS",
+    "is_free": false
+  },
+  {
+    "name": "JDoodle.ai",
+    "slug": "jdoodle-ai",
+    "url": "https://www.jdoodle.ai/",
+    "vibe_description": "The free bug fixes are a total mood; it’s the only AI that’s brave enough to admit its mistakes and fix them for free.",
+    "category": "DEV TOOLS",
+    "is_free": true
+  },
+  {
+    "name": "Windsurf",
+    "slug": "windsurf",
+    "url": "https://codeium.com/windsurf",
+    "vibe_description": "That project-level memory is a lifesaver; it remembers that weird fix I did three days ago so I don't have to.",
+    "category": "DEV TOOLS",
+    "is_free": true
+  },
+  {
+    "name": "Replit Agent",
+    "slug": "replit-agent",
+    "url": "https://replit.com/",
+    "vibe_description": "It just grinds away in the background like a digital employee that never needs a coffee break—pure autonomous power.",
+    "category": "DEV TOOLS",
+    "is_free": false
+  },
+  {
+    "name": "Base44",
+    "slug": "base44",
+    "url": "https://www.base44.com/",
+    "vibe_description": "The simplest path from \"I have an idea\" to \"here is the live link,\" with zero configuration nightmares in between.",
+    "category": "DEV TOOLS",
+    "is_free": true
+  },
+  {
+    "name": "NotebookLM",
+    "slug": "notebooklm",
+    "url": "https://notebooklm.google/",
+    "vibe_description": "It’s my personal research sanctuary where the AI actually stays focused on the facts and doesn't just make stuff up to look smart.",
+    "category": "RESEARCH",
+    "is_free": true
+  },
+  {
+    "name": "Perplexity",
+    "slug": "perplexity",
+    "url": "https://www.perplexity.ai/",
+    "vibe_description": "The only way I search for anything now; it gives me the real sources so I can actually trust what I'm reading.",
+    "category": "RESEARCH",
+    "is_free": true
+  },
+  {
+    "name": "SciSpace",
+    "slug": "scispace",
+    "url": "https://typeset.io/",
+    "vibe_description": "It turns those scary academic papers into something I can actually understand without having to go back to grad school.",
+    "category": "RESEARCH",
+    "is_free": true
+  },
+  {
+    "name": "Elicit",
+    "slug": "elicit",
+    "url": "https://elicit.org/",
+    "vibe_description": "It’s like a super-powered librarian that reads every paper for me and finds exactly what I need in seconds.",
+    "category": "RESEARCH",
+    "is_free": true
+  },
+  {
+    "name": "Humata",
+    "slug": "humata",
+    "url": "https://www.humata.ai/",
+    "vibe_description": "The clickable citations are a total game-changer; it’s the only way to be 100% sure the AI isn't just dreaming.",
+    "category": "RESEARCH",
+    "is_free": true
+  },
+  {
+    "name": "ScholarAI",
+    "slug": "scholarai",
+    "url": "https://scholarai.io/",
+    "vibe_description": "A powerhouse for anyone deep in the scientific weeds; it makes navigating the world of research feel like a breeze.",
+    "category": "RESEARCH",
+    "is_free": false
+  },
+  {
+    "name": "Consensus",
+    "slug": "consensus",
+    "url": "https://consensus.app/",
+    "vibe_description": "It finally gives me a straight answer based on real science instead of just showing me a bunch of random links.",
+    "category": "RESEARCH",
+    "is_free": true
+  },
+  {
+    "name": "ResearchRabbit",
+    "slug": "researchrabbit",
+    "url": "https://researchrabbit.ai/",
+    "vibe_description": "It’s the Spotify of research; it maps out the whole field and suggests papers I would have never found on my own.",
+    "category": "RESEARCH",
+    "is_free": true
+  },
+  {
+    "name": "Goblin.tools",
+    "slug": "goblin-tools",
+    "url": "https://goblin.tools/",
+    "vibe_description": "It’s the kindest piece of software I’ve ever used; it takes my overwhelming tasks and makes them feel totally doable.",
+    "category": "PRODUCTIVITY",
+    "is_free": true
+  },
+  {
+    "name": "Sudowrite",
+    "slug": "sudowrite",
+    "url": "https://www.sudowrite.com/",
+    "vibe_description": "My ultimate writing partner that knows exactly how to help me push through that scary blank page and find the story again.",
+    "category": "PRODUCTIVITY",
+    "is_free": false
+  },
+  {
+    "name": "NovelCrafter",
+    "slug": "novelcrafter",
+    "url": "https://www.novelcrafter.com/",
+    "vibe_description": "For the true story nerds who need an AI that actually remembers the rules of their world and respects the lore.",
+    "category": "PRODUCTIVITY",
+    "is_free": false
+  },
+  {
+    "name": "Gamma",
+    "slug": "gamma",
+    "url": "https://gamma.app/",
+    "vibe_description": "It turns my messy thoughts into gorgeous slides in seconds, which is basically the only way I can survive presentation days now.",
+    "category": "PRODUCTIVITY",
+    "is_free": true
+  },
+  {
+    "name": "editGPT",
+    "slug": "editgpt",
+    "url": "https://editgpt.app/",
+    "vibe_description": "It’s the first editor I’ve found that actually listens to what I’m trying to say instead of just fixing my commas.",
+    "category": "PRODUCTIVITY",
+    "is_free": true
+  },
+  {
+    "name": "Wispr Flow",
+    "slug": "wispr-flow",
+    "url": "https://www.wisprflow.ai/",
+    "vibe_description": "I can just talk my way through my workday and it captures the vibe perfectly—no more typing until my fingers hurt.",
+    "category": "PRODUCTIVITY",
+    "is_free": false
+  },
+  {
+    "name": "Anki (AI Add-ons)",
+    "slug": "anki-ai-add-ons",
+    "url": "https://apps.ankiweb.net/",
+    "vibe_description": "It turns my notes into flashcards like magic, so I can actually spend more time learning and less time preparing.",
+    "category": "PRODUCTIVITY",
+    "is_free": true
+  },
+  {
+    "name": "Quizlet (Q-Chat)",
+    "slug": "quizlet-q-chat",
+    "url": "https://quizlet.com/",
+    "vibe_description": "The AI tutor that actually challenges me with games and tests instead of just letting me flip cards until I'm bored.",
+    "category": "PRODUCTIVITY",
+    "is_free": true
+  }
+]
