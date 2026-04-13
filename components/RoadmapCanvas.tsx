@@ -8,7 +8,7 @@ import { useState, useEffect, useCallback, useTransition } from "react";
 import NodeDrawer from "./NodeDrawer";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Sprout } from "lucide-react";
+import { Sprout, Scissors } from "lucide-react";
 import {
   ReactFlow,
   Background,
@@ -23,6 +23,7 @@ import {
 } from "@xyflow/react";
 import ToolNode, { type ToolNodeData } from "./ToolNode";
 import CustomEdge from "./CustomEdge";
+import OvergrowthDrawer from "./OvergrowthDrawer";
 import { RoadmapIdContext, ReadOnlyContext } from "./RoadmapIdContext";
 import { updateRoadmapEdges, toggleRoadmapVisibility, cloneRoadmap, updateToolStatus, persistNodes } from "@/app/actions/roadmap";
 
@@ -188,6 +189,7 @@ export default function RoadmapCanvas({
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const isEmpty = nodes.length === 0;
   const [mobileBannerDismissed, setMobileBannerDismissed] = useState(false);
+  const [overgrowthOpen, setOvergrowthOpen] = useState(false);
 
   const onConnect = useCallback(
     (connection: Connection) => {
@@ -317,7 +319,28 @@ export default function RoadmapCanvas({
             {readOnly ? (
               <CloneInHeader roadmapId={roadmapId} />
             ) : (
-              <SharePanel roadmapId={roadmapId} initialIsPublic={initialIsPublic} />
+              <div className="flex items-center gap-3 flex-shrink-0">
+                {/* Overgrowth trigger */}
+                <button
+                  onClick={() => {
+                    setSelectedNodeId(null);   // close node drawer
+                    setOvergrowthOpen(true);
+                  }}
+                  className="
+                    flex items-center gap-1.5
+                    font-body text-xs font-semibold
+                    px-3.5 py-1.5 rounded-xl
+                    border border-moss-200 text-forest/60
+                    hover:border-moss-400 hover:text-forest hover:bg-moss-50
+                    transition-colors duration-150 flex-shrink-0
+                  "
+                >
+                  <Scissors className="w-3.5 h-3.5 flex-shrink-0" />
+                  <span className="hidden sm:inline">Clear the Overgrowth</span>
+                </button>
+
+                <SharePanel roadmapId={roadmapId} initialIsPublic={initialIsPublic} />
+              </div>
             )}
           </div>
 
@@ -388,6 +411,11 @@ export default function RoadmapCanvas({
               node={selectedNode as Node<ToolNodeData> | null}
               onClose={() => setSelectedNodeId(null)}
               onStatusChange={handleStatusChange}
+            />
+
+            <OvergrowthDrawer
+              open={overgrowthOpen}
+              onClose={() => setOvergrowthOpen(false)}
             />
           </div>
         </div>
