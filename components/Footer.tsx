@@ -27,7 +27,7 @@ export default function Footer() {
             Terms of Service
           </Link>
           <a
-            href="mailto:hi@aight.app"
+            href="mailto:singhmankaran05@gmail.com"
             className="font-body text-xs text-forest/50 hover:text-forest transition-colors duration-150"
           >
             Contact
