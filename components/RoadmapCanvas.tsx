@@ -22,10 +22,14 @@ import {
   type Connection,
 } from "@xyflow/react";
 import ToolNode, { type ToolNodeData } from "./ToolNode";
+import CustomEdge from "./CustomEdge";
 import { RoadmapIdContext, ReadOnlyContext } from "./RoadmapIdContext";
 import { updateRoadmapEdges, toggleRoadmapVisibility, cloneRoadmap, updateToolStatus, persistNodes } from "@/app/actions/roadmap";
 
 const nodeTypes = { toolNode: ToolNode };
+// Override the built-in "smoothstep" type so every persisted edge automatically
+// gets the delete button — no DB migration required.
+const edgeTypes = { smoothstep: CustomEdge };
 const NAVBAR_H = 56;
 
 // Sort surviving nodes left-to-right by x position and reassign stepNumber.
@@ -242,6 +246,19 @@ export default function RoadmapCanvas({
     [setNodes, roadmapId]
   );
 
+  // Persist edge deletions triggered either by the × button on CustomEdge
+  // or by keyboard (Backspace / Delete) when an edge is selected.
+  // When onEdgesDelete fires, `edges` is still the pre-deletion snapshot,
+  // so we filter out the deleted IDs to get the remaining set.
+  const handleEdgesDelete = useCallback(
+    (deletedEdges: Edge[]) => {
+      const deletedIds = new Set(deletedEdges.map((e) => e.id));
+      const remaining  = edges.filter((e) => !deletedIds.has(e.id));
+      updateRoadmapEdges(remaining, roadmapId);
+    },
+    [edges, roadmapId]
+  );
+
   return (
     <RoadmapIdContext.Provider value={roadmapId}>
       <ReadOnlyContext.Provider value={readOnly}>
@@ -313,9 +330,11 @@ export default function RoadmapCanvas({
               onEdgesChange={readOnly ? undefined : onEdgesChange}
               onConnect={readOnly ? undefined : onConnect}
               onNodesDelete={readOnly ? undefined : handleNodesDelete}
+              onEdgesDelete={readOnly ? undefined : handleEdgesDelete}
               onNodeClick={handleNodeClick}
               onPaneClick={() => setSelectedNodeId(null)}
               nodeTypes={nodeTypes}
+              edgeTypes={edgeTypes}
               nodesDraggable={!readOnly}
               nodesConnectable={!readOnly}
               elementsSelectable={true}
