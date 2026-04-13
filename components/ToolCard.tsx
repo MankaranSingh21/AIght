@@ -67,7 +67,8 @@ export default function ToolCard({
   url,
   accentColor = "moss",
 }: ToolCardProps) {
-  const [imgError, setImgError] = useState(false);
+  const [imgError,  setImgError]  = useState(false);
+  const [imgLoaded, setImgLoaded] = useState(false);
   const accent = accentMap[accentColor ?? "moss"] ?? accentMap["moss"];
 
   // Show the screenshot only when we have a URL and it hasn't errored out.
@@ -98,14 +99,28 @@ export default function ToolCard({
         `}
       >
         {showScreenshot ? (
-          <Image
-            src={getMicrolinkUrl(url!)}
-            alt={`${name} website screenshot`}
-            fill
-            unoptimized
-            className="object-cover object-top opacity-90 transition-opacity hover:opacity-100"
-            onError={() => setImgError(true)}
-          />
+          <>
+            {/* Shimmer skeleton while image loads */}
+            {!imgLoaded && (
+              <div className="absolute inset-0 animate-pulse">
+                <div className={`w-full h-full ${accent.bg}`} />
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-parchment/30 to-transparent animate-[shimmer_1.5s_infinite]" />
+              </div>
+            )}
+            <Image
+              src={getMicrolinkUrl(url!)}
+              alt={`${name} website screenshot`}
+              fill
+              unoptimized
+              className={`
+                object-cover object-top
+                transition-opacity duration-500
+                ${imgLoaded ? "opacity-90" : "opacity-0"}
+              `}
+              onLoad={() => setImgLoaded(true)}
+              onError={() => setImgError(true)}
+            />
+          </>
         ) : (
           <motion.span
             className="text-5xl leading-none select-none"

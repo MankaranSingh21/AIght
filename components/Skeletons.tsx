@@ -104,6 +104,68 @@ export function ToolDetailSkeleton() {
   );
 }
 
+// ── Roadmaps dashboard skeleton (used as loading state on /roadmaps) ──────
+
+export function RoadmapsDashboardSkeleton() {
+  return (
+    <div className="min-h-screen bg-parchment texture-grain">
+      <div className="max-w-5xl mx-auto px-6 md:px-12 py-14 space-y-8 animate-pulse">
+        {/* Page header */}
+        <div className="space-y-3">
+          <div className="h-3 w-28 rounded-full bg-moss-200" />
+          <div className="h-12 w-56 rounded-xl bg-moss-100" />
+          <div className="h-4 w-80 rounded bg-moss-100" />
+        </div>
+
+        {/* AI curator bar */}
+        <div className="rounded-4xl border border-moss-200 p-7 space-y-5 bg-parchment">
+          <div className="space-y-2.5">
+            <div className="h-3 w-24 rounded-full bg-moss-200" />
+            <div className="h-7 w-72 rounded-lg bg-moss-100" />
+            <div className="h-4 w-96 max-w-full rounded bg-moss-100" />
+          </div>
+          <div className="flex gap-3">
+            <div className="flex-1 h-12 rounded-2xl bg-moss-100/60 border border-moss-100" />
+            <div className="h-12 w-28 rounded-2xl bg-moss-200/60 flex-shrink-0" />
+          </div>
+          {/* Example prompt pills */}
+          <div className="flex flex-wrap gap-2">
+            {[80, 96, 72, 88].map((w, i) => (
+              <div key={i} className={`h-8 w-${w} rounded-full bg-moss-100`} />
+            ))}
+          </div>
+        </div>
+
+        {/* Divider */}
+        <div className="h-px w-full bg-moss-100" />
+
+        {/* Canvas grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {[0, 1, 2].map((i) => (
+            <div
+              key={i}
+              className="rounded-3xl border border-moss-200 bg-parchment shadow-card overflow-hidden"
+            >
+              <div className="h-2 bg-gradient-to-r from-moss-300/60 to-amber-200/60" />
+              <div className="px-6 py-5 space-y-3">
+                <div className="h-6 w-3/4 rounded-lg bg-moss-100" />
+                <div className="flex items-center gap-3">
+                  <div className="h-3.5 w-12 rounded bg-moss-100" />
+                  <div className="h-1 w-1 rounded-full bg-moss-200" />
+                  <div className="h-3.5 w-20 rounded bg-moss-100" />
+                </div>
+              </div>
+              <div className="px-6 pb-5">
+                <div className="h-3.5 w-24 rounded bg-moss-100" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ── Canvas skeleton (used as Suspense fallback on /roadmaps/[id]) ──────────
 
 export function CanvasSkeleton() {

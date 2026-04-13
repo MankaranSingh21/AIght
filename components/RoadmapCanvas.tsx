@@ -319,6 +319,7 @@ export default function RoadmapCanvas({
               nodesDraggable={!readOnly}
               nodesConnectable={!readOnly}
               elementsSelectable={true}
+              deleteKeyCode={readOnly ? null : ["Backspace", "Delete"]}
               panOnScroll={true}
               zoomOnPinch={true}
               preventScrolling={false}
