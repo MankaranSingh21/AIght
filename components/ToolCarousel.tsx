@@ -54,7 +54,7 @@ export default function ToolCarousel({ tools }: { tools: ToolCardProps[] }) {
           <motion.div
             key={tool.name}
             variants={cardSlide}
-            className="flex-shrink-0 w-[272px] snap-start"
+            className="flex-shrink-0 w-[272px] h-[380px] snap-start"
           >
             <Link href={`/tool/${tool.slug}`} className="block">
               <ToolCard {...tool} />

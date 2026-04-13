@@ -249,10 +249,10 @@ export default function RoadmapDashboard({ roadmaps }: { roadmaps: RoadmapRow[] 
                   hover:border-moss-400 hover:shadow-card-hover
                   transition-all duration-200 overflow-hidden
                 ">
-                  <div className="h-2 bg-gradient-to-r from-moss-300 to-amber-200" />
+                  <div className="h-1.5 bg-gradient-to-r from-moss-200 to-amber-100 opacity-70" />
 
                   <div className="px-6 py-5 space-y-3">
-                    <h3 className="font-serif text-xl font-bold text-espresso group-hover:text-moss-700 transition-colors duration-150 leading-snug">
+                    <h3 className="font-serif text-xl font-bold text-espresso group-hover:text-moss-700 transition-colors duration-150 leading-snug line-clamp-2">
                       {rm.title}
                     </h3>
                     <div className="flex items-center gap-4 font-body text-xs text-forest/50">

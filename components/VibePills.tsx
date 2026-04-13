@@ -25,10 +25,10 @@ export default function VibePills({ active, onSelect }: Props) {
             key={vibe.id}
             onClick={() => onSelect(vibe.id)}
             className={`
-              relative flex-shrink-0 flex items-center gap-2 px-5 py-2.5 rounded-full
+              relative overflow-hidden flex-shrink-0 flex items-center gap-2 px-5 py-2.5 rounded-full
               font-body text-sm font-medium border transition-colors duration-200 select-none
               ${isActive
-                ? "bg-espresso text-parchment border-espresso"
+                ? "text-parchment border-espresso"
                 : "bg-moss-100 text-forest border-moss-200 hover:bg-moss-200 hover:border-moss-400"
               }
             `}

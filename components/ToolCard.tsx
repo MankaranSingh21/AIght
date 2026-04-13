@@ -77,7 +77,7 @@ export default function ToolCard({
   return (
     <motion.div
       className={`
-        relative overflow-hidden rounded-3xl border border-moss-100
+        relative flex flex-col overflow-hidden rounded-3xl border border-moss-200/60
         bg-parchment shadow-card cursor-pointer
         transition-shadow duration-300 ${accent.glow}
       `}
@@ -141,12 +141,12 @@ export default function ToolCard({
         </span>
 
         {/* Name */}
-        <h3 className="font-serif text-xl font-bold text-espresso leading-snug">
+        <h3 className="font-serif text-xl font-bold text-espresso leading-snug line-clamp-2">
           {name}
         </h3>
 
         {/* Tagline */}
-        <p className="font-body text-sm text-forest/80 leading-relaxed">
+        <p className="font-body text-sm text-forest/80 leading-relaxed line-clamp-2">
           {tagline}
         </p>
 
