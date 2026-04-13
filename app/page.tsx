@@ -3,6 +3,7 @@ import { createClient } from "@/utils/supabase/server";
 import Hero from "@/components/Hero";
 import StarterStacks from "@/components/StarterStacks";
 import DiscoverySection from "@/components/DiscoverySection";
+import Footer from "@/components/Footer";
 import { ToolGridSkeleton } from "@/components/Skeletons";
 import type { ToolCardProps } from "@/components/ToolCard";
 import type { Tool } from "@/utils/supabase/types";
@@ -40,31 +41,35 @@ async function ToolsSection() {
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-parchment texture-grain">
-      <Hero />
+    <>
+      <main className="min-h-screen bg-parchment texture-grain">
+        <Hero />
 
-      <Suspense fallback={<ToolGridSkeleton />}>
-        <ToolsSection />
-      </Suspense>
+        <Suspense fallback={<ToolGridSkeleton />}>
+          <ToolsSection />
+        </Suspense>
 
-      <section id="about" className="px-6 md:px-12 lg:px-20 py-20 border-t border-moss-100">
-        <div className="max-w-2xl mx-auto text-center space-y-5">
-          <p className="font-body text-xs uppercase tracking-[0.2em] text-moss-500">
-            about this corner of the internet ✦
-          </p>
-          <h2 className="font-serif text-3xl md:text-4xl font-bold text-espresso">
-            What even is AIght?
-          </h2>
-          <p className="font-body text-lg text-forest/75 leading-relaxed">
-            AIght is a cozy, curated directory of AI tools that actually deserve your attention.
-            No sponsored rankings. No hustle-bro energy. Just honest curation, warm vibes, and
-            a roadmap builder so you can learn at your own pace — the internet as it should be.
-          </p>
-          <p className="font-body text-sm text-forest/50 leading-relaxed">
-            Built slowly, on purpose. More features coming when they&rsquo;re ready. ✦
-          </p>
-        </div>
-      </section>
-    </main>
+        <section id="about" className="px-6 md:px-12 lg:px-20 py-20 border-t border-moss-100">
+          <div className="max-w-2xl mx-auto text-center space-y-5">
+            <p className="font-body text-xs uppercase tracking-[0.2em] text-moss-500">
+              about this corner of the internet ✦
+            </p>
+            <h2 className="font-serif text-3xl md:text-4xl font-bold text-espresso">
+              What even is AIght?
+            </h2>
+            <p className="font-body text-lg text-forest/75 leading-relaxed">
+              AIght is a cozy, curated directory of AI tools that actually deserve your attention.
+              No sponsored rankings. No hustle-bro energy. Just honest curation, warm vibes, and
+              a roadmap builder so you can learn at your own pace — the internet as it should be.
+            </p>
+            <p className="font-body text-sm text-forest/50 leading-relaxed">
+              Built slowly, on purpose. More features coming when they&rsquo;re ready. ✦
+            </p>
+          </div>
+        </section>
+      </main>
+
+      <Footer />
+    </>
   );
 }
