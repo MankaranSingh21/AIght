@@ -11,7 +11,7 @@ const config: Config = {
     extend: {
       colors: {
         // Base — earthy, never stark
-        parchment: "#F5EFE0",
+        parchment: "#fdfaf5",
         espresso: "#2C1A0E",
         forest: "#1C3A2E",
 
@@ -69,6 +69,10 @@ const config: Config = {
           900: "#150822",
         },
 
+        // Brand accents
+        terracotta: "#e07a5f",
+        sage:       "#81b29a",
+
         // Neon accents — sparingly
         neon: {
           lime:  "#AAFF4D",
@@ -102,6 +106,7 @@ const config: Config = {
       boxShadow: {
         "moss":        "0 4px 24px 0 rgba(61, 138, 43, 0.18)",
         "amber":       "0 4px 24px 0 rgba(244, 171, 31, 0.22)",
+        "terracotta":  "0 4px 24px 0 rgba(224, 122, 95, 0.25)",
         "glow-neon":   "0 0 20px 2px rgba(170, 255, 77, 0.35)",
         "card":        "0 2px 16px 0 rgba(44, 26, 14, 0.10)",
         "card-hover":  "0 8px 32px 0 rgba(44, 26, 14, 0.18)",

@@ -12,7 +12,7 @@ type Stack = {
   title: string;
   subtitle: string;
   description: string;
-  steps: { emoji: string; label: string }[];
+  steps: { initials: string; label: string }[];
   accent: {
     bg: string;
     border: string;
@@ -32,9 +32,9 @@ const STACKS: Stack[] = [
     description:
       "Go from blank canvas to shipped product. This is the pipeline that solo builders use to move at startup speed without a team.",
     steps: [
-      { emoji: "⚡", label: "Bolt.new" },
-      { emoji: "🖱️", label: "Cursor" },
-      { emoji: "🤖", label: "Claude" },
+      { initials: "BN", label: "Bolt.new" },
+      { initials: "CR", label: "Cursor" },
+      { initials: "CL", label: "Claude" },
     ],
     accent: {
       bg:       "bg-gradient-to-br from-amber-50 to-parchment",
@@ -53,9 +53,9 @@ const STACKS: Stack[] = [
     description:
       "Go from a vague question to a nuanced answer. The pipeline serious researchers use to cut through noise and build real understanding.",
     steps: [
-      { emoji: "🔭", label: "Perplexity" },
-      { emoji: "🤖", label: "Claude" },
-      { emoji: "📓", label: "NotebookLM" },
+      { initials: "PX", label: "Perplexity" },
+      { initials: "CL", label: "Claude" },
+      { initials: "NB", label: "NotebookLM" },
     ],
     accent: {
       bg:       "bg-gradient-to-br from-lavender-50 to-parchment",
@@ -97,7 +97,7 @@ function StackCard({ stack }: { stack: Stack }) {
               toast.error("Stack injection failed", { description: result.error });
             } else {
               setPickerOpen(false);
-              toast.success(`${stack.title} added to your roadmap ✦`);
+              toast.success(`${stack.title} added to your roadmap.`);
               router.push(`/roadmaps/${roadmapId}`);
             }
           });
@@ -121,8 +121,8 @@ function StackCard({ stack }: { stack: Stack }) {
         {stack.steps.map((step, i) => (
           <div key={step.label} className="flex items-center">
             <div className="flex flex-col items-center gap-1.5">
-              <div className="w-11 h-11 rounded-2xl bg-parchment border border-moss-100 shadow-card flex items-center justify-center text-xl">
-                {step.emoji}
+              <div className="w-11 h-11 rounded-2xl bg-parchment border border-moss-100 shadow-card flex items-center justify-center">
+                <span className="font-body text-xs font-bold text-espresso tracking-tight">{step.initials}</span>
               </div>
               <span className="font-body text-2xs text-forest/60 font-medium whitespace-nowrap">
                 {step.label}
@@ -161,7 +161,7 @@ export default function StarterStacks() {
       {/* Section header */}
       <div className="mb-8">
         <p className="font-body text-xs uppercase tracking-[0.2em] text-moss-500 mb-2">
-          skip the blank canvas ✦
+          skip the blank canvas
         </p>
         <h2 className="font-serif text-2xl md:text-3xl font-bold text-espresso">
           Curated Starter Stacks

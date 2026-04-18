@@ -74,7 +74,7 @@ export default function Hero() {
             variants={item}
             className="font-body text-xs uppercase tracking-[0.2em] text-moss-500 mb-5"
           >
-            your cozy corner of the internet ✦
+            your cozy corner of the internet
           </motion.p>
 
           <motion.h1
@@ -113,8 +113,8 @@ export default function Hero() {
                   inline-flex items-center gap-2.5
                   font-body font-semibold tracking-wide text-lg
                   px-9 py-4 rounded-3xl
-                  bg-moss-500 text-parchment border border-moss-600
-                  hover:bg-moss-600 shadow-moss
+                  bg-terracotta text-parchment border border-terracotta/80
+                  hover:bg-[#d4694f] shadow-terracotta
                   transition-colors duration-200 cursor-pointer
                 "
                 whileHover={{ scale: 1.03 }}
@@ -130,7 +130,7 @@ export default function Hero() {
                   {ctaLabel}
                 </motion.span>
                 {isLoggedIn !== true && (
-                  <span className="font-body text-sm font-normal text-parchment/70 bg-moss-600/50 px-2.5 py-0.5 rounded-full">
+                  <span className="font-body text-sm font-normal text-parchment/70 bg-[#d4694f]/60 px-2.5 py-0.5 rounded-full">
                     Free
                   </span>
                 )}
@@ -144,7 +144,7 @@ export default function Hero() {
                 transition={{ delay: 0.3, duration: 0.4 }}
                 className="font-body text-sm text-forest/50 dark:text-parchment/40 leading-relaxed"
               >
-                Your first canvas is completely free — no credit card, no catch. ✦
+                Your first canvas is completely free — no credit card, no catch.
               </motion.p>
             )}
           </motion.div>

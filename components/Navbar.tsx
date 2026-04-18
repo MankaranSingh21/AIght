@@ -24,7 +24,7 @@ export default async function Navbar() {
             AIght
           </span>
           <span className="font-body text-2xs text-moss-500 uppercase tracking-widest hidden sm:block">
-            ✦ tools
+            tools
           </span>
         </Link>
 

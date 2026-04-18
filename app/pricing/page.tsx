@@ -91,7 +91,7 @@ function PlanCard({
           px-6 py-3.5 rounded-2xl border transition-colors duration-150
           ${highlight
             ? "bg-parchment text-espresso border-parchment hover:bg-moss-50"
-            : "bg-moss-500 text-parchment border-moss-600 hover:bg-moss-600 shadow-moss"
+            : "bg-terracotta text-parchment border-terracotta/80 hover:bg-[#d4694f] shadow-terracotta"
           }
         `}
       >
@@ -121,7 +121,7 @@ export default function PricingPage() {
         {/* Header */}
         <section className="px-6 md:px-12 lg:px-20 pt-20 pb-16 text-center max-w-3xl mx-auto">
           <p className="font-body text-xs uppercase tracking-[0.2em] text-moss-500 mb-5">
-            simple, honest pricing ✦
+            simple, honest pricing
           </p>
           <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-espresso dark:text-parchment leading-tight mb-6 text-balance">
             Start for free.{" "}

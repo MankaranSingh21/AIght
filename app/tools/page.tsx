@@ -37,7 +37,7 @@ export default async function ToolsArchivePage() {
         {/* Header */}
         <section className="px-6 md:px-12 lg:px-20 pt-16 pb-12">
           <p className="font-body text-xs uppercase tracking-[0.2em] text-moss-500 mb-4">
-            every tool we&apos;ve found worth your time ✦
+            every tool we&apos;ve found worth your time
           </p>
           <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-espresso dark:text-parchment leading-tight mb-4">
             The Full Archive

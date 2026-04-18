@@ -20,7 +20,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 type DemoNodeData = {
   label: string;
-  emoji: string;
+  initials: string;
   category: string;
   step: number;
   accent: "amber" | "moss" | "lavender";
@@ -72,8 +72,10 @@ const DemoNode = memo(function DemoNode({ data }: { data: DemoNodeData }) {
 
       {/* Header strip */}
       <div className={`px-3 py-2 ${a.header} flex items-center gap-2`}>
-        <span className="text-sm leading-none">{data.emoji}</span>
-        <span className={`text-[9px] font-body font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full ${a.badge}`}>
+        <span className={`text-[9px] font-body font-bold leading-none w-5 h-5 rounded flex items-center justify-center ${a.badge} flex-shrink-0`}>
+          {data.initials}
+        </span>
+        <span className="text-[9px] font-body font-bold uppercase tracking-wider text-espresso/60 dark:text-parchment/50 truncate">
           {data.category}
         </span>
       </div>
@@ -107,35 +109,35 @@ const INITIAL_NODES: Node[] = [
     id: "1",
     type: "demo",
     position: { x: 30,  y: 80 },
-    data: { label: "Bolt.new", emoji: "⚡", category: "Code Gen", step: 1, accent: "amber" },
+    data: { label: "Bolt.new", initials: "BN", category: "Code Gen", step: 1, accent: "amber" },
     draggable: true,
   },
   {
     id: "2",
     type: "demo",
     position: { x: 240, y: 10 },
-    data: { label: "Claude", emoji: "🤖", category: "AI Chat", step: 2, accent: "moss" },
+    data: { label: "Claude", initials: "CL", category: "AI Chat", step: 2, accent: "moss" },
     draggable: true,
   },
   {
     id: "3",
     type: "demo",
     position: { x: 450, y: 80 },
-    data: { label: "Cursor", emoji: "🖱️", category: "Dev Tool", step: 3, accent: "lavender" },
+    data: { label: "Cursor", initials: "CR", category: "Dev Tool", step: 3, accent: "lavender" },
     draggable: true,
   },
   {
     id: "4",
     type: "demo",
     position: { x: 120, y: 210 },
-    data: { label: "NotebookLM", emoji: "📓", category: "Research", step: 4, accent: "moss" },
+    data: { label: "NotebookLM", initials: "NB", category: "Research", step: 4, accent: "moss" },
     draggable: true,
   },
   {
     id: "5",
     type: "demo",
     position: { x: 360, y: 210 },
-    data: { label: "Perplexity", emoji: "🔭", category: "Search", step: 5, accent: "amber" },
+    data: { label: "Perplexity", initials: "PX", category: "Search", step: 5, accent: "amber" },
     draggable: true,
   },
 ];
@@ -232,12 +234,12 @@ export default function HeroDemoCanvas() {
               <motion.span
                 animate={{ x: [0, 4, -4, 4, 0] }}
                 transition={{ delay: 1.8, duration: 0.6, repeat: 3, repeatDelay: 3 }}
-                className="text-sm"
+                className="font-body text-xs text-parchment/70 select-none"
               >
-                👆
+                drag
               </motion.span>
               <span className="font-body text-xs font-medium text-parchment whitespace-nowrap">
-                Try dragging me ✦
+                Try dragging the nodes
               </span>
             </div>
           </motion.div>

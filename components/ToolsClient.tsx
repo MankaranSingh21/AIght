@@ -51,7 +51,7 @@ function ToolCardWithAction({ tool }: { tool: ToolCardProps }) {
         {
           slug:     tool.slug,
           name:     tool.name,
-          emoji:    tool.emoji,
+          emoji:    tool.emoji ?? "",
           url:      tool.url,
           category: tool.category,
           accent:   (tool.accentColor as "moss" | "amber" | "lavender") ?? "moss",
@@ -64,7 +64,7 @@ function ToolCardWithAction({ tool }: { tool: ToolCardProps }) {
         return;
       }
 
-      toast.success(`${tool.name} roadmap ready ✦`, { id: toastId });
+      toast.success(`${tool.name} roadmap ready.`, { id: toastId });
       router.push(`/roadmaps/${roadmapResult.id}`);
     });
   }
@@ -84,8 +84,8 @@ function ToolCardWithAction({ tool }: { tool: ToolCardProps }) {
             w-full sm:w-auto flex items-center justify-center gap-1.5
             font-body text-xs font-semibold
             px-3 py-2 sm:py-1.5 rounded-xl
-            bg-espresso dark:bg-charcoal-950 text-parchment
-            hover:bg-moss-600 disabled:opacity-50
+            bg-terracotta text-parchment
+            hover:bg-[#d4694f] disabled:opacity-50
             shadow-card dark:shadow-card-dark
             transition-colors duration-150 whitespace-nowrap
           "
@@ -245,7 +245,7 @@ export default function ToolsClient({ tools, initialCategory = "all" }: Props) {
             Nothing here yet.
           </p>
           <p className="font-body text-sm text-forest/40 dark:text-parchment/30">
-            Try a different search or filter. ✦
+            Try a different search or filter.
           </p>
           <button
             onClick={clearAll}

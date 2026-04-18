@@ -23,7 +23,7 @@ export default function ToolCarousel({ tools }: { tools: ToolCardProps[] }) {
     return (
       <div className="px-6 md:px-12 lg:px-20 py-12 text-center">
         <p className="font-body text-sm text-forest/50">
-          No tools yet — the shelves are being stocked. ✦
+          No tools yet — the shelves are being stocked.
         </p>
       </div>
     );

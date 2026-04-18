@@ -96,15 +96,15 @@ export default function RoadmapPicker({ open, isPending, onClose, onSelect }: Pr
             <div className="px-6 py-6 space-y-4 text-center">
               <p className="font-body text-sm text-forest/70 leading-relaxed">
                 Log in to build and save your roadmap canvas.
-                Your first canvas is completely free. ✦
+                Your first canvas is completely free.
               </p>
               <Link
                 href="/login"
                 className="
                   inline-flex items-center justify-center w-full
                   font-body font-semibold text-sm px-6 py-3 rounded-2xl
-                  bg-moss-500 text-parchment border border-moss-600
-                  hover:bg-moss-600 transition-colors duration-150
+                  bg-terracotta text-parchment border border-terracotta/80
+                  hover:bg-[#d4694f] transition-colors duration-150
                 "
               >
                 Log in — it&rsquo;s free
@@ -134,7 +134,7 @@ export default function RoadmapPicker({ open, isPending, onClose, onSelect }: Pr
                   disabled={busy || !newTitle.trim()}
                   className="
                     font-body text-sm font-semibold px-4 py-2.5 rounded-xl flex-shrink-0
-                    bg-moss-500 text-parchment hover:bg-moss-600
+                    bg-terracotta text-parchment hover:bg-[#d4694f]
                     disabled:opacity-50 transition-colors duration-150
                   "
                 >

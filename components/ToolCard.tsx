@@ -10,7 +10,7 @@ export type ToolCardProps = {
   tagline: string;
   category: string;
   tags: string[];
-  emoji: string;
+  emoji?: string;
   url?: string | null;
   accentColor?: string;
 };
@@ -56,13 +56,18 @@ function getMicrolinkUrl(toolUrl: string): string {
   return `https://api.microlink.io/?url=${encodeURIComponent(toolUrl)}&screenshot=true&meta=false&embed=screenshot.url`;
 }
 
+function toolInitials(name: string): string {
+  const words = name.trim().split(/\s+/);
+  if (words.length >= 2) return (words[0][0] + words[1][0]).toUpperCase();
+  return name.slice(0, 2).toUpperCase();
+}
+
 export default function ToolCard({
   slug: _slug,
   name,
   tagline,
   category,
   tags,
-  emoji,
   url,
   accentColor = "moss",
 }: ToolCardProps) {
@@ -110,14 +115,11 @@ export default function ToolCard({
             />
           </>
         ) : (
-          <motion.span
-            className="text-5xl leading-none select-none"
-            animate={{ scale: [1, 1.06, 1] }}
-            transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
-            aria-label={emoji}
-          >
-            {emoji}
-          </motion.span>
+          <div className={`w-14 h-14 rounded-2xl ${accent.badge} flex items-center justify-center select-none`}>
+            <span className="font-display text-xl font-bold leading-none">
+              {toolInitials(name)}
+            </span>
+          </div>
         )}
       </div>
 
@@ -137,7 +139,7 @@ export default function ToolCard({
 
         <div className="flex flex-wrap gap-1.5 pt-1">
           {tags.map((tag) => (
-            <span key={tag} className={`text-2xs font-body px-2.5 py-1 rounded-full ${accent.tag}`}>
+            <span key={tag} className="text-2xs font-body px-2.5 py-1 rounded-full bg-sage/15 text-sage dark:bg-sage/10 dark:text-sage">
               #{tag}
             </span>
           ))}

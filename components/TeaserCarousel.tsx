@@ -87,7 +87,11 @@ export default function TeaserCarousel({ tools }: { tools: ToolCardProps[] }) {
               transition={{ type: "spring", stiffness: 260, damping: 22 }}
               onClick={(e) => e.stopPropagation()}
             >
-              <span className="text-4xl leading-none">{pendingTool.emoji}</span>
+              <div className="w-14 h-14 rounded-2xl bg-moss-100 dark:bg-moss-900/30 flex items-center justify-center mx-auto">
+                <span className="font-display text-xl font-bold text-moss-700 dark:text-moss-300">
+                  {pendingTool.name.slice(0, 2).toUpperCase()}
+                </span>
+              </div>
               <div className="space-y-2">
                 <h3 className="font-serif text-xl font-bold text-espresso">
                   Add {pendingTool.name} to your canvas
@@ -102,9 +106,9 @@ export default function TeaserCarousel({ tools }: { tools: ToolCardProps[] }) {
               <div className="flex flex-col gap-3 pt-1">
                 <Link
                   href="/login"
-                  className="inline-flex items-center justify-center gap-2 font-body font-semibold tracking-wide text-base px-7 py-3 rounded-2xl bg-moss-500 text-parchment border border-moss-600 hover:bg-moss-600 transition-colors duration-150"
+                  className="inline-flex items-center justify-center gap-2 font-body font-semibold tracking-wide text-base px-7 py-3 rounded-2xl bg-terracotta text-parchment border border-terracotta/80 hover:bg-[#d4694f] transition-colors duration-150"
                 >
-                  Log in — it&rsquo;s free ✦
+                  Log in — it&rsquo;s free
                 </Link>
                 <button
                   className="font-body text-sm text-forest/50 hover:text-forest/70 transition-colors duration-150"

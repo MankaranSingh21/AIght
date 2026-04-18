@@ -70,7 +70,7 @@ export default function LoginForm() {
         <motion.div variants={fadeUp} className="text-center mb-10">
           <span className="font-display text-4xl font-bold text-espresso">AIght</span>
           <p className="font-body text-2xs uppercase tracking-[0.2em] text-moss-500 mt-1">
-            ✦ your cozy corner for AI tools
+            your cozy corner for AI tools
           </p>
         </motion.div>
 

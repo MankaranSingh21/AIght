@@ -3,11 +3,11 @@
 import { motion } from "framer-motion";
 
 export const VIBES = [
-  { id: "all",      label: "all tools",         emoji: "✦" },
-  { id: "builders", label: "for builders",       emoji: "🔨" },
-  { id: "students", label: "for broke students", emoji: "📚" },
-  { id: "writers",  label: "for writers",        emoji: "✍️" },
-  { id: "curious",  label: "for the curious",    emoji: "🔭" },
+  { id: "all",      label: "All tools" },
+  { id: "builders", label: "Builders" },
+  { id: "students", label: "Students" },
+  { id: "writers",  label: "Writers" },
+  { id: "curious",  label: "Curious minds" },
 ];
 
 type Props = {
@@ -45,7 +45,6 @@ export default function VibePills({ active, onSelect }: Props) {
                 transition={{ type: "spring", stiffness: 320, damping: 30 }}
               />
             )}
-            <span className="relative z-10">{vibe.emoji}</span>
             <span className="relative z-10">{vibe.label}</span>
           </motion.button>
         );

@@ -37,7 +37,7 @@ async function GlimpseSection() {
       <div className="px-6 md:px-12 lg:px-20 mb-7 flex items-baseline justify-between">
         <div>
           <p className="font-body text-xs uppercase tracking-[0.2em] text-moss-500 mb-2">
-            glimpse the archive ✦
+            glimpse the archive
           </p>
           <h2 className="font-serif text-2xl md:text-3xl font-bold text-espresso dark:text-parchment">
             The signal in the noise
@@ -74,7 +74,7 @@ function FoundersNote() {
     <section className="px-6 md:px-12 lg:px-20 py-20 border-t border-moss-100 dark:border-charcoal-800">
       <div className="max-w-2xl mx-auto space-y-6">
         <p className="font-body text-xs uppercase tracking-[0.2em] text-amber-500">
-          why this exists ✦
+          why this exists
         </p>
         <blockquote className="font-serif text-2xl md:text-3xl font-bold text-espresso dark:text-parchment leading-snug text-balance">
           &ldquo;The internet is drowning in AI spam and affiliate links.&rdquo;
@@ -132,7 +132,7 @@ export default function Home() {
         <section id="about" className="px-6 md:px-12 lg:px-20 py-20 border-t border-moss-100 dark:border-charcoal-800">
           <div className="max-w-2xl mx-auto text-center space-y-5">
             <p className="font-body text-xs uppercase tracking-[0.2em] text-moss-500">
-              about this corner of the internet ✦
+              about this corner of the internet
             </p>
             <h2 className="font-serif text-3xl md:text-4xl font-bold text-espresso dark:text-parchment">
               What even is AIght?
@@ -143,7 +143,7 @@ export default function Home() {
               a roadmap builder so you can learn at your own pace — the internet as it should be.
             </p>
             <p className="font-body text-sm text-forest/50 dark:text-parchment/40 leading-relaxed">
-              Built slowly, on purpose. More features coming when they&rsquo;re ready. ✦
+              Built slowly, on purpose. More features coming when they&rsquo;re ready.
             </p>
           </div>
         </section>

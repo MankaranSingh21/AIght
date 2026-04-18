@@ -21,7 +21,7 @@ function NewsletterForm() {
       await new Promise((r) => setTimeout(r, 600));
       setDone(true);
       setEmail("");
-      toast.success("You're in the archive. ✦ We'll be in touch.");
+      toast.success("You're in the archive. We'll be in touch.");
     });
   }
 
@@ -32,7 +32,7 @@ function NewsletterForm() {
         animate={{ opacity: 1, y: 0 }}
         className="font-body text-sm text-moss-600 dark:text-moss-400 font-semibold"
       >
-        ✦ You&apos;re in. See you in the archive.
+        You&apos;re in. See you in the archive.
       </motion.p>
     );
   }
@@ -93,7 +93,7 @@ export default function Footer() {
 
           {/* Brand column */}
           <div className="space-y-3">
-            <p className="font-serif text-xl font-bold text-espresso dark:text-parchment">AIght ✦</p>
+            <p className="font-serif text-xl font-bold text-espresso dark:text-parchment">AIght</p>
             <p className="font-body text-sm text-forest/60 dark:text-parchment/50 leading-relaxed max-w-xs">
               The internet&apos;s cozy corner for AI tool discovery.
               Curated slowly, on purpose.
@@ -143,7 +143,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="mt-10 pt-6 border-t border-moss-100 dark:border-charcoal-800 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="font-body text-xs text-forest/40 dark:text-parchment/30">
-            © {new Date().getFullYear()} AIght. Built with 🌿 by{" "}
+            © {new Date().getFullYear()} AIght. Built by{" "}
             <a
               href="mailto:singhmankaran05@gmail.com"
               className="hover:text-forest dark:hover:text-parchment transition-colors duration-150"
@@ -152,7 +152,7 @@ export default function Footer() {
             </a>
           </p>
           <p className="font-body text-xs text-forest/30 dark:text-parchment/20 italic">
-            Built slowly, on purpose. ✦
+            Built slowly, on purpose.
           </p>
         </div>
       </div>
