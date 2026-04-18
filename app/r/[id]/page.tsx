@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const nodeCount = Array.isArray(data.nodes_json) ? data.nodes_json.length : 0;
   const title       = `${data.title} — shared on AIght`;
   const description = `Explore this curated AI tool pipeline on AIght. ${nodeCount} tool${nodeCount === 1 ? "" : "s"}, step by step. Clone it to your own account in one click.`;
-  const url         = `https://aight.app/r/${id}`;
+  const url         = `${process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.aightai.in"}/r/${id}`;
 
   return {
     title,

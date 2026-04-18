@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useState, useTransition } from "react";
+import Link from "next/link";
 import { toast } from "sonner";
 import { createClient } from "@/utils/supabase/client";
 import { createRoadmap } from "@/app/actions/roadmap";
 
 type Roadmap = { id: string; title: string };
+type AuthState = "loading" | "guest" | "authed";
 
 type Props = {
   open: boolean;
@@ -16,19 +18,18 @@ type Props = {
 
 export default function RoadmapPicker({ open, isPending, onClose, onSelect }: Props) {
   const [roadmaps, setRoadmaps]       = useState<Roadmap[]>([]);
-  const [loading, setLoading]         = useState(false);
+  const [authState, setAuthState]     = useState<AuthState>("loading");
   const [newTitle, setNewTitle]       = useState("");
   const [isCreating, startCreateTransition] = useTransition();
 
   useEffect(() => {
     if (!open) return;
-    setLoading(true);
+    setAuthState("loading");
     const supabase = createClient();
     (async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        setRoadmaps([]);
-        setLoading(false);
+        setAuthState("guest");
         return;
       }
       const { data } = await supabase
@@ -37,9 +38,11 @@ export default function RoadmapPicker({ open, isPending, onClose, onSelect }: Pr
         .eq("user_id", user.id)
         .order("created_at", { ascending: true });
       setRoadmaps(data ?? []);
-      setLoading(false);
+      setAuthState("authed");
     })();
   }, [open]);
+
+  const loading = authState === "loading";
 
   function handleCreateAndAdd(e: React.FormEvent) {
     e.preventDefault();
@@ -89,6 +92,24 @@ export default function RoadmapPicker({ open, isPending, onClose, onSelect }: Pr
         <div className="py-2 max-h-64 overflow-y-auto scrollbar-hide">
           {loading ? (
             <p className="px-6 py-4 font-body text-sm text-forest/50">Loading…</p>
+          ) : authState === "guest" ? (
+            <div className="px-6 py-6 space-y-4 text-center">
+              <p className="font-body text-sm text-forest/70 leading-relaxed">
+                Log in to build and save your roadmap canvas.
+                Your first canvas is completely free. ✦
+              </p>
+              <Link
+                href="/login"
+                className="
+                  inline-flex items-center justify-center w-full
+                  font-body font-semibold text-sm px-6 py-3 rounded-2xl
+                  bg-moss-500 text-parchment border border-moss-600
+                  hover:bg-moss-600 transition-colors duration-150
+                "
+              >
+                Log in — it&rsquo;s free
+              </Link>
+            </div>
           ) : roadmaps.length === 0 ? (
             /* ── Inline create flow ─────────────────────────── */
             <div className="px-6 py-5 space-y-4">
@@ -147,8 +168,8 @@ export default function RoadmapPicker({ open, isPending, onClose, onSelect }: Pr
           )}
         </div>
 
-        {/* Footer — only shown when the user already has canvases */}
-        {!loading && roadmaps.length > 0 && (
+        {/* Footer — only shown when the user is authed and has canvases */}
+        {authState === "authed" && roadmaps.length > 0 && (
           <div className="px-6 py-4 border-t border-moss-100">
             <form onSubmit={handleCreateAndAdd} className="flex gap-2">
               <input

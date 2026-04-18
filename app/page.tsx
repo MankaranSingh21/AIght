@@ -94,11 +94,32 @@ function FoundersNote() {
   );
 }
 
+function SocialProof() {
+  return (
+    <section className="px-6 md:px-12 lg:px-20 py-8 border-b border-moss-100">
+      <div className="max-w-4xl mx-auto flex flex-wrap items-center justify-center gap-8 md:gap-16">
+        {[
+          { stat: "52+",    label: "curated tools" },
+          { stat: "0",      label: "sponsored rankings" },
+          { stat: "∞",      label: "roadmaps — first is free" },
+          { stat: "100%",   label: "ad-free, always" },
+        ].map(({ stat, label }) => (
+          <div key={label} className="flex flex-col items-center gap-0.5">
+            <span className="font-serif text-3xl font-bold text-moss-600">{stat}</span>
+            <span className="font-body text-xs text-forest/50 uppercase tracking-widest">{label}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 export default function Home() {
   return (
     <>
       <main className="min-h-screen bg-parchment texture-grain">
         <Hero />
+        <SocialProof />
 
         <Suspense fallback={<ToolGridSkeleton />}>
           <GlimpseSection />

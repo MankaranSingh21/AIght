@@ -192,7 +192,7 @@ export default async function Image({
                 fontWeight: 600,
               }}
             >
-              aight.app
+              aightai.in
             </span>
           </div>
         </div>

@@ -41,7 +41,7 @@ export default function PrivacyPage() {
               and operated by Mankaran Singh. We take your privacy seriously. This
               Privacy Policy explains what information we collect, why we collect it,
               and how we protect it when you use{" "}
-              <span className="text-moss-600 font-medium">aight.app</span>.
+              <span className="text-moss-600 font-medium">aightai.in</span>.
             </p>
             <p className="text-base">
               By using AIght, you agree to the practices described in this policy. If
@@ -259,7 +259,7 @@ export default function PrivacyPage() {
             </p>
             <address className="not-italic rounded-2xl border border-moss-200 bg-moss-50/40 px-6 py-5 text-sm space-y-1">
               <p className="font-semibold text-espresso">Mankaran Singh</p>
-              <p>AIght — aight.app</p>
+              <p>AIght — aightai.in</p>
               <p>
                 <a
                   href="mailto:singhmankaran05@gmail.com"

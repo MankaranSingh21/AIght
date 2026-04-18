@@ -24,14 +24,53 @@ const fraunces = Fraunces({
   display: "swap",
 });
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.aightai.in";
+
 export const metadata: Metadata = {
-  // Required so Next.js can resolve relative OG image URLs to absolute ones.
-  // Falls back to the production domain when NEXT_PUBLIC_SITE_URL isn't set.
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://aight.app"
-  ),
-  title: "AIght — your cozy corner for AI tools",
-  description: "Discover, learn, and build with AI tools. Cozy not clinical.",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "AIght — your cozy corner for AI tools",
+    template: "%s — AIght",
+  },
+  description:
+    "Discover the best AI tools, then build a beautiful visual roadmap to actually use them. Ruthlessly curated. No hype, no sponsored rankings.",
+  keywords: ["AI tools", "AI directory", "roadmap builder", "AI learning", "curated AI"],
+  authors: [{ name: "Mankaran Singh" }],
+  creator: "Mankaran Singh",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: SITE_URL,
+    siteName: "AIght",
+    title: "AIght — your cozy corner for AI tools",
+    description:
+      "Discover the best AI tools, then build a beautiful visual roadmap to actually use them. No spam, no affiliate links.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "AIght — your cozy corner for AI tools",
+    description:
+      "Discover the best AI tools, then build a beautiful visual roadmap to actually use them.",
+    creator: "@aightai",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large" },
+  },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "AIght",
+  "url": SITE_URL,
+  "description": "Curated AI tool directory + visual roadmap builder. No spam, no affiliate links.",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": `${SITE_URL}/tools?q={search_term_string}`,
+    "query-input": "required name=search_term_string",
+  },
 };
 
 export default function RootLayout({
@@ -41,6 +80,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body
         className={`${playfair.variable} ${lora.variable} ${fraunces.variable} antialiased`}
       >

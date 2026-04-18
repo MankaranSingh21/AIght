@@ -41,7 +41,7 @@ export default function TermsPage() {
               AIght (&ldquo;the Service&rdquo;), operated by{" "}
               <strong className="text-espresso">Mankaran Singh</strong> (&ldquo;we&rdquo;,
               &ldquo;our&rdquo;, or &ldquo;us&rdquo;) at{" "}
-              <span className="text-moss-600 font-medium">aight.app</span>.
+              <span className="text-moss-600 font-medium">aightai.in</span>.
             </p>
             <p>
               Please read these Terms carefully before using the Service. By creating
@@ -257,7 +257,7 @@ export default function TermsPage() {
             </p>
             <address className="not-italic rounded-2xl border border-moss-200 bg-moss-50/40 px-6 py-5 text-sm space-y-1">
               <p className="font-semibold text-espresso">Mankaran Singh</p>
-              <p>AIght — aight.app</p>
+              <p>AIght — aightai.in</p>
               <p>
                 <a
                   href="mailto:singhmankaran05@gmail.com"

@@ -87,7 +87,7 @@ function CanvasMockup() {
         </div>
         <div className="flex-1 mx-3 bg-parchment rounded-full border border-moss-100 px-4 py-1">
           <span className="font-body text-xs text-forest/35 select-none">
-            aight.app/roadmaps/my-ai-stack
+            aightai.in/roadmaps/my-ai-stack
           </span>
         </div>
       </div>

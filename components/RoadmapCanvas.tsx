@@ -8,7 +8,7 @@ import { useState, useEffect, useCallback, useTransition } from "react";
 import NodeDrawer from "./NodeDrawer";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Sprout, Scissors } from "lucide-react";
+import { Sprout, Scissors, Download } from "lucide-react";
 import {
   ReactFlow,
   Background,
@@ -28,10 +28,30 @@ import { RoadmapIdContext, ReadOnlyContext } from "./RoadmapIdContext";
 import { updateRoadmapEdges, toggleRoadmapVisibility, cloneRoadmap, updateToolStatus, persistNodes } from "@/app/actions/roadmap";
 
 const nodeTypes = { toolNode: ToolNode };
-// Override the built-in "smoothstep" type so every persisted edge automatically
-// gets the delete button — no DB migration required.
 const edgeTypes = { smoothstep: CustomEdge };
 const NAVBAR_H = 56;
+
+async function exportCanvasPng(title: string) {
+  const { toPng } = await import("html-to-image");
+  const el = document.querySelector(".react-flow__viewport") as HTMLElement | null;
+  if (!el) {
+    toast.error("Canvas not ready — try again in a moment.");
+    return;
+  }
+  try {
+    const dataUrl = await toPng(el, {
+      backgroundColor: "#F5EFE0",
+      pixelRatio: 2,
+    });
+    const link = document.createElement("a");
+    link.download = `${title.replace(/\s+/g, "-").toLowerCase()}.png`;
+    link.href = dataUrl;
+    link.click();
+    toast.success("Canvas exported as PNG ✦");
+  } catch {
+    toast.error("Export failed — try again.");
+  }
+}
 
 // Sort surviving nodes left-to-right by x position and reassign stepNumber.
 function resequenceNodes(nodes: Node<ToolNodeData>[]): Node<ToolNodeData>[] {
@@ -320,10 +340,27 @@ export default function RoadmapCanvas({
               <CloneInHeader roadmapId={roadmapId} />
             ) : (
               <div className="flex items-center gap-3 flex-shrink-0">
+                {/* PNG export */}
+                <button
+                  onClick={() => exportCanvasPng(title)}
+                  title="Export as PNG"
+                  className="
+                    flex items-center gap-1.5
+                    font-body text-xs font-semibold
+                    px-3.5 py-1.5 rounded-xl
+                    border border-moss-200 text-forest/60
+                    hover:border-moss-400 hover:text-forest hover:bg-moss-50
+                    transition-colors duration-150 flex-shrink-0
+                  "
+                >
+                  <Download className="w-3.5 h-3.5 flex-shrink-0" />
+                  <span className="hidden sm:inline">Export PNG</span>
+                </button>
+
                 {/* Overgrowth trigger */}
                 <button
                   onClick={() => {
-                    setSelectedNodeId(null);   // close node drawer
+                    setSelectedNodeId(null);
                     setOvergrowthOpen(true);
                   }}
                   className="

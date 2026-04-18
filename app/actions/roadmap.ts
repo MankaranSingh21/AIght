@@ -263,6 +263,20 @@ export async function updateRoadmapEdges(edges: Edge[], roadmapId: string) {
     .eq("user_id", user.id);
 }
 
+// ── createRoadmapWithTool ──────────────────────────────────────────────────
+// Convenience: creates a new roadmap and immediately adds one tool.
+
+export async function createRoadmapWithTool(
+  title: string,
+  tool: AddToolInput
+): Promise<{ id?: string; error?: string }> {
+  const roadmap = await createRoadmap(title);
+  if (roadmap.error || !roadmap.id) return { error: roadmap.error ?? "Failed to create roadmap" };
+  const result = await addToolToRoadmap(tool, roadmap.id);
+  if (result?.error) return { error: result.error };
+  return { id: roadmap.id };
+}
+
 // ── Stack definitions ──────────────────────────────────────────────────────
 
 const STACKS: Record<"indie" | "research", string[]> = {

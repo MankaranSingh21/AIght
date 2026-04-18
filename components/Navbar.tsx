@@ -4,14 +4,13 @@ import NavAuthSection from "./NavAuthSection";
 import CommandMenuTrigger from "./CommandMenuTrigger";
 
 export default async function Navbar() {
-  // Gracefully degrade when Supabase env vars aren't set (e.g. during local build)
   let user = null;
   try {
     const supabase = await createClient();
     const { data } = await supabase.auth.getUser();
     user = data.user;
   } catch {
-    // Not configured yet — show unauthenticated nav
+    // Not configured — show unauthenticated nav
   }
 
   return (
@@ -28,11 +27,35 @@ export default async function Navbar() {
           </span>
         </Link>
 
-        {/* Search trigger */}
-        <CommandMenuTrigger />
+        {/* Center nav links */}
+        <div className="hidden md:flex items-center gap-1">
+          <Link
+            href="/tools"
+            className="font-body text-sm text-forest/70 hover:text-forest px-3 py-1.5 rounded-lg hover:bg-moss-50 transition-all duration-150"
+          >
+            Directory
+          </Link>
+          <Link
+            href="/pricing"
+            className="font-body text-sm text-forest/70 hover:text-forest px-3 py-1.5 rounded-lg hover:bg-moss-50 transition-all duration-150"
+          >
+            Pricing
+          </Link>
+          {user && (
+            <Link
+              href="/roadmaps"
+              className="font-body text-sm text-forest/70 hover:text-forest px-3 py-1.5 rounded-lg hover:bg-moss-50 transition-all duration-150"
+            >
+              My Canvases
+            </Link>
+          )}
+        </div>
 
         {/* Right side */}
-        <NavAuthSection user={user} />
+        <div className="flex items-center gap-3">
+          <CommandMenuTrigger />
+          <NavAuthSection user={user} />
+        </div>
       </div>
     </nav>
   );
