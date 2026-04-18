@@ -331,7 +331,7 @@ export default function Hero() {
           </motion.p>
 
           {/* Single CTA — updates after auth check without layout shift */}
-          <motion.div variants={item}>
+          <motion.div variants={item} className="flex flex-col items-center gap-3">
             <Link href={ctaHref}>
               <motion.span
                 className="
@@ -361,6 +361,17 @@ export default function Hero() {
                 )}
               </motion.span>
             </Link>
+            {isLoggedIn !== true && (
+              <motion.p
+                key="cta-subtext"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3, duration: 0.4 }}
+                className="font-body text-sm text-forest/50 leading-relaxed"
+              >
+                Your first canvas is completely free — no credit card, no catch. ✦
+              </motion.p>
+            )}
           </motion.div>
 
           <motion.div
