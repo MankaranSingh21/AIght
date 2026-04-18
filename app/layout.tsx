@@ -3,6 +3,7 @@ import { Playfair_Display, Lora, Fraunces } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import CommandMenu from "@/components/CommandMenu";
 import PostHogProvider from "./providers/PostHogProvider";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import { Toaster } from "sonner";
 import "./globals.css";
 
@@ -79,7 +80,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <script
           type="application/ld+json"
@@ -89,6 +90,7 @@ export default function RootLayout({
       <body
         className={`${playfair.variable} ${lora.variable} ${fraunces.variable} antialiased`}
       >
+        <ThemeProvider>
         <PostHogProvider>
           <Navbar />
           {children}
@@ -97,15 +99,16 @@ export default function RootLayout({
             position="bottom-right"
             toastOptions={{
               classNames: {
-                toast:       "!bg-parchment !border !border-moss-200 !shadow-card !rounded-2xl !font-body !text-espresso",
-                title:       "!font-body !font-semibold !text-espresso !text-sm",
-                description: "!font-body !text-forest/70 !text-xs",
-                success:     "!border-moss-300",
-                error:       "!border-red-200",
+                toast:       "!bg-parchment dark:!bg-charcoal-800 !border !border-moss-200 dark:!border-charcoal-700 !shadow-card !rounded-2xl !font-body !text-espresso dark:!text-parchment",
+                title:       "!font-body !font-semibold !text-espresso dark:!text-parchment !text-sm",
+                description: "!font-body !text-forest/70 dark:!text-parchment/60 !text-xs",
+                success:     "!border-moss-300 dark:!border-moss-700",
+                error:       "!border-red-200 dark:!border-red-900",
               },
             }}
           />
         </PostHogProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

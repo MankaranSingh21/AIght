@@ -6,13 +6,30 @@ const config: Config = {
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  darkMode: "class",
   theme: {
     extend: {
       colors: {
         // Base — earthy, never stark
-        parchment: "#F5EFE0",     // off-white base
-        espresso: "#2C1A0E",      // deep dark (replaces #000)
-        forest: "#1C3A2E",        // deep forest green
+        parchment: "#F5EFE0",
+        espresso: "#2C1A0E",
+        forest: "#1C3A2E",
+
+        // Dark mode base palette
+        charcoal: {
+          50:  "#f9f7f4",
+          100: "#f0ede8",
+          200: "#d9d4cb",
+          300: "#b8b0a4",
+          400: "#8f8578",
+          500: "#6b6055",
+          600: "#524840",
+          700: "#3d342d",
+          800: "#231f1b",
+          850: "#1e1a16",
+          900: "#1a1814",
+          950: "#0f0d0b",
+        },
 
         // Primary palette
         moss: {
@@ -21,7 +38,7 @@ const config: Config = {
           200: "#B4D4A3",
           300: "#8ABF76",
           400: "#61A649",
-          500: "#3D8A2B",   // main moss green
+          500: "#3D8A2B",
           600: "#2D6B1F",
           700: "#1F4F15",
           800: "#12340C",
@@ -32,7 +49,7 @@ const config: Config = {
           100: "#FDECC8",
           200: "#FAD88F",
           300: "#F7C255",
-          400: "#F4AB1F",   // warm amber accent
+          400: "#F4AB1F",
           500: "#D98D08",
           600: "#A96B04",
           700: "#7A4D02",
@@ -44,7 +61,7 @@ const config: Config = {
           100: "#E8DCF5",
           200: "#D1B9EB",
           300: "#BA96E1",
-          400: "#A373D7",   // soft lavender
+          400: "#A373D7",
           500: "#8B50CD",
           600: "#6B38A3",
           700: "#4D2578",
@@ -52,19 +69,16 @@ const config: Config = {
           900: "#150822",
         },
 
-        // Neon accents — used sparingly for key interactions
+        // Neon accents — sparingly
         neon: {
-          lime:   "#AAFF4D",
-          teal:   "#00FFD1",
-          amber:  "#FFB300",
+          lime:  "#AAFF4D",
+          teal:  "#00FFD1",
+          amber: "#FFB300",
         },
       },
       fontFamily: {
-        // Elegant serif for headers
-        serif:  ["var(--font-playfair)", "Georgia", "serif"],
-        // Warm readable body
-        body:   ["var(--font-lora)", "Palatino", "serif"],
-        // Playful display / accents
+        serif:   ["var(--font-playfair)", "Georgia", "serif"],
+        body:    ["var(--font-lora)", "Palatino", "serif"],
         display: ["var(--font-fraunces)", "Georgia", "serif"],
       },
       fontSize: {
@@ -86,11 +100,13 @@ const config: Config = {
         "5xl": "2.5rem",
       },
       boxShadow: {
-        "moss":    "0 4px 24px 0 rgba(61, 138, 43, 0.18)",
-        "amber":   "0 4px 24px 0 rgba(244, 171, 31, 0.22)",
-        "glow-neon": "0 0 20px 2px rgba(170, 255, 77, 0.35)",
-        "card":    "0 2px 16px 0 rgba(44, 26, 14, 0.10)",
-        "card-hover": "0 8px 32px 0 rgba(44, 26, 14, 0.18)",
+        "moss":        "0 4px 24px 0 rgba(61, 138, 43, 0.18)",
+        "amber":       "0 4px 24px 0 rgba(244, 171, 31, 0.22)",
+        "glow-neon":   "0 0 20px 2px rgba(170, 255, 77, 0.35)",
+        "card":        "0 2px 16px 0 rgba(44, 26, 14, 0.10)",
+        "card-hover":  "0 8px 32px 0 rgba(44, 26, 14, 0.18)",
+        "card-dark":   "0 2px 16px 0 rgba(0, 0, 0, 0.35)",
+        "card-dark-hover": "0 8px 32px 0 rgba(0, 0, 0, 0.5)",
       },
       backgroundImage: {
         "grain": "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E\")",
@@ -106,7 +122,7 @@ const config: Config = {
         },
       },
       animation: {
-        breathe:   "breathe 4s ease-in-out infinite",
+        breathe:    "breathe 4s ease-in-out infinite",
         "float-up": "float-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards",
       },
     },

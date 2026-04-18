@@ -70,21 +70,23 @@ function ToolCardWithAction({ tool }: { tool: ToolCardProps }) {
   }
 
   return (
-    <div className="relative group/card">
-      <Link href={`/tool/${tool.slug}`} className="block">
+    <div className="relative group/card flex flex-col">
+      <Link href={`/tool/${tool.slug}`} className="block flex-1">
         <ToolCard {...tool} />
       </Link>
 
-      {/* Build Roadmap quick-action */}
-      <div className="absolute bottom-[4.5rem] right-3 opacity-0 group-hover/card:opacity-100 transition-all duration-200 translate-y-1 group-hover/card:translate-y-0">
+      {/* Build Roadmap — visible on mobile, lifts on hover on desktop */}
+      <div className="mt-2 sm:absolute sm:bottom-[4.5rem] sm:right-3 sm:mt-0 sm:opacity-0 sm:group-hover/card:opacity-100 sm:transition-all sm:duration-200 sm:translate-y-1 sm:group-hover/card:translate-y-0">
         <button
           onClick={handleBuildRoadmap}
           disabled={isPending}
           className="
-            flex items-center gap-1.5 font-body text-xs font-semibold
-            px-3 py-1.5 rounded-xl shadow-card-hover
-            bg-espresso text-parchment
+            w-full sm:w-auto flex items-center justify-center gap-1.5
+            font-body text-xs font-semibold
+            px-3 py-2 sm:py-1.5 rounded-xl
+            bg-espresso dark:bg-charcoal-950 text-parchment
             hover:bg-moss-600 disabled:opacity-50
+            shadow-card dark:shadow-card-dark
             transition-colors duration-150 whitespace-nowrap
           "
         >
@@ -154,7 +156,7 @@ export default function ToolsClient({ tools, initialCategory = "all" }: Props) {
     <div>
       {/* ── Search bar ── */}
       <div className="relative mb-6">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-forest/40 pointer-events-none" />
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-forest/40 dark:text-parchment/30 pointer-events-none" />
         <input
           type="search"
           placeholder="Search tools, tags, or categories…"
@@ -162,16 +164,16 @@ export default function ToolsClient({ tools, initialCategory = "all" }: Props) {
           onChange={(e) => setQuery(e.target.value)}
           className="
             w-full pl-11 pr-4 py-3.5 rounded-2xl
-            font-body text-base text-espresso placeholder:text-forest/35
-            bg-parchment border border-moss-200
-            focus:outline-none focus:border-moss-400 focus:ring-2 focus:ring-moss-200/50
+            font-body text-base text-espresso dark:text-parchment placeholder:text-forest/35 dark:placeholder:text-parchment/30
+            bg-parchment dark:bg-charcoal-800 border border-moss-200 dark:border-charcoal-700
+            focus:outline-none focus:border-moss-400 dark:focus:border-moss-600 focus:ring-2 focus:ring-moss-200/50 dark:focus:ring-moss-800/50
             transition-all duration-150
           "
         />
         {query && (
           <button
             onClick={() => setQuery("")}
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-forest/40 hover:text-forest transition-colors"
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-forest/40 dark:text-parchment/30 hover:text-forest dark:hover:text-parchment transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
@@ -189,7 +191,7 @@ export default function ToolsClient({ tools, initialCategory = "all" }: Props) {
               px-4 py-2 rounded-full border transition-all duration-150
               ${activeCategory === cat.id
                 ? "bg-moss-500 text-parchment border-moss-600 shadow-moss"
-                : "bg-parchment text-forest/70 border-moss-200 hover:border-moss-400 hover:text-forest"
+                : "bg-parchment dark:bg-charcoal-800 text-forest/70 dark:text-parchment/60 border-moss-200 dark:border-charcoal-700 hover:border-moss-400 dark:hover:border-moss-700 hover:text-forest dark:hover:text-parchment"
               }
             `}
           >
@@ -210,7 +212,7 @@ export default function ToolsClient({ tools, initialCategory = "all" }: Props) {
                 font-body text-2xs px-3 py-1.5 rounded-full border transition-all duration-150
                 ${active
                   ? "bg-amber-400 text-espresso border-amber-500"
-                  : "bg-parchment text-forest/60 border-moss-100 hover:border-moss-300 hover:text-forest"
+                  : "bg-parchment dark:bg-charcoal-800 text-forest/60 dark:text-parchment/50 border-moss-100 dark:border-charcoal-700 hover:border-moss-300 dark:hover:border-charcoal-600 hover:text-forest dark:hover:text-parchment"
                 }
               `}
             >
@@ -222,14 +224,14 @@ export default function ToolsClient({ tools, initialCategory = "all" }: Props) {
 
       {/* ── Results count + clear ── */}
       <div className="flex items-center justify-between mb-6">
-        <p className="font-body text-sm text-forest/50">
-          <span className="text-espresso font-semibold">{filtered.length}</span>
+        <p className="font-body text-sm text-forest/50 dark:text-parchment/40">
+          <span className="text-espresso dark:text-parchment font-semibold">{filtered.length}</span>
           {" "}of {tools.length} tools
         </p>
         {hasFilters && (
           <button
             onClick={clearAll}
-            className="flex items-center gap-1.5 font-body text-xs text-forest/50 hover:text-forest transition-colors duration-150"
+            className="flex items-center gap-1.5 font-body text-xs text-forest/50 dark:text-parchment/40 hover:text-forest dark:hover:text-parchment transition-colors duration-150"
           >
             <X className="w-3.5 h-3.5" /> Clear all filters
           </button>
@@ -239,10 +241,10 @@ export default function ToolsClient({ tools, initialCategory = "all" }: Props) {
       {/* ── Grid ── */}
       {filtered.length === 0 ? (
         <div className="text-center py-24 space-y-3">
-          <p className="font-serif text-2xl font-semibold text-espresso/40">
+          <p className="font-serif text-2xl font-semibold text-espresso/40 dark:text-parchment/30">
             Nothing here yet.
           </p>
-          <p className="font-body text-sm text-forest/40">
+          <p className="font-body text-sm text-forest/40 dark:text-parchment/30">
             Try a different search or filter. ✦
           </p>
           <button

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Check } from "lucide-react";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "Pricing",
@@ -115,77 +116,80 @@ function PlanCard({
 
 export default function PricingPage() {
   return (
-    <main className="min-h-screen bg-parchment texture-grain">
-      {/* Header */}
-      <section className="px-6 md:px-12 lg:px-20 pt-20 pb-16 text-center max-w-3xl mx-auto">
-        <p className="font-body text-xs uppercase tracking-[0.2em] text-moss-500 mb-5">
-          simple, honest pricing ✦
-        </p>
-        <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-espresso leading-tight mb-6 text-balance">
-          Start for free.{" "}
-          <span className="italic text-moss-600">Go deeper</span> when you&apos;re ready.
-        </h1>
-        <p className="font-body text-lg text-forest/70 leading-relaxed text-balance">
-          AIght will always have a generous free tier. We&apos;re not a VC-backed growth machine — we&apos;re a slowly built archive that respects your time and attention.
-        </p>
-      </section>
+    <>
+      <main className="min-h-screen bg-parchment dark:bg-charcoal-900 texture-grain transition-colors duration-200">
+        {/* Header */}
+        <section className="px-6 md:px-12 lg:px-20 pt-20 pb-16 text-center max-w-3xl mx-auto">
+          <p className="font-body text-xs uppercase tracking-[0.2em] text-moss-500 mb-5">
+            simple, honest pricing ✦
+          </p>
+          <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-espresso dark:text-parchment leading-tight mb-6 text-balance">
+            Start for free.{" "}
+            <span className="italic text-moss-600 dark:text-moss-400">Go deeper</span> when you&apos;re ready.
+          </h1>
+          <p className="font-body text-lg text-forest/70 dark:text-parchment/60 leading-relaxed text-balance">
+            AIght will always have a generous free tier. We&apos;re not a VC-backed growth machine — we&apos;re a slowly built archive that respects your time and attention.
+          </p>
+        </section>
 
-      {/* Plans */}
-      <section className="px-6 md:px-12 lg:px-20 pb-20 max-w-4xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-          <PlanCard
-            name="Free — forever"
-            price="$0"
-            period="/ month"
-            tagline="One canvas is enough to discover whether visual roadmaps click for you."
-            features={FREE_FEATURES}
-            cta="Start building — it's free"
-            ctaHref="/login"
-            highlight={false}
-          />
-          <PlanCard
-            name="Pro"
-            price="$9"
-            period="/ month"
-            tagline="For people who are serious about building with AI and want to keep the archive alive."
-            features={PRO_FEATURES}
-            cta="Upgrade to Pro"
-            ctaHref="/login"
-            highlight={true}
-            badge="Most popular"
-          />
-        </div>
+        {/* Plans */}
+        <section className="px-6 md:px-12 lg:px-20 pb-20 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+            <PlanCard
+              name="Free — forever"
+              price="$0"
+              period="/ month"
+              tagline="One canvas is enough to discover whether visual roadmaps click for you."
+              features={FREE_FEATURES}
+              cta="Start building — it's free"
+              ctaHref="/login"
+              highlight={false}
+            />
+            <PlanCard
+              name="Pro"
+              price="$9"
+              period="/ month"
+              tagline="For people who are serious about building with AI and want to keep the archive alive."
+              features={PRO_FEATURES}
+              cta="Upgrade to Pro"
+              ctaHref="/login"
+              highlight={true}
+              badge="Most popular"
+            />
+          </div>
 
-        {/* FAQ-style notes */}
-        <div className="mt-16 space-y-6 max-w-2xl mx-auto">
-          <h2 className="font-serif text-2xl font-bold text-espresso text-center mb-8">
-            Honest answers
-          </h2>
-          {[
-            {
-              q: "Is the free plan really free?",
-              a: "Yes. No credit card, no trial period. One canvas, full feature set, forever. We'd rather you use it and love it than pay for something you're unsure about.",
-            },
-            {
-              q: "Why $9/month?",
-              a: "It covers server costs, curation time, and keeps the site ad-free. We're not building a unicorn — just a tool that doesn't suck.",
-            },
-            {
-              q: "Can I cancel anytime?",
-              a: "Of course. No dark patterns, no cancellation friction. You cancel, you go back to the free tier. Simple.",
-            },
-            {
-              q: "What's the AI roadmap generation?",
-              a: "We're building a feature that reads your goal ('I want to build a SaaS in 30 days') and generates a pre-wired canvas. It's in early access for Pro users first.",
-            },
-          ].map(({ q, a }) => (
-            <div key={q} className="rounded-3xl border border-moss-100 bg-parchment p-7 space-y-2">
-              <p className="font-serif text-base font-bold text-espresso">{q}</p>
-              <p className="font-body text-sm text-forest/70 leading-relaxed">{a}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-    </main>
+          {/* FAQ-style notes */}
+          <div className="mt-16 space-y-6 max-w-2xl mx-auto">
+            <h2 className="font-serif text-2xl font-bold text-espresso dark:text-parchment text-center mb-8">
+              Honest answers
+            </h2>
+            {[
+              {
+                q: "Is the free plan really free?",
+                a: "Yes. No credit card, no trial period. One canvas, full feature set, forever. We'd rather you use it and love it than pay for something you're unsure about.",
+              },
+              {
+                q: "Why $9/month?",
+                a: "It covers server costs, curation time, and keeps the site ad-free. We're not building a unicorn — just a tool that doesn't suck.",
+              },
+              {
+                q: "Can I cancel anytime?",
+                a: "Of course. No dark patterns, no cancellation friction. You cancel, you go back to the free tier. Simple.",
+              },
+              {
+                q: "What's the AI roadmap generation?",
+                a: "We're building a feature that reads your goal ('I want to build a SaaS in 30 days') and generates a pre-wired canvas. It's in early access for Pro users first.",
+              },
+            ].map(({ q, a }) => (
+              <div key={q} className="rounded-3xl border border-moss-100 dark:border-charcoal-800 bg-parchment dark:bg-charcoal-800 p-7 space-y-2">
+                <p className="font-serif text-base font-bold text-espresso dark:text-parchment">{q}</p>
+                <p className="font-body text-sm text-forest/70 dark:text-parchment/60 leading-relaxed">{a}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      </main>
+      <Footer />
+    </>
   );
 }

@@ -23,36 +23,35 @@ const accentMap: Record<string, {
   dot: string;
 }> = {
   moss: {
-    bg: "bg-moss-100",
+    bg: "bg-moss-100 dark:bg-moss-900/30",
     badge: "bg-moss-500 text-parchment",
-    tag: "bg-moss-200 text-moss-800",
+    tag: "bg-moss-200 dark:bg-moss-900/50 text-moss-800 dark:text-moss-300",
     glow: "hover:shadow-moss",
     dot: "bg-moss-400",
   },
   amber: {
-    bg: "bg-amber-100",
+    bg: "bg-amber-100 dark:bg-amber-900/30",
     badge: "bg-amber-400 text-espresso",
-    tag: "bg-amber-200 text-amber-800",
+    tag: "bg-amber-200 dark:bg-amber-900/50 text-amber-800 dark:text-amber-300",
     glow: "hover:shadow-amber",
     dot: "bg-amber-400",
   },
   lavender: {
-    bg: "bg-lavender-100",
+    bg: "bg-lavender-100 dark:bg-lavender-900/30",
     badge: "bg-lavender-400 text-parchment",
-    tag: "bg-lavender-200 text-lavender-800",
-    glow: "hover:shadow-card-hover",
+    tag: "bg-lavender-200 dark:bg-lavender-900/50 text-lavender-800 dark:text-lavender-300",
+    glow: "hover:shadow-card-hover dark:hover:shadow-card-dark-hover",
     dot: "bg-lavender-400",
   },
   sand: {
-    bg: "bg-amber-50",
+    bg: "bg-amber-50 dark:bg-amber-900/20",
     badge: "bg-amber-200 text-espresso",
-    tag: "bg-amber-100 text-amber-800",
+    tag: "bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300",
     glow: "hover:shadow-amber",
     dot: "bg-amber-300",
   },
 };
 
-/** Returns the Microlink API URL that embeds a live screenshot directly. */
 function getMicrolinkUrl(toolUrl: string): string {
   return `https://api.microlink.io/?url=${encodeURIComponent(toolUrl)}&screenshot=true&meta=false&embed=screenshot.url`;
 }
@@ -67,18 +66,17 @@ export default function ToolCard({
   url,
   accentColor = "moss",
 }: ToolCardProps) {
-  const [imgError,  setImgError]  = useState(false);
+  const [imgError, setImgError]   = useState(false);
   const [imgLoaded, setImgLoaded] = useState(false);
   const accent = accentMap[accentColor ?? "moss"] ?? accentMap["moss"];
 
-  // Show the screenshot only when we have a URL and it hasn't errored out.
   const showScreenshot = !!url && !imgError;
 
   return (
     <motion.div
       className={`
-        relative flex flex-col overflow-hidden rounded-3xl border border-moss-200/60
-        bg-parchment shadow-card cursor-pointer
+        relative flex flex-col overflow-hidden rounded-3xl border border-moss-200/60 dark:border-charcoal-700
+        bg-parchment dark:bg-charcoal-800 shadow-card dark:shadow-card-dark cursor-pointer
         transition-shadow duration-300 ${accent.glow}
       `}
       whileHover={{
@@ -92,19 +90,13 @@ export default function ToolCard({
       transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
     >
       {/* Screenshot / emoji hero */}
-      <div
-        className={`
-          relative overflow-hidden h-36
-          ${accent.bg} flex items-center justify-center
-        `}
-      >
+      <div className={`relative overflow-hidden h-36 ${accent.bg} flex items-center justify-center`}>
         {showScreenshot ? (
           <>
-            {/* Shimmer skeleton while image loads */}
             {!imgLoaded && (
               <div className="absolute inset-0 animate-pulse">
                 <div className={`w-full h-full ${accent.bg}`} />
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-parchment/30 to-transparent animate-[shimmer_1.5s_infinite]" />
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-parchment/30 dark:via-charcoal-700/30 to-transparent animate-[shimmer_1.5s_infinite]" />
               </div>
             )}
             <Image
@@ -112,11 +104,7 @@ export default function ToolCard({
               alt={`${name} website screenshot`}
               fill
               unoptimized
-              className={`
-                object-cover object-top
-                transition-opacity duration-500
-                ${imgLoaded ? "opacity-90" : "opacity-0"}
-              `}
+              className={`object-cover object-top transition-opacity duration-500 ${imgLoaded ? "opacity-90" : "opacity-0"}`}
               onLoad={() => setImgLoaded(true)}
               onError={() => setImgError(true)}
             />
@@ -134,43 +122,36 @@ export default function ToolCard({
       </div>
 
       {/* Body */}
-      <div className="p-5 space-y-3">
-        {/* Category badge */}
+      <div className="p-5 space-y-3 flex-1">
         <span className={`inline-block text-2xs font-body font-semibold uppercase tracking-widest px-2.5 py-1 rounded-full ${accent.badge}`}>
           {category}
         </span>
 
-        {/* Name */}
-        <h3 className="font-serif text-xl font-bold text-espresso leading-snug line-clamp-2">
+        <h3 className="font-serif text-xl font-bold text-espresso dark:text-parchment leading-snug line-clamp-2">
           {name}
         </h3>
 
-        {/* Tagline */}
-        <p className="font-body text-sm text-forest/80 leading-relaxed line-clamp-2">
+        <p className="font-body text-sm text-forest/80 dark:text-parchment/60 leading-relaxed line-clamp-2">
           {tagline}
         </p>
 
-        {/* Tags */}
         <div className="flex flex-wrap gap-1.5 pt-1">
           {tags.map((tag) => (
-            <span
-              key={tag}
-              className={`text-2xs font-body px-2.5 py-1 rounded-full ${accent.tag}`}
-            >
+            <span key={tag} className={`text-2xs font-body px-2.5 py-1 rounded-full ${accent.tag}`}>
               #{tag}
             </span>
           ))}
         </div>
       </div>
 
-      {/* Bottom bar — breathing dot */}
+      {/* Bottom bar */}
       <div className="px-5 pb-4 flex items-center gap-2">
         <motion.span
           className={`inline-block w-2 h-2 rounded-full ${accent.dot}`}
           animate={{ opacity: [0.5, 1, 0.5] }}
           transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
         />
-        <span className="font-body text-2xs text-forest/60 uppercase tracking-widest">
+        <span className="font-body text-2xs text-forest/60 dark:text-parchment/40 uppercase tracking-widest">
           Live
         </span>
       </div>

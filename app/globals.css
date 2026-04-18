@@ -6,11 +6,22 @@
   :root {
     --background: #F5EFE0;
     --foreground: #2C1A0E;
+    --card:       #F5EFE0;
+    --border:     #B4D4A3;
+    --muted:      #1C3A2E;
+  }
+
+  .dark {
+    --background: #1a1814;
+    --foreground: #F5EFE0;
+    --card:       #231f1b;
+    --border:     #3d342d;
+    --muted:      #F5EFE0;
   }
 
   html {
-    background-color: #F5EFE0;
-    color: #2C1A0E;
+    background-color: var(--background);
+    color: var(--foreground);
     scroll-behavior: smooth;
   }
 
@@ -19,21 +30,25 @@
     background-color: var(--background);
     color: var(--foreground);
     min-height: 100vh;
+    transition: background-color 0.25s ease, color 0.25s ease;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-playfair), Georgia, serif;
   }
 
-  /* Nice smooth scrolling */
   * {
     scroll-behavior: smooth;
   }
 
-  /* Custom selection color */
   ::selection {
     background-color: #B4D4A3;
     color: #1C3A2E;
+  }
+
+  .dark ::selection {
+    background-color: #3D8A2B;
+    color: #F5EFE0;
   }
 }
 
@@ -47,7 +62,6 @@
     text-wrap: balance;
   }
 
-  /* Scrollbars: gone, but not forgotten */
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -56,19 +70,18 @@
     display: none;
   }
 
-  /* ── React Flow overrides ── */
-  /* Controls panel */
+  /* ── React Flow overrides (light) ── */
   .react-flow__controls {
     box-shadow: 0 2px 16px 0 rgba(44, 26, 14, 0.10);
     border-radius: 0.875rem;
-    border: 1px solid #D9EAD0; /* moss-200 */
+    border: 1px solid #D9EAD0;
     overflow: hidden;
   }
   .react-flow__controls-button {
-    background: #F5EFE0; /* parchment */
+    background: #F5EFE0;
     border: none;
     border-bottom: 1px solid #D9EAD0;
-    color: #1C3A2E; /* forest */
+    color: #1C3A2E;
     width: 28px;
     height: 28px;
     transition: background 0.15s;
@@ -77,28 +90,54 @@
     border-bottom: none;
   }
   .react-flow__controls-button:hover {
-    background: #D9EAD0; /* moss-100 */
+    background: #D9EAD0;
   }
   .react-flow__controls-button svg {
     fill: #1C3A2E;
   }
-  /* Selection box */
   .react-flow__selection {
     background: rgba(61, 138, 43, 0.06);
     border: 1.5px solid #3D8A2B;
   }
-  /* Animated edge dashes */
   .react-flow__edge-path {
     stroke-linecap: round;
   }
 
+  /* ── React Flow overrides (dark) ── */
+  .dark .react-flow__controls {
+    box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.35);
+    border-color: #3d342d;
+  }
+  .dark .react-flow__controls-button {
+    background: #231f1b;
+    border-bottom-color: #3d342d;
+    color: #F5EFE0;
+  }
+  .dark .react-flow__controls-button:hover {
+    background: #3d342d;
+  }
+  .dark .react-flow__controls-button svg {
+    fill: #F5EFE0;
+  }
+  .dark .react-flow__background {
+    background-color: #1a1814;
+  }
+  .dark .react-flow__background pattern circle,
+  .dark .react-flow__background pattern rect {
+    fill: #3D8A2B;
+    opacity: 0.3;
+  }
+
   /* Paper texture overlay */
+  .texture-grain {
+    position: relative;
+  }
   .texture-grain::after {
     content: "";
-    position: absolute;
+    position: fixed;
     inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
     pointer-events: none;
-    border-radius: inherit;
+    z-index: 9999;
   }
 }

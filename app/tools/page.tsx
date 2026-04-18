@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { createClient } from "@/utils/supabase/server";
 import ToolsClient from "@/components/ToolsClient";
+import Footer from "@/components/Footer";
 import type { ToolCardProps } from "@/components/ToolCard";
 import type { Tool } from "@/utils/supabase/types";
 
@@ -31,30 +32,33 @@ export default async function ToolsArchivePage() {
   }));
 
   return (
-    <main className="min-h-screen bg-parchment texture-grain">
-      {/* Header */}
-      <section className="px-6 md:px-12 lg:px-20 pt-16 pb-12">
-        <p className="font-body text-xs uppercase tracking-[0.2em] text-moss-500 mb-4">
-          every tool we&apos;ve found worth your time ✦
-        </p>
-        <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-espresso leading-tight mb-4">
-          The Full Archive
-        </h1>
-        <p className="font-body text-lg text-forest/70 max-w-xl leading-relaxed">
-          {tools.length} tools and counting. No sponsored rankings. No hustle energy.
-          Hover any card to build a roadmap with it in one click.
-        </p>
-      </section>
+    <>
+      <main className="min-h-screen bg-parchment dark:bg-charcoal-900 texture-grain transition-colors duration-200">
+        {/* Header */}
+        <section className="px-6 md:px-12 lg:px-20 pt-16 pb-12">
+          <p className="font-body text-xs uppercase tracking-[0.2em] text-moss-500 mb-4">
+            every tool we&apos;ve found worth your time ✦
+          </p>
+          <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-espresso dark:text-parchment leading-tight mb-4">
+            The Full Archive
+          </h1>
+          <p className="font-body text-lg text-forest/70 dark:text-parchment/60 max-w-xl leading-relaxed">
+            {tools.length} tools and counting. No sponsored rankings. No hustle energy.
+            Tap any card to explore, or hit &ldquo;Build Roadmap&rdquo; to start a canvas.
+          </p>
+        </section>
 
-      {/* Divider */}
-      <div className="px-6 md:px-12 lg:px-20">
-        <div className="h-px w-full bg-moss-200" />
-      </div>
+        {/* Divider */}
+        <div className="px-6 md:px-12 lg:px-20">
+          <div className="h-px w-full bg-moss-200 dark:bg-charcoal-700" />
+        </div>
 
-      {/* Search + grid */}
-      <section className="px-6 md:px-12 lg:px-20 py-10">
-        <ToolsClient tools={tools} />
-      </section>
-    </main>
+        {/* Search + grid */}
+        <section className="px-6 md:px-12 lg:px-20 py-10">
+          <ToolsClient tools={tools} />
+        </section>
+      </main>
+      <Footer />
+    </>
   );
 }
