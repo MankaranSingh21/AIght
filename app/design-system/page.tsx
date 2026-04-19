@@ -97,8 +97,8 @@ export default function DesignSystemPage() {
         <section>
           <SectionLabel>04 — Tool Card</SectionLabel>
           <p className="font-body text-sm text-forest/60 mb-8">
-            Hover each card — they breathe. The emoji pulses at rest. The whole
-            thing springs on interaction.
+            Hover each card — they breathe. The category watermark shifts at rest.
+            The whole thing springs on interaction.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <ToolCard
@@ -107,8 +107,6 @@ export default function DesignSystemPage() {
               tagline="Your second brain, now with a brain of its own. Yeah, it writes pretty well."
               category="Productivity"
               tags={["writing", "PKM", "notes"]}
-              emoji="🧠"
-              accentColor="moss"
             />
             <ToolCard
               slug="midjourney"
@@ -116,8 +114,6 @@ export default function DesignSystemPage() {
               tagline="Prompts into paintings. Every iteration is a little act of magic."
               category="Image Gen"
               tags={["art", "design", "creative"]}
-              emoji="🎨"
-              accentColor="amber"
             />
             <ToolCard
               slug="elevenlabs"
@@ -125,8 +121,6 @@ export default function DesignSystemPage() {
               tagline="Clone a voice, narrate a world. Audio that feels disturbingly human."
               category="Audio AI"
               tags={["voice", "audio", "TTS"]}
-              emoji="🎙️"
-              accentColor="lavender"
             />
           </div>
         </section>

@@ -2,26 +2,21 @@
 
 import Link from "next/link";
 import { motion, type Variants } from "framer-motion";
-import ToolLogo from "./ToolLogo";
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
 export type UseCase = {
   audience: string;
-  emoji: string;
   headline: string;
   description: string;
-  accent: "moss" | "amber" | "lavender";
 };
 
 export type ToolDetailData = {
   name: string;
   slug: string;
-  emoji: string;
   tagline: string;
   category: string;
   pricing: "Free" | "Open Source" | "Paid" | "Freemium";
-  accent: "moss" | "amber" | "lavender";
   url?: string | null;
   tags: string[];
   useCases: [UseCase, UseCase];
@@ -71,25 +66,7 @@ function getYouTubeEmbedUrl(url: string): string {
   return url;
 }
 
-// ── Accent Maps ────────────────────────────────────────────────────────────
-
-const useCaseAccent = {
-  moss: {
-    header: "bg-raised",
-    border: "border-subtle",
-    label: "bg-accent text-inverse",
-  },
-  amber: {
-    header: "bg-raised",
-    border: "border-subtle",
-    label: "bg-warm text-inverse",
-  },
-  lavender: {
-    header: "bg-raised",
-    border: "border-subtle",
-    label: "bg-accent text-inverse",
-  },
-};
+// ── Pricing Styles ─────────────────────────────────────────────────────────
 
 const pricingStyle: Record<ToolDetailData["pricing"], string> = {
   Free:          "bg-[var(--accent-primary-glow)] text-accent border border-emphasis",
@@ -101,19 +78,17 @@ const pricingStyle: Record<ToolDetailData["pricing"], string> = {
 // ── Internal sub-component ─────────────────────────────────────────────────
 
 function UseCaseCard({ useCase }: { useCase: UseCase }) {
-  const a = useCaseAccent[useCase.accent];
   return (
     <motion.div
-      className={`rounded-xl border ${a.border} bg-panel overflow-hidden cursor-default transition-colors duration-200 hover:border-emphasis`}
+      className="rounded-xl border border-subtle bg-panel overflow-hidden cursor-default transition-colors duration-200 hover:border-emphasis"
       whileHover={{
         y: -2,
         transition: { duration: 0.2, ease: "easeOut" },
       }}
     >
-      <div className={`${a.header} px-7 pt-7 pb-5`}>
-        <div className="flex items-center gap-3 mb-3">
-          <span className="text-3xl">{useCase.emoji}</span>
-          <span className={`font-mono text-xs uppercase tracking-[0.1em] px-3 py-1 rounded-sm ${a.label}`}>
+      <div className="bg-raised px-7 pt-7 pb-5">
+        <div className="mb-3">
+          <span className="font-mono text-xs uppercase tracking-[0.1em] px-3 py-1 rounded-sm bg-accent text-inverse">
             {useCase.audience}
           </span>
         </div>
@@ -159,10 +134,6 @@ export default function ToolDetail({ tool }: { tool: ToolDetailData }) {
           animate="show"
           className="space-y-6"
         >
-          <motion.div variants={fadeUp}>
-            <ToolLogo url={tool.url} emoji={tool.emoji} size={96} className="rounded-xl" />
-          </motion.div>
-
           <motion.div variants={fadeUp} className="space-y-3">
             <div className="flex flex-wrap items-center gap-3">
               <h1 className="font-sans text-5xl md:text-6xl font-semibold text-primary leading-none tracking-tight">

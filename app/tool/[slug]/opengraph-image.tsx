@@ -14,26 +14,6 @@ const C = {
   forest:    "#1C3A2E",
   moss:      "#3D8A2B",
   mossLight: "#8ABF76",
-  amber:     "#F4AB1F",
-  lavender:  "#9B72CF",
-};
-
-const ACCENT_STRIPE: Record<string, string> = {
-  moss:     C.moss,
-  amber:    C.amber,
-  lavender: C.lavender,
-};
-
-const ACCENT_PILL_BG: Record<string, string> = {
-  moss:     C.moss,
-  amber:    "#F4AB1F22",
-  lavender: "#9B72CF22",
-};
-
-const ACCENT_PILL_TEXT: Record<string, string> = {
-  moss:     C.parchment,
-  amber:    "#92600A",
-  lavender: "#5B3F8A",
 };
 
 export default async function Image({
@@ -46,19 +26,17 @@ export default async function Image({
   const supabase = createServiceClient();
   const { data: tool } = await supabase
     .from("tools")
-    .select("name, vibe_description, category, emoji, accent")
+    .select("name, vibe_description, category")
     .eq("slug", slug)
     .single();
 
-  const name     = tool?.name     ?? "AI Tool";
+  const name     = tool?.name ?? "AI Tool";
   const tagline  = tool?.vibe_description ?? "";
   const category = tool?.category ?? "AI Tool";
-  const emoji    = tool?.emoji    ?? "✨";
-  const accent   = (tool?.accent as string) ?? "moss";
 
-  const stripeColor  = ACCENT_STRIPE[accent]   ?? C.moss;
-  const pillBg       = ACCENT_PILL_BG[accent]  ?? C.moss;
-  const pillText     = ACCENT_PILL_TEXT[accent] ?? C.parchment;
+  const stripeColor = C.moss;
+  const pillBg      = `${C.moss}22`;
+  const pillText    = C.parchment;
 
   // Truncate tagline for the card
   const shortTagline =
@@ -111,19 +89,16 @@ export default async function Image({
             }}
           >
             {/* AIght wordmark */}
-            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <span
-                style={{
-                  fontSize:      "34px",
-                  fontWeight:    700,
-                  color:         C.espresso,
-                  letterSpacing: "-0.5px",
-                }}
-              >
-                AIght
-              </span>
-              <span style={{ color: C.moss, fontSize: "22px" }}>✦</span>
-            </div>
+            <span
+              style={{
+                fontSize:      "34px",
+                fontWeight:    700,
+                color:         C.espresso,
+                letterSpacing: "-0.5px",
+              }}
+            >
+              AIght
+            </span>
 
             {/* Category pill */}
             <div
@@ -158,9 +133,6 @@ export default async function Image({
               gap:            "16px",
             }}
           >
-            {/* Emoji */}
-            <div style={{ fontSize: "64px", lineHeight: 1 }}>{emoji}</div>
-
             {/* Tool name */}
             <div
               style={{

@@ -9,7 +9,7 @@ export type Tool = {
   category: string | null;
   emoji: string;
   tags: string[];
-  accent: string;               // "moss" | "amber" | "lavender"
+  accent: string | null;
   video_url: string | null;
   learning_guide: string | null;
   related_concepts: string[];

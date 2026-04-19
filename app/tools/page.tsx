@@ -17,18 +17,16 @@ export default async function ToolsArchivePage() {
   const supabase = await createClient();
   const { data } = await supabase
     .from("tools")
-    .select("slug, name, vibe_description, category, emoji, url, tags, accent")
+    .select("slug, name, vibe_description, category, url, tags")
     .order("created_at", { ascending: true });
 
   const tools: ToolCardProps[] = (data ?? []).map((t: Partial<Tool>) => ({
-    slug:        t.slug ?? "",
-    name:        t.name ?? "",
-    tagline:     t.vibe_description ?? "",
-    category:    t.category ?? "AI Tool",
-    emoji:       t.emoji ?? "🤖",
-    url:         t.url ?? null,
-    tags:        t.tags ?? [],
-    accentColor: (t.accent as "moss" | "amber" | "lavender") ?? "moss",
+    slug:     t.slug ?? "",
+    name:     t.name ?? "",
+    tagline:  t.vibe_description ?? "",
+    category: t.category ?? "AI Tool",
+    url:      t.url ?? null,
+    tags:     t.tags ?? [],
   }));
 
   return (
