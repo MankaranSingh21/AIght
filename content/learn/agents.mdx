@@ -1,0 +1,79 @@
+---
+title: "AI Agents"
+tagline: "When AI stops answering and starts doing"
+readTime: "9 min read"
+slug: "agents"
+---
+
+The word "agent" has been stretched so thin it's nearly useless. Every product calls itself agentic now. Assistants, pipelines, chatbots with a tool or two — all agents, according to their marketing. So let's be specific about what the word actually means when it's used carefully.
+
+A chatbot responds. You ask, it answers. The interaction is complete.
+
+An agent acts. It takes your goal, figures out what steps are needed, executes them, observes what happens, adjusts based on what it learns, and keeps going until the goal is reached — or until it decides it can't. That last part matters too.
+
+The key distinction isn't capability. It's the loop.
+
+---
+
+## The loop is the thing
+
+An agent's defining characteristic is that it operates in a feedback loop with the world. It doesn't just generate output — it observes state, decides on an action, takes that action, observes the new state, and repeats. The simplest version of this pattern is sometimes called ReAct, shorthand for Reason and Act.
+
+**Observe** what the current state is. What tools are available? What has already happened? What does the environment look like?
+
+**Reason** about what to do next. Not necessarily deep reasoning — sometimes it's just: "I need to search the web before I can answer this."
+
+**Act** by calling a tool, writing a file, sending a request, generating text.
+
+**Observe** the result and decide what's next.
+
+```python
+def run_agent(goal: str) -> str:
+    messages = [{"role": "user", "content": goal}]
+
+    while True:
+        response = llm.complete(messages, tools=AVAILABLE_TOOLS)
+
+        # If the model stopped calling tools, it's done
+        if not response.tool_calls:
+            return response.content
+
+        # Execute each tool call, feed results back into context
+        for call in response.tool_calls:
+            result = execute_tool(call.name, call.arguments)
+            messages.append({"role": "tool", "content": str(result)})
+
+        messages.append(response)
+```
+
+> Most agents fail not because the AI is wrong, but because the feedback loop is brittle — bad tool outputs, ambiguous errors, no way to recover from a dead end. The model is often fine. The scaffolding isn't.
+
+---
+
+## What separates agents from assistants
+
+You can give a chatbot tools and it will use them. That's not quite the same as an agent.
+
+What makes something agentically different is **multi-step autonomy** — the ability to pursue a goal across multiple actions without a human in the loop at each step. An assistant with tool use will search the web if you ask it to search. An agent will search, read the results, realize the first results weren't useful, search again with a refined query, extract the relevant sections, cross-reference them, and only then write its response.
+
+The agent decides what to do at each step. You set the goal once.
+
+This is why **planning** matters so much in agent design. A good agent doesn't just execute the first thing it thinks of — it considers the goal, breaks it into subproblems, and sequences actions in a sensible order. Whether that planning is explicit (the agent writes out a plan first) or implicit (the model just reasons through steps naturally) varies by approach.
+
+---
+
+## The hard parts nobody talks about first
+
+Building an agent is easy. Building one that works reliably is much harder.
+
+**Tool reliability is the ceiling.** An agent is only as good as its tools. If a web search returns garbage, or a file reader silently fails, the model is reasoning on bad premises. Agents amplify whatever quality your tools have — for better or worse.
+
+**Context accumulates.** Each tool call adds more to the conversation. Long agent runs can hit token limits, or the model can start losing track of the original goal under the weight of intermediate results. Good agent design thinks about what gets trimmed or summarized.
+
+**Error handling requires explicit design.** When a human gets a confusing result, they reconsider. An agent will keep going unless you've built in the logic to recognize that something went wrong and try a different approach. Most production agents invest heavily in retry logic, error pattern detection, and graceful exits.
+
+---
+
+The most useful mental model: an agent is a model operating in a while loop, with tools as its hands and observations as its eyes. What makes an agent good isn't magic in the model — it's the quality of the loop, the tools, and the scaffolding that keeps the whole thing from going sideways.
+
+The loop is ordinary. Done well, what it can do is not.

@@ -176,6 +176,7 @@ export default async function ToolPage({ params }: Props) {
     useCases: getUseCases(tool.category),
     video_url: tool.video_url,
     learning_guide: tool.learning_guide,
+    related_concepts: tool.related_concepts ?? [],
   };
 
   return <ToolDetail tool={toolDetail} />;

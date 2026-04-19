@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 import AdminToolList from "@/components/AdminToolList";
 
@@ -10,17 +9,20 @@ export default async function AdminPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Auth guard — send unauthenticated visitors to login
-  if (!user) redirect("/login");
+  // No active auth system — show nothing until auth is re-added
+  if (!user) {
+    return (
+      <main className="min-h-screen bg-page flex items-center justify-center">
+        <p className="font-sans text-sm text-muted">Nothing to see here. ✦</p>
+      </main>
+    );
+  }
 
-  // Admin guard — bail early if not the owner
   const adminEmail = process.env.ADMIN_EMAIL;
   if (!adminEmail || user.email !== adminEmail) {
     return (
-      <main className="min-h-screen bg-parchment flex items-center justify-center px-6">
-        <p className="font-body text-sm text-forest/50">
-          Nothing to see here. ✦
-        </p>
+      <main className="min-h-screen bg-page flex items-center justify-center">
+        <p className="font-sans text-sm text-muted">Nothing to see here. ✦</p>
       </main>
     );
   }
@@ -33,38 +35,36 @@ export default async function AdminPage() {
   const tools = data ?? [];
 
   return (
-    <main className="min-h-screen bg-parchment">
+    <main className="min-h-screen bg-page">
       <div className="max-w-3xl mx-auto px-6 py-14 space-y-10">
 
-        {/* Header */}
         <div className="space-y-2">
-          <p className="font-body text-xs uppercase tracking-[0.2em] text-moss-500">
-            admin ✦ restricted
+          <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted">
+            admin · restricted
           </p>
-          <h1 className="font-serif text-4xl font-bold text-espresso">
+          <h1 className="font-sans text-4xl font-semibold text-primary">
             Tool Content Manager
           </h1>
-          <p className="font-body text-sm text-forest/60">
-            {tools.length} tools · click Edit to expand a tool and update its video and guide.
+          <p className="font-sans text-sm text-secondary">
+            {tools.length} tools · click Edit to update a tool&apos;s video and guide.
           </p>
         </div>
 
-        {/* Legend */}
-        <div className="flex items-center gap-6 font-body text-xs text-forest/50">
+        <div className="flex items-center gap-6 font-mono text-xs text-muted">
           <span className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-moss-500 inline-block" />
+            <span className="w-2 h-2 rounded-full bg-accent inline-block" />
             video set
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-moss-200 inline-block" />
+            <span className="w-2 h-2 rounded-full bg-raised inline-block" />
             no video
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-amber-400 inline-block" />
+            <span className="w-2 h-2 rounded-full bg-warm inline-block" />
             guide set
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-amber-100 inline-block" />
+            <span className="w-2 h-2 rounded-full bg-raised inline-block" />
             no guide
           </span>
         </div>

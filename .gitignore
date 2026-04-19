@@ -38,6 +38,9 @@ yarn-error.log*
 .cursor/
 .aider*
 
+# Session notes — internal dev diary, not for version control
+SESSION_NOTES.md
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

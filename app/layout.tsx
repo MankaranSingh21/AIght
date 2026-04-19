@@ -1,27 +1,25 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Lora, Fraunces } from "next/font/google";
+import { Space_Grotesk, Lora, JetBrains_Mono } from "next/font/google";
 import Navbar from "@/components/Navbar";
-import CommandMenu from "@/components/CommandMenu";
 import PostHogProvider from "./providers/PostHogProvider";
-import { ThemeProvider } from "@/components/ThemeProvider";
 import { Toaster } from "sonner";
 import "./globals.css";
 
-const playfair = Playfair_Display({
+const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
-  variable: "--font-playfair",
+  variable: "--font-ui",
   display: "swap",
 });
 
 const lora = Lora({
   subsets: ["latin"],
-  variable: "--font-lora",
+  variable: "--font-editorial",
   display: "swap",
 });
 
-const fraunces = Fraunces({
+const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
-  variable: "--font-fraunces",
+  variable: "--font-mono",
   display: "swap",
 });
 
@@ -34,8 +32,8 @@ export const metadata: Metadata = {
     template: "%s — AIght",
   },
   description:
-    "Discover the best AI tools, then build a beautiful visual roadmap to actually use them. Ruthlessly curated. No hype, no sponsored rankings.",
-  keywords: ["AI tools", "AI directory", "roadmap builder", "AI learning", "curated AI"],
+    "A ruthlessly curated AI tool directory. No hype, no sponsored rankings. Just honest signal.",
+  keywords: ["AI tools", "AI directory", "AI learning", "curated AI"],
   authors: [{ name: "Mankaran Singh" }],
   creator: "Mankaran Singh",
   openGraph: {
@@ -45,13 +43,12 @@ export const metadata: Metadata = {
     siteName: "AIght",
     title: "AIght — your cozy corner for AI tools",
     description:
-      "Discover the best AI tools, then build a beautiful visual roadmap to actually use them. No spam, no affiliate links.",
+      "A ruthlessly curated AI tool directory. No spam, no affiliate links.",
   },
   twitter: {
     card: "summary_large_image",
     title: "AIght — your cozy corner for AI tools",
-    description:
-      "Discover the best AI tools, then build a beautiful visual roadmap to actually use them.",
+    description: "A ruthlessly curated AI tool directory. No spam, no affiliate links.",
     creator: "@aightai",
   },
   robots: {
@@ -66,7 +63,7 @@ const jsonLd = {
   "@type": "WebSite",
   "name": "AIght",
   "url": SITE_URL,
-  "description": "Curated AI tool directory + visual roadmap builder. No spam, no affiliate links.",
+  "description": "Curated AI tool directory. No spam, no affiliate links.",
   "potentialAction": {
     "@type": "SearchAction",
     "target": `${SITE_URL}/tools?q={search_term_string}`,
@@ -80,7 +77,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       <head>
         <script
           type="application/ld+json"
@@ -88,27 +85,24 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${playfair.variable} ${lora.variable} ${fraunces.variable} antialiased`}
+        className={`${spaceGrotesk.variable} ${lora.variable} ${jetbrainsMono.variable} antialiased`}
       >
-        <ThemeProvider>
         <PostHogProvider>
           <Navbar />
           {children}
-          <CommandMenu />
           <Toaster
             position="bottom-right"
             toastOptions={{
               classNames: {
-                toast:       "!bg-parchment dark:!bg-charcoal-800 !border !border-moss-200 dark:!border-charcoal-700 !shadow-card !rounded-2xl !font-body !text-espresso dark:!text-parchment",
-                title:       "!font-body !font-semibold !text-espresso dark:!text-parchment !text-sm",
-                description: "!font-body !text-forest/70 dark:!text-parchment/60 !text-xs",
-                success:     "!border-moss-300 dark:!border-moss-700",
-                error:       "!border-red-200 dark:!border-red-900",
+                toast:       "!bg-panel !border !border-subtle !rounded-lg !font-sans !text-primary",
+                title:       "!font-sans !font-semibold !text-primary !text-sm",
+                description: "!font-sans !text-secondary !text-xs",
+                success:     "!border-emphasis",
+                error:       "!border-danger",
               },
             }}
           />
         </PostHogProvider>
-        </ThemeProvider>
       </body>
     </html>
   );

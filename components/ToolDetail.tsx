@@ -1,15 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useTransition } from "react";
-import { useRouter, usePathname } from "next/navigation";
 import { motion, type Variants } from "framer-motion";
-import { toast } from "sonner";
-import posthog from "posthog-js";
-import { createClient } from "@/utils/supabase/client";
-import { addToolToRoadmap } from "@/app/actions/roadmap";
-import Button from "./Button";
-import RoadmapPicker from "./RoadmapPicker";
 import ToolLogo from "./ToolLogo";
 
 // ── Types ──────────────────────────────────────────────────────────────────
@@ -35,6 +27,7 @@ export type ToolDetailData = {
   useCases: [UseCase, UseCase];
   video_url?: string | null;
   learning_guide?: string | null;
+  related_concepts?: string[];
 };
 
 // ── Animation Variants ─────────────────────────────────────────────────────
@@ -65,20 +58,16 @@ const fadeIn: Variants = {
 // ── Helpers ────────────────────────────────────────────────────────────────
 
 function getYouTubeEmbedUrl(url: string): string {
-  // Already an embed URL — return as-is
   if (url.includes("youtube.com/embed/")) return url;
 
-  // youtu.be/ID or youtu.be/ID?t=...
   const shortMatch = url.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/);
   if (shortMatch) return `https://www.youtube.com/embed/${shortMatch[1]}`;
 
-  // youtube.com/watch?v=ID or youtube.com/shorts/ID
   const longMatch = url.match(
     /youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/)([a-zA-Z0-9_-]{11})/
   );
   if (longMatch) return `https://www.youtube.com/embed/${longMatch[1]}`;
 
-  // Unrecognised — pass through and let the browser handle it
   return url;
 }
 
@@ -86,30 +75,27 @@ function getYouTubeEmbedUrl(url: string): string {
 
 const useCaseAccent = {
   moss: {
-    header: "bg-moss-100",
-    border: "border-moss-200",
-    label: "bg-moss-500 text-parchment",
-    shadow: "hover:shadow-moss",
+    header: "bg-raised",
+    border: "border-subtle",
+    label: "bg-accent text-inverse",
   },
   amber: {
-    header: "bg-amber-100",
-    border: "border-amber-200",
-    label: "bg-amber-400 text-espresso",
-    shadow: "hover:shadow-amber",
+    header: "bg-raised",
+    border: "border-subtle",
+    label: "bg-warm text-inverse",
   },
   lavender: {
-    header: "bg-lavender-100",
-    border: "border-lavender-200",
-    label: "bg-lavender-400 text-parchment",
-    shadow: "hover:shadow-card-hover",
+    header: "bg-raised",
+    border: "border-subtle",
+    label: "bg-accent text-inverse",
   },
 };
 
 const pricingStyle: Record<ToolDetailData["pricing"], string> = {
-  Free:         "bg-neon-lime/20 text-forest border border-neon-lime/50",
-  "Open Source":"bg-lavender-100 text-lavender-700 border border-lavender-300",
-  Freemium:     "bg-amber-100 text-amber-700 border border-amber-300",
-  Paid:         "bg-moss-100 text-moss-700 border border-moss-300",
+  Free:          "bg-[var(--accent-primary-glow)] text-accent border border-emphasis",
+  "Open Source": "bg-[var(--accent-primary-glow)] text-accent border border-emphasis",
+  Freemium:      "bg-raised text-warm border border-subtle",
+  Paid:          "bg-raised text-muted border border-subtle",
 };
 
 // ── Internal sub-component ─────────────────────────────────────────────────
@@ -118,32 +104,25 @@ function UseCaseCard({ useCase }: { useCase: UseCase }) {
   const a = useCaseAccent[useCase.accent];
   return (
     <motion.div
-      className={`
-        rounded-3xl border ${a.border} bg-parchment shadow-card
-        overflow-hidden cursor-default transition-shadow duration-300 ${a.shadow}
-      `}
+      className={`rounded-xl border ${a.border} bg-panel overflow-hidden cursor-default transition-colors duration-200 hover:border-emphasis`}
       whileHover={{
-        y: -5,
-        scale: 1.012,
-        transition: { type: "spring", stiffness: 260, damping: 22 },
+        y: -2,
+        transition: { duration: 0.2, ease: "easeOut" },
       }}
     >
-      {/* Coloured header strip */}
       <div className={`${a.header} px-7 pt-7 pb-5`}>
         <div className="flex items-center gap-3 mb-3">
           <span className="text-3xl">{useCase.emoji}</span>
-          <span className={`text-2xs font-body font-semibold uppercase tracking-widest px-3 py-1 rounded-full ${a.label}`}>
+          <span className={`font-mono text-xs uppercase tracking-[0.1em] px-3 py-1 rounded-sm ${a.label}`}>
             {useCase.audience}
           </span>
         </div>
-        <h3 className="font-serif text-xl font-bold text-espresso leading-snug">
+        <h3 className="font-sans text-xl font-medium text-primary leading-snug">
           {useCase.headline}
         </h3>
       </div>
-
-      {/* Body */}
       <div className="px-7 py-5">
-        <p className="font-body text-sm text-forest/80 leading-relaxed">
+        <p className="font-sans text-sm text-secondary leading-relaxed">
           {useCase.description}
         </p>
       </div>
@@ -154,12 +133,8 @@ function UseCaseCard({ useCase }: { useCase: UseCase }) {
 // ── Main Component ─────────────────────────────────────────────────────────
 
 export default function ToolDetail({ tool }: { tool: ToolDetailData }) {
-  const [isPending, startTransition] = useTransition();
-  const [pickerOpen, setPickerOpen]  = useState(false);
-  const router   = useRouter();
-  const pathname = usePathname();
   return (
-    <main className="min-h-screen bg-parchment">
+    <main className="min-h-screen bg-page">
       <div className="max-w-4xl mx-auto px-6 md:px-10 py-10 space-y-16">
 
         {/* Back navigation */}
@@ -170,7 +145,7 @@ export default function ToolDetail({ tool }: { tool: ToolDetailData }) {
         >
           <Link
             href="/"
-            className="inline-flex items-center gap-2 font-body text-sm text-forest/60 hover:text-forest transition-colors duration-150"
+            className="inline-flex items-center gap-2 font-sans text-sm text-secondary hover:text-primary transition-colors duration-150"
           >
             <span>←</span>
             <span>Back to all tools</span>
@@ -184,48 +159,35 @@ export default function ToolDetail({ tool }: { tool: ToolDetailData }) {
           animate="show"
           className="space-y-6"
         >
-          {/* Logo */}
           <motion.div variants={fadeUp}>
-            <motion.div
-              className="inline-flex"
-              animate={{ scale: [1, 1.06, 1] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            >
-              <ToolLogo url={tool.url} emoji={tool.emoji} size={96} className="rounded-2xl" />
-            </motion.div>
+            <ToolLogo url={tool.url} emoji={tool.emoji} size={96} className="rounded-xl" />
           </motion.div>
 
-          {/* Name + pricing */}
           <motion.div variants={fadeUp} className="space-y-3">
             <div className="flex flex-wrap items-center gap-3">
-              <h1 className="font-serif text-5xl md:text-6xl font-bold text-espresso leading-none">
+              <h1 className="font-sans text-5xl md:text-6xl font-semibold text-primary leading-none tracking-tight">
                 {tool.name}
               </h1>
-              <span className={`text-xs font-body font-semibold px-3 py-1.5 rounded-full ${pricingStyle[tool.pricing]}`}>
+              <span className={`font-mono text-xs px-3 py-1.5 rounded-sm ${pricingStyle[tool.pricing]}`}>
                 {tool.pricing}
               </span>
             </div>
           </motion.div>
 
-          {/* Tagline */}
           <motion.p
             variants={fadeUp}
-            className="font-body text-lg md:text-xl text-forest/80 max-w-2xl leading-relaxed"
+            className="font-sans text-lg md:text-xl text-secondary max-w-2xl leading-relaxed"
           >
             {tool.tagline}
           </motion.p>
 
-          {/* Category + tags */}
           <motion.div variants={fadeUp} className="flex flex-wrap items-center gap-2">
-            <span className="text-2xs font-body font-semibold uppercase tracking-widest bg-moss-500 text-parchment px-3 py-1.5 rounded-full">
+            <span className="font-mono text-xs uppercase tracking-[0.1em] bg-accent text-inverse px-3 py-1.5 rounded-sm">
               {tool.category}
             </span>
             {tool.tags.map((tag) => (
-              <span
-                key={tag}
-                className="text-2xs font-body px-3 py-1.5 rounded-full bg-moss-100 text-moss-800"
-              >
-                #{tag}
+              <span key={tag} className="tag">
+                {tag}
               </span>
             ))}
           </motion.div>
@@ -234,7 +196,7 @@ export default function ToolDetail({ tool }: { tool: ToolDetailData }) {
         {/* ── Video ── */}
         <motion.section variants={fadeIn} initial="hidden" animate="show">
           {tool.video_url ? (
-            <div className="relative overflow-hidden rounded-4xl border border-moss-200 bg-espresso aspect-video">
+            <div className="relative overflow-hidden rounded-xl border border-subtle bg-raised aspect-video">
               <iframe
                 src={getYouTubeEmbedUrl(tool.video_url)}
                 title={`${tool.name} demo`}
@@ -244,30 +206,17 @@ export default function ToolDetail({ tool }: { tool: ToolDetailData }) {
               />
             </div>
           ) : (
-            <div className="relative overflow-hidden rounded-4xl border border-moss-200 bg-gradient-to-br from-moss-100 via-parchment to-amber-100 h-[320px] md:h-[400px] flex flex-col items-center justify-center gap-5">
-              {/* Ambient blobs */}
-              <div className="absolute top-6 left-8 w-40 h-40 bg-moss-300/20 rounded-full blur-2xl pointer-events-none" />
-              <div className="absolute bottom-8 right-10 w-52 h-52 bg-amber-300/20 rounded-full blur-2xl pointer-events-none" />
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-lavender-200/15 rounded-full blur-2xl pointer-events-none" />
-
-              {/* Pulsing play icon */}
-              <motion.div
-                className="relative z-10 w-20 h-20 rounded-full bg-espresso/90 flex items-center justify-center shadow-card-hover"
-                animate={{ scale: [1, 1.04, 1] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-              >
-                <svg className="w-8 h-8 text-parchment ml-1" viewBox="0 0 24 24" fill="currentColor">
+            <div className="relative overflow-hidden rounded-xl border border-subtle bg-raised h-[320px] md:h-[400px] flex flex-col items-center justify-center gap-5">
+              <div className="absolute top-6 left-8 w-40 h-40 bg-[var(--accent-primary-glow)] rounded-full blur-2xl pointer-events-none" />
+              <div className="absolute bottom-8 right-10 w-52 h-52 bg-[rgba(201,169,110,0.07)] rounded-full blur-2xl pointer-events-none" />
+              <div className="relative z-10 w-20 h-20 rounded-full bg-panel border border-subtle flex items-center justify-center">
+                <svg className="w-8 h-8 text-primary ml-1" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M8 5v14l11-7z" />
                 </svg>
-              </motion.div>
-
+              </div>
               <div className="relative z-10 text-center space-y-1.5">
-                <p className="font-serif text-lg font-semibold text-espresso">
-                  Video walkthrough
-                </p>
-                <p className="font-body text-sm text-forest/50 uppercase tracking-widest">
-                  coming soon ✦
-                </p>
+                <p className="font-sans text-lg font-medium text-primary">Video walkthrough</p>
+                <p className="font-mono text-sm text-muted uppercase tracking-widest">coming soon</p>
               </div>
             </div>
           )}
@@ -282,10 +231,10 @@ export default function ToolDetail({ tool }: { tool: ToolDetailData }) {
             transition={{ type: "spring", stiffness: 180, damping: 26 }}
             className="mb-8"
           >
-            <p className="font-body text-xs uppercase tracking-[0.2em] text-moss-500 font-semibold mb-2">
+            <p className="font-mono text-xs uppercase tracking-[0.1em] text-accent mb-2">
               Real workflows, real people
             </p>
-            <h2 className="font-serif text-3xl md:text-4xl font-bold text-espresso">
+            <h2 className="font-sans text-3xl md:text-4xl font-semibold text-primary">
               How people are using it
             </h2>
           </motion.div>
@@ -295,10 +244,7 @@ export default function ToolDetail({ tool }: { tool: ToolDetailData }) {
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, margin: "-60px" }}
-            variants={{
-              hidden: {},
-              show: { transition: { staggerChildren: 0.12 } },
-            }}
+            variants={{ hidden: {}, show: { transition: { staggerChildren: 0.12 } } }}
           >
             {tool.useCases.map((uc) => (
               <motion.div key={uc.audience} variants={fadeUp}>
@@ -318,17 +264,16 @@ export default function ToolDetail({ tool }: { tool: ToolDetailData }) {
             className="space-y-6"
           >
             <div>
-              <p className="font-body text-xs uppercase tracking-[0.2em] text-moss-500 font-semibold mb-2">
+              <p className="font-mono text-xs uppercase tracking-[0.1em] text-accent mb-2">
                 your starter pack
               </p>
-              <h2 className="font-serif text-3xl md:text-4xl font-bold text-espresso">
+              <h2 className="font-sans text-3xl md:text-4xl font-semibold text-primary">
                 Learning Guide
               </h2>
             </div>
-
-            <div className="rounded-4xl border border-moss-200 bg-gradient-to-b from-moss-50/60 to-parchment p-8 md:p-10 space-y-4">
+            <div className="rounded-xl border border-subtle bg-raised p-8 md:p-10 space-y-4">
               {tool.learning_guide.split(/\n\n+/).map((para, i) => (
-                <p key={i} className="font-body text-base text-forest/85 leading-relaxed">
+                <p key={i} className="font-sans text-base text-secondary leading-relaxed">
                   {para.trim()}
                 </p>
               ))}
@@ -336,85 +281,59 @@ export default function ToolDetail({ tool }: { tool: ToolDetailData }) {
           </motion.section>
         )}
 
-        {/* ── CTA ── */}
-        <motion.section
-          className="pb-8 flex flex-col sm:flex-row items-center gap-4 border-t border-moss-200 pt-12"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-40px" }}
-          transition={{ type: "spring", stiffness: 180, damping: 26 }}
-        >
-          <div className="flex-1 space-y-1">
-            <p className="font-serif text-xl font-semibold text-espresso">
-              Ready to actually use this?
-            </p>
-            <p className="font-body text-sm text-forest/60">
-              Add it to your roadmap and we&rsquo;ll help you get started.
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-3 flex-shrink-0">
-            <Button
-              variant="primary"
-              size="lg"
-              disabled={isPending}
-              onClick={async () => {
-                const supabase = createClient();
-                const { data: { user } } = await supabase.auth.getUser();
-                if (!user) {
-                  router.push(`/login?next=${encodeURIComponent(pathname)}`);
-                  return;
-                }
-                setPickerOpen(true);
-              }}
-            >
-              {isPending ? "Adding…" : "+ Add to Roadmap"}
-            </Button>
+        {/* ── How this works ── */}
+        {tool.related_concepts && tool.related_concepts.length > 0 && (
+          <motion.section
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="space-y-5"
+          >
+            <div>
+              <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted mb-2">
+                under the hood
+              </p>
+              <h2 className="font-sans text-3xl font-semibold text-primary">
+                How this works
+              </h2>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              {tool.related_concepts.map((concept) => (
+                <Link
+                  key={concept}
+                  href={`/learn/${concept.toLowerCase().replace(/\s+/g, "-")}`}
+                  className="tag tag-accent hover:opacity-80 transition-opacity duration-150"
+                >
+                  {concept} →
+                </Link>
+              ))}
+            </div>
+          </motion.section>
+        )}
 
-            <RoadmapPicker
-              open={pickerOpen}
-              isPending={isPending}
-              onClose={() => setPickerOpen(false)}
-              onSelect={(roadmapId) => {
-                startTransition(async () => {
-                  const result = await addToolToRoadmap(
-                    {
-                      slug:           tool.slug,
-                      name:           tool.name,
-                      emoji:          tool.emoji,
-                      url:            tool.url,
-                      category:       tool.category,
-                      accent:         tool.accent,
-                      learning_guide: tool.learning_guide,
-                      video_url:      tool.video_url,
-                    },
-                    roadmapId
-                  );
-                  if (result?.error) {
-                    toast.error("Couldn't add tool", { description: result.error });
-                  } else {
-                    posthog.capture("tool_added_to_canvas", { tool_slug: tool.slug });
-                    setPickerOpen(false);
-                    toast.success(`${tool.name} added to your roadmap ✦`);
-                    router.push(`/roadmaps/${roadmapId}`);
-                  }
-                });
-              }}
-            />
-            {tool.url && (
-              <motion.a
-                href={tool.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-body font-semibold tracking-wide text-base px-6 py-3 rounded-2xl bg-transparent text-forest border border-forest/30 hover:bg-forest/[0.08] transition-colors duration-200 inline-flex items-center"
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-                transition={{ type: "spring", stiffness: 300, damping: 22 }}
-              >
-                Visit Tool ↗
-              </motion.a>
-            )}
-          </div>
-        </motion.section>
+        {/* ── CTA ── */}
+        {tool.url && (
+          <motion.section
+            className="pb-8 flex items-center border-t border-subtle pt-12"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ type: "spring", stiffness: 180, damping: 26 }}
+          >
+            <motion.a
+              href={tool.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-sans font-medium tracking-wide text-sm px-6 py-3 rounded-md bg-transparent text-primary border border-subtle hover:border-emphasis hover:text-accent transition-colors duration-150 inline-flex items-center"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ type: "spring", stiffness: 300, damping: 22 }}
+            >
+              Visit Tool ↗
+            </motion.a>
+          </motion.section>
+        )}
 
       </div>
     </main>

@@ -4,57 +4,202 @@
 
 @layer base {
   :root {
-    --background: #F5EFE0;
-    --foreground: #2C1A0E;
-    --card:       #F5EFE0;
-    --border:     #B4D4A3;
-    --muted:      #1C3A2E;
-  }
+    /* Backgrounds — warm near-black, not cold */
+    --bg-base:     #0E0D0B;
+    --bg-surface:  #1A1916;
+    --bg-elevated: #242320;
+    --bg-overlay:  #2E2C29;
 
-  .dark {
-    --background: #1a1814;
-    --foreground: #F5EFE0;
-    --card:       #231f1b;
-    --border:     #3d342d;
-    --muted:      #F5EFE0;
+    /* Accent — Ghibli green. Soft, warm, organic. Not neon. Not sage. */
+    --accent-primary:      #7DBF8C;
+    --accent-primary-dim:  #5A9469;
+    --accent-primary-glow: rgba(125, 191, 140, 0.12);
+
+    /* Secondary accent — warm amber. Use sparingly. */
+    --accent-warm:     #C9A96E;
+    --accent-warm-dim: #A0824A;
+
+    /* Text — warm off-white, like aged paper */
+    --text-primary:   #F0EDE8;
+    --text-secondary: #A8A49E;
+    --text-muted:     #6B6760;
+    --text-inverse:   #0E0D0B;
+
+    /* Borders */
+    --border-subtle:   rgba(240, 237, 232, 0.06);
+    --border-default:  rgba(240, 237, 232, 0.12);
+    --border-emphasis: rgba(125, 191, 140, 0.25);
+
+    /* Functional */
+    --success: #7DBF8C;
+    --warning: #C9A96E;
+    --error:   #E07070;
+
+    /* Cursor */
+    --cursor-color: var(--accent-primary);
+
+    /* Fonts */
+    --font-ui:       'Space Grotesk', system-ui, sans-serif;
+    --font-editorial: 'Lora', Georgia, serif;
+    --font-mono:     'JetBrains Mono', 'Fira Code', monospace;
+
+    /* Type Scale */
+    --text-xs:   0.75rem;
+    --text-sm:   0.875rem;
+    --text-base: 1rem;
+    --text-lg:   1.125rem;
+    --text-xl:   1.25rem;
+    --text-2xl:  1.5rem;
+    --text-3xl:  2rem;
+    --text-4xl:  2.75rem;
+    --text-5xl:  3.75rem;
+
+    /* Spacing — 4px base unit */
+    --space-1:  0.25rem;
+    --space-2:  0.5rem;
+    --space-3:  0.75rem;
+    --space-4:  1rem;
+    --space-5:  1.25rem;
+    --space-6:  1.5rem;
+    --space-8:  2rem;
+    --space-10: 2.5rem;
+    --space-12: 3rem;
+    --space-16: 4rem;
+    --space-20: 5rem;
+    --space-24: 6rem;
+
+    /* Border Radius */
+    --radius-sm:   4px;
+    --radius-md:   8px;
+    --radius-lg:   12px;
+    --radius-xl:   16px;
+    --radius-full: 9999px;
+
+    /* Max Widths */
+    --max-width-content:   1200px;
+    --max-width-editorial: 740px;
+    --max-width-narrow:    480px;
+
+    /* Transitions */
+    --transition-fast:   150ms ease;
+    --transition-base:   200ms ease;
+    --transition-slow:   350ms ease;
+    --transition-reveal: 600ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   html {
-    background-color: var(--background);
-    color: var(--foreground);
+    background-color: var(--bg-base);
+    color: var(--text-primary);
     scroll-behavior: smooth;
   }
 
   body {
-    font-family: var(--font-lora), Palatino, serif;
-    background-color: var(--background);
-    color: var(--foreground);
+    font-family: var(--font-ui);
+    background-color: var(--bg-base);
+    color: var(--text-primary);
     min-height: 100vh;
-    transition: background-color 0.25s ease, color 0.25s ease;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-playfair), Georgia, serif;
-  }
-
-  * {
-    scroll-behavior: smooth;
+    font-family: var(--font-ui);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
   }
 
   ::selection {
-    background-color: #B4D4A3;
-    color: #1C3A2E;
-  }
-
-  .dark ::selection {
-    background-color: #3D8A2B;
-    color: #F5EFE0;
+    background-color: var(--accent-primary-glow);
+    color: var(--accent-primary);
   }
 }
 
-@keyframes shimmer {
-  0%   { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+@layer components {
+  /* Editorial body — Lora, generous line height, 68ch max */
+  .editorial-body {
+    font-family: var(--font-editorial);
+    font-size: var(--text-base);
+    line-height: 1.85;
+    letter-spacing: 0.01em;
+    color: var(--text-primary);
+    max-width: 68ch;
+  }
+
+  /* UI heading — Space Grotesk, tight tracking */
+  .ui-heading {
+    font-family: var(--font-ui);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  /* Mono accent */
+  .mono {
+    font-family: var(--font-mono);
+    line-height: 1.6;
+  }
+
+  /* Logo cursor blink */
+  .logo-cursor {
+    color: var(--accent-primary);
+    animation: blink 1s step-end infinite;
+  }
+
+  /* Buttons */
+  .btn-primary {
+    background: var(--accent-primary);
+    color: var(--text-inverse);
+    font-family: var(--font-ui);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    padding: var(--space-3) var(--space-6);
+    border-radius: var(--radius-md);
+    border: none;
+    cursor: pointer;
+    transition: background var(--transition-fast);
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+  }
+  .btn-primary:hover {
+    background: var(--accent-primary-dim);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-primary);
+    border: 1px solid var(--border-default);
+    font-family: var(--font-ui);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    padding: var(--space-3) var(--space-6);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: border-color var(--transition-fast), color var(--transition-fast);
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+  }
+  .btn-ghost:hover {
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+  }
+
+  /* Tags and chips */
+  .tag {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.05em;
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-sm);
+    background: var(--bg-elevated);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-subtle);
+    display: inline-flex;
+    align-items: center;
+  }
+  .tag.tag-accent {
+    background: var(--accent-primary-glow);
+    color: var(--accent-primary);
+    border-color: var(--border-emphasis);
+  }
 }
 
 @layer utilities {
@@ -69,75 +214,9 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+}
 
-  /* ── React Flow overrides (light) ── */
-  .react-flow__controls {
-    box-shadow: 0 2px 16px 0 rgba(44, 26, 14, 0.10);
-    border-radius: 0.875rem;
-    border: 1px solid #D9EAD0;
-    overflow: hidden;
-  }
-  .react-flow__controls-button {
-    background: #F5EFE0;
-    border: none;
-    border-bottom: 1px solid #D9EAD0;
-    color: #1C3A2E;
-    width: 28px;
-    height: 28px;
-    transition: background 0.15s;
-  }
-  .react-flow__controls-button:last-child {
-    border-bottom: none;
-  }
-  .react-flow__controls-button:hover {
-    background: #D9EAD0;
-  }
-  .react-flow__controls-button svg {
-    fill: #1C3A2E;
-  }
-  .react-flow__selection {
-    background: rgba(61, 138, 43, 0.06);
-    border: 1.5px solid #3D8A2B;
-  }
-  .react-flow__edge-path {
-    stroke-linecap: round;
-  }
-
-  /* ── React Flow overrides (dark) ── */
-  .dark .react-flow__controls {
-    box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.35);
-    border-color: #3d342d;
-  }
-  .dark .react-flow__controls-button {
-    background: #231f1b;
-    border-bottom-color: #3d342d;
-    color: #F5EFE0;
-  }
-  .dark .react-flow__controls-button:hover {
-    background: #3d342d;
-  }
-  .dark .react-flow__controls-button svg {
-    fill: #F5EFE0;
-  }
-  .dark .react-flow__background {
-    background-color: #1a1814;
-  }
-  .dark .react-flow__background pattern circle,
-  .dark .react-flow__background pattern rect {
-    fill: #3D8A2B;
-    opacity: 0.3;
-  }
-
-  /* Paper texture overlay */
-  .texture-grain {
-    position: relative;
-  }
-  .texture-grain::after {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 9999;
-  }
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
 }

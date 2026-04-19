@@ -1,154 +1,245 @@
 import { Suspense } from "react";
+import Link from "next/link";
 import { createClient } from "@/utils/supabase/server";
 import Hero from "@/components/Hero";
-import StarterStacks from "@/components/StarterStacks";
-import DiscoverySection from "@/components/DiscoverySection";
-import TeaserCarousel from "@/components/TeaserCarousel";
 import Footer from "@/components/Footer";
-import { ToolGridSkeleton } from "@/components/Skeletons";
-import type { ToolCardProps } from "@/components/ToolCard";
+import ToolCard, { type ToolCardProps } from "@/components/ToolCard";
+import NewsletterForm from "@/components/NewsletterForm";
 import type { Tool } from "@/utils/supabase/types";
+import { getAllConcepts } from "@/lib/learn";
+import { getSignalPosts } from "@/lib/signal";
+
+// ── Data helpers ──────────────────────────────────────────────────────────────
 
 function mapTool(t: Partial<Tool>): ToolCardProps {
   return {
-    slug: t.slug ?? "",
-    name: t.name ?? "",
-    tagline: t.vibe_description ?? "",
-    category: t.category ?? "AI Tool",
-    emoji: t.emoji ?? "🤖",
-    url: t.url ?? null,
-    tags: t.tags ?? [],
+    slug:        t.slug ?? "",
+    name:        t.name ?? "",
+    tagline:     t.vibe_description ?? "",
+    category:    t.category ?? "AI Tool",
+    emoji:       t.emoji ?? "🤖",
+    url:         t.url ?? null,
+    tags:        t.tags ?? [],
     accentColor: (t.accent as "moss" | "amber" | "lavender") ?? "moss",
   };
 }
 
-async function GlimpseSection() {
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from("tools")
-    .select("slug, name, vibe_description, category, emoji, url, tags, accent")
-    .order("created_at", { ascending: false })
-    .limit(10);
+// ── Signal post card ──────────────────────────────────────────────────────────
 
-  const tools = (data ?? []).map(mapTool);
+function SignalCard({
+  date,
+  title,
+  excerpt,
+  href,
+}: {
+  date: string;
+  title: string;
+  excerpt: string;
+  href: string;
+}) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="group block py-6 border-b border-subtle last:border-b-0"
+    >
+      <p className="font-mono text-sm text-muted mb-2">{date}</p>
+      <h3 className="font-sans text-xl font-medium text-primary group-hover:text-accent transition-colors duration-150 mb-2">
+        {title}
+      </h3>
+      <p className="font-serif text-base text-secondary leading-relaxed line-clamp-2">
+        {excerpt}
+      </p>
+    </a>
+  );
+}
+
+// ── Concept card ──────────────────────────────────────────────────────────────
+
+function ConceptCard({
+  title,
+  tagline,
+  readTime,
+  slug,
+}: {
+  title: string;
+  tagline: string;
+  readTime: string;
+  slug: string;
+}) {
+  return (
+    <Link
+      href={`/learn/${slug}`}
+      className="group flex flex-col gap-3 p-6 bg-panel border-l-[3px] border-accent rounded-lg hover:bg-raised transition-colors duration-200"
+    >
+      <p className="font-mono text-xs uppercase tracking-[0.15em] text-muted">
+        Concept
+      </p>
+      <h3
+        className="font-sans text-2xl font-semibold text-primary group-hover:text-accent transition-colors duration-150 leading-tight"
+        style={{ letterSpacing: "-0.02em" }}
+      >
+        {title}
+      </h3>
+      <p className="font-serif italic text-base text-secondary leading-relaxed flex-1">
+        {tagline}
+      </p>
+      <p className="font-mono text-sm text-muted">{readTime}</p>
+    </Link>
+  );
+}
+
+// ── Async server sections ─────────────────────────────────────────────────────
+
+async function SignalSection() {
+  const posts = await getSignalPosts(3);
+  if (posts.length === 0) return null;
 
   return (
-    <section className="py-16 border-t border-moss-100 dark:border-charcoal-800">
-      <div className="px-6 md:px-12 lg:px-20 mb-7 flex items-baseline justify-between">
-        <div>
-          <p className="font-body text-xs uppercase tracking-[0.2em] text-moss-500 mb-2">
-            glimpse the archive
+    <section className="px-6 md:px-12 lg:px-20 py-20 border-t border-subtle">
+      <div className="max-w-editorial mx-auto">
+        <div className="mb-8">
+          <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted mb-2">
+            latest
           </p>
-          <h2 className="font-serif text-2xl md:text-3xl font-bold text-espresso dark:text-parchment">
-            The signal in the noise
+          <h2
+            className="font-sans text-3xl font-semibold text-primary"
+            style={{ letterSpacing: "-0.02em" }}
+          >
+            From the archive
           </h2>
         </div>
+
+        <div>
+          {posts.map((post, i) => (
+            <SignalCard key={i} {...post} />
+          ))}
+        </div>
+
+        <div className="pt-8">
+          <Link href="/signal" className="btn-ghost">
+            Read all signal →
+          </Link>
+        </div>
       </div>
-      <TeaserCarousel tools={tools} />
     </section>
   );
 }
 
 async function ToolsSection() {
   const supabase = await createClient();
-
   const { data } = await supabase
     .from("tools")
     .select("slug, name, vibe_description, category, emoji, url, tags, accent")
-    .order("created_at", { ascending: true });
+    .order("created_at", { ascending: false })
+    .limit(6);
 
   const tools = (data ?? []).map(mapTool);
+  if (tools.length === 0) return null;
 
   return (
-    <>
-      <StarterStacks />
-      <section id="trending-tools">
-        <DiscoverySection tools={tools} />
-      </section>
-    </>
-  );
-}
+    <section className="px-6 md:px-12 lg:px-20 py-20 border-t border-subtle">
+      <div className="max-w-content mx-auto">
+        <div className="mb-10">
+          <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted mb-2">
+            recently added
+          </p>
+          <h2
+            className="font-sans text-3xl font-semibold text-primary"
+            style={{ letterSpacing: "-0.02em" }}
+          >
+            Tools making waves
+          </h2>
+        </div>
 
-function FoundersNote() {
-  return (
-    <section className="px-6 md:px-12 lg:px-20 py-20 border-t border-moss-100 dark:border-charcoal-800">
-      <div className="max-w-2xl mx-auto space-y-6">
-        <p className="font-body text-xs uppercase tracking-[0.2em] text-amber-500">
-          why this exists
-        </p>
-        <blockquote className="font-serif text-2xl md:text-3xl font-bold text-espresso dark:text-parchment leading-snug text-balance">
-          &ldquo;The internet is drowning in AI spam and affiliate links.&rdquo;
-        </blockquote>
-        <p className="font-body text-lg text-forest/75 dark:text-parchment/60 leading-relaxed">
-          AIght is a deeply personal, ruthlessly curated archive. No hype, no sponsored rankings.
-          Just the signal hidden in the noise. Built slowly, on purpose.
-        </p>
-        <div className="pt-2 flex items-center gap-3">
-          <div className="h-px w-10 bg-amber-300" />
-          <span className="font-body text-xs text-forest/40 dark:text-parchment/30 tracking-widest uppercase">
-            the founder&rsquo;s note
-          </span>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          {tools.map((tool) => (
+            <Link key={tool.slug} href={`/tool/${tool.slug}`} className="block">
+              <ToolCard {...tool} />
+            </Link>
+          ))}
+        </div>
+
+        <div className="mt-10">
+          <Link href="/tools" className="btn-ghost">
+            See the full archive →
+          </Link>
         </div>
       </div>
     </section>
   );
 }
 
-function SocialProof() {
-  return (
-    <section className="px-6 md:px-12 lg:px-20 py-8 border-b border-moss-100 dark:border-charcoal-800">
-      <div className="max-w-4xl mx-auto flex flex-wrap items-center justify-center gap-8 md:gap-16">
-        {[
-          { stat: "52+",  label: "curated tools" },
-          { stat: "0",    label: "sponsored rankings" },
-          { stat: "∞",    label: "roadmaps — first is free" },
-          { stat: "100%", label: "ad-free, always" },
-        ].map(({ stat, label }) => (
-          <div key={label} className="flex flex-col items-center gap-0.5">
-            <span className="font-serif text-3xl font-bold text-moss-600 dark:text-moss-400">{stat}</span>
-            <span className="font-body text-xs text-forest/50 dark:text-parchment/40 uppercase tracking-widest">{label}</span>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
+// ── Page ──────────────────────────────────────────────────────────────────────
 
 export default function Home() {
+  const concepts = getAllConcepts().slice(0, 3);
+
   return (
     <>
-      <main className="min-h-screen bg-parchment dark:bg-charcoal-900 texture-grain transition-colors duration-200">
-        <Hero />
-        <SocialProof />
+      <main className="min-h-screen bg-page">
 
-        <Suspense fallback={<ToolGridSkeleton />}>
-          <GlimpseSection />
+        {/* 1. Hero */}
+        <Hero />
+
+        {/* 2. From the archive — live Signal posts from Medium */}
+        <Suspense fallback={null}>
+          <SignalSection />
         </Suspense>
 
-        <Suspense fallback={<ToolGridSkeleton />}>
+        {/* 3. Understand — Concept cards sourced from content/learn/ */}
+        {concepts.length > 0 && (
+          <section className="px-6 md:px-12 lg:px-20 py-20 border-t border-subtle">
+            <div className="max-w-content mx-auto">
+              <div className="mb-10">
+                <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted mb-2">
+                  learn
+                </p>
+                <h2
+                  className="font-sans text-3xl font-semibold text-primary"
+                  style={{ letterSpacing: "-0.02em" }}
+                >
+                  Understand the tools you use
+                </h2>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {concepts.map((concept) => (
+                  <ConceptCard key={concept.slug} {...concept} />
+                ))}
+              </div>
+
+              <div className="mt-10">
+                <Link href="/learn" className="btn-ghost">
+                  Read all concepts →
+                </Link>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* 4. Tools making waves */}
+        <Suspense fallback={null}>
           <ToolsSection />
         </Suspense>
 
-        <section id="about" className="px-6 md:px-12 lg:px-20 py-20 border-t border-moss-100 dark:border-charcoal-800">
-          <div className="max-w-2xl mx-auto text-center space-y-5">
-            <p className="font-body text-xs uppercase tracking-[0.2em] text-moss-500">
-              about this corner of the internet
-            </p>
-            <h2 className="font-serif text-3xl md:text-4xl font-bold text-espresso dark:text-parchment">
-              What even is AIght?
+        {/* 5. Newsletter */}
+        <section className="px-6 md:px-12 lg:px-20 py-20 border-t border-subtle">
+          <div className="max-w-narrow mx-auto">
+            <h2
+              className="font-sans text-2xl font-semibold text-primary mb-2"
+              style={{ letterSpacing: "-0.02em" }}
+            >
+              Stay in the signal.
             </h2>
-            <p className="font-body text-lg text-forest/75 dark:text-parchment/60 leading-relaxed">
-              AIght is a cozy, curated directory of AI tools that actually deserve your attention.
-              No sponsored rankings. No hustle-bro energy. Just honest curation, warm vibes, and
-              a roadmap builder so you can learn at your own pace — the internet as it should be.
+            <p className="font-sans text-sm text-secondary mb-6">
+              No spam. Unsubscribe whenever.
             </p>
-            <p className="font-body text-sm text-forest/50 dark:text-parchment/40 leading-relaxed">
-              Built slowly, on purpose. More features coming when they&rsquo;re ready.
-            </p>
+            <NewsletterForm />
           </div>
         </section>
 
-        <FoundersNote />
       </main>
 
       <Footer />

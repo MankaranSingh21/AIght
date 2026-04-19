@@ -9,9 +9,10 @@ export type Tool = {
   category: string | null;
   emoji: string;
   tags: string[];
-  accent: string;          // "moss" | "amber" | "lavender"
+  accent: string;               // "moss" | "amber" | "lavender"
   video_url: string | null;
   learning_guide: string | null;
+  related_concepts: string[];
   created_at: string;
 };
 

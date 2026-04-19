@@ -1,0 +1,66 @@
+---
+title: "Transformers"
+tagline: "The architecture that changed what AI could do with language"
+readTime: "8 min read"
+slug: "transformers"
+---
+
+For a long time, AI models read text the way someone with a very short memory might: one word at a time, dragging a running summary of what came before. They were good at reading forward. They struggled with looking back. By the time a model reached the end of a long paragraph, the beginning was a blur.
+
+Understanding "the trophy didn't fit in the suitcase because it was too big" requires knowing that "it" refers to the trophy, not the suitcase — which means remembering context from earlier in the sentence and connecting it to something later. That kind of reference is easy for humans and was genuinely hard for the sequential models that preceded Transformers.
+
+The Transformer architecture, introduced in a 2017 paper called "Attention Is All You Need," changed the fundamental approach. Instead of reading one token at a time, it reads everything at once — and uses a mechanism called attention to decide which parts of the input matter most for understanding each part.
+
+---
+
+## The attention mechanism
+
+Attention is the key insight, and it's worth understanding in its simplest form.
+
+For each word (or token) in a sequence, the model asks: which other tokens in this sequence are most relevant to understanding what I mean right now? It computes a score for each pair — how much should this word "attend to" that one — then uses those scores to compute a weighted blend of information from all positions.
+
+"Trophy" and "too big" have a strong relationship in that sentence. The attention mechanism learns to capture that relationship, across whatever distance separates them in the text.
+
+```python
+# Simplified self-attention for a single token
+def self_attention(query, keys, values, scale):
+    # Score: how relevant is each key to this query?
+    scores = [dot_product(query, k) / scale for k in keys]
+
+    # Normalize scores to probabilities (which positions to attend to)
+    weights = softmax(scores)
+
+    # Weighted sum: blend values according to relevance
+    output = sum(w * v for w, v in zip(weights, values))
+    return output
+```
+
+> "Attention is all you need" turned out to be both a title and a claim. The mechanism was enough. The sequential processing that came before — all of it — could be replaced.
+
+---
+
+## Why this was a significant change
+
+The previous generation of models processed text sequentially, which meant that relating a word near the end of a paragraph to a word at the beginning required threading through every intermediate step. Information degraded over distance. Long documents were hard.
+
+Transformers have no such constraint. Every token attends to every other token in one operation. Long-range dependencies — the connections between ideas separated by many words — are as easy to capture as adjacent ones. The architecture scales: bigger models, more layers, more attention heads, and the performance kept improving.
+
+This scalability is what enabled the language models we have now. GPT, Claude, Gemini — they're all Transformer-based. The architecture turned out to be remarkably general, moving from language tasks to code, to images (via Vision Transformers), to protein structure prediction. Most of the large models that feel foundational today were built on top of this 2017 architecture, refined and scaled.
+
+---
+
+## What Transformers don't do
+
+Understanding what attention is also means knowing what it isn't.
+
+**Attention doesn't mean understanding.** The model learns to attend to the right things through training, but "the right things" is defined by predicting the next token well — not by understanding meaning the way humans do. What attention captures is statistical co-occurrence, shaped by enormous scale.
+
+**Context windows are still finite.** Transformers can attend to everything in the input, but that input has a maximum length. The "context window" — how many tokens a model can hold at once — is a real constraint. Fitting your entire codebase or document library into a single prompt isn't possible. This is one reason RAG and other retrieval approaches exist.
+
+**Quadratic cost at scale.** For a sequence of length n, attention requires computing n² scores. Short sequences are fine. Very long ones are expensive. A significant amount of research has focused on making attention faster at long contexts — sparse attention, linear approximations, and similar techniques.
+
+---
+
+The paper came out in 2017. By 2023, the most widely used AI systems were built directly on its ideas, scaled up by orders of magnitude. That's a fast transformation for any technology.
+
+The mechanism is simple enough to sketch in a few lines of pseudocode. What emerged from scaling it is not simple at all.

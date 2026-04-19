@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { toast } from "sonner";
 import { updateToolContent } from "@/app/actions/admin";
 
 type AdminTool = {
@@ -42,8 +41,8 @@ export default function AdminToolList({ tools }: { tools: AdminTool[] }) {
     setExpandedId((prev) => (prev === id ? null : id));
   }
 
-  function patch(id: string, patch: Partial<EditState>) {
-    setEditStates((prev) => ({ ...prev, [id]: { ...prev[id], ...patch } }));
+  function patch(id: string, changes: Partial<EditState>) {
+    setEditStates((prev) => ({ ...prev, [id]: { ...prev[id], ...changes } }));
   }
 
   function handleSave(tool: AdminTool) {
@@ -58,10 +57,8 @@ export default function AdminToolList({ tools }: { tools: AdminTool[] }) {
       );
       if (result.error) {
         patch(tool.id, { error: result.error });
-        toast.error("Save failed", { description: result.error });
       } else {
         patch(tool.id, { saved: true });
-        toast.success("Saved", { description: `${tool.name} updated.` });
         setTimeout(() => patch(tool.id, { saved: false }), 2500);
       }
     });
@@ -76,16 +73,16 @@ export default function AdminToolList({ tools }: { tools: AdminTool[] }) {
         return (
           <div
             key={tool.id}
-            className="rounded-2xl border border-moss-200 bg-parchment overflow-hidden"
+            className="rounded-lg border border-subtle bg-panel overflow-hidden"
           >
             {/* Row */}
             <div className="flex items-center gap-4 px-5 py-4">
               <span className="text-2xl w-8 flex-shrink-0">{tool.emoji}</span>
               <div className="flex-1 min-w-0">
-                <p className="font-serif font-bold text-espresso truncate">
+                <p className="font-sans font-semibold text-primary truncate">
                   {tool.name}
                 </p>
-                <p className="font-body text-xs text-forest/50 uppercase tracking-wider">
+                <p className="font-mono text-xs text-muted uppercase tracking-wider">
                   {tool.category ?? "—"} · {tool.slug}
                 </p>
               </div>
@@ -95,22 +92,22 @@ export default function AdminToolList({ tools }: { tools: AdminTool[] }) {
                 <span
                   aria-label={state.videoUrl ? "Has video" : "No video"}
                   className={`w-2 h-2 rounded-full ${
-                    state.videoUrl ? "bg-moss-500" : "bg-moss-200"
+                    state.videoUrl ? "bg-accent" : "bg-raised"
                   }`}
                 />
                 <span
                   aria-label={state.learningGuide ? "Has guide" : "No guide"}
                   className={`w-2 h-2 rounded-full ${
-                    state.learningGuide ? "bg-amber-400" : "bg-amber-100"
+                    state.learningGuide ? "bg-warm" : "bg-raised"
                   }`}
                 />
                 <button
                   onClick={() => toggle(tool.id)}
                   className={`
-                    font-body text-xs font-semibold px-4 py-1.5 rounded-full border transition-colors duration-150
+                    font-sans text-xs font-medium px-4 py-1.5 rounded-full border transition-colors duration-150
                     ${isOpen
-                      ? "bg-espresso text-parchment border-espresso"
-                      : "bg-moss-100 text-forest border-moss-200 hover:bg-moss-200"
+                      ? "bg-primary text-inverse border-primary"
+                      : "bg-raised text-secondary border-subtle hover:border-emphasis hover:text-primary"
                     }
                   `}
                 >
@@ -121,11 +118,11 @@ export default function AdminToolList({ tools }: { tools: AdminTool[] }) {
 
             {/* Inline form */}
             {isOpen && (
-              <div className="border-t border-moss-100 px-5 py-5 space-y-4 bg-moss-50/40">
+              <div className="border-t border-subtle px-5 py-5 space-y-4 bg-raised">
                 <div className="space-y-1.5">
-                  <label className="font-body text-xs font-semibold uppercase tracking-widest text-forest/60">
+                  <label className="font-sans text-xs font-medium uppercase tracking-widest text-muted">
                     Video URL
-                    <span className="ml-2 font-normal normal-case tracking-normal text-forest/40">
+                    <span className="ml-2 font-normal normal-case tracking-normal">
                       (YouTube embed URL)
                     </span>
                   </label>
@@ -136,14 +133,14 @@ export default function AdminToolList({ tools }: { tools: AdminTool[] }) {
                       patch(tool.id, { videoUrl: e.target.value, saved: false })
                     }
                     placeholder="https://www.youtube.com/embed/VIDEO_ID"
-                    className="w-full font-body text-sm bg-parchment border border-moss-200 rounded-xl px-4 py-2.5 text-espresso placeholder:text-forest/30 focus:outline-none focus:border-moss-400 transition-colors"
+                    className="w-full font-mono text-sm bg-page border border-[var(--border-default)] rounded-md px-4 py-2.5 text-primary placeholder:text-muted focus:outline-none focus:border-emphasis transition-colors"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="font-body text-xs font-semibold uppercase tracking-widest text-forest/60">
+                  <label className="font-sans text-xs font-medium uppercase tracking-widest text-muted">
                     Learning Guide
-                    <span className="ml-2 font-normal normal-case tracking-normal text-forest/40">
+                    <span className="ml-2 font-normal normal-case tracking-normal">
                       (separate paragraphs with a blank line)
                     </span>
                   </label>
@@ -157,26 +154,26 @@ export default function AdminToolList({ tools }: { tools: AdminTool[] }) {
                       })
                     }
                     placeholder="Write a friendly, practical guide for getting started with this tool..."
-                    className="w-full font-body text-sm bg-parchment border border-moss-200 rounded-xl px-4 py-2.5 text-espresso placeholder:text-forest/30 focus:outline-none focus:border-moss-400 transition-colors resize-y"
+                    className="w-full font-sans text-sm bg-page border border-[var(--border-default)] rounded-md px-4 py-2.5 text-primary placeholder:text-muted focus:outline-none focus:border-emphasis transition-colors resize-y"
                   />
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-4">
                   <button
                     onClick={() => handleSave(tool)}
                     disabled={isPending}
-                    className="font-body text-sm font-semibold px-6 py-2.5 rounded-xl bg-moss-500 text-parchment hover:bg-moss-600 disabled:opacity-50 transition-colors duration-150"
+                    className="font-sans text-sm font-medium px-6 py-2.5 rounded-md bg-accent text-inverse hover:bg-accent-dim disabled:opacity-50 transition-colors duration-150"
                   >
                     {isPending ? "Saving…" : "Save"}
                   </button>
 
                   {state.saved && (
-                    <span className="font-body text-sm text-moss-600 font-medium">
+                    <span className="font-sans text-sm text-accent">
                       ✓ Saved
                     </span>
                   )}
                   {state.error && (
-                    <span className="font-body text-sm text-red-600">
+                    <span className="font-sans text-sm text-danger">
                       {state.error}
                     </span>
                   )}

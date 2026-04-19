@@ -1,0 +1,76 @@
+---
+title: "Fine-Tuning"
+tagline: "Teaching a model new habits, not new knowledge"
+readTime: "8 min read"
+slug: "fine-tuning"
+---
+
+There's a version of this explanation that will make you want to fine-tune everything. And a version that will leave you thinking most people never need to. Both of those versions are true. The useful question is which one applies to you — and being honest about that requires understanding what fine-tuning actually does.
+
+Base models like GPT-4 or Claude are trained on enormous amounts of text, which gives them broad, general capabilities. Fine-tuning takes one of those models and continues training it on a smaller, specific dataset — your customer support transcripts, your legal documents, your company's writing style guide — to shift its behavior toward your particular context.
+
+What changes isn't the model's intelligence. And, importantly, it isn't primarily the model's knowledge either. What fine-tuning changes is **behavior**: tone, format, consistency, the particular way the model responds.
+
+---
+
+## What fine-tuning actually adjusts
+
+Think of a base model as someone with a strong general education and no particular professional context. They can write in many styles, explain many topics, follow many kinds of instructions. Now put them through six months at a specific company with a specific house style, handling a specific set of customer interactions.
+
+Their capabilities don't grow. Their habits change. They start to respond the way your context expects without being told to each time.
+
+That's the outcome fine-tuning produces: reliable style and format, without having to specify it in every prompt.
+
+```python
+from openai import OpenAI
+
+client = OpenAI()
+
+# Upload a JSONL file of training examples
+# Each line: {"messages": [{"role": "user", ...}, {"role": "assistant", ...}]}
+job = client.fine_tuning.jobs.create(
+    training_file="file-abc123",
+    model="gpt-4o-mini",
+    hyperparameters={"n_epochs": 3},
+)
+
+# The resulting model ID looks like:
+# ft:gpt-4o-mini:your-org:custom-name:abc123
+print(job.id)
+```
+
+> Most people who believe they need to fine-tune just need a better system prompt. Fine-tuning is for when you've genuinely exhausted prompting — when you need consistency at scale, across thousands of calls, that a prompt can't reliably deliver.
+
+---
+
+## When fine-tuning makes sense
+
+**You have a consistent format or structure requirement.** If every response needs to be valid JSON with a specific schema, or formatted in a particular way that's hard to enforce through prompting alone, fine-tuning can make that format reliable without repeatedly specifying it.
+
+**You need a very specific tone.** If your brand has a distinctive voice — particular vocabulary, specific warmth, a writing style that's hard to describe but easy to demonstrate — fine-tuning on examples of that voice can transfer it more reliably than prompt instructions.
+
+**You're making thousands of calls.** A fine-tuned model can often achieve good results with shorter prompts than a base model, because some of the context is baked in. At high volume, that's real cost savings.
+
+---
+
+## When it doesn't
+
+**You want the model to learn facts.** Fine-tuning is poor at reliably encoding new factual knowledge. The model may appear to learn facts during training but will hallucinate around them in ways that are hard to predict. For factual grounding, use RAG — give the model the information at inference time, don't try to bake it in.
+
+**You want behavior that a system prompt can already achieve.** This is the majority of cases. If careful prompting and a good system prompt get you 90% of the way there, fine-tuning is expensive and slow for marginal gains. The data collection and training process takes significant time; the system prompt can be iterated in minutes.
+
+**Your use case is still changing.** Fine-tuned models are snapshots. Every time your requirements shift, you need new training data and a new fine-tuning run. A prompt is cheaper to update.
+
+---
+
+## What it doesn't do
+
+Fine-tuning doesn't make a smaller model as capable as a larger one. If the base model can't perform a reasoning task, fine-tuning won't unlock that capability — it wasn't there to be taught.
+
+It also doesn't give you complete control. The fine-tuned model's underlying tendencies come from pretraining, which is orders of magnitude larger than your dataset. You're nudging behavior within the space the base model defines, not rewriting it from scratch.
+
+---
+
+The analogy holds: fine-tuning shapes professional habits, not raw intelligence. Used for the right reasons — format, tone, consistent style at scale — it delivers. Used as a substitute for the harder work of designing good prompts and choosing the right model, it mostly costs money and time.
+
+Know which situation you're in before you start collecting training data.

@@ -8,116 +8,89 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
-    <main className="min-h-screen bg-parchment">
+    <main className="min-h-screen bg-page">
       <div className="max-w-3xl mx-auto px-6 md:px-10 py-16 md:py-24">
 
         {/* Back */}
         <Link
           href="/"
-          className="inline-flex items-center gap-2 font-body text-sm text-forest/50 hover:text-forest transition-colors duration-150 mb-12"
+          className="inline-flex items-center gap-2 font-sans text-sm text-secondary hover:text-primary transition-colors duration-150 mb-12"
         >
           ← Back to AIght
         </Link>
 
         {/* Header */}
-        <div className="mb-12 pb-8 border-b border-moss-200">
-          <p className="font-body text-xs uppercase tracking-[0.2em] text-moss-500 mb-3">
-            Legal ✦
+        <div className="mb-12 pb-8 border-b border-subtle">
+          <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted mb-3">
+            Legal
           </p>
-          <h1 className="font-serif text-4xl md:text-5xl font-bold text-espresso leading-tight mb-4">
+          <h1 className="font-sans text-4xl md:text-5xl font-semibold text-primary leading-tight mb-4">
             Terms of Service
           </h1>
-          <p className="font-body text-sm text-forest/50">
+          <p className="font-sans text-sm text-secondary">
             Last updated: <time dateTime="2026-04">April 2026</time>
           </p>
         </div>
 
         {/* Body */}
-        <div className="space-y-12 font-body text-forest/80 leading-relaxed">
+        <div className="space-y-12 font-sans text-secondary leading-relaxed">
 
           <section className="space-y-4">
             <p className="text-base">
               These Terms of Service (&ldquo;Terms&rdquo;) govern your access to and use of
               AIght (&ldquo;the Service&rdquo;), operated by{" "}
-              <strong className="text-espresso">Mankaran Singh</strong> (&ldquo;we&rdquo;,
+              <strong className="text-primary">Mankaran Singh</strong> (&ldquo;we&rdquo;,
               &ldquo;our&rdquo;, or &ldquo;us&rdquo;) at{" "}
-              <span className="text-moss-600 font-medium">aightai.in</span>.
+              <span className="text-accent font-medium">aightai.in</span>.
             </p>
             <p>
-              Please read these Terms carefully before using the Service. By creating
-              an account or otherwise accessing AIght, you agree to be bound by these
-              Terms.
+              Please read these Terms carefully before using the Service. By accessing
+              AIght, you agree to be bound by these Terms.
             </p>
           </section>
 
           {/* 1 */}
           <section className="space-y-4">
-            <h2 className="font-serif text-2xl font-bold text-espresso">
+            <h2 className="font-sans text-2xl font-semibold text-primary">
               1. Acceptance of Terms
             </h2>
             <p>
               By accessing or using AIght, you confirm that you are at least 13 years
-              of age (or the minimum digital age of consent in your jurisdiction,
-              whichever is higher), that you have read and understood these Terms, and
-              that you agree to be bound by them and by our{" "}
+              of age, that you have read and understood these Terms, and that you
+              agree to be bound by them and by our{" "}
               <Link
                 href="/privacy"
-                className="text-moss-600 hover:text-moss-700 underline underline-offset-2"
+                className="text-accent hover:text-accent-dim underline underline-offset-2"
               >
                 Privacy Policy
               </Link>.
-            </p>
-            <p>
-              If you are using the Service on behalf of an organisation, you represent
-              that you have the authority to bind that organisation to these Terms.
             </p>
           </section>
 
           {/* 2 */}
           <section className="space-y-4">
-            <h2 className="font-serif text-2xl font-bold text-espresso">
+            <h2 className="font-sans text-2xl font-semibold text-primary">
               2. Description of Service
             </h2>
             <p>
-              AIght is a curated AI tool directory and visual roadmap builder. It
-              allows registered users to:
+              AIght is a curated AI tool directory and literary magazine. It allows
+              anyone to:
             </p>
             <ul className="list-disc list-outside ml-5 space-y-2">
               <li>Browse and discover AI tools curated by the platform.</li>
-              <li>
-                Submit natural-language prompts to generate personalised, AI-curated
-                roadmaps of tools relevant to their goals.
-              </li>
-              <li>Build and manage visual canvases of tool workflows.</li>
-              <li>Share read-only views of their canvases with others.</li>
+              <li>Read editorial content about AI tools and concepts (Signal, Learn).</li>
+              <li>Subscribe to a newsletter for updates.</li>
             </ul>
             <p>
-              The Service is provided on an &ldquo;as is&rdquo; basis. Features, tool listings,
-              and AI outputs may change or be removed at any time without prior notice.
+              No account is required to use the Service. Features, tool listings, and
+              content may change or be removed at any time without prior notice.
             </p>
           </section>
 
           {/* 3 */}
           <section className="space-y-4">
-            <h2 className="font-serif text-2xl font-bold text-espresso">
-              3. User Accounts
-            </h2>
-            <p>
-              You must create an account to access personalised features. You are
-              responsible for maintaining the security of your account and for all
-              activity that occurs under it. You must notify us immediately of any
-              unauthorised access.
-            </p>
-            <p>
-              We reserve the right to terminate accounts that violate these Terms,
-              are inactive for extended periods, or where required by law.
-            </p>
-          </section>
-
-          {/* 4 */}
-          <section className="space-y-4">
-            <h2 className="font-serif text-2xl font-bold text-espresso">
-              4. User Conduct
+            <h2 className="font-sans text-2xl font-semibold text-primary">
+              3. Acceptable Use
             </h2>
             <p>
               You agree to use the Service only for lawful purposes and in a manner
@@ -125,40 +98,26 @@ export default function TermsPage() {
             </p>
             <ul className="list-disc list-outside ml-5 space-y-2">
               <li>
-                Submit prompts designed to generate harmful, illegal, defamatory,
-                or otherwise objectionable content.
-              </li>
-              <li>
-                Attempt to manipulate, jailbreak, or otherwise circumvent the
-                safety measures of any AI model integrated into the Service.
-              </li>
-              <li>
                 Use the Service to scrape, harvest, or systematically extract data
-                from the platform without express written permission.
+                without express written permission.
               </li>
               <li>
                 Introduce malicious code, bots, or automated scripts that interfere
                 with the normal operation of the Service.
               </li>
               <li>
-                Impersonate any person or entity or misrepresent your affiliation
-                with any person or entity.
+                Attempt to gain unauthorised access to any backend systems.
               </li>
               <li>
-                Attempt to gain unauthorised access to other users&rsquo; accounts
-                or any backend systems.
+                Impersonate any person or entity or misrepresent your affiliation.
               </li>
             </ul>
-            <p>
-              We reserve the right to remove content and suspend accounts that
-              violate these conduct rules without prior notice or refund.
-            </p>
           </section>
 
-          {/* 5 */}
+          {/* 4 */}
           <section className="space-y-4">
-            <h2 className="font-serif text-2xl font-bold text-espresso">
-              5. Intellectual Property
+            <h2 className="font-sans text-2xl font-semibold text-primary">
+              4. Intellectual Property
             </h2>
             <p>
               The AIght name, logo, codebase, design, and curated tool content are
@@ -166,102 +125,80 @@ export default function TermsPage() {
               applicable copyright and trademark laws.
             </p>
             <p>
-              You retain ownership of any original prompts and content you submit to
-              the Service. By submitting content, you grant us a non-exclusive,
-              royalty-free, worldwide licence to store and display that content solely
-              for the purpose of providing and improving the Service.
+              Editorial content on the Service (Signal posts, Learn articles) is
+              written by the operator and may not be reproduced without attribution.
             </p>
+          </section>
+
+          {/* 5 */}
+          <section className="space-y-4">
+            <h2 className="font-sans text-2xl font-semibold text-primary">
+              5. Disclaimer of Warranties
+            </h2>
             <p>
-              AI-generated roadmaps produced by the Service are the result of automated
-              processing. We make no claim of copyright over AI outputs, but we also
-              do not warrant their accuracy, completeness, or fitness for any particular
-              purpose.
+              The Service is provided <strong className="text-primary">&ldquo;as is&rdquo;</strong> and{" "}
+              <strong className="text-primary">&ldquo;as available&rdquo;</strong> without warranties
+              of any kind. Tool listings may be inaccurate, outdated, or incomplete.
+              You should independently verify any information before making professional
+              or financial decisions based on it.
             </p>
           </section>
 
           {/* 6 */}
           <section className="space-y-4">
-            <h2 className="font-serif text-2xl font-bold text-espresso">
-              6. Disclaimer of Warranties
+            <h2 className="font-sans text-2xl font-semibold text-primary">
+              6. Limitation of Liability
             </h2>
             <p>
-              The Service is provided <strong>&ldquo;as is&rdquo;</strong> and{" "}
-              <strong>&ldquo;as available&rdquo;</strong> without warranties of any kind, express
-              or implied, including but not limited to warranties of merchantability,
-              fitness for a particular purpose, non-infringement, or that the Service
-              will be uninterrupted, error-free, or free of viruses.
+              To the maximum extent permitted by applicable law, Mankaran Singh shall
+              not be liable for any indirect, incidental, special, consequential, or
+              punitive damages arising out of or related to your use of, or inability
+              to use, the Service.
             </p>
             <p>
-              AI-generated content may be inaccurate, incomplete, or outdated. You
-              should independently verify any information provided by the AI Curator
-              before making professional or financial decisions based on it.
+              Our total liability to you for any claim shall not exceed ₹1,000 INR.
             </p>
           </section>
 
           {/* 7 */}
           <section className="space-y-4">
-            <h2 className="font-serif text-2xl font-bold text-espresso">
-              7. Limitation of Liability
+            <h2 className="font-sans text-2xl font-semibold text-primary">
+              7. Governing Law
             </h2>
             <p>
-              To the maximum extent permitted by applicable law, Mankaran Singh shall
-              not be liable for any indirect, incidental, special, consequential, or
-              punitive damages — including but not limited to loss of data, loss of
-              revenue, loss of profits, or loss of goodwill — arising out of or
-              related to your use of, or inability to use, the Service, even if
-              advised of the possibility of such damages.
-            </p>
-            <p>
-              Our total liability to you for any claim arising from or related to
-              these Terms or the Service shall not exceed the greater of (a) the
-              amounts you paid us, if any, in the twelve months preceding the claim,
-              or (b) ₹1,000 INR.
+              These Terms shall be governed by the laws of <strong className="text-primary">India</strong>.
+              Any disputes shall be subject to the exclusive jurisdiction of the courts
+              located in India.
             </p>
           </section>
 
           {/* 8 */}
           <section className="space-y-4">
-            <h2 className="font-serif text-2xl font-bold text-espresso">
-              8. Governing Law &amp; Jurisdiction
+            <h2 className="font-sans text-2xl font-semibold text-primary">
+              8. Changes to These Terms
             </h2>
             <p>
-              These Terms shall be governed by and construed in accordance with the
-              laws of <strong>India</strong>, without regard to its conflict of law
-              provisions. Any disputes arising under or in connection with these
-              Terms shall be subject to the exclusive jurisdiction of the courts
-              located in India.
+              We may modify these Terms at any time by updating the &ldquo;Last updated&rdquo;
+              date at the top of this page. Continued use of the Service after changes
+              constitutes your acceptance of the revised Terms.
             </p>
           </section>
 
           {/* 9 */}
           <section className="space-y-4">
-            <h2 className="font-serif text-2xl font-bold text-espresso">
-              9. Changes to These Terms
+            <h2 className="font-sans text-2xl font-semibold text-primary">
+              9. Contact
             </h2>
             <p>
-              We reserve the right to modify these Terms at any time. We will provide
-              notice of material changes by updating the &ldquo;Last updated&rdquo; date at the
-              top of this page and, where appropriate, by notifying you via email.
-              Continued use of the Service after the effective date of any changes
-              constitutes your acceptance of the revised Terms.
+              Questions or concerns regarding these Terms:
             </p>
-          </section>
-
-          {/* 10 */}
-          <section className="space-y-4">
-            <h2 className="font-serif text-2xl font-bold text-espresso">
-              10. Contact
-            </h2>
-            <p>
-              Questions or concerns regarding these Terms should be directed to:
-            </p>
-            <address className="not-italic rounded-2xl border border-moss-200 bg-moss-50/40 px-6 py-5 text-sm space-y-1">
-              <p className="font-semibold text-espresso">Mankaran Singh</p>
+            <address className="not-italic rounded-lg border border-subtle bg-raised px-6 py-5 text-sm space-y-1">
+              <p className="font-sans font-medium text-primary">Mankaran Singh</p>
               <p>AIght — aightai.in</p>
               <p>
                 <a
                   href="mailto:singhmankaran05@gmail.com"
-                  className="text-moss-600 hover:text-moss-700 underline underline-offset-2"
+                  className="text-accent hover:text-accent-dim underline underline-offset-2"
                 >
                   singhmankaran05@gmail.com
                 </a>
@@ -272,13 +209,13 @@ export default function TermsPage() {
         </div>
 
         {/* Footer nav */}
-        <div className="mt-16 pt-8 border-t border-moss-200 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="font-body text-xs text-forest/40">
-            © {new Date().getFullYear()} AIght. Built with 🌿 by Mankaran Singh.
+        <div className="mt-16 pt-8 border-t border-subtle flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="font-sans text-xs text-muted">
+            © {new Date().getFullYear()} AIght. Built by Mankaran Singh.
           </p>
           <Link
             href="/privacy"
-            className="font-body text-xs text-moss-600 hover:text-moss-700 transition-colors duration-150"
+            className="font-sans text-xs text-accent hover:text-accent-dim transition-colors duration-150"
           >
             Privacy Policy →
           </Link>

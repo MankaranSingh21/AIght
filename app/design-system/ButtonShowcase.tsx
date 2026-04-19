@@ -26,9 +26,6 @@ export default function ButtonShowcase() {
           <Button variant="primary">Primary</Button>
           <Button variant="secondary">Secondary</Button>
           <Button variant="ghost">Ghost</Button>
-          <span className="inline-block bg-espresso rounded-2xl p-1">
-            <Button variant="neon">Neon (on dark)</Button>
-          </span>
         </div>
       </div>
 
@@ -42,7 +39,7 @@ export default function ButtonShowcase() {
             Explore Tools →
           </Button>
           <Button variant="secondary" size="lg">
-            Add to Roadmap
+            See all signal
           </Button>
           <Button variant="ghost" size="md">
             See all categories
