@@ -8,6 +8,7 @@ import NewsletterForm from "@/components/NewsletterForm";
 import type { Tool } from "@/utils/supabase/types";
 import { getAllConcepts } from "@/lib/learn";
 import { getSignalPosts } from "@/lib/signal";
+import fields from "@/content/paths/fields.json";
 
 // ── Data helpers ──────────────────────────────────────────────────────────────
 
@@ -86,6 +87,63 @@ function ConceptCard({
         {tagline}
       </p>
       <p className="font-mono text-sm text-muted">{readTime}</p>
+    </Link>
+  );
+}
+
+// ── Path card (field guide) ───────────────────────────────────────────────────
+
+const FEATURED_SLUGS = ["biology", "medicine-healthcare", "creative-writing-literature", "education-teaching"];
+
+function PathCard({
+  field,
+  slug,
+  tagline,
+  difficulty,
+}: {
+  field: string;
+  slug: string;
+  tagline: string;
+  difficulty: string;
+}) {
+  const badgeStyle =
+    difficulty === "Easy"
+      ? undefined
+      : difficulty === "Medium"
+      ? {
+          background: "rgba(201, 169, 110, 0.1)",
+          color: "var(--accent-warm)",
+          borderColor: "rgba(201, 169, 110, 0.3)",
+        }
+      : {
+          background: "rgba(224, 112, 112, 0.1)",
+          color: "var(--error)",
+          borderColor: "rgba(224, 112, 112, 0.3)",
+        };
+
+  return (
+    <Link
+      href={`/learn/paths/${slug}`}
+      className="group flex flex-col gap-3 p-6 bg-panel border border-subtle rounded-lg hover:border-emphasis hover:-translate-y-0.5 transition-all duration-200"
+    >
+      <div className="flex items-start justify-between gap-4">
+        <h3
+          className="font-sans text-xl font-semibold text-primary group-hover:text-accent transition-colors duration-150 leading-tight"
+          style={{ letterSpacing: "-0.02em" }}
+        >
+          {field}
+        </h3>
+        <span
+          className={difficulty === "Easy" ? "tag tag-accent" : "tag"}
+          style={badgeStyle}
+        >
+          {difficulty}
+        </span>
+      </div>
+      <p className="font-serif italic text-sm text-secondary leading-relaxed flex-1 line-clamp-3">
+        {tagline}
+      </p>
+      <p className="font-sans text-sm text-accent mt-1">Explore path →</p>
     </Link>
   );
 }
@@ -219,7 +277,50 @@ export default function Home() {
           </section>
         )}
 
-        {/* 4. Tools making waves */}
+        {/* 4. AI in your field */}
+        {(() => {
+          const featured = FEATURED_SLUGS
+            .map((s) => fields.find((f) => f.slug === s))
+            .filter(Boolean) as typeof fields;
+          if (featured.length === 0) return null;
+          return (
+            <section className="px-6 md:px-12 lg:px-20 py-20 border-t border-subtle">
+              <div className="max-w-content mx-auto">
+                <div className="mb-10">
+                  <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted mb-2">
+                    field guides
+                  </p>
+                  <h2
+                    className="font-sans text-3xl font-semibold text-primary"
+                    style={{ letterSpacing: "-0.02em" }}
+                  >
+                    AI in your field
+                  </h2>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  {featured.map((f) => (
+                    <PathCard
+                      key={f.slug}
+                      field={f.field}
+                      slug={f.slug}
+                      tagline={f.tagline}
+                      difficulty={f.difficulty}
+                    />
+                  ))}
+                </div>
+
+                <div className="mt-10">
+                  <Link href="/learn/paths" className="btn-ghost">
+                    See all fields →
+                  </Link>
+                </div>
+              </div>
+            </section>
+          );
+        })()}
+
+        {/* 5. Tools making waves */}
         <Suspense fallback={null}>
           <ToolsSection />
         </Suspense>
