@@ -33,6 +33,9 @@ export default function Hero() {
           <Link href="/tools" className="btn-ghost">
             Browse tools
           </Link>
+          <Link href="/quiz" className="btn-ghost">
+            Find your risk score →
+          </Link>
         </div>
       </div>
     </section>
