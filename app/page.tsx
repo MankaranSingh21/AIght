@@ -209,7 +209,13 @@ async function ToolsSection() {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+            gap: "var(--space-6)",
+          }}
+        >
           {tools.map((tool) => (
             <Link key={tool.slug} href={`/tool/${tool.slug}`} className="block">
               <ToolCard {...tool} />

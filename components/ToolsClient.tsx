@@ -175,7 +175,11 @@ export default function ToolsClient({ tools, initialCategory = "all" }: Props) {
         </div>
       ) : (
         <motion.div
-          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6"
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+            gap: "var(--space-6)",
+          }}
           initial="hidden"
           animate="show"
           variants={{ hidden: {}, show: { transition: { staggerChildren: 0.04 } } }}
