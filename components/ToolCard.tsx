@@ -13,13 +13,8 @@ export type ToolCardProps = {
   url?: string | null;
 };
 
-function getDomain(url: string | null | undefined): string | null {
-  if (!url) return null;
-  try {
-    return new URL(url).hostname.replace(/^www\./, "");
-  } catch {
-    return null;
-  }
+function getMicrolinkUrl(url: string): string {
+  return `https://api.microlink.io/?url=${encodeURIComponent(url)}&screenshot=true&embed=screenshot.url`;
 }
 
 export default function ToolCard({
@@ -30,9 +25,8 @@ export default function ToolCard({
   tags,
   url,
 }: ToolCardProps) {
-  const [imgError, setImgError] = useState(false);
-  const domain = getDomain(url);
-  const showLogo = !!domain && !imgError;
+  const [screenshotError, setScreenshotError] = useState(false);
+  const hasUrl = !!url;
 
   return (
     <motion.div
@@ -43,32 +37,36 @@ export default function ToolCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
     >
-      {/* Media — fixed 120px, logo centred, category pinned bottom-left */}
+      {/* Media — screenshot with category placeholder fallback */}
       <div
-        className="relative flex items-center justify-center shrink-0"
-        style={{ height: 120, background: "var(--bg-elevated)" }}
+        className="relative shrink-0 overflow-hidden"
+        style={{
+          height: 140,
+          borderRadius: "var(--radius-lg) var(--radius-lg) 0 0",
+          background: "var(--bg-elevated)",
+        }}
       >
-        {showLogo ? (
+        {hasUrl && !screenshotError ? (
           <Image
-            src={`https://logo.clearbit.com/${domain}`}
-            alt={`${name} logo`}
-            width={48}
-            height={48}
-            className="object-contain rounded-md"
-            onError={() => setImgError(true)}
+            src={getMicrolinkUrl(url!)}
+            alt={`${name} screenshot`}
+            fill
+            className="object-cover"
+            onError={() => setScreenshotError(true)}
             unoptimized
           />
         ) : (
           <span
-            className="font-mono font-medium select-none"
-            style={{ fontSize: "2.5rem", color: "var(--accent-primary)", opacity: 0.35 }}
+            className="absolute inset-0 flex items-center justify-center font-mono font-medium select-none"
+            style={{ fontSize: "10rem", color: "var(--accent-primary)", opacity: 0.06, lineHeight: 1 }}
+            aria-hidden="true"
           >
-            {name.charAt(0)}
+            {category}
           </span>
         )}
         <span
           className="absolute bottom-3 left-4 font-mono text-xs uppercase tracking-[0.1em]"
-          style={{ color: "var(--text-muted)" }}
+          style={{ color: "var(--text-muted)", position: "absolute", zIndex: 1 }}
         >
           {category}
         </span>

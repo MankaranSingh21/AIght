@@ -58,6 +58,7 @@ const BRIDGE = `M ${D_BX1},${D_BY} C ${D_BMX - 20},${D_BY - 35} ${D_BMX + 20},${
 export default function ConceptMap() {
   const router = useRouter();
   const [hovered, setHovered] = useState<string | null>(null);
+  const [focused, setFocused] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -156,6 +157,7 @@ export default function ConceptMap() {
       {NODES.map((node, i) => {
         const p = pos(node);
         const isHov = hovered === node.id;
+        const isFoc = focused === node.id;
         const delay = i * 80;
 
         return (
@@ -176,9 +178,13 @@ export default function ConceptMap() {
                 transformOrigin: `${p.cx}px ${p.cy}px`,
                 transform: isHov ? 'scale(1.03)' : 'scale(1)',
                 transition: 'transform 200ms ease',
+                outline: 'none',
+                WebkitTapHighlightColor: 'transparent',
               }}
               onMouseEnter={() => setHovered(node.id)}
               onMouseLeave={() => setHovered(null)}
+              onFocus={() => setFocused(node.id)}
+              onBlur={() => setFocused(null)}
               onClick={() => router.push(`/learn/${node.slug}`)}
               onKeyDown={(e) => { if (e.key === 'Enter') router.push(`/learn/${node.slug}`); }}
             >
@@ -189,8 +195,8 @@ export default function ConceptMap() {
                 height={p.h}
                 rx={12}
                 fill="var(--bg-surface)"
-                stroke={isHov ? 'var(--border-emphasis)' : 'var(--border-default)'}
-                strokeWidth={1}
+                stroke={isFoc ? 'var(--accent-primary)' : isHov ? 'var(--border-emphasis)' : 'var(--border-default)'}
+                strokeWidth={isFoc ? 1.5 : 1}
                 style={{ transition: 'stroke 200ms ease' }}
               />
               {/* Title */}

@@ -7,6 +7,11 @@ const nextConfig = {
         hostname: "logo.clearbit.com",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "api.microlink.io",
+        pathname: "/**",
+      },
     ],
   },
 
