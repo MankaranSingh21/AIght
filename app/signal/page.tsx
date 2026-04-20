@@ -49,7 +49,7 @@ export default async function SignalPage() {
                 className="group block py-8 border-b border-subtle last:border-b-0"
               >
                 <p className="font-mono text-sm text-muted mb-2">{post.date}</p>
-                <h2 className="font-sans text-xl font-medium text-primary group-hover:text-accent transition-colors duration-150 mb-3">
+                <h2 className="font-sans text-xl font-medium text-primary group-hover:text-accent group-hover:translate-x-1 transition-[color,transform] duration-150 mb-3">
                   {post.title}
                 </h2>
                 <p className="font-serif text-base text-secondary leading-relaxed line-clamp-2">

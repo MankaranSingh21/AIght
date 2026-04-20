@@ -30,7 +30,7 @@ export default function ToolCard({
 
   return (
     <motion.div
-      className="relative flex flex-col overflow-hidden rounded-lg border border-subtle bg-panel cursor-pointer transition-[border-color] duration-200 hover:[border-color:var(--border-emphasis)]"
+      className="group relative flex flex-col overflow-hidden rounded-lg border border-subtle bg-panel cursor-pointer transition-[border-color] duration-200 hover:[border-color:var(--border-emphasis)]"
       whileHover={{ y: -2, transition: { duration: 0.2, ease: "easeOut" } }}
       whileTap={{ scale: 0.99 }}
       initial={{ opacity: 0, y: 16 }}
@@ -39,7 +39,7 @@ export default function ToolCard({
     >
       {/* Media — screenshot with category placeholder fallback */}
       <div
-        className="relative shrink-0 overflow-hidden"
+        className="relative shrink-0 overflow-hidden group-hover:brightness-105 transition-[filter] duration-200"
         style={{
           height: 140,
           borderRadius: "var(--radius-lg) var(--radius-lg) 0 0",

@@ -7,11 +7,11 @@ import { useRouter } from 'next/navigation';
 
 const D_T1X = 170, D_T2X = 530;
 const D_NW = 200, D_NH = 75;
-const D_VW = 700, D_VH = 660;
+const D_VW = 700, D_VH = 680;
 
 const M_CX = 160;
 const M_NW = 260, M_NH = 70;
-const M_VW = 320, M_VH = 820;
+const M_VW = 320, M_VH = 850;
 
 // ── Node data (positions baked in) ───────────────────────────────
 
@@ -170,6 +170,7 @@ export default function ConceptMap() {
             }
           >
             <g
+              className="concept-node"
               role="button"
               tabIndex={0}
               aria-label={`Learn about ${node.title}`}
@@ -235,6 +236,34 @@ export default function ConceptMap() {
               >
                 {node.tagline}
               </text>
+              {/* Tooltip — appears below node on hover (pure CSS via .concept-node:hover) */}
+              <g className="concept-tooltip">
+                <rect
+                  x={p.x - 2}
+                  y={p.y + p.h + 5}
+                  width={p.w + 4}
+                  height={22}
+                  rx={4}
+                  fill="var(--bg-elevated)"
+                  stroke="var(--border-emphasis)"
+                  strokeWidth={1}
+                />
+                <text
+                  x={p.cx}
+                  y={p.y + p.h + 19}
+                  textAnchor="middle"
+                  style={{
+                    fontFamily: 'var(--font-editorial)',
+                    fontSize: 11,
+                    fontStyle: 'italic',
+                    fill: 'var(--accent-primary)',
+                    userSelect: 'none',
+                    pointerEvents: 'none',
+                  }}
+                >
+                  {node.tagline}
+                </text>
+              </g>
             </g>
           </g>
         );

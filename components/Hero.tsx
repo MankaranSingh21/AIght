@@ -11,7 +11,7 @@ export default function Hero() {
           className="font-mono uppercase text-accent mb-8"
           style={{ fontSize: "11px", letterSpacing: "0.12em" }}
         >
-          A literary magazine covering AI
+          A literary magazine covering AI<span className="eyebrow-cursor">_</span>
         </p>
 
         <h1

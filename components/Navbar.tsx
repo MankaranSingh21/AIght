@@ -14,24 +14,9 @@ export default function Navbar() {
 
         {/* Nav links */}
         <div className="hidden md:flex items-center gap-1">
-          <Link
-            href="/learn"
-            className="font-sans text-sm text-secondary hover:text-primary px-3 py-1.5 rounded-md transition-colors duration-150"
-          >
-            Learn
-          </Link>
-          <Link
-            href="/tools"
-            className="font-sans text-sm text-secondary hover:text-primary px-3 py-1.5 rounded-md transition-colors duration-150"
-          >
-            Tools
-          </Link>
-          <Link
-            href="/signal"
-            className="font-sans text-sm text-secondary hover:text-primary px-3 py-1.5 rounded-md transition-colors duration-150"
-          >
-            Signal
-          </Link>
+          <Link href="/learn" className="nav-link">Learn</Link>
+          <Link href="/tools" className="nav-link">Tools</Link>
+          <Link href="/signal" className="nav-link">Signal</Link>
         </div>
       </div>
     </nav>

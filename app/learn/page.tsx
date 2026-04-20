@@ -43,7 +43,7 @@ export default function LearnPage() {
               <Link
                 key={concept.slug}
                 href={`/learn/${concept.slug}`}
-                className="group block bg-panel border-l-[3px] border-accent rounded-lg p-6 hover:bg-raised transition-colors duration-200"
+                className="group block concept-card rounded-lg p-6"
               >
                 <p className="font-mono text-xs uppercase tracking-[0.15em] text-muted mb-4">
                   Concept

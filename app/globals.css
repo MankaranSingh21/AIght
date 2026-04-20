@@ -38,6 +38,9 @@
     /* Cursor */
     --cursor-color: var(--accent-primary);
 
+    /* Accent bright — slightly lighter for border hover transitions */
+    --accent-primary-bright: #9ED4AB;
+
     /* Fonts */
     --font-ui:       'Space Grotesk', system-ui, sans-serif;
     --font-editorial: 'Lora', Georgia, serif;
@@ -182,6 +185,94 @@
     color: var(--accent-primary);
   }
 
+  /* Eyebrow cursor — blinks 3 times then fades */
+  .eyebrow-cursor {
+    color: var(--accent-primary);
+    animation: blink 1s step-end 3, fade-out-cursor 0.4s ease 3s forwards;
+  }
+
+  /* Nav link — hover underline grows left-to-right */
+  .nav-link {
+    position: relative;
+    font-family: var(--font-ui);
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    padding: 6px var(--space-3);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+    white-space: nowrap;
+  }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    left: var(--space-3);
+    right: var(--space-3);
+    bottom: 3px;
+    height: 1px;
+    background: var(--accent-primary);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--transition-base);
+  }
+  .nav-link:hover {
+    color: var(--text-primary);
+  }
+  .nav-link:hover::after {
+    transform: scaleX(1);
+  }
+
+  /* Concept card — border brightens + glow background on hover */
+  .concept-card {
+    background: var(--bg-surface);
+    border-left: 3px solid var(--accent-primary);
+    transition: border-color var(--transition-base), background-color var(--transition-base);
+  }
+  .concept-card:hover {
+    border-left-color: var(--accent-primary-bright);
+    background-color: var(--accent-primary-glow);
+  }
+
+  /* SVG concept map — CSS tooltip, no JS */
+  .concept-node .concept-tooltip {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 200ms ease;
+  }
+  .concept-node:hover .concept-tooltip {
+    opacity: 1;
+  }
+
+  /* Scroll-reveal sections */
+  .reveal-section {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 500ms ease, transform 500ms ease;
+  }
+  .reveal-section.is-revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  /* Stagger direct grid/list children by 60ms */
+  .reveal-section .reveal-grid > *,
+  .reveal-section .reveal-list > * {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 500ms ease, transform 500ms ease;
+  }
+  .reveal-section.is-revealed .reveal-grid > *:nth-child(1),
+  .reveal-section.is-revealed .reveal-list > *:nth-child(1) { opacity: 1; transform: translateY(0); transition-delay: 60ms; }
+  .reveal-section.is-revealed .reveal-grid > *:nth-child(2),
+  .reveal-section.is-revealed .reveal-list > *:nth-child(2) { opacity: 1; transform: translateY(0); transition-delay: 120ms; }
+  .reveal-section.is-revealed .reveal-grid > *:nth-child(3),
+  .reveal-section.is-revealed .reveal-list > *:nth-child(3) { opacity: 1; transform: translateY(0); transition-delay: 180ms; }
+  .reveal-section.is-revealed .reveal-grid > *:nth-child(4),
+  .reveal-section.is-revealed .reveal-list > *:nth-child(4) { opacity: 1; transform: translateY(0); transition-delay: 240ms; }
+  .reveal-section.is-revealed .reveal-grid > *:nth-child(5),
+  .reveal-section.is-revealed .reveal-list > *:nth-child(5) { opacity: 1; transform: translateY(0); transition-delay: 300ms; }
+  .reveal-section.is-revealed .reveal-grid > *:nth-child(6),
+  .reveal-section.is-revealed .reveal-list > *:nth-child(6) { opacity: 1; transform: translateY(0); transition-delay: 360ms; }
+
   /* Tags and chips */
   .tag {
     font-family: var(--font-mono);
@@ -224,4 +315,9 @@
 @keyframes fade-up {
   from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-out-cursor {
+  from { opacity: 1; }
+  to   { opacity: 0; }
 }

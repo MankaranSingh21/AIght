@@ -5,6 +5,7 @@ import Hero from "@/components/Hero";
 import Footer from "@/components/Footer";
 import ToolCard, { type ToolCardProps } from "@/components/ToolCard";
 import NewsletterForm from "@/components/NewsletterForm";
+import ScrollReveal from "@/components/ScrollReveal";
 import type { Tool } from "@/utils/supabase/types";
 import { getAllConcepts } from "@/lib/learn";
 import { getSignalPosts } from "@/lib/signal";
@@ -44,7 +45,7 @@ function SignalCard({
       className="group block py-6 border-b border-subtle last:border-b-0"
     >
       <p className="font-mono text-sm text-muted mb-2">{date}</p>
-      <h3 className="font-sans text-xl font-medium text-primary group-hover:text-accent transition-colors duration-150 mb-2">
+      <h3 className="font-sans text-xl font-medium text-primary group-hover:text-accent group-hover:translate-x-1 transition-[color,transform] duration-150 mb-2">
         {title}
       </h3>
       <p className="font-serif text-base text-secondary leading-relaxed line-clamp-2">
@@ -70,7 +71,7 @@ function ConceptCard({
   return (
     <Link
       href={`/learn/${slug}`}
-      className="group flex flex-col gap-3 p-6 bg-panel border-l-[3px] border-accent rounded-lg hover:bg-raised transition-colors duration-200"
+      className="group flex flex-col gap-3 p-6 concept-card rounded-lg"
     >
       <p className="font-mono text-xs uppercase tracking-[0.15em] text-muted">
         Concept
@@ -167,7 +168,7 @@ async function SignalSection() {
           </h2>
         </div>
 
-        <div>
+        <div className="reveal-list">
           {posts.map((post, i) => (
             <SignalCard key={i} {...post} />
           ))}
@@ -246,12 +247,15 @@ export default function Home() {
         <Hero />
 
         {/* 2. From the archive — live Signal posts from Medium */}
-        <Suspense fallback={null}>
-          <SignalSection />
-        </Suspense>
+        <ScrollReveal>
+          <Suspense fallback={null}>
+            <SignalSection />
+          </Suspense>
+        </ScrollReveal>
 
         {/* 3. Understand — Concept cards sourced from content/learn/ */}
         {concepts.length > 0 && (
+          <ScrollReveal>
           <section className="px-6 md:px-12 lg:px-20 py-20 border-t border-subtle">
             <div className="max-w-content mx-auto">
               <div className="mb-10">
@@ -266,7 +270,7 @@ export default function Home() {
                 </h2>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 reveal-grid">
                 {concepts.map((concept) => (
                   <ConceptCard key={concept.slug} {...concept} />
                 ))}
@@ -279,6 +283,7 @@ export default function Home() {
               </div>
             </div>
           </section>
+          </ScrollReveal>
         )}
 
         {/* 4. AI in your field */}
@@ -288,6 +293,7 @@ export default function Home() {
             .filter(Boolean) as typeof fields;
           if (featured.length === 0) return null;
           return (
+            <ScrollReveal>
             <section className="px-6 md:px-12 lg:px-20 py-20 border-t border-subtle">
               <div className="max-w-content mx-auto">
                 <div className="mb-10">
@@ -302,7 +308,7 @@ export default function Home() {
                   </h2>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 reveal-grid">
                   {featured.map((f) => (
                     <PathCard
                       key={f.slug}
@@ -321,13 +327,16 @@ export default function Home() {
                 </div>
               </div>
             </section>
+            </ScrollReveal>
           );
         })()}
 
         {/* 5. Tools making waves */}
-        <Suspense fallback={null}>
-          <ToolsSection />
-        </Suspense>
+        <ScrollReveal>
+          <Suspense fallback={null}>
+            <ToolsSection />
+          </Suspense>
+        </ScrollReveal>
 
         {/* 5. Newsletter */}
         <section className="px-6 md:px-12 lg:px-20 py-20 border-t border-subtle">
