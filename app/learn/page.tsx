@@ -65,6 +65,16 @@ export default function LearnPage() {
           </div>
         )}
 
+        {/* Map link */}
+        <div className="mt-12">
+          <Link
+            href="/learn/map"
+            className="font-sans text-sm text-secondary hover:text-accent transition-colors duration-150"
+          >
+            The landscape →
+          </Link>
+        </div>
+
       </div>
     </main>
   );
