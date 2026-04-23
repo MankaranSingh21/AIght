@@ -137,7 +137,7 @@ export default function HeroWidgets({ mouse }: { mouse: MousePos }) {
   });
 
   return (
-    <div style={{ position: 'relative', width: '100%', height: 480 }}>
+    <div style={{ position: 'relative', width: '100%', height: 480, overflow: 'hidden' }}>
 
       {/* Ambient orbs */}
       <div style={{
@@ -230,7 +230,7 @@ export default function HeroWidgets({ mouse }: { mouse: MousePos }) {
         bottom: '12%', right: '0%',
         transform: `translate(${p(0.9).x}px, ${p(0.9).y}px)`,
         transition: 'transform 0.4s cubic-bezier(0.16,1,0.3,1)',
-        zIndex: 5,
+        zIndex: 2,
         ...(shown.includes(3) ? { animation: 'widget-appear 0.6s cubic-bezier(0.16,1,0.3,1) both' } : {}),
       })}>
         <Glass style={{ padding: '11px 15px', borderColor: 'rgba(170,255,77,0.18)' }}>
