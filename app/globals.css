@@ -321,3 +321,19 @@
   from { opacity: 1; }
   to   { opacity: 0; }
 }
+
+/* Field guides — responsive grid layouts */
+.field-content-grid {
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+}
+@media (max-width: 768px) {
+  .field-content-grid {
+    grid-template-columns: 1fr;
+  }
+  .paths-header-grid {
+    grid-template-columns: 1fr;
+  }
+  .quiz-cta-panel {
+    max-width: 100% !important;
+  }
+}

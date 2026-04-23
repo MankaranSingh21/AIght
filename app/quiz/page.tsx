@@ -6,60 +6,100 @@ import Footer from '@/components/Footer';
 import fieldsData from '@/content/paths/fields.json';
 
 type FieldData = (typeof fieldsData)[0];
-type QuizStep = 'field' | 'q1' | 'q2' | 'q3' | 'q4' | 'q5' | 'results';
+type QuizStep = 'field' | 'q1' | 'q2' | 'q3' | 'q4' | 'q5' | 'q6' | 'results';
 
-const DIFFICULTY_BASE: Record<string, number> = { Easy: 70, Medium: 50, Hard: 30 };
+// Easy = field is highly susceptible to AI disruption (high base score)
+const DIFFICULTY_BASE: Record<string, number> = { Easy: 68, Medium: 48, Hard: 28 };
 
 const Q_SCORES: Record<string, Record<string, number>> = {
-  q1: { 'Highly predictable': 15, 'Mostly routine': 5, 'A mix of both': 0, 'Highly unpredictable': -10 },
-  q2: { Never: 10, Rarely: 5, Often: -10, Constantly: -20 },
-  q3: { 'Very little': 10, Some: 0, Most: -10, 'Nearly all': -20 },
-  q4: { Rarely: 10, Sometimes: 0, Often: -10, Daily: -15 },
+  q1: {
+    'Highly predictable': 16,
+    'Mostly routine': 6,
+    'A mix of both': -2,
+    'Highly unpredictable': -12,
+  },
+  q2: {
+    Never: 10,
+    Rarely: 4,
+    Often: -10,
+    Constantly: -20,
+  },
+  q3: {
+    'Very little': 10,
+    Some: 0,
+    Most: -10,
+    'Nearly all': -20,
+  },
+  q4: {
+    Rarely: 10,
+    Sometimes: 0,
+    Often: -10,
+    Daily: -18,
+  },
   q5: {
-    'Low (easily fixable)': 10,
-    Moderate: 0,
-    'High (financial/reputational damage)': -10,
-    'Critical (human safety/massive loss)': -20,
+    // Can output be verified without domain expertise?
+    // Objective/verifiable output → more automatable (higher risk)
+    'Yes — clear quality standards exist': 12,
+    'Partly — experts can spot-check key decisions': 4,
+    'Rarely — only a peer expert can judge quality': -8,
+    'Never — judgment is intrinsic and non-transferable': -16,
+  },
+  q6: {
+    // AI adoption = lower risk (you're already augmenting, not being replaced)
+    "I've deeply integrated AI tools into my daily workflow": -18,
+    'I use AI tools a few times a week': -8,
+    'I experiment occasionally but nothing habitual': 4,
+    'I avoid them or my workplace blocks them': 14,
   },
 };
 
 const QUESTIONS: Record<string, { number: number; question: string; options: string[] }> = {
   q1: {
     number: 1,
-    question: 'How predictable are the daily problems you solve?',
+    question: 'How predictable are the problems you solve on a typical day?',
     options: ['Highly predictable', 'Mostly routine', 'A mix of both', 'Highly unpredictable'],
   },
   q2: {
     number: 2,
     question:
-      'Does your role require navigating unpredictable physical environments or using complex manual dexterity?',
+      'Does your role require navigating unpredictable physical environments or complex manual dexterity?',
     options: ['Never', 'Rarely', 'Often', 'Constantly'],
   },
   q3: {
     number: 3,
     question:
-      'How much does your work rely on building deep human trust or navigating complex emotional situations?',
+      'How central is deep human trust or navigating complex emotional situations to your work?',
     options: ['Very little', 'Some', 'Most', 'Nearly all'],
   },
   q4: {
     number: 4,
-    question: 'How often do you have to invent entirely new strategies or synthesize unconnected, abstract ideas?',
+    question: 'How often do you have to invent new strategies or synthesize ideas across unrelated domains?',
     options: ['Rarely', 'Sometimes', 'Often', 'Daily'],
   },
   q5: {
     number: 5,
-    question: 'If you make a critical mistake in your core tasks, what is the immediate consequence?',
+    question: "Can your work output be evaluated by someone who doesn't share your expertise?",
     options: [
-      'Low (easily fixable)',
-      'Moderate',
-      'High (financial/reputational damage)',
-      'Critical (human safety/massive loss)',
+      'Yes — clear quality standards exist',
+      'Partly — experts can spot-check key decisions',
+      'Rarely — only a peer expert can judge quality',
+      'Never — judgment is intrinsic and non-transferable',
+    ],
+  },
+  q6: {
+    number: 6,
+    question: 'How much are you already using AI tools in your daily work?',
+    options: [
+      "I've deeply integrated AI tools into my daily workflow",
+      'I use AI tools a few times a week',
+      'I experiment occasionally but nothing habitual',
+      'I avoid them or my workplace blocks them',
     ],
   },
 };
 
 const STEP_DOT: Record<QuizStep, number> = {
-  field: 1, q1: 2, q2: 2, q3: 3, q4: 3, q5: 4, results: 4,
+  field: 1, q1: 2, q2: 2, q3: 3, q4: 3, q5: 4, q6: 4, results: 4,
 };
 
 const STEP_LABEL: Record<QuizStep, string> = {
@@ -69,11 +109,12 @@ const STEP_LABEL: Record<QuizStep, string> = {
   q3: 'Step 3 of 4',
   q4: 'Step 3 of 4',
   q5: 'Step 4 of 4',
+  q6: 'Step 4 of 4',
   results: 'Your results',
 };
 
 const NEXT_STEP: Record<QuizStep, QuizStep | null> = {
-  field: 'q1', q1: 'q2', q2: 'q3', q3: 'q4', q4: 'q5', q5: 'results', results: null,
+  field: 'q1', q1: 'q2', q2: 'q3', q3: 'q4', q4: 'q5', q5: 'q6', q6: 'results', results: null,
 };
 
 function conceptToSlug(concept: string): string {
@@ -98,15 +139,23 @@ function conceptToSlug(concept: string): string {
 }
 
 function getScoreColor(score: number) {
-  if (score <= 35) return 'var(--accent-primary)';
-  if (score <= 60) return 'var(--accent-warm)';
+  if (score <= 30) return 'var(--accent-primary)';
+  if (score <= 55) return 'var(--accent-warm)';
   return 'var(--error)';
 }
 
 function getRiskLabel(score: number) {
-  if (score <= 35) return 'Low disruption risk';
-  if (score <= 60) return 'Moderate disruption risk';
-  return 'High disruption risk';
+  if (score <= 30) return 'Low disruption risk';
+  if (score <= 55) return 'Moderate disruption risk';
+  if (score <= 72) return 'High disruption risk';
+  return 'Significant disruption ahead';
+}
+
+function getRiskSubtext(score: number) {
+  if (score <= 30) return 'AI is a tool in your hands. Your work relies on dimensions that are difficult to automate.';
+  if (score <= 55) return 'Parts of your role will change — likely the parts you find most routine. The human core of what you do still holds.';
+  if (score <= 72) return 'Routine tasks in your field are already being automated. Adapting now — not later — is the edge.';
+  return 'Your current role may look very different by 2027. The people thriving here will be those who become the experts at directing AI, not competing with it.';
 }
 
 function StepIndicator({ step }: { step: QuizStep }) {
@@ -184,7 +233,7 @@ function QuestionBlock({ number, question, options, flashed, onSelect }: Questio
   );
 }
 
-const QUESTION_STEPS: QuizStep[] = ['q1', 'q2', 'q3', 'q4', 'q5'];
+const QUESTION_STEPS: QuizStep[] = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6'];
 
 export default function QuizPage() {
   const [step, setStep] = useState<QuizStep>('field');
@@ -258,15 +307,16 @@ export default function QuizPage() {
       if (next === 'results') {
         if (!selectedField) return;
         const allAnswers = { ...answers, [qKey]: answer };
-        const base = DIFFICULTY_BASE[selectedField.difficulty] ?? 50;
+        const base = DIFFICULTY_BASE[selectedField.difficulty] ?? 48;
         const raw =
           base +
           (Q_SCORES.q1[allAnswers.q1] ?? 0) +
           (Q_SCORES.q2[allAnswers.q2] ?? 0) +
           (Q_SCORES.q3[allAnswers.q3] ?? 0) +
           (Q_SCORES.q4[allAnswers.q4] ?? 0) +
-          (Q_SCORES.q5[allAnswers.q5] ?? 0);
-        setScore(Math.min(90, Math.max(10, raw)));
+          (Q_SCORES.q5[allAnswers.q5] ?? 0) +
+          (Q_SCORES.q6[allAnswers.q6] ?? 0);
+        setScore(Math.min(92, Math.max(8, raw)));
         setDisplayScore(0);
         setAnimated(false);
         setStep('results');
@@ -466,7 +516,13 @@ export default function QuizPage() {
                 >
                   {getRiskLabel(score)}
                 </h2>
-                <p className="font-mono text-sm text-muted mt-1">{selectedField.field}</p>
+                <p className="font-mono text-sm text-muted mt-1 mb-3">{selectedField.field}</p>
+                <p
+                  className="font-serif italic text-sm text-center"
+                  style={{ color: 'var(--text-secondary)', maxWidth: '38ch', lineHeight: 1.7 }}
+                >
+                  {getRiskSubtext(score)}
+                </p>
               </div>
 
               {/* Action paragraph as pull quote */}
