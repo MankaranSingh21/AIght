@@ -4,6 +4,7 @@ import Link from "next/link";
 import fields from "@/content/paths/fields.json";
 import FieldBackground from "@/components/learn/FieldBackground";
 import AugmentationDiagram from "@/components/learn/AugmentationDiagram";
+import FieldImpactQuiz from "@/components/learn/FieldImpactQuiz";
 
 type Difficulty = "Easy" | "Medium" | "Hard";
 
@@ -94,9 +95,12 @@ export default async function PathPage({
           </div>
 
           <div style={{ display: 'flex', gap: 14, alignItems: 'center', flexWrap: 'wrap', marginTop: 40 }}>
-            <Link href="/quiz" className="btn-primary">
-              Run AI impact quiz →
-            </Link>
+            <FieldImpactQuiz
+              fieldName={field.field}
+              impactData={field.impact_data}
+              concepts={field.concepts}
+              tools={field.tools}
+            />
             <span style={{ fontFamily: 'var(--font-ui)', fontSize: 13, color: 'rgba(245,239,224,0.35)' }}>
               See your personal disruption score in 2 minutes
             </span>
@@ -134,6 +138,34 @@ export default async function PathPage({
               <AugmentationDiagram slug={slug} />
             </section>
 
+            {/* Roles at risk / growing */}
+            <section style={{ marginBottom: 56, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+              <div style={{ padding: 20, borderRadius: 12, border: '1px solid rgba(224,112,112,0.15)', background: 'rgba(224,112,112,0.04)' }}>
+                <p style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#E07070', marginBottom: 14 }}>
+                  Roles at risk
+                </p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  {field.impact_data.roles_at_risk.map((role) => (
+                    <p key={role} style={{ fontFamily: 'var(--font-ui)', fontSize: 13, color: 'rgba(245,239,224,0.55)', lineHeight: 1.4, margin: 0, paddingLeft: 12, borderLeft: '2px solid rgba(224,112,112,0.30)' }}>
+                      {role}
+                    </p>
+                  ))}
+                </div>
+              </div>
+              <div style={{ padding: 20, borderRadius: 12, border: '1px solid rgba(170,255,77,0.15)', background: 'rgba(170,255,77,0.04)' }}>
+                <p style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#AAFF4D', marginBottom: 14 }}>
+                  Roles growing
+                </p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  {field.impact_data.roles_growing.map((role) => (
+                    <p key={role} style={{ fontFamily: 'var(--font-ui)', fontSize: 13, color: 'rgba(245,239,224,0.55)', lineHeight: 1.4, margin: 0, paddingLeft: 12, borderLeft: '2px solid rgba(170,255,77,0.30)' }}>
+                      {role}
+                    </p>
+                  ))}
+                </div>
+              </div>
+            </section>
+
             {/* What to actually do */}
             <section style={{ marginBottom: 56 }}>
               <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 24, fontWeight: 700, color: '#F5EFE0', letterSpacing: '-0.02em', marginBottom: 28, margin: '0 0 28px' }}>
@@ -167,11 +199,15 @@ export default async function PathPage({
                 How disrupted are you, really?
               </p>
               <p style={{ fontFamily: 'var(--font-editorial)', fontSize: 13, color: 'rgba(245,239,224,0.50)', lineHeight: 1.65, marginBottom: 16 }}>
-                Five questions. An honest score tailored to your specific role and work style.
+                Three questions. An honest score tailored to your specific role.
               </p>
-              <Link href="/quiz" className="btn-primary">
-                Take the quiz →
-              </Link>
+              <FieldImpactQuiz
+                fieldName={field.field}
+                impactData={field.impact_data}
+                concepts={field.concepts}
+                tools={field.tools}
+                triggerLabel="Take the quiz →"
+              />
             </div>
 
             {/* Tools to know */}
@@ -223,7 +259,13 @@ export default async function PathPage({
             </p>
           </div>
           <div style={{ display: 'flex', gap: 14, alignItems: 'center', flexWrap: 'wrap' }}>
-            <Link href="/quiz" className="btn-primary">Run AI impact quiz →</Link>
+            <FieldImpactQuiz
+              fieldName={field.field}
+              impactData={field.impact_data}
+              concepts={field.concepts}
+              tools={field.tools}
+              triggerLabel="Run AI impact quiz →"
+            />
             <Link href="/learn/paths" className="btn-ghost">Explore other fields</Link>
           </div>
         </div>

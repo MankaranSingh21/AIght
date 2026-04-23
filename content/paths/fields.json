@@ -29,7 +29,18 @@
     ],
     "action_paragraph": "In the next two years, biologists must integrate AI into daily workflows by uploading lab data to tools like AlphaFold for hypothesis generation before experiments, running routine literature scans and data analysis through specialized platforms instead of manual searches, and collaborating with computational biologists to validate AI-generated designs in wet labs. Prioritize learning prompt engineering for biological queries and establishing data pipelines that feed experimental results back into models for iterative improvement—treating AI as a co-pilot that accelerates discovery rather than a replacement for hands-on validation.",
     "difficulty": "Medium",
-    "difficulty_reason": "Requires bridging wet-lab expertise with computational skills, but accessible entry points like web-based AlphaFold interfaces lower the barrier compared to pure coding fields."
+    "difficulty_reason": "Requires bridging wet-lab expertise with computational skills, but accessible entry points like web-based AlphaFold interfaces lower the barrier compared to pure coding fields.",
+    "impact_data": {
+      "replacement_risk": 22,
+      "roles_at_risk": ["Lab technician (routine assays)", "Literature review researcher", "Manual data annotation biologist"],
+      "roles_growing": ["AI-biology integrator", "Computational biologist", "Synthetic biology engineer", "Bioinformatics lead"],
+      "timeline": [
+        { "year": 2024, "label": "AlphaFold becomes standard", "description": "Structure prediction integrated into most academic and pharma pipelines" },
+        { "year": 2026, "label": "Self-driving labs emerge", "description": "Automated hypothesis-test-analyze loops running in major research centers" },
+        { "year": 2028, "label": "AI-co-authored research", "description": "Most high-impact papers list AI systems as significant contributors to discovery" },
+        { "year": 2030, "label": "Synthetic biology at scale", "description": "AI-designed organisms and enzymes in commercial production for medicine and materials" }
+      ]
+    }
   },
   {
     "field": "Physics & Engineering",
@@ -61,7 +72,18 @@
     ],
     "action_paragraph": "Over the next two years, physicists and engineers should embed AI into simulation pipelines by training or fine-tuning physics-informed models on their domain-specific datasets, replacing lengthy finite-element runs with surrogate AI models for rapid prototyping, and using tools like Neural Concept to explore 10x more design variants before physical builds. Actively validate AI outputs against known physics benchmarks, contribute domain data to open models, and shift focus from manual computation to interpreting AI-generated insights—while learning to prompt multimodal LLMs for hypothesis generation in theoretical work.",
     "difficulty": "Medium",
-    "difficulty_reason": "Engineers already use simulation software, so AI extensions build on existing skills, but incorporating physics constraints and validation requires targeted upskilling."
+    "difficulty_reason": "Engineers already use simulation software, so AI extensions build on existing skills, but incorporating physics constraints and validation requires targeted upskilling.",
+    "impact_data": {
+      "replacement_risk": 28,
+      "roles_at_risk": ["CAD draftsman", "Routine simulation analyst", "Manual test & measurement technician"],
+      "roles_growing": ["Physics-AI hybrid engineer", "Generative design specialist", "Digital twin architect", "AI validation engineer"],
+      "timeline": [
+        { "year": 2024, "label": "AI simulation tools standard", "description": "Neural surrogate models adopted across aerospace, automotive, and civil engineering" },
+        { "year": 2026, "label": "AI handles routine design work", "description": "70–80% of parametric design iterations run by AI with human oversight" },
+        { "year": 2028, "label": "AI-first engineering firms", "description": "Leading firms restructure around AI-human hybrid design teams" },
+        { "year": 2030, "label": "Fully generative pipelines", "description": "End-to-end AI systems taking requirements to manufacturable designs autonomously" }
+      ]
+    }
   },
   {
     "field": "Medicine & Healthcare",
@@ -93,7 +115,18 @@
     ],
     "action_paragraph": "In the next two years, clinicians must adopt AI scribes for every patient encounter to reclaim administrative time, query RAG-powered tools like OpenEvidence during rounds for instant literature-backed decisions, and integrate predictive dashboards into workflows to flag at-risk patients proactively. Commit to human-in-the-loop validation of all AI outputs, participate in hospital AI governance committees to set usage policies, and complete targeted training on prompting medical LLMs—ensuring AI augments rather than replaces diagnostic judgment while documenting all AI-assisted decisions for liability and learning.",
     "difficulty": "Medium",
-    "difficulty_reason": "Regulatory and ethical hurdles exist, but HIPAA-compliant tools and integration into existing EHRs make adoption straightforward for tech-savvy practitioners."
+    "difficulty_reason": "Regulatory and ethical hurdles exist, but HIPAA-compliant tools and integration into existing EHRs make adoption straightforward for tech-savvy practitioners.",
+    "impact_data": {
+      "replacement_risk": 18,
+      "roles_at_risk": ["Routine radiograph reader", "Medical transcriptionist", "Basic diagnostic coder"],
+      "roles_growing": ["AI clinical coordinator", "Precision medicine specialist", "Healthcare AI auditor", "Telehealth physician"],
+      "timeline": [
+        { "year": 2024, "label": "AI scribes go mainstream", "description": "Ambient documentation tools deployed across major health systems in the US and UK" },
+        { "year": 2026, "label": "AI-assisted diagnostics standard", "description": "Imaging AI required in accreditation for radiology and pathology departments" },
+        { "year": 2028, "label": "Precision medicine at scale", "description": "AI-guided treatment protocols personalized to patient genotype and real-world data" },
+        { "year": 2030, "label": "AI-first preventive care", "description": "Continuous monitoring AI flags most chronic disease risks months before symptoms appear" }
+      ]
+    }
   },
   {
     "field": "Law & Legal",
@@ -125,7 +158,18 @@
     ],
     "action_paragraph": "Lawyers must integrate AI tools into case intake by using platforms like Harvey for initial research and drafting while always verifying citations manually, adopt AI scribes for deposition summaries to cut review time, and build firm-wide policies requiring human oversight and disclosure of AI use in filings. Dedicate weekly time to test new legal-specific LLMs on anonymized cases, track time savings versus error rates, and collaborate with ethics committees to update billing and competence standards—treating AI as a junior associate that accelerates routine work but never replaces professional judgment or client communication.",
     "difficulty": "Easy",
-    "difficulty_reason": "Mature legal-specific tools integrate directly into existing workflows like Word and case management systems with minimal technical barriers."
+    "difficulty_reason": "Mature legal-specific tools integrate directly into existing workflows like Word and case management systems with minimal technical barriers.",
+    "impact_data": {
+      "replacement_risk": 42,
+      "roles_at_risk": ["Contract review paralegal", "Junior associate (routine research)", "Legal transcriptionist"],
+      "roles_growing": ["AI-augmented litigator", "Legal tech specialist", "AI compliance counsel", "Contract intelligence analyst"],
+      "timeline": [
+        { "year": 2024, "label": "AI contract review standard", "description": "Large firms deploy AI for M&A due diligence, cutting review time by 60–80%" },
+        { "year": 2026, "label": "Predictive litigation tools widespread", "description": "Case outcome forecasting used by most Am Law 200 firms before trial strategy decisions" },
+        { "year": 2028, "label": "AI handles routine legal work", "description": "Commodity legal services (wills, NDAs, incorporations) nearly fully automated" },
+        { "year": 2030, "label": "Lawyer role redefined", "description": "Strategic counsel, complex negotiation, and ethics oversight become the core legal value-add" }
+      ]
+    }
   },
   {
     "field": "Finance & Economics",
@@ -157,7 +201,18 @@
     ],
     "action_paragraph": "Finance professionals should embed AI into daily reporting by feeding earnings data into tools like AlphaSense for instant synthesis, use predictive models to stress-test portfolios weekly instead of quarterly, and automate routine compliance checks while manually reviewing high-stakes outputs. Learn to audit AI-generated forecasts against historical benchmarks, implement human oversight loops for all automated trades or reports, and upskill in prompt engineering for financial LLMs—focusing on interpreting AI insights to inform strategic decisions rather than relying on black-box outputs.",
     "difficulty": "Easy",
-    "difficulty_reason": "Finance already relies heavily on data analytics and automation platforms, so AI tools plug directly into existing Excel, Bloomberg, and compliance systems."
+    "difficulty_reason": "Finance already relies heavily on data analytics and automation platforms, so AI tools plug directly into existing Excel, Bloomberg, and compliance systems.",
+    "impact_data": {
+      "replacement_risk": 48,
+      "roles_at_risk": ["Junior equity analyst", "Routine compliance officer", "Back-office data entry specialist", "Financial report writer"],
+      "roles_growing": ["AI risk strategist", "Quantitative AI researcher", "Financial AI auditor", "Personalization product manager"],
+      "timeline": [
+        { "year": 2024, "label": "AI trading and compliance live", "description": "AI-generated research notes and real-time compliance scanning now standard at tier-1 banks" },
+        { "year": 2026, "label": "Automated financial reporting", "description": "Quarterly earnings prep time cut by 50%+ as AI drafts filings and management commentary" },
+        { "year": 2028, "label": "Hyper-personalized banking", "description": "Every retail customer gets dynamically adjusted products, rates, and advice in real time" },
+        { "year": 2030, "label": "AI-first investment decisions", "description": "Most allocation decisions made or strongly influenced by AI systems with human governance layer" }
+      ]
+    }
   },
   {
     "field": "Education & Teaching",
@@ -189,7 +244,18 @@
     ],
     "action_paragraph": "Educators must integrate AI by using adaptive platforms to create individualized learning paths for every student, automating grading and routine planning with tools like Kira while spending saved time on relationship-building and complex facilitation. Require students to cite AI use in assignments, teach prompt engineering as a core skill alongside critical thinking, and participate in school AI policy development to ensure equitable access—shifting from content delivery to guiding students in evaluating and building upon AI-generated materials.",
     "difficulty": "Easy",
-    "difficulty_reason": "Many free or low-cost AI tools integrate directly into existing LMS platforms and require no advanced technical skills beyond basic prompting."
+    "difficulty_reason": "Many free or low-cost AI tools integrate directly into existing LMS platforms and require no advanced technical skills beyond basic prompting.",
+    "impact_data": {
+      "replacement_risk": 27,
+      "roles_at_risk": ["Standardized test tutor", "Routine grader / teaching assistant", "Basic curriculum designer"],
+      "roles_growing": ["Learning experience designer", "AI curriculum strategist", "Student mentor and coach", "EdTech implementation lead"],
+      "timeline": [
+        { "year": 2024, "label": "AI tutors in classrooms", "description": "ChatGPT and adaptive platforms used by millions of students for homework and exam prep" },
+        { "year": 2026, "label": "Personalized learning standard", "description": "Most districts piloting AI-adaptive curricula; teacher time shifting toward facilitation" },
+        { "year": 2028, "label": "AI handles routine instruction", "description": "Foundational skill delivery largely automated; teachers focus on critical thinking and social development" },
+        { "year": 2030, "label": "Lifelong AI learning companions", "description": "Persistent AI tutors track individual learners from school through career development" }
+      ]
+    }
   },
   {
     "field": "Architecture & Urban Design",
@@ -221,7 +287,18 @@
     ],
     "action_paragraph": "Architects should run every early-stage concept through generative tools like Spacemaker to evaluate dozens of massing options against sustainability metrics before manual refinement, incorporate AI physics simulations into BIM workflows for rapid energy and structural feedback, and use prompt-based rendering for client presentations while maintaining final design control. Learn to craft performance-weighted prompts, validate all AI outputs against building codes and physical models, and collaborate with engineers to fine-tune generative outputs—treating AI as a rapid ideation partner that expands creative exploration without replacing human oversight of constructability and aesthetics.",
     "difficulty": "Medium",
-    "difficulty_reason": "Requires integrating AI into existing CAD/BIM software, but many tools offer plug-ins and cloud interfaces familiar to design professionals."
+    "difficulty_reason": "Requires integrating AI into existing CAD/BIM software, but many tools offer plug-ins and cloud interfaces familiar to design professionals.",
+    "impact_data": {
+      "replacement_risk": 32,
+      "roles_at_risk": ["CAD technician / draftsman", "Rendering specialist", "Feasibility study analyst"],
+      "roles_growing": ["Generative design architect", "Computational designer", "Sustainability AI consultant", "Urban intelligence analyst"],
+      "timeline": [
+        { "year": 2024, "label": "AI renders and massing tools adopted", "description": "Midjourney and Spacemaker enter standard practice at forward-thinking firms" },
+        { "year": 2026, "label": "Generative design in proposals", "description": "AI-generated site options expected by clients in most feasibility and planning submissions" },
+        { "year": 2028, "label": "AI-integrated BIM workflows", "description": "Design, simulation, and documentation produced in continuous AI-assisted loops" },
+        { "year": 2030, "label": "AI urban planning systems", "description": "City-scale optimization tools reshaping zoning, transit, and climate-resilient planning" }
+      ]
+    }
   },
   {
     "field": "Creative Writing & Literature",
@@ -253,7 +330,18 @@
     ],
     "action_paragraph": "Writers must use AI exclusively in the ideation and drafting phases—generating multiple outlines or scene variations with tools like Sudowrite, then rewriting every sentence in their own voice—while treating AI output as raw material never submitted as final work. Experiment weekly with different models to compare stylistic fidelity, always disclose AI assistance in published works or workshops, and focus class or peer feedback sessions on distinguishing human creativity from machine suggestions—ensuring AI amplifies originality rather than replacing the iterative struggle that defines literary craft.",
     "difficulty": "Easy",
-    "difficulty_reason": "Creative writers already experiment with tools; the main shift is ethical workflow integration rather than technical learning."
+    "difficulty_reason": "Creative writers already experiment with tools; the main shift is ethical workflow integration rather than technical learning.",
+    "impact_data": {
+      "replacement_risk": 30,
+      "roles_at_risk": ["Content farm writer", "Generic blog and SEO copywriter", "Routine ghostwriter for commodity content"],
+      "roles_growing": ["Narrative designer (games/interactive)", "AI content strategist", "Human voice editor", "Story experience designer"],
+      "timeline": [
+        { "year": 2024, "label": "AI writing assistants mainstream", "description": "Most professional writers using AI for ideation, drafts, and editing feedback" },
+        { "year": 2026, "label": "Commodity content fully automated", "description": "Generic articles, product descriptions, and templates produced entirely by AI" },
+        { "year": 2028, "label": "Human voice becomes the premium", "description": "Readers pay more for provably human-authored literary work; AI disclosure required" },
+        { "year": 2030, "label": "Interactive AI-authored media rises", "description": "Personalized narrative experiences and AI co-authored interactive fiction become mainstream" }
+      ]
+    }
   },
   {
     "field": "Graphic Design & Visual Arts",
@@ -285,7 +373,18 @@
     ],
     "action_paragraph": "Designers must treat AI as a super-fast junior designer: prompt for 20+ concepts per brief, then spend the bulk of time curating, refining, and adding original illustration or photography layers that AI cannot replicate. Build reusable prompt libraries and style references for brand consistency, run A/B tests on AI-generated variants using built-in analytics, and always credit or disclose AI use in client deliverables—while dedicating portfolio time to purely human-led projects that showcase strategic thinking and craftsmanship over raw generation speed.",
     "difficulty": "Easy",
-    "difficulty_reason": "Most popular design software already embeds AI features, and prompt-based tools require only creative direction skills designers already possess."
+    "difficulty_reason": "Most popular design software already embeds AI features, and prompt-based tools require only creative direction skills designers already possess.",
+    "impact_data": {
+      "replacement_risk": 52,
+      "roles_at_risk": ["Stock illustration creator", "Routine photo retoucher", "Template-based layout designer", "Entry-level brand asset producer"],
+      "roles_growing": ["AI art director", "Prompt design strategist", "Brand identity guardian", "Creative technologist"],
+      "timeline": [
+        { "year": 2024, "label": "AI image generation ubiquitous", "description": "Every major design tool embeds generative AI; stock illustration market disrupted" },
+        { "year": 2026, "label": "AI handles routine creative production", "description": "Social media assets, ad variations, and web graphics largely generated automatically" },
+        { "year": 2028, "label": "Human curation becomes the job", "description": "Designers valued for taste, strategy, and brand stewardship over production speed" },
+        { "year": 2030, "label": "Fully generative brand systems", "description": "AI-maintained brand systems update and generate assets dynamically across all channels" }
+      ]
+    }
   },
   {
     "field": "Film & Video Production",
@@ -317,7 +416,18 @@
     ],
     "action_paragraph": "Filmmakers should generate multiple pre-vis sequences with Runway or Sora early in development to test pacing and visuals before principal photography, use AI editing tools to produce rough cuts in hours instead of weeks, and apply generative VFX only for non-critical elements while reserving final compositing for human artists. Always screen AI-generated footage for continuity errors or artifacts in full context, document AI use for credits and rights clearance, and allocate saved time to on-set collaboration and storytelling refinement—ensuring technology accelerates production without compromising the director's vision or actor performances.",
     "difficulty": "Medium",
-    "difficulty_reason": "High-end production already uses complex software; AI plugins integrate easily, but quality control and union guidelines add workflow considerations."
+    "difficulty_reason": "High-end production already uses complex software; AI plugins integrate easily, but quality control and union guidelines add workflow considerations.",
+    "impact_data": {
+      "replacement_risk": 38,
+      "roles_at_risk": ["Rotoscoping artist", "Routine video editor (social / corporate)", "Basic VFX compositor"],
+      "roles_growing": ["AI pre-vis director", "Generative VFX supervisor", "AI post-production producer", "Interactive media director"],
+      "timeline": [
+        { "year": 2024, "label": "AI editing and pre-vis adopted", "description": "Studios use Runway and Sora for pre-visualization; AI cuts social media turnaround times" },
+        { "year": 2026, "label": "AI-assisted production standard", "description": "Most streaming and studio productions integrate AI at every post-production stage" },
+        { "year": 2028, "label": "Independent AI filmmaking matures", "description": "Solo creators produce feature-quality content with AI; studio output volume doubles" },
+        { "year": 2030, "label": "Personalized AI-generated cinema", "description": "Interactive, viewer-adapted narratives emerge as a mainstream entertainment format" }
+      ]
+    }
   },
   {
     "field": "Music & Audio",
@@ -349,7 +459,18 @@
     ],
     "action_paragraph": "Musicians should use AI generators like Suno for rapid prototyping of melody ideas or full demo tracks, then record or perform live elements over the AI stems to retain ownership and artistic signature. Master every release with tools like LANDR while manually tweaking for emotional intent, experiment with stem separation for creative remixes, and build custom voice models or style references for consistency. Always credit AI contributions, register works appropriately for copyright, and focus live performance and songwriting sessions on the human elements AI cannot replicate—treating AI as a limitless session musician that expands possibilities without replacing the artist's voice.",
     "difficulty": "Easy",
-    "difficulty_reason": "User-friendly web interfaces require no music theory knowledge to start, and integration with DAWs is straightforward for producers."
+    "difficulty_reason": "User-friendly web interfaces require no music theory knowledge to start, and integration with DAWs is straightforward for producers.",
+    "impact_data": {
+      "replacement_risk": 35,
+      "roles_at_risk": ["Background / library music composer", "Session musician (routine parts)", "Audio mastering engineer (commodity)"],
+      "roles_growing": ["AI music director", "Adaptive score composer (games/XR)", "Music rights and licensing specialist", "Live performance experience designer"],
+      "timeline": [
+        { "year": 2024, "label": "AI music generation arrives", "description": "Suno and Udio reach millions of users; sync licensing market begins major disruption" },
+        { "year": 2026, "label": "AI background music standard", "description": "Games, podcasts, ads, and videos switch to AI-generated adaptive soundscapes by default" },
+        { "year": 2028, "label": "Human artistry commands premium", "description": "Live performance and provably human-authored recordings become the valued scarce commodity" },
+        { "year": 2030, "label": "Personalized AI music companions", "description": "AI systems compose custom music for individuals based on mood, activity, and preferences in real time" }
+      ]
+    }
   },
   {
     "field": "Journalism & Media",
@@ -381,7 +502,18 @@
     ],
     "action_paragraph": "Journalists must use AI transcription for every interview and meeting, then verify and edit outputs themselves while querying RAG tools for background research instead of manual searches. Generate first drafts of routine stories only as starting points, always adding original reporting and context, and implement a mandatory human fact-check step for every AI-assisted claim. Build newsroom guidelines requiring disclosure of AI use, track time saved versus accuracy, and dedicate reporting time to source relationships and investigative work that algorithms cannot replicate—ensuring AI augments speed without compromising verification or original voice.",
     "difficulty": "Easy",
-    "difficulty_reason": "Transcription and search tools integrate directly into existing reporter workflows with minimal training."
+    "difficulty_reason": "Transcription and search tools integrate directly into existing reporter workflows with minimal training.",
+    "impact_data": {
+      "replacement_risk": 44,
+      "roles_at_risk": ["Wire report writer", "Earnings and data report journalist", "Social media news aggregator"],
+      "roles_growing": ["Investigative journalist (data-augmented)", "AI journalism ethics editor", "News verification specialist", "Audience intelligence analyst"],
+      "timeline": [
+        { "year": 2024, "label": "AI reporting tools widespread", "description": "Major outlets use AI for sports recaps, earnings summaries, and breaking news alerts" },
+        { "year": 2026, "label": "Routine journalism automated", "description": "75%+ of commodity news content generated or heavily drafted by AI systems" },
+        { "year": 2028, "label": "Trust becomes the product", "description": "Human-verified, source-rich investigative journalism commands premium audience loyalty" },
+        { "year": 2030, "label": "Personalized news synthesis", "description": "AI-curated and partially generated news feeds become the primary consumption format for most readers" }
+      ]
+    }
   },
   {
     "field": "Psychology & Mental Health",
@@ -413,7 +545,18 @@
     ],
     "action_paragraph": "Mental health professionals should integrate AI chatbots as adjunct tools for clients between sessions, using session-recording AI like Upheal to generate draft notes for review rather than starting from scratch. Review predictive risk flags from client wearables weekly and follow up personally, while maintaining strict boundaries on AI use in crisis situations. Complete ethics training on AI disclosure and bias, document all AI-assisted interventions, and use freed administrative time for deeper therapeutic alliance-building—treating AI as a scalable support layer that extends reach without replacing the human relationship essential to healing.",
     "difficulty": "Medium",
-    "difficulty_reason": "Ethical and HIPAA concerns require careful tool selection and training, but compliant platforms exist and integrate into practice management systems."
+    "difficulty_reason": "Ethical and HIPAA concerns require careful tool selection and training, but compliant platforms exist and integrate into practice management systems.",
+    "impact_data": {
+      "replacement_risk": 16,
+      "roles_at_risk": ["Intake coordinator", "Routine psychoeducation provider", "Basic skills coaching support worker"],
+      "roles_growing": ["AI-augmented therapist", "Mental health technology integrator", "Crisis triage specialist", "Therapeutic AI ethics reviewer"],
+      "timeline": [
+        { "year": 2024, "label": "AI mental health apps scale", "description": "Woebot, Wysa, and similar tools reach tens of millions; waitlist pressures drive adoption" },
+        { "year": 2026, "label": "AI triage becomes standard", "description": "Most health systems use AI to triage, onboard, and support patients between therapy sessions" },
+        { "year": 2028, "label": "Predictive mental health monitoring", "description": "Wearable + behavioral AI predicts deterioration days before crisis; proactive outreach normalized" },
+        { "year": 2030, "label": "Therapeutic AI companions mainstream", "description": "Long-term AI companions provide daily mental health support; human therapists focus on complex cases" }
+      ]
+    }
   },
   {
     "field": "Chemistry & Materials Science",
@@ -445,7 +588,18 @@
     ],
     "action_paragraph": "Chemists must feed experimental results back into AI models weekly to refine predictions, use generative tools like Chemistry42 to propose synthesis routes before ordering reagents, and run virtual screens on every new project to prioritize the most promising candidates for lab validation. Collaborate with computational teams to build domain-specific datasets, validate all AI-suggested molecules with DFT calculations before synthesis, and document AI contributions in publications—shifting from trial-and-error bench work to hypothesis-driven experimentation guided by machine intelligence.",
     "difficulty": "Hard",
-    "difficulty_reason": "Requires deep domain knowledge to interpret and validate AI outputs alongside access to high-performance computing and lab infrastructure."
+    "difficulty_reason": "Requires deep domain knowledge to interpret and validate AI outputs alongside access to high-performance computing and lab infrastructure.",
+    "impact_data": {
+      "replacement_risk": 22,
+      "roles_at_risk": ["Routine synthesis technician", "Literature mining researcher", "Manual molecular screening analyst"],
+      "roles_growing": ["AI-chemistry research scientist", "Autonomous lab engineer", "Computational materials designer", "AI validation chemist"],
+      "timeline": [
+        { "year": 2024, "label": "AI virtual screening standard", "description": "GNoME and similar tools integrated into discovery pipelines at major materials labs" },
+        { "year": 2026, "label": "Self-driving labs operational", "description": "Closed-loop robotic labs running continuous hypothesis-synthesis-test cycles with minimal human input" },
+        { "year": 2028, "label": "AI-first materials discovery", "description": "Most new battery, catalyst, and polymer discoveries initiated by AI hypothesis generation" },
+        { "year": 2030, "label": "On-demand molecular design", "description": "AI systems design and validate novel materials to order within weeks for specific industrial applications" }
+      ]
+    }
   },
   {
     "field": "Environmental Science & Climate",
@@ -477,7 +631,18 @@
     ],
     "action_paragraph": "Environmental scientists should integrate AI monitoring tools into every field campaign for real-time anomaly detection, use generative climate models like Earth-2 to test policy scenarios before recommending interventions, and validate all AI predictions against ground-truth data. Contribute domain datasets to improve global models, advocate for open-source AI tools in research grants, and focus human effort on interpreting model outputs for policy and community engagement—leveraging AI's scale while ensuring scientific rigor and ethical deployment in vulnerable regions.",
     "difficulty": "Medium",
-    "difficulty_reason": "Abundant open satellite data and cloud platforms lower technical barriers, but domain expertise is essential for model validation and ethical application."
+    "difficulty_reason": "Abundant open satellite data and cloud platforms lower technical barriers, but domain expertise is essential for model validation and ethical application.",
+    "impact_data": {
+      "replacement_risk": 24,
+      "roles_at_risk": ["Manual satellite image analyst", "Routine field data collector", "Basic weather data reporter"],
+      "roles_growing": ["Climate AI scientist", "Environmental monitoring engineer", "AI policy impact analyst", "Planetary intelligence researcher"],
+      "timeline": [
+        { "year": 2024, "label": "AI climate monitoring deployed", "description": "Real-time deforestation and emissions tracking via satellite AI used by governments and NGOs" },
+        { "year": 2026, "label": "AI forecasting saves lives", "description": "Flood and extreme weather AI alerts reach 1B+ people; accuracy surpasses traditional NWP models" },
+        { "year": 2028, "label": "AI-optimized energy grids", "description": "Renewable energy dispatch fully AI-managed; grid stability and efficiency dramatically improved" },
+        { "year": 2030, "label": "Planetary-scale AI stewardship", "description": "AI systems monitor, model, and recommend interventions for global climate systems in near real time" }
+      ]
+    }
   },
   {
     "field": "Marketing & Advertising",
@@ -509,7 +674,18 @@
     ],
     "action_paragraph": "Marketers must prompt generative tools daily for campaign variations, then A/B test AI outputs at scale using built-in analytics rather than guessing creative direction. Build brand-specific prompt libraries and style references to ensure consistency, review every AI-generated asset for cultural sensitivity and accuracy before launch, and allocate saved production time to strategy, audience research, and performance analysis. Implement disclosure policies for AI-created content and focus measurement on business outcomes—not just efficiency—ensuring AI amplifies creativity and reach without eroding brand trust.",
     "difficulty": "Easy",
-    "difficulty_reason": "Marketing teams already use digital platforms; AI features integrate seamlessly into tools like Canva, Google Ads, and social dashboards."
+    "difficulty_reason": "Marketing teams already use digital platforms; AI features integrate seamlessly into tools like Canva, Google Ads, and social dashboards.",
+    "impact_data": {
+      "replacement_risk": 55,
+      "roles_at_risk": ["Junior copywriter", "Media buyer (routine programmatic)", "Social media content producer", "Basic performance analyst"],
+      "roles_growing": ["Brand strategy director", "AI campaign architect", "Audience intelligence lead", "Creative AI director"],
+      "timeline": [
+        { "year": 2024, "label": "AI copy and creative standard", "description": "Jasper, Canva AI, and similar tools used by majority of marketing teams for content production" },
+        { "year": 2026, "label": "Programmatic creation at scale", "description": "Entire campaign launches — copy, visuals, targeting — orchestrated by AI with human approval" },
+        { "year": 2028, "label": "1:1 personalization at scale", "description": "Every customer receives dynamically generated, individualized marketing across all channels" },
+        { "year": 2030, "label": "AI marketing agents autonomous", "description": "AI systems manage full campaign lifecycles; marketers focus on brand direction and ethics oversight" }
+      ]
+    }
   },
   {
     "field": "Social Work & Public Policy",
@@ -541,7 +717,18 @@
     ],
     "action_paragraph": "Social workers should use compliant AI documentation tools for every client session to free time for direct service, review predictive risk scores as one data point among many before acting, and employ generative AI only for drafting internal reports or grant sections that receive full human revision. Establish agency policies requiring AI disclosure to clients and supervisors, participate in bias audits of risk models, and dedicate saved administrative hours to relationship-building and community advocacy—ensuring technology supports, rather than supplants, the human connection at the heart of social work practice.",
     "difficulty": "Medium",
-    "difficulty_reason": "Ethical, privacy, and equity concerns demand careful tool selection and training, but purpose-built platforms exist for human services."
+    "difficulty_reason": "Ethical, privacy, and equity concerns demand careful tool selection and training, but purpose-built platforms exist for human services.",
+    "impact_data": {
+      "replacement_risk": 19,
+      "roles_at_risk": ["Case documentation specialist", "Routine resource referral coordinator", "Intake screening worker"],
+      "roles_growing": ["Human services AI integrator", "Community AI policy advocate", "Predictive intervention coordinator", "Equity and AI bias auditor"],
+      "timeline": [
+        { "year": 2024, "label": "AI documentation tools arrive", "description": "Purpose-built AI note-takers for social work reduce admin burden at progressive agencies" },
+        { "year": 2026, "label": "Predictive risk models deployed", "description": "Government agencies use AI risk scoring for child welfare, housing, and mental health prioritization" },
+        { "year": 2028, "label": "AI-assisted policy design", "description": "Generative AI drafts policy briefs and simulates intervention impact before legislation" },
+        { "year": 2030, "label": "Community AI systems integrated", "description": "City-wide AI systems coordinate social services, housing, and crisis response in real time" }
+      ]
+    }
   },
   {
     "field": "Pharmacy & Drug Discovery",
@@ -573,7 +760,18 @@
     ],
     "action_paragraph": "Pharmacists and discovery scientists must incorporate AI-generated candidates into screening cascades immediately after virtual validation, use predictive ADMET tools to triage compounds before synthesis, and integrate pharmacogenomic models into dispensing workflows for personalized recommendations. Collaborate with AI teams to fine-tune models on proprietary datasets, manually verify all critical safety predictions, and document AI contributions in regulatory filings—shifting from manual literature searches to AI-augmented hypothesis generation while maintaining rigorous experimental confirmation at every stage.",
     "difficulty": "Hard",
-    "difficulty_reason": "Regulatory validation, data privacy, and the need for wet-lab confirmation make adoption complex despite powerful discovery tools."
+    "difficulty_reason": "Regulatory validation, data privacy, and the need for wet-lab confirmation make adoption complex despite powerful discovery tools.",
+    "impact_data": {
+      "replacement_risk": 24,
+      "roles_at_risk": ["Manual literature screening researcher", "Routine compound screening technician", "Basic ADMET data analyst"],
+      "roles_growing": ["AI drug discovery scientist", "Pharmacogenomics specialist", "Regulatory AI compliance officer", "Translational AI researcher"],
+      "timeline": [
+        { "year": 2024, "label": "First AI drugs in late trials", "description": "AI-designed molecules from Insilico Medicine and others reach Phase II/III clinical trials" },
+        { "year": 2026, "label": "AI discovery standard at big pharma", "description": "All major pharmaceutical companies integrate AI from target ID through candidate selection" },
+        { "year": 2028, "label": "Personalized dosing at scale", "description": "Pharmacogenomic AI guides prescribing for most complex medications in major health systems" },
+        { "year": 2030, "label": "AI-first drug pipelines", "description": "Most new drug approvals trace primary discovery to AI systems; human chemists focus on validation and translation" }
+      ]
+    }
   },
   {
     "field": "Agriculture & Food Science",
@@ -605,7 +803,18 @@
     ],
     "action_paragraph": "Farmers and food scientists should deploy drone or satellite AI scouting weekly to catch issues early, integrate predictive irrigation and nutrient models into daily operations instead of fixed schedules, and adopt robotic tools for repetitive tasks while focusing human effort on strategic decisions and soil health. Calibrate AI models with local field data for accuracy, validate recommendations with on-ground checks, and use freed labor for regenerative practices and direct market relationships—leveraging AI's precision to build more resilient and sustainable food systems rather than simply maximizing short-term yield.",
     "difficulty": "Medium",
-    "difficulty_reason": "Affordable drone and sensor hardware plus cloud platforms make entry accessible, though rural connectivity and initial calibration require investment."
+    "difficulty_reason": "Affordable drone and sensor hardware plus cloud platforms make entry accessible, though rural connectivity and initial calibration require investment.",
+    "impact_data": {
+      "replacement_risk": 32,
+      "roles_at_risk": ["Manual field scout", "Routine irrigation operator", "Basic food quality sorter"],
+      "roles_growing": ["Precision agriculture technologist", "Agri-AI data analyst", "Autonomous farm systems engineer", "Food supply chain AI specialist"],
+      "timeline": [
+        { "year": 2024, "label": "Precision ag tools mainstream", "description": "Drone scouting and AI irrigation optimization used on 20%+ of large commercial farmland" },
+        { "year": 2026, "label": "Autonomous field operations", "description": "AI-guided robots handle planting, weeding, and selective harvesting on leading farms" },
+        { "year": 2028, "label": "AI-optimized food systems", "description": "Farm-to-shelf supply chains AI-managed for minimal waste and maximal nutrition efficiency" },
+        { "year": 2030, "label": "Predictive food security intelligence", "description": "Global AI monitoring systems predict crop failures and food shortages months in advance" }
+      ]
+    }
   },
   {
     "field": "History & Humanities",
@@ -637,6 +846,17 @@
     ],
     "action_paragraph": "Historians must upload primary sources to tools like NotebookLM for rapid synthesis and timeline generation before deep reading, use transcription AI to process archival materials faster, and always cross-verify AI outputs against original documents while documenting limitations. Incorporate AI-assisted reconstruction only as interpretive aids, teach students to critique machine-generated historical narratives for bias, and focus research time on contextual interpretation and ethical questions AI cannot address—treating these tools as powerful research assistants that expand access to the archive without replacing rigorous source criticism.",
     "difficulty": "Easy",
-    "difficulty_reason": "Humanities researchers already work with digitized texts; AI tools require only basic prompting and critical evaluation skills already central to the discipline."
+    "difficulty_reason": "Humanities researchers already work with digitized texts; AI tools require only basic prompting and critical evaluation skills already central to the discipline.",
+    "impact_data": {
+      "replacement_risk": 34,
+      "roles_at_risk": ["Archival transcription specialist", "Routine literature review researcher", "Encyclopedic content writer"],
+      "roles_growing": ["Digital humanities researcher", "AI-assisted archivist", "Historical simulation designer", "Cultural AI ethics scholar"],
+      "timeline": [
+        { "year": 2024, "label": "AI unlocks vast archives", "description": "Millions of manuscripts, inscriptions, and historical records made searchable via AI transcription" },
+        { "year": 2026, "label": "AI synthesis transforms research", "description": "Scholars use AI to analyze centuries of text in hours; research scope expands dramatically" },
+        { "year": 2028, "label": "Interactive historical experiences", "description": "AI-powered museum installations and educational simulations let people explore history directly" },
+        { "year": 2030, "label": "AI as interpretive collaborator", "description": "Historians co-author papers with AI systems that surface overlooked patterns across vast corpora" }
+      ]
+    }
   }
 ]
