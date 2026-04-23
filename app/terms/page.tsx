@@ -6,217 +6,180 @@ export const metadata: Metadata = {
   description: "The terms governing your use of the AIght platform.",
 };
 
+const sectionHeadingStyle: React.CSSProperties = {
+  fontFamily: 'var(--font-display)',
+  fontSize: 22,
+  fontWeight: 700,
+  color: '#F5EFE0',
+  letterSpacing: '-0.02em',
+  margin: '0 0 14px',
+};
+
+const bodyStyle: React.CSSProperties = {
+  fontFamily: 'var(--font-editorial)',
+  fontSize: 15,
+  lineHeight: 1.85,
+  color: 'rgba(245,239,224,0.60)',
+};
+
 export default function TermsPage() {
   return (
-    <main className="min-h-screen bg-page">
-      <div className="max-w-3xl mx-auto px-6 md:px-10 py-16 md:py-24">
+    <main style={{ minHeight: '100vh', background: 'var(--bg-base)' }}>
+      <div style={{ maxWidth: 740, margin: '0 auto', padding: '64px 48px 96px' }}>
 
         {/* Back */}
         <Link
           href="/"
-          className="inline-flex items-center gap-2 font-sans text-sm text-secondary hover:text-primary transition-colors duration-150 mb-12"
+          style={{ fontFamily: 'var(--font-ui)', fontSize: 13, color: 'rgba(245,239,224,0.45)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6, marginBottom: 48 }}
+          className="hover:text-primary"
         >
           ← Back to AIght
         </Link>
 
         {/* Header */}
-        <div className="mb-12 pb-8 border-b border-subtle">
-          <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted mb-3">
+        <div style={{ marginBottom: 48, paddingBottom: 32, borderBottom: '1px solid rgba(245,239,224,0.07)' }}>
+          <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(245,239,224,0.30)', marginBottom: 12 }}>
             Legal
           </p>
-          <h1 className="font-sans text-4xl md:text-5xl font-semibold text-primary leading-tight mb-4">
+          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(32px, 5vw, 48px)', fontWeight: 900, color: '#F5EFE0', letterSpacing: '-0.03em', lineHeight: 1.05, margin: '0 0 12px' }}>
             Terms of Service
           </h1>
-          <p className="font-sans text-sm text-secondary">
+          <p style={{ fontFamily: 'var(--font-ui)', fontSize: 13, color: 'rgba(245,239,224,0.35)' }}>
             Last updated: <time dateTime="2026-04">April 2026</time>
           </p>
         </div>
 
-        {/* Body */}
-        <div className="space-y-12 font-sans text-secondary leading-relaxed">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 48 }}>
 
-          <section className="space-y-4">
-            <p className="text-base">
+          <section>
+            <p style={bodyStyle}>
               These Terms of Service (&ldquo;Terms&rdquo;) govern your access to and use of
               AIght (&ldquo;the Service&rdquo;), operated by{" "}
-              <strong className="text-primary">Mankaran Singh</strong> (&ldquo;we&rdquo;,
+              <strong style={{ color: '#F5EFE0', fontWeight: 600 }}>Mankaran Singh</strong> (&ldquo;we&rdquo;,
               &ldquo;our&rdquo;, or &ldquo;us&rdquo;) at{" "}
-              <span className="text-accent font-medium">aightai.in</span>.
+              <span style={{ color: '#AAFF4D' }}>aightai.in</span>.
             </p>
-            <p>
+            <p style={{ ...bodyStyle, marginTop: 14 }}>
               Please read these Terms carefully before using the Service. By accessing
               AIght, you agree to be bound by these Terms.
             </p>
           </section>
 
-          {/* 1 */}
-          <section className="space-y-4">
-            <h2 className="font-sans text-2xl font-semibold text-primary">
-              1. Acceptance of Terms
-            </h2>
-            <p>
+          <section>
+            <h2 style={sectionHeadingStyle}>1. Acceptance of Terms</h2>
+            <p style={bodyStyle}>
               By accessing or using AIght, you confirm that you are at least 13 years
               of age, that you have read and understood these Terms, and that you
               agree to be bound by them and by our{" "}
-              <Link
-                href="/privacy"
-                className="text-accent hover:text-accent-dim underline underline-offset-2"
-              >
+              <Link href="/privacy" style={{ color: '#AAFF4D', textDecoration: 'underline', textUnderlineOffset: 2 }}>
                 Privacy Policy
               </Link>.
             </p>
           </section>
 
-          {/* 2 */}
-          <section className="space-y-4">
-            <h2 className="font-sans text-2xl font-semibold text-primary">
-              2. Description of Service
-            </h2>
-            <p>
-              AIght is a curated AI tool directory and literary magazine. It allows
-              anyone to:
-            </p>
-            <ul className="list-disc list-outside ml-5 space-y-2">
+          <section>
+            <h2 style={sectionHeadingStyle}>2. Description of Service</h2>
+            <p style={bodyStyle}>AIght is a curated AI tool directory and literary magazine. It allows anyone to:</p>
+            <ul style={{ ...bodyStyle, listStyleType: 'disc', listStylePosition: 'outside', marginLeft: 20, marginTop: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
               <li>Browse and discover AI tools curated by the platform.</li>
               <li>Read editorial content about AI tools and concepts (Signal, Learn).</li>
               <li>Subscribe to a newsletter for updates.</li>
             </ul>
-            <p>
+            <p style={{ ...bodyStyle, marginTop: 14 }}>
               No account is required to use the Service. Features, tool listings, and
               content may change or be removed at any time without prior notice.
             </p>
           </section>
 
-          {/* 3 */}
-          <section className="space-y-4">
-            <h2 className="font-sans text-2xl font-semibold text-primary">
-              3. Acceptable Use
-            </h2>
-            <p>
+          <section>
+            <h2 style={sectionHeadingStyle}>3. Acceptable Use</h2>
+            <p style={bodyStyle}>
               You agree to use the Service only for lawful purposes and in a manner
               that does not infringe the rights of others. You must not:
             </p>
-            <ul className="list-disc list-outside ml-5 space-y-2">
-              <li>
-                Use the Service to scrape, harvest, or systematically extract data
-                without express written permission.
-              </li>
-              <li>
-                Introduce malicious code, bots, or automated scripts that interfere
-                with the normal operation of the Service.
-              </li>
-              <li>
-                Attempt to gain unauthorised access to any backend systems.
-              </li>
-              <li>
-                Impersonate any person or entity or misrepresent your affiliation.
-              </li>
+            <ul style={{ ...bodyStyle, listStyleType: 'disc', listStylePosition: 'outside', marginLeft: 20, marginTop: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <li>Use the Service to scrape, harvest, or systematically extract data without express written permission.</li>
+              <li>Introduce malicious code, bots, or automated scripts that interfere with the normal operation of the Service.</li>
+              <li>Attempt to gain unauthorised access to any backend systems.</li>
+              <li>Impersonate any person or entity or misrepresent your affiliation.</li>
             </ul>
           </section>
 
-          {/* 4 */}
-          <section className="space-y-4">
-            <h2 className="font-sans text-2xl font-semibold text-primary">
-              4. Intellectual Property
-            </h2>
-            <p>
+          <section>
+            <h2 style={sectionHeadingStyle}>4. Intellectual Property</h2>
+            <p style={bodyStyle}>
               The AIght name, logo, codebase, design, and curated tool content are
               the intellectual property of Mankaran Singh and are protected by
               applicable copyright and trademark laws.
             </p>
-            <p>
+            <p style={{ ...bodyStyle, marginTop: 14 }}>
               Editorial content on the Service (Signal posts, Learn articles) is
               written by the operator and may not be reproduced without attribution.
             </p>
           </section>
 
-          {/* 5 */}
-          <section className="space-y-4">
-            <h2 className="font-sans text-2xl font-semibold text-primary">
-              5. Disclaimer of Warranties
-            </h2>
-            <p>
-              The Service is provided <strong className="text-primary">&ldquo;as is&rdquo;</strong> and{" "}
-              <strong className="text-primary">&ldquo;as available&rdquo;</strong> without warranties
+          <section>
+            <h2 style={sectionHeadingStyle}>5. Disclaimer of Warranties</h2>
+            <p style={bodyStyle}>
+              The Service is provided <strong style={{ color: '#F5EFE0' }}>&ldquo;as is&rdquo;</strong> and{" "}
+              <strong style={{ color: '#F5EFE0' }}>&ldquo;as available&rdquo;</strong> without warranties
               of any kind. Tool listings may be inaccurate, outdated, or incomplete.
               You should independently verify any information before making professional
               or financial decisions based on it.
             </p>
           </section>
 
-          {/* 6 */}
-          <section className="space-y-4">
-            <h2 className="font-sans text-2xl font-semibold text-primary">
-              6. Limitation of Liability
-            </h2>
-            <p>
+          <section>
+            <h2 style={sectionHeadingStyle}>6. Limitation of Liability</h2>
+            <p style={bodyStyle}>
               To the maximum extent permitted by applicable law, Mankaran Singh shall
               not be liable for any indirect, incidental, special, consequential, or
               punitive damages arising out of or related to your use of, or inability
               to use, the Service.
             </p>
-            <p>
+            <p style={{ ...bodyStyle, marginTop: 14 }}>
               Our total liability to you for any claim shall not exceed ₹1,000 INR.
             </p>
           </section>
 
-          {/* 7 */}
-          <section className="space-y-4">
-            <h2 className="font-sans text-2xl font-semibold text-primary">
-              7. Governing Law
-            </h2>
-            <p>
-              These Terms shall be governed by the laws of <strong className="text-primary">India</strong>.
+          <section>
+            <h2 style={sectionHeadingStyle}>7. Governing Law</h2>
+            <p style={bodyStyle}>
+              These Terms shall be governed by the laws of <strong style={{ color: '#F5EFE0' }}>India</strong>.
               Any disputes shall be subject to the exclusive jurisdiction of the courts
               located in India.
             </p>
           </section>
 
-          {/* 8 */}
-          <section className="space-y-4">
-            <h2 className="font-sans text-2xl font-semibold text-primary">
-              8. Changes to These Terms
-            </h2>
-            <p>
+          <section>
+            <h2 style={sectionHeadingStyle}>8. Changes to These Terms</h2>
+            <p style={bodyStyle}>
               We may modify these Terms at any time by updating the &ldquo;Last updated&rdquo;
               date at the top of this page. Continued use of the Service after changes
               constitutes your acceptance of the revised Terms.
             </p>
           </section>
 
-          {/* 9 */}
-          <section className="space-y-4">
-            <h2 className="font-sans text-2xl font-semibold text-primary">
-              9. Contact
-            </h2>
-            <p>
-              Questions or concerns regarding these Terms:
-            </p>
-            <address className="not-italic rounded-lg border border-subtle bg-raised px-6 py-5 text-sm space-y-1">
-              <p className="font-sans font-medium text-primary">Mankaran Singh</p>
-              <p>AIght — aightai.in</p>
-              <p>
-                <a
-                  href="mailto:singhmankaran05@gmail.com"
-                  className="text-accent hover:text-accent-dim underline underline-offset-2"
-                >
-                  singhmankaran05@gmail.com
-                </a>
-              </p>
+          <section>
+            <h2 style={sectionHeadingStyle}>9. Contact</h2>
+            <p style={bodyStyle}>Questions or concerns regarding these Terms:</p>
+            <address style={{ marginTop: 16, fontStyle: 'normal', borderRadius: 12, border: '1px solid rgba(245,239,224,0.07)', background: 'rgba(255,250,240,0.03)', padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 4 }}>
+              <p style={{ fontFamily: 'var(--font-ui)', fontSize: 14, fontWeight: 600, color: '#F5EFE0' }}>Mankaran Singh</p>
+              <p style={{ fontFamily: 'var(--font-ui)', fontSize: 13, color: 'rgba(245,239,224,0.45)' }}>AIght — aightai.in</p>
+              <a href="mailto:singhmankaran05@gmail.com" style={{ fontFamily: 'var(--font-ui)', fontSize: 13, color: '#AAFF4D', textDecoration: 'underline', textUnderlineOffset: 2 }}>
+                singhmankaran05@gmail.com
+              </a>
             </address>
           </section>
 
         </div>
 
         {/* Footer nav */}
-        <div className="mt-16 pt-8 border-t border-subtle flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="font-sans text-xs text-muted">
+        <div style={{ marginTop: 64, paddingTop: 32, borderTop: '1px solid rgba(245,239,224,0.07)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
+          <p style={{ fontFamily: 'var(--font-ui)', fontSize: 12, color: 'rgba(245,239,224,0.25)' }}>
             © {new Date().getFullYear()} AIght. Built by Mankaran Singh.
           </p>
-          <Link
-            href="/privacy"
-            className="font-sans text-xs text-accent hover:text-accent-dim transition-colors duration-150"
-          >
+          <Link href="/privacy" style={{ fontFamily: 'var(--font-ui)', fontSize: 12, color: '#AAFF4D', textDecoration: 'none' }}>
             Privacy Policy →
           </Link>
         </div>

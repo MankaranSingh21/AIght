@@ -6,19 +6,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Search, X } from "lucide-react";
 import ToolCard, { type ToolCardProps } from "./ToolCard";
 
-// ── Category pill config ────────────────────────────────────────────────────
-
 const CATEGORIES = [
-  { id: "all", label: "All tools" },
-  { id: "Research", label: "Research" },
-  { id: "AI Chat", label: "AI Chat" },
-  { id: "Dev Tools", label: "Dev Tools" },
+  { id: "all",          label: "All tools"    },
+  { id: "Research",     label: "Research"     },
+  { id: "AI Chat",      label: "AI Chat"      },
+  { id: "Dev Tools",    label: "Dev Tools"    },
   { id: "Productivity", label: "Productivity" },
-  { id: "Image Gen", label: "Image Gen" },
-  { id: "Video Gen", label: "Video Gen" },
+  { id: "Image Gen",    label: "Image Gen"    },
+  { id: "Video Gen",    label: "Video Gen"    },
 ];
-
-// ── Main client component ───────────────────────────────────────────────────
 
 type Props = {
   tools: ToolCardProps[];
@@ -26,8 +22,9 @@ type Props = {
 };
 
 export default function ToolsClient({ tools, initialCategory = "all" }: Props) {
-  const [query, setQuery] = useState("");
+  const [query, setQuery]               = useState("");
   const [activeCategory, setActiveCategory] = useState(initialCategory);
+  const [selectedTags, setSelectedTags] = useState<Set<string>>(new Set());
 
   const allTags = useMemo(() => {
     const freq = new Map<string, number>();
@@ -37,8 +34,6 @@ export default function ToolsClient({ tools, initialCategory = "all" }: Props) {
       .slice(0, 24)
       .map(([tag]) => tag);
   }, [tools]);
-
-  const [selectedTags, setSelectedTags] = useState<Set<string>>(new Set());
 
   function toggleTag(tag: string) {
     setSelectedTags((prev) => {
@@ -73,67 +68,91 @@ export default function ToolsClient({ tools, initialCategory = "all" }: Props) {
 
   return (
     <div>
-      {/* ── Search bar ── */}
-      <div className="relative mb-6">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" />
+      {/* Search bar */}
+      <div style={{ position: 'relative', marginBottom: 20 }}>
+        <Search style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', width: 14, height: 14, color: 'rgba(245,239,224,0.30)', pointerEvents: 'none' }} />
         <input
           type="search"
           placeholder="Search tools, tags, or categories…"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="
-            w-full pl-11 pr-4 py-3.5 rounded-md
-            font-sans text-base text-primary placeholder:text-muted
-            bg-raised border border-subtle
-            focus:outline-none focus:border-emphasis
-            transition-colors duration-150
-          "
+          style={{
+            width: '100%',
+            paddingLeft: 40,
+            paddingRight: 40,
+            paddingTop: 12,
+            paddingBottom: 12,
+            borderRadius: 10,
+            fontFamily: 'var(--font-ui)',
+            fontSize: 14,
+            color: '#F5EFE0',
+            background: 'rgba(255,250,240,0.04)',
+            border: '1px solid rgba(245,239,224,0.09)',
+            outline: 'none',
+            transition: 'border-color 150ms ease',
+            boxSizing: 'border-box',
+          }}
+          onFocus={e => (e.currentTarget.style.borderColor = 'rgba(170,255,77,0.30)')}
+          onBlur={e => (e.currentTarget.style.borderColor = 'rgba(245,239,224,0.09)')}
         />
         {query && (
           <button
             onClick={() => setQuery("")}
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-muted hover:text-primary transition-colors"
+            style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(245,239,224,0.30)', display: 'flex', alignItems: 'center' }}
           >
-            <X className="w-4 h-4" />
+            <X style={{ width: 14, height: 14 }} />
           </button>
         )}
       </div>
 
-      {/* ── Category pills ── */}
-      <div className="flex flex-wrap gap-2 mb-5">
-        {CATEGORIES.map((cat) => (
-          <button
-            key={cat.id}
-            onClick={() => setActiveCategory(cat.id)}
-            className={`
-              font-mono text-xs uppercase tracking-[0.1em]
-              px-4 py-2 rounded-sm border transition-colors duration-150
-              ${activeCategory === cat.id
-                ? "bg-accent text-inverse border-accent-dim"
-                : "bg-panel text-secondary border-subtle hover:border-emphasis hover:text-primary"
-              }
-            `}
-          >
-            {cat.label}
-          </button>
-        ))}
+      {/* Category pills */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 16 }}>
+        {CATEGORIES.map((cat) => {
+          const active = activeCategory === cat.id;
+          return (
+            <button
+              key={cat.id}
+              onClick={() => setActiveCategory(cat.id)}
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: 10,
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                padding: '6px 14px',
+                borderRadius: 9999,
+                border: `1px solid ${active ? 'rgba(170,255,77,0.35)' : 'rgba(245,239,224,0.09)'}`,
+                background: active ? 'rgba(170,255,77,0.10)' : 'transparent',
+                color: active ? '#AAFF4D' : 'rgba(245,239,224,0.45)',
+                cursor: 'pointer',
+                transition: 'all 150ms ease',
+              }}
+            >
+              {cat.label}
+            </button>
+          );
+        })}
       </div>
 
-      {/* ── Tag pills ── */}
-      <div className="flex flex-wrap gap-2 mb-8">
+      {/* Tag pills */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 28 }}>
         {allTags.map((tag) => {
           const active = selectedTags.has(tag);
           return (
             <button
               key={tag}
               onClick={() => toggleTag(tag)}
-              className={`
-                font-mono text-xs px-3 py-1.5 rounded-sm border transition-colors duration-150
-                ${active
-                  ? "bg-accent text-inverse border-accent-dim"
-                  : "bg-raised text-muted border-subtle hover:border-emphasis hover:text-secondary"
-                }
-              `}
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: 10,
+                letterSpacing: '0.04em',
+                padding: '3px 10px',
+                borderRadius: 4,
+                border: `1px solid ${active ? 'rgba(170,255,77,0.30)' : 'rgba(245,239,224,0.07)'}`,
+                background: active ? 'rgba(170,255,77,0.08)' : 'rgba(245,239,224,0.03)',
+                color: active ? '#AAFF4D' : 'rgba(245,239,224,0.35)',
+                cursor: 'pointer',
+                transition: 'all 150ms ease',
+              }}
             >
               #{tag}
             </button>
@@ -141,45 +160,40 @@ export default function ToolsClient({ tools, initialCategory = "all" }: Props) {
         })}
       </div>
 
-      {/* ── Results count + clear ── */}
-      <div className="flex items-center justify-between mb-6">
-        <p className="font-sans text-sm text-muted">
-          <span className="text-primary font-medium">{filtered.length}</span>
+      {/* Results count + clear */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
+        <p style={{ fontFamily: 'var(--font-ui)', fontSize: 13, color: 'rgba(245,239,224,0.35)' }}>
+          <span style={{ color: '#F5EFE0', fontWeight: 600 }}>{filtered.length}</span>
           {" "}of {tools.length} tools
         </p>
         {hasFilters && (
           <button
             onClick={clearAll}
-            className="flex items-center gap-1.5 font-sans text-xs text-muted hover:text-primary transition-colors duration-150"
+            style={{ fontFamily: 'var(--font-ui)', fontSize: 12, color: 'rgba(245,239,224,0.35)', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4, transition: 'color 150ms ease' }}
+            onMouseEnter={e => (e.currentTarget.style.color = '#F5EFE0')}
+            onMouseLeave={e => (e.currentTarget.style.color = 'rgba(245,239,224,0.35)')}
           >
-            <X className="w-3.5 h-3.5" /> Clear all filters
+            <X style={{ width: 12, height: 12 }} /> Clear all filters
           </button>
         )}
       </div>
 
-      {/* ── Grid ── */}
+      {/* Grid */}
       {filtered.length === 0 ? (
-        <div className="text-center py-24 space-y-3">
-          <p className="font-sans text-2xl font-medium text-muted">
+        <div style={{ textAlign: 'center', padding: '96px 0', display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'center' }}>
+          <p style={{ fontFamily: 'var(--font-display)', fontSize: 22, fontWeight: 700, color: 'rgba(245,239,224,0.30)' }}>
             Nothing here yet.
           </p>
-          <p className="font-sans text-sm text-muted">
+          <p style={{ fontFamily: 'var(--font-ui)', fontSize: 13, color: 'rgba(245,239,224,0.25)' }}>
             Try a different search or filter.
           </p>
-          <button
-            onClick={clearAll}
-            className="font-sans text-sm text-accent hover:text-accent-dim underline underline-offset-4 transition-colors"
-          >
+          <button onClick={clearAll} style={{ fontFamily: 'var(--font-ui)', fontSize: 13, color: '#AAFF4D', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline', textUnderlineOffset: 3 }}>
             Clear all filters
           </button>
         </div>
       ) : (
         <motion.div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-            gap: "var(--space-6)",
-          }}
+          style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "var(--space-6)" }}
           initial="hidden"
           animate="show"
           variants={{ hidden: {}, show: { transition: { staggerChildren: 0.04 } } }}
@@ -194,7 +208,7 @@ export default function ToolsClient({ tools, initialCategory = "all" }: Props) {
                 exit={{ opacity: 0, scale: 0.97 }}
                 transition={{ duration: 0.2, ease: "easeOut" }}
               >
-                <Link href={`/tool/${tool.slug}`} className="block">
+                <Link href={`/tool/${tool.slug}`} style={{ display: 'block', textDecoration: 'none' }}>
                   <ToolCard {...tool} />
                 </Link>
               </motion.div>

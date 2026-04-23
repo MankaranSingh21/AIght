@@ -1,9 +1,7 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
-import { motion, type Variants } from "framer-motion";
-
-// ── Types ──────────────────────────────────────────────────────────────────
 
 export type UseCase = {
   audience: string;
@@ -25,135 +23,91 @@ export type ToolDetailData = {
   related_concepts?: string[];
 };
 
-// ── Animation Variants ─────────────────────────────────────────────────────
-
-const stagger: Variants = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.1, delayChildren: 0.05 } },
-};
-
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 18 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { type: "spring", stiffness: 200, damping: 26 },
-  },
-};
-
-const fadeIn: Variants = {
-  hidden: { opacity: 0, scale: 0.98 },
-  show: {
-    opacity: 1,
-    scale: 1,
-    transition: { type: "spring", stiffness: 180, damping: 28, delay: 0.3 },
-  },
-};
-
-// ── Helpers ────────────────────────────────────────────────────────────────
-
 function getYouTubeEmbedUrl(url: string): string {
   if (url.includes("youtube.com/embed/")) return url;
-
   const shortMatch = url.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/);
   if (shortMatch) return `https://www.youtube.com/embed/${shortMatch[1]}`;
-
-  const longMatch = url.match(
-    /youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/)([a-zA-Z0-9_-]{11})/
-  );
+  const longMatch = url.match(/youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/)([a-zA-Z0-9_-]{11})/);
   if (longMatch) return `https://www.youtube.com/embed/${longMatch[1]}`;
-
   return url;
 }
 
-// ── Pricing Styles ─────────────────────────────────────────────────────────
-
-const pricingStyle: Record<ToolDetailData["pricing"], string> = {
-  Free:          "bg-[var(--accent-primary-glow)] text-accent border border-emphasis",
-  "Open Source": "bg-[var(--accent-primary-glow)] text-accent border border-emphasis",
-  Freemium:      "bg-raised text-warm border border-subtle",
-  Paid:          "bg-raised text-muted border border-subtle",
-};
-
-// ── Internal sub-component ─────────────────────────────────────────────────
+function pricingStyle(pricing: ToolDetailData["pricing"]): React.CSSProperties {
+  if (pricing === "Free" || pricing === "Open Source") {
+    return { background: 'rgba(170,255,77,0.10)', color: '#AAFF4D', border: '1px solid rgba(170,255,77,0.25)', fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.08em', padding: '2px 8px', borderRadius: 4, display: 'inline-flex', alignItems: 'center' };
+  }
+  if (pricing === "Freemium") {
+    return { background: 'rgba(244,171,31,0.10)', color: 'var(--accent-warm)', border: '1px solid rgba(244,171,31,0.25)', fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.08em', padding: '2px 8px', borderRadius: 4, display: 'inline-flex', alignItems: 'center' };
+  }
+  return { background: 'rgba(245,239,224,0.05)', color: 'rgba(245,239,224,0.45)', border: '1px solid rgba(245,239,224,0.10)', fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.08em', padding: '2px 8px', borderRadius: 4, display: 'inline-flex', alignItems: 'center' };
+}
 
 function UseCaseCard({ useCase }: { useCase: UseCase }) {
+  const [hov, setHov] = useState(false);
   return (
-    <motion.div
-      className="rounded-xl border border-subtle bg-panel overflow-hidden cursor-default transition-colors duration-200 hover:border-emphasis"
-      whileHover={{
-        y: -2,
-        transition: { duration: 0.2, ease: "easeOut" },
+    <div
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      style={{
+        borderRadius: 14,
+        border: `1px solid ${hov ? 'rgba(170,255,77,0.20)' : 'rgba(245,239,224,0.07)'}`,
+        background: hov ? 'rgba(255,250,240,0.06)' : 'rgba(255,250,240,0.03)',
+        backdropFilter: 'blur(20px)',
+        overflow: 'hidden',
+        transform: hov ? 'translateY(-2px)' : 'none',
+        transition: 'all 220ms ease',
       }}
     >
-      <div className="bg-raised px-7 pt-7 pb-5">
-        <div className="mb-3">
-          <span className="font-mono text-xs uppercase tracking-[0.1em] px-3 py-1 rounded-sm bg-accent text-inverse">
+      <div style={{ background: 'rgba(245,239,224,0.03)', padding: '24px 28px 20px' }}>
+        <div style={{ marginBottom: 12 }}>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.09em', textTransform: 'uppercase', padding: '2px 10px', borderRadius: 4, background: '#AAFF4D', color: '#0C0A08', fontWeight: 700 }}>
             {useCase.audience}
           </span>
         </div>
-        <h3 className="font-sans text-xl font-medium text-primary leading-snug">
+        <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 700, color: '#F5EFE0', letterSpacing: '-0.02em', lineHeight: 1.3, margin: 0 }}>
           {useCase.headline}
         </h3>
       </div>
-      <div className="px-7 py-5">
-        <p className="font-sans text-sm text-secondary leading-relaxed">
+      <div style={{ padding: '16px 28px 24px' }}>
+        <p style={{ fontFamily: 'var(--font-editorial)', fontSize: 13, color: 'rgba(245,239,224,0.55)', lineHeight: 1.75, margin: 0 }}>
           {useCase.description}
         </p>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
-// ── Main Component ─────────────────────────────────────────────────────────
-
 export default function ToolDetail({ tool }: { tool: ToolDetailData }) {
   return (
-    <main className="min-h-screen bg-page">
-      <div className="max-w-4xl mx-auto px-6 md:px-10 py-10 space-y-16">
+    <main style={{ minHeight: '100vh', background: 'var(--bg-base)' }}>
+      <div style={{ maxWidth: 900, margin: '0 auto', padding: '40px 48px 96px', display: 'flex', flexDirection: 'column', gap: 64 }}>
 
-        {/* Back navigation */}
-        <motion.div
-          initial={{ opacity: 0, x: -10 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        {/* Back */}
+        <Link
+          href="/"
+          style={{ fontFamily: 'var(--font-ui)', fontSize: 13, color: 'rgba(245,239,224,0.45)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6, width: 'fit-content', transition: 'color 150ms ease' }}
+          className="hover:text-primary"
         >
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 font-sans text-sm text-secondary hover:text-primary transition-colors duration-150"
-          >
-            <span>←</span>
-            <span>Back to all tools</span>
-          </Link>
-        </motion.div>
+          ← Back to all tools
+        </Link>
 
-        {/* ── Header ── */}
-        <motion.section
-          variants={stagger}
-          initial="hidden"
-          animate="show"
-          className="space-y-6"
-        >
-          <motion.div variants={fadeUp} className="space-y-3">
-            <div className="flex flex-wrap items-center gap-3">
-              <h1 className="font-sans text-5xl md:text-6xl font-semibold text-primary leading-none tracking-tight">
-                {tool.name}
-              </h1>
-              <span className={`font-mono text-xs px-3 py-1.5 rounded-sm ${pricingStyle[tool.pricing]}`}>
-                {tool.pricing}
-              </span>
-            </div>
-          </motion.div>
+        {/* Header */}
+        <section style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', gap: 14 }}>
+            <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(40px, 6vw, 64px)', fontWeight: 900, color: '#F5EFE0', letterSpacing: '-0.03em', lineHeight: 1, margin: 0 }}>
+              {tool.name}
+            </h1>
+            <span style={{ ...pricingStyle(tool.pricing), marginTop: 10 }}>
+              {tool.pricing}
+            </span>
+          </div>
 
-          <motion.p
-            variants={fadeUp}
-            className="font-sans text-lg md:text-xl text-secondary max-w-2xl leading-relaxed"
-          >
+          <p style={{ fontFamily: 'var(--font-editorial)', fontSize: 18, color: 'rgba(245,239,224,0.60)', lineHeight: 1.75, maxWidth: '54ch', fontStyle: 'italic' }}>
             {tool.tagline}
-          </motion.p>
+          </p>
 
-          <motion.div variants={fadeUp} className="flex flex-wrap items-center gap-2">
-            <span className="font-mono text-xs uppercase tracking-[0.1em] bg-accent text-inverse px-3 py-1.5 rounded-sm">
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 8 }}>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.09em', textTransform: 'uppercase', padding: '3px 10px', borderRadius: 4, background: '#AAFF4D', color: '#0C0A08', fontWeight: 700 }}>
               {tool.category}
             </span>
             {tool.tags.map((tag) => (
@@ -161,149 +115,115 @@ export default function ToolDetail({ tool }: { tool: ToolDetailData }) {
                 {tag}
               </span>
             ))}
-          </motion.div>
-        </motion.section>
+          </div>
+        </section>
 
-        {/* ── Video ── */}
-        <motion.section variants={fadeIn} initial="hidden" animate="show">
+        {/* Video */}
+        <section>
           {tool.video_url ? (
-            <div className="relative overflow-hidden rounded-xl border border-subtle bg-raised aspect-video">
+            <div style={{ position: 'relative', overflow: 'hidden', borderRadius: 14, border: '1px solid rgba(245,239,224,0.07)', background: 'rgba(255,250,240,0.03)', aspectRatio: '16/9' }}>
               <iframe
                 src={getYouTubeEmbedUrl(tool.video_url)}
                 title={`${tool.name} demo`}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
-                className="absolute inset-0 w-full h-full"
+                style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
               />
             </div>
           ) : (
-            <div className="relative overflow-hidden rounded-xl border border-subtle bg-raised h-[320px] md:h-[400px] flex flex-col items-center justify-center gap-5">
-              <div className="absolute top-6 left-8 w-40 h-40 bg-[var(--accent-primary-glow)] rounded-full blur-2xl pointer-events-none" />
-              <div className="absolute bottom-8 right-10 w-52 h-52 bg-[rgba(201,169,110,0.07)] rounded-full blur-2xl pointer-events-none" />
-              <div className="relative z-10 w-20 h-20 rounded-full bg-panel border border-subtle flex items-center justify-center">
-                <svg className="w-8 h-8 text-primary ml-1" viewBox="0 0 24 24" fill="currentColor">
+            <div style={{ position: 'relative', overflow: 'hidden', borderRadius: 14, border: '1px solid rgba(245,239,224,0.07)', background: 'rgba(255,250,240,0.03)', height: 360, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 20 }}>
+              <div style={{ position: 'absolute', top: 24, left: 32, width: 160, height: 160, background: 'rgba(170,255,77,0.07)', borderRadius: '50%', filter: 'blur(60px)', pointerEvents: 'none' }} />
+              <div style={{ position: 'absolute', bottom: 32, right: 40, width: 200, height: 200, background: 'rgba(244,171,31,0.05)', borderRadius: '50%', filter: 'blur(60px)', pointerEvents: 'none' }} />
+              <div style={{ position: 'relative', width: 72, height: 72, borderRadius: '50%', background: 'rgba(255,250,240,0.04)', border: '1px solid rgba(245,239,224,0.09)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="rgba(245,239,224,0.60)" style={{ marginLeft: 4 }}>
                   <path d="M8 5v14l11-7z" />
                 </svg>
               </div>
-              <div className="relative z-10 text-center space-y-1.5">
-                <p className="font-sans text-lg font-medium text-primary">Video walkthrough</p>
-                <p className="font-mono text-sm text-muted uppercase tracking-widest">coming soon</p>
+              <div style={{ position: 'relative', textAlign: 'center' }}>
+                <p style={{ fontFamily: 'var(--font-ui)', fontSize: 16, fontWeight: 600, color: '#F5EFE0', marginBottom: 4 }}>Video walkthrough</p>
+                <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'rgba(245,239,224,0.30)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>coming soon</p>
               </div>
             </div>
           )}
-        </motion.section>
-
-        {/* ── Use Cases ── */}
-        <section>
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-60px" }}
-            transition={{ type: "spring", stiffness: 180, damping: 26 }}
-            className="mb-8"
-          >
-            <p className="font-mono text-xs uppercase tracking-[0.1em] text-accent mb-2">
-              Real workflows, real people
-            </p>
-            <h2 className="font-sans text-3xl md:text-4xl font-semibold text-primary">
-              How people are using it
-            </h2>
-          </motion.div>
-
-          <motion.div
-            className="grid grid-cols-1 md:grid-cols-2 gap-5"
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, margin: "-60px" }}
-            variants={{ hidden: {}, show: { transition: { staggerChildren: 0.12 } } }}
-          >
-            {tool.useCases.map((uc) => (
-              <motion.div key={uc.audience} variants={fadeUp}>
-                <UseCaseCard useCase={uc} />
-              </motion.div>
-            ))}
-          </motion.div>
         </section>
 
-        {/* ── Learning Guide ── */}
+        {/* Use Cases */}
+        <section>
+          <div style={{ marginBottom: 32 }}>
+            <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#AAFF4D', marginBottom: 8 }}>
+              Real workflows, real people
+            </p>
+            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 32, fontWeight: 700, color: '#F5EFE0', letterSpacing: '-0.02em', margin: 0 }}>
+              How people are using it
+            </h2>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20 }}>
+            {tool.useCases.map((uc) => (
+              <UseCaseCard key={uc.audience} useCase={uc} />
+            ))}
+          </div>
+        </section>
+
+        {/* Learning Guide */}
         {tool.learning_guide && (
-          <motion.section
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-60px" }}
-            transition={{ type: "spring", stiffness: 180, damping: 26 }}
-            className="space-y-6"
-          >
+          <section style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
             <div>
-              <p className="font-mono text-xs uppercase tracking-[0.1em] text-accent mb-2">
+              <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#AAFF4D', marginBottom: 8 }}>
                 your starter pack
               </p>
-              <h2 className="font-sans text-3xl md:text-4xl font-semibold text-primary">
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 32, fontWeight: 700, color: '#F5EFE0', letterSpacing: '-0.02em', margin: 0 }}>
                 Learning Guide
               </h2>
             </div>
-            <div className="rounded-xl border border-subtle bg-raised p-8 md:p-10 space-y-4">
+            <div style={{ borderRadius: 14, border: '1px solid rgba(245,239,224,0.07)', background: 'rgba(255,250,240,0.03)', padding: '40px', display: 'flex', flexDirection: 'column', gap: 16 }}>
               {tool.learning_guide.split(/\n\n+/).map((para, i) => (
-                <p key={i} className="font-sans text-base text-secondary leading-relaxed">
+                <p key={i} style={{ fontFamily: 'var(--font-editorial)', fontSize: 15, color: 'rgba(245,239,224,0.60)', lineHeight: 1.85, margin: 0 }}>
                   {para.trim()}
                 </p>
               ))}
             </div>
-          </motion.section>
+          </section>
         )}
 
-        {/* ── How this works ── */}
+        {/* Related concepts */}
         {tool.related_concepts && tool.related_concepts.length > 0 && (
-          <motion.section
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-60px" }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="space-y-5"
-          >
+          <section style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
             <div>
-              <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted mb-2">
+              <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(245,239,224,0.30)', marginBottom: 8 }}>
                 under the hood
               </p>
-              <h2 className="font-sans text-3xl font-semibold text-primary">
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 32, fontWeight: 700, color: '#F5EFE0', letterSpacing: '-0.02em', margin: 0 }}>
                 How this works
               </h2>
             </div>
-            <div className="flex flex-wrap gap-3">
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
               {tool.related_concepts.map((concept) => (
                 <Link
                   key={concept}
                   href={`/learn/${concept.toLowerCase().replace(/\s+/g, "-")}`}
-                  className="tag tag-accent hover:opacity-80 transition-opacity duration-150"
+                  className="tag tag-accent"
+                  style={{ textDecoration: 'none' }}
                 >
                   {concept} →
                 </Link>
               ))}
             </div>
-          </motion.section>
+          </section>
         )}
 
-        {/* ── CTA ── */}
+        {/* CTA */}
         {tool.url && (
-          <motion.section
-            className="pb-8 flex items-center border-t border-subtle pt-12"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-40px" }}
-            transition={{ type: "spring", stiffness: 180, damping: 26 }}
-          >
-            <motion.a
+          <section style={{ paddingTop: 48, borderTop: '1px solid rgba(245,239,224,0.07)' }}>
+            <a
               href={tool.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-sans font-medium tracking-wide text-sm px-6 py-3 rounded-md bg-transparent text-primary border border-subtle hover:border-emphasis hover:text-accent transition-colors duration-150 inline-flex items-center"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              transition={{ type: "spring", stiffness: 300, damping: 22 }}
+              className="btn-ghost"
+              style={{ fontSize: 14 }}
             >
-              Visit Tool ↗
-            </motion.a>
-          </motion.section>
+              Visit {tool.name} ↗
+            </a>
+          </section>
         )}
 
       </div>

@@ -8,18 +8,15 @@ export const metadata: Metadata = {
 
 export default function MapPage() {
   return (
-    <main className="min-h-screen bg-page">
-      <div className="max-w-content mx-auto px-6 md:px-10 py-16 md:py-24">
+    <main style={{ minHeight: '100vh', background: 'var(--bg-base)' }}>
+      <div style={{ maxWidth: 'var(--max-width-content)', margin: '0 auto', padding: '64px 48px 96px' }}>
 
         {/* Header */}
-        <div className="mb-16 md:mb-20">
-          <h1
-            className="font-sans text-4xl md:text-5xl font-semibold text-primary leading-tight mb-4"
-            style={{ letterSpacing: "-0.02em" }}
-          >
+        <div style={{ marginBottom: 64 }}>
+          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(36px, 5vw, 56px)', fontWeight: 900, color: '#F5EFE0', letterSpacing: '-0.03em', lineHeight: 1.05, margin: '0 0 14px' }}>
             The landscape
           </h1>
-          <p className="font-serif italic text-lg text-secondary leading-relaxed">
+          <p style={{ fontFamily: 'var(--font-editorial)', fontStyle: 'italic', fontSize: 17, color: 'rgba(245,239,224,0.55)', lineHeight: 1.8 }}>
             Six concepts. Two tracks. Everything connects.
           </p>
         </div>
@@ -28,10 +25,7 @@ export default function MapPage() {
         <ConceptMap />
 
         {/* Footer note */}
-        <p
-          className="font-mono text-xs text-muted text-center mt-16"
-          style={{ letterSpacing: "0.04em" }}
-        >
+        <p style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'rgba(245,239,224,0.25)', textAlign: 'center', marginTop: 64, letterSpacing: '0.04em' }}>
           More concepts coming — slowly, on purpose.
         </p>
 

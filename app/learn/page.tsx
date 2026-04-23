@@ -11,21 +11,18 @@ export default function LearnPage() {
   const concepts = getAllConcepts();
 
   return (
-    <main className="min-h-screen bg-page">
-      <div className="max-w-content mx-auto px-6 md:px-10 py-16 md:py-24">
+    <main style={{ minHeight: '100vh', background: 'var(--bg-base)' }}>
+      <div style={{ maxWidth: 'var(--max-width-content)', margin: '0 auto', padding: '64px 48px 96px' }}>
 
         {/* Header */}
-        <div className="mb-16">
-          <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted mb-3">
+        <div style={{ marginBottom: 64 }}>
+          <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(245,239,224,0.30)', marginBottom: 12 }}>
             Learn
           </p>
-          <h1
-            className="font-sans text-4xl md:text-5xl font-semibold text-primary leading-tight mb-4"
-            style={{ letterSpacing: "-0.02em" }}
-          >
+          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(36px, 5vw, 56px)', fontWeight: 900, color: '#F5EFE0', letterSpacing: '-0.03em', lineHeight: 1.05, marginBottom: 16, margin: '0 0 16px' }}>
             Understand the tools you use
           </h1>
-          <p className="font-sans text-lg text-secondary max-w-xl leading-relaxed">
+          <p style={{ fontFamily: 'var(--font-editorial)', fontSize: 17, lineHeight: 1.8, color: 'rgba(245,239,224,0.55)', maxWidth: '52ch', marginTop: 16 }}>
             No jargon for its own sake. No sales copy dressed up as explanation.
             Just honest accounts of how these things actually work.
           </p>
@@ -33,43 +30,42 @@ export default function LearnPage() {
 
         {/* Concept cards grid */}
         {concepts.length === 0 ? (
-          <p className="font-sans text-sm text-muted">No concepts yet.</p>
+          <p style={{ fontFamily: 'var(--font-ui)', fontSize: 14, color: 'rgba(245,239,224,0.35)' }}>No concepts yet.</p>
         ) : (
-          <div
-            className="grid gap-6"
-            style={{ gridTemplateColumns: "repeat(auto-fill, minmax(360px, 1fr))" }}
-          >
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))', gap: 24 }}>
             {concepts.map((concept) => (
               <Link
                 key={concept.slug}
                 href={`/learn/${concept.slug}`}
-                className="group block concept-card rounded-lg p-6"
+                style={{ textDecoration: 'none', display: 'block' }}
+                className="concept-card group"
               >
-                <p className="font-mono text-xs uppercase tracking-[0.15em] text-muted mb-4">
-                  Concept
-                </p>
-                <h2
-                  className="font-sans text-2xl font-semibold text-primary mb-3 leading-tight group-hover:text-accent transition-colors duration-150"
-                  style={{ letterSpacing: "-0.02em" }}
-                >
-                  {concept.title}
-                </h2>
-                <p className="font-serif italic text-base text-secondary leading-relaxed mb-5">
-                  {concept.tagline}
-                </p>
-                <p className="font-mono text-sm text-muted">
-                  {concept.readTime}
-                </p>
+                <div style={{ padding: 24 }}>
+                  <p style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(245,239,224,0.30)', marginBottom: 14 }}>
+                    Concept
+                  </p>
+                  <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 22, fontWeight: 700, color: '#F5EFE0', letterSpacing: '-0.02em', lineHeight: 1.2, marginBottom: 10, margin: '0 0 10px', transition: 'color 150ms ease' }}
+                    className="group-hover:text-accent">
+                    {concept.title}
+                  </h2>
+                  <p style={{ fontFamily: 'var(--font-editorial)', fontStyle: 'italic', fontSize: 14, color: 'rgba(245,239,224,0.50)', lineHeight: 1.7, marginBottom: 16 }}>
+                    {concept.tagline}
+                  </p>
+                  <p style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'rgba(245,239,224,0.30)' }}>
+                    {concept.readTime}
+                  </p>
+                </div>
               </Link>
             ))}
           </div>
         )}
 
         {/* Map link */}
-        <div className="mt-12">
+        <div style={{ marginTop: 48 }}>
           <Link
             href="/learn/map"
-            className="font-sans text-sm text-secondary hover:text-accent transition-colors duration-150"
+            style={{ fontFamily: 'var(--font-ui)', fontSize: 13, color: 'rgba(245,239,224,0.45)', textDecoration: 'none', transition: 'color 150ms ease' }}
+            className="hover:text-accent"
           >
             The landscape →
           </Link>

@@ -31,30 +31,32 @@ export default async function ToolsArchivePage() {
 
   return (
     <>
-      <main className="min-h-screen bg-page">
+      <main style={{ minHeight: '100vh', background: 'var(--bg-base)' }}>
+
         {/* Header */}
-        <section className="px-6 md:px-12 lg:px-20 pt-16 pb-12">
-          <p className="font-sans text-xs uppercase tracking-[0.2em] text-accent mb-4">
+        <section style={{ maxWidth: 'var(--max-width-content)', margin: '0 auto', padding: '64px 48px 40px' }}>
+          <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#AAFF4D', marginBottom: 14 }}>
             every tool we&apos;ve found worth your time
           </p>
-          <h1 className="font-sans text-4xl md:text-5xl font-semibold text-primary leading-tight mb-4 tracking-tight">
+          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(36px, 5vw, 56px)', fontWeight: 900, color: '#F5EFE0', letterSpacing: '-0.03em', lineHeight: 1.05, margin: '0 0 14px' }}>
             The Full Archive
           </h1>
-          <p className="font-sans text-lg text-secondary max-w-xl leading-relaxed">
+          <p style={{ fontFamily: 'var(--font-editorial)', fontSize: 16, lineHeight: 1.8, color: 'rgba(245,239,224,0.55)', maxWidth: '52ch' }}>
             {tools.length} tools and counting. No sponsored rankings. No hustle energy.
             Tap any card to explore.
           </p>
         </section>
 
         {/* Divider */}
-        <div className="px-6 md:px-12 lg:px-20">
-          <div className="h-px w-full bg-[var(--border-default)]" />
+        <div style={{ maxWidth: 'var(--max-width-content)', margin: '0 auto', padding: '0 48px' }}>
+          <div style={{ height: 1, background: 'rgba(245,239,224,0.07)' }} />
         </div>
 
         {/* Search + grid */}
-        <section className="px-6 md:px-12 lg:px-20 py-10">
+        <section style={{ maxWidth: 'var(--max-width-content)', margin: '0 auto', padding: '40px 48px 80px' }}>
           <ToolsClient tools={tools} />
         </section>
+
       </main>
       <Footer />
     </>

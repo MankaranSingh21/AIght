@@ -201,30 +201,32 @@ interface QuestionBlockProps {
 function QuestionBlock({ number, question, options, flashed, onSelect }: QuestionBlockProps) {
   return (
     <div>
-      <p className="font-mono text-xs text-muted uppercase tracking-widest mb-3">
+      <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'rgba(245,239,224,0.30)', textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: 12 }}>
         Question {number} of 5
       </p>
-      <p
-        className="font-sans text-xl font-medium text-primary mb-6 leading-snug"
-        style={{ letterSpacing: '-0.02em' }}
-      >
+      <p style={{ fontFamily: 'var(--font-display)', fontSize: 22, fontWeight: 700, color: '#F5EFE0', letterSpacing: '-0.02em', lineHeight: 1.3, marginBottom: 24 }}>
         {question}
       </p>
-      <div className="flex flex-col gap-3">
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
         {options.map((opt) => {
           const isFlashed = flashed === opt;
           return (
             <button
               key={opt}
               onClick={() => onSelect(opt)}
-              className="text-left px-5 py-4 rounded-lg border transition-all duration-150"
               style={{
-                background: isFlashed ? 'var(--accent-primary-glow)' : 'var(--bg-elevated)',
-                borderColor: isFlashed ? 'var(--accent-primary)' : 'var(--border-default)',
-                color: isFlashed ? 'var(--accent-primary)' : 'var(--text-secondary)',
+                textAlign: 'left',
+                padding: '14px 20px',
+                borderRadius: 10,
+                border: `1px solid ${isFlashed ? 'rgba(170,255,77,0.35)' : 'rgba(245,239,224,0.09)'}`,
+                background: isFlashed ? 'rgba(170,255,77,0.08)' : 'rgba(255,250,240,0.03)',
+                backdropFilter: 'blur(12px)',
+                color: isFlashed ? '#AAFF4D' : 'rgba(245,239,224,0.60)',
+                cursor: 'pointer',
+                transition: 'all 150ms ease',
               }}
             >
-              <span className="font-sans text-base">{opt}</span>
+              <span style={{ fontFamily: 'var(--font-ui)', fontSize: 14 }}>{opt}</span>
             </button>
           );
         })}
@@ -372,42 +374,35 @@ export default function QuizPage() {
           {/* ── Step 1: Field selection ── */}
           {step === 'field' && (
             <div>
-              <h1
-                className="font-sans text-4xl font-semibold text-primary mb-4"
-                style={{ letterSpacing: '-0.02em' }}
-              >
+              <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(32px, 5vw, 52px)', fontWeight: 900, color: '#F5EFE0', letterSpacing: '-0.03em', lineHeight: 1.05, marginBottom: 14, margin: '0 0 14px' }}>
                 How will AI affect you?
               </h1>
-              <p className="font-sans text-lg text-secondary mb-14 max-w-xl leading-relaxed">
+              <p style={{ fontFamily: 'var(--font-editorial)', fontSize: 17, color: 'rgba(245,239,224,0.55)', lineHeight: 1.8, maxWidth: '48ch', marginBottom: 56 }}>
                 Select your field. We&apos;ll ask five questions and give you an honest disruption score.
               </p>
-              <div
-                className="grid gap-4"
-                style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))' }}
-              >
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
                 {fieldsData.map((field) => {
                   const isFlashed = flashedOption === field.slug;
                   return (
                     <button
                       key={field.slug}
                       onClick={() => handleFieldSelect(field as FieldData)}
-                      className="text-left p-6 rounded-lg border transition-all duration-150"
                       style={{
-                        background: isFlashed ? 'var(--accent-primary-glow)' : 'var(--bg-surface)',
-                        borderColor: isFlashed ? 'var(--accent-primary)' : 'var(--border-subtle)',
+                        textAlign: 'left',
+                        padding: 20,
+                        borderRadius: 12,
+                        border: `1px solid ${isFlashed ? 'rgba(170,255,77,0.35)' : 'rgba(245,239,224,0.07)'}`,
+                        background: isFlashed ? 'rgba(170,255,77,0.08)' : 'rgba(255,250,240,0.03)',
+                        backdropFilter: 'blur(16px)',
                         transform: isFlashed ? 'translateY(-2px)' : 'translateY(0)',
+                        transition: 'all 150ms ease',
+                        cursor: 'pointer',
                       }}
                     >
-                      <h3
-                        className="font-sans text-base font-medium mb-2 leading-tight"
-                        style={{ color: isFlashed ? 'var(--accent-primary)' : 'var(--text-primary)' }}
-                      >
+                      <h3 style={{ fontFamily: 'var(--font-ui)', fontSize: 14, fontWeight: 600, color: isFlashed ? '#AAFF4D' : '#F5EFE0', marginBottom: 6, lineHeight: 1.3 }}>
                         {field.field}
                       </h3>
-                      <p
-                        className="font-sans text-sm leading-snug line-clamp-2"
-                        style={{ color: 'var(--text-secondary)' }}
-                      >
+                      <p style={{ fontFamily: 'var(--font-editorial)', fontSize: 12, color: 'rgba(245,239,224,0.45)', lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', margin: 0 }}>
                         {field.tagline}
                       </p>
                     </button>
@@ -510,17 +505,11 @@ export default function QuizPage() {
                     </text>
                   </svg>
                 </div>
-                <h2
-                  className="font-sans text-2xl font-semibold text-center"
-                  style={{ color: strokeColor, letterSpacing: '-0.02em' }}
-                >
+                <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 22, fontWeight: 700, textAlign: 'center', color: strokeColor, letterSpacing: '-0.02em' }}>
                   {getRiskLabel(score)}
                 </h2>
-                <p className="font-mono text-sm text-muted mt-1 mb-3">{selectedField.field}</p>
-                <p
-                  className="font-serif italic text-sm text-center"
-                  style={{ color: 'var(--text-secondary)', maxWidth: '38ch', lineHeight: 1.7 }}
-                >
+                <p style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'rgba(245,239,224,0.30)', marginTop: 4, marginBottom: 12 }}>{selectedField.field}</p>
+                <p style={{ fontFamily: 'var(--font-editorial)', fontStyle: 'italic', fontSize: 14, textAlign: 'center', color: 'rgba(245,239,224,0.55)', maxWidth: '38ch', lineHeight: 1.7 }}>
                   {getRiskSubtext(score)}
                 </p>
               </div>

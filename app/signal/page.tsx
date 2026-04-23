@@ -13,21 +13,18 @@ export default async function SignalPage() {
   const posts = await getSignalPosts();
 
   return (
-    <main className="min-h-screen bg-page">
-      <div className="max-w-editorial mx-auto px-6 md:px-10 py-16 md:py-24">
+    <main style={{ minHeight: '100vh', background: 'var(--bg-base)' }}>
+      <div style={{ maxWidth: 'var(--max-width-editorial)', margin: '0 auto', padding: '64px 48px 96px' }}>
 
         {/* Header */}
-        <div className="mb-16 pb-8 border-b border-subtle">
-          <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted mb-3">
+        <div style={{ marginBottom: 56, paddingBottom: 32, borderBottom: '1px solid rgba(245,239,224,0.07)' }}>
+          <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(245,239,224,0.30)', marginBottom: 12 }}>
             Signal
           </p>
-          <h1
-            className="font-sans text-4xl md:text-5xl font-semibold text-primary leading-tight mb-4"
-            style={{ letterSpacing: "-0.02em" }}
-          >
+          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(36px, 5vw, 56px)', fontWeight: 900, color: '#F5EFE0', letterSpacing: '-0.03em', lineHeight: 1.05, margin: '0 0 16px' }}>
             From the archive
           </h1>
-          <p className="font-sans text-base text-secondary max-w-prose leading-relaxed">
+          <p style={{ fontFamily: 'var(--font-editorial)', fontSize: 16, lineHeight: 1.8, color: 'rgba(245,239,224,0.55)', maxWidth: '52ch' }}>
             Honest writing about AI tools and what they mean. No hype, no
             sponsored takes. Just signal.
           </p>
@@ -35,7 +32,7 @@ export default async function SignalPage() {
 
         {/* Post list */}
         {posts.length === 0 ? (
-          <p className="font-sans text-sm text-muted py-12">
+          <p style={{ fontFamily: 'var(--font-ui)', fontSize: 14, color: 'rgba(245,239,224,0.35)', padding: '48px 0' }}>
             Nothing published yet. Check back soon.
           </p>
         ) : (
@@ -46,13 +43,15 @@ export default async function SignalPage() {
                 href={post.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group block py-8 border-b border-subtle last:border-b-0"
+                style={{ display: 'block', padding: '32px 0', borderBottom: '1px solid rgba(245,239,224,0.07)', textDecoration: 'none' }}
+                className="group"
               >
-                <p className="font-mono text-sm text-muted mb-2">{post.date}</p>
-                <h2 className="font-sans text-xl font-medium text-primary group-hover:text-accent group-hover:translate-x-1 transition-[color,transform] duration-150 mb-3">
+                <p style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'rgba(245,239,224,0.30)', marginBottom: 8 }}>{post.date}</p>
+                <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontWeight: 700, color: '#F5EFE0', letterSpacing: '-0.02em', lineHeight: 1.3, marginBottom: 10, transition: 'color 150ms ease' }}
+                  className="group-hover:text-accent group-hover:translate-x-0.5">
                   {post.title}
                 </h2>
-                <p className="font-serif text-base text-secondary leading-relaxed line-clamp-2">
+                <p style={{ fontFamily: 'var(--font-editorial)', fontSize: 14, color: 'rgba(245,239,224,0.50)', lineHeight: 1.7, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                   {post.excerpt}
                 </p>
               </a>
@@ -61,16 +60,17 @@ export default async function SignalPage() {
         )}
 
         {/* Footer nav */}
-        <div className="mt-16 pt-8 border-t border-subtle flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div style={{ marginTop: 64, paddingTop: 32, borderTop: '1px solid rgba(245,239,224,0.07)', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
           <Link
             href="/"
-            className="font-sans text-sm text-secondary hover:text-primary transition-colors duration-150"
+            style={{ fontFamily: 'var(--font-ui)', fontSize: 13, color: 'rgba(245,239,224,0.45)', textDecoration: 'none', transition: 'color 150ms ease' }}
+            className="hover:text-primary"
           >
             ← Back to AIght
           </Link>
           <Link
             href="/learn"
-            className="font-sans text-sm text-accent hover:text-accent-dim transition-colors duration-150"
+            style={{ fontFamily: 'var(--font-ui)', fontSize: 13, color: '#AAFF4D', textDecoration: 'none', transition: 'color 150ms ease' }}
           >
             Explore concepts →
           </Link>

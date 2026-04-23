@@ -37,63 +37,140 @@ const mdxComponents = {
   McpSimulation,
   h2: (props: JSX.IntrinsicElements["h2"]) => (
     <h2
-      className="font-sans text-3xl font-semibold text-primary mt-14 mb-5 leading-tight"
-      style={{ letterSpacing: "-0.02em" }}
+      style={{
+        fontFamily: 'var(--font-display)',
+        fontSize: 28,
+        fontWeight: 700,
+        color: '#F5EFE0',
+        letterSpacing: '-0.02em',
+        lineHeight: 1.2,
+        marginTop: 56,
+        marginBottom: 20,
+      }}
       {...props}
     />
   ),
   h3: (props: JSX.IntrinsicElements["h3"]) => (
     <h3
-      className="font-sans text-2xl font-semibold text-primary mt-10 mb-4 leading-tight"
-      style={{ letterSpacing: "-0.02em" }}
+      style={{
+        fontFamily: 'var(--font-display)',
+        fontSize: 22,
+        fontWeight: 700,
+        color: '#F5EFE0',
+        letterSpacing: '-0.02em',
+        lineHeight: 1.2,
+        marginTop: 40,
+        marginBottom: 14,
+      }}
       {...props}
     />
   ),
   p: (props: JSX.IntrinsicElements["p"]) => (
     <p
-      className="font-serif text-base text-primary leading-[1.85] tracking-[0.01em] mb-6 max-w-[68ch]"
+      style={{
+        fontFamily: 'var(--font-editorial)',
+        fontSize: 16,
+        color: 'rgba(245,239,224,0.75)',
+        lineHeight: 1.85,
+        letterSpacing: '0.01em',
+        marginBottom: 22,
+        maxWidth: '68ch',
+      }}
       {...props}
     />
   ),
   blockquote: (props: JSX.IntrinsicElements["blockquote"]) => (
     <blockquote
-      className="font-serif italic text-2xl text-warm border-l-[3px] border-warm pl-6 my-10 max-w-[58ch] leading-relaxed"
+      style={{
+        fontFamily: 'var(--font-editorial)',
+        fontStyle: 'italic',
+        fontSize: 22,
+        color: 'var(--accent-warm)',
+        borderLeft: '3px solid var(--accent-warm)',
+        paddingLeft: 24,
+        margin: '40px 0',
+        maxWidth: '58ch',
+        lineHeight: 1.6,
+      }}
       {...props}
     />
   ),
   hr: () => (
-    <hr className="border-none border-t border-subtle my-16" />
+    <hr style={{ border: 'none', borderTop: '1px solid rgba(245,239,224,0.07)', margin: '64px 0' }} />
   ),
   pre: (props: JSX.IntrinsicElements["pre"]) => (
     <pre
-      className="font-mono text-sm bg-raised rounded-md p-6 overflow-x-auto my-8 leading-relaxed"
+      style={{
+        fontFamily: 'var(--font-mono)',
+        fontSize: 13,
+        background: 'var(--bg-elevated)',
+        borderRadius: 8,
+        padding: 24,
+        overflowX: 'auto',
+        margin: '28px 0',
+        lineHeight: 1.7,
+        border: '1px solid rgba(245,239,224,0.07)',
+      }}
       {...props}
     />
   ),
   code: (props: JSX.IntrinsicElements["code"]) => (
     <code
-      className="font-mono text-sm bg-raised px-1.5 py-0.5 rounded"
+      style={{
+        fontFamily: 'var(--font-mono)',
+        fontSize: 13,
+        background: 'var(--bg-elevated)',
+        padding: '2px 6px',
+        borderRadius: 4,
+        color: '#AAFF4D',
+      }}
       {...props}
     />
   ),
   strong: (props: JSX.IntrinsicElements["strong"]) => (
-    <strong className="font-medium text-primary not-italic" {...props} />
+    <strong style={{ fontWeight: 600, color: '#F5EFE0', fontStyle: 'normal' }} {...props} />
   ),
   a: (props: JSX.IntrinsicElements["a"]) => (
     <a
-      className="text-accent hover:text-accent-dim underline underline-offset-2 transition-colors duration-150"
+      style={{ color: '#AAFF4D', textDecoration: 'underline', textUnderlineOffset: 2, transition: 'color 150ms ease' }}
       {...props}
     />
   ),
   ul: (props: JSX.IntrinsicElements["ul"]) => (
     <ul
-      className="font-serif text-base text-primary leading-[1.85] list-disc list-outside ml-5 space-y-2 mb-6 max-w-[68ch]"
+      style={{
+        fontFamily: 'var(--font-editorial)',
+        fontSize: 16,
+        color: 'rgba(245,239,224,0.75)',
+        lineHeight: 1.85,
+        listStyleType: 'disc',
+        listStylePosition: 'outside',
+        marginLeft: 20,
+        marginBottom: 22,
+        maxWidth: '68ch',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 8,
+      }}
       {...props}
     />
   ),
   ol: (props: JSX.IntrinsicElements["ol"]) => (
     <ol
-      className="font-serif text-base text-primary leading-[1.85] list-decimal list-outside ml-5 space-y-2 mb-6 max-w-[68ch]"
+      style={{
+        fontFamily: 'var(--font-editorial)',
+        fontSize: 16,
+        color: 'rgba(245,239,224,0.75)',
+        lineHeight: 1.85,
+        listStyleType: 'decimal',
+        listStylePosition: 'outside',
+        marginLeft: 20,
+        marginBottom: 22,
+        maxWidth: '68ch',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 8,
+      }}
       {...props}
     />
   ),
@@ -116,50 +193,49 @@ export default async function LearnConceptPage({ params }: Props) {
   });
 
   return (
-    <main className="min-h-screen bg-page">
-      <div className="max-w-editorial mx-auto px-6 md:px-10 py-16 md:py-24">
+    <main style={{ minHeight: '100vh', background: 'var(--bg-base)' }}>
+      <div style={{ maxWidth: 'var(--max-width-editorial)', margin: '0 auto', padding: '64px 48px 96px' }}>
 
         {/* Back */}
         <Link
           href="/learn"
-          className="inline-flex items-center gap-2 font-sans text-sm text-secondary hover:text-primary transition-colors duration-150 mb-12"
+          style={{ fontFamily: 'var(--font-ui)', fontSize: 13, color: 'rgba(245,239,224,0.45)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6, marginBottom: 48 }}
+          className="hover:text-primary"
         >
           ← All concepts
         </Link>
 
         {/* Article header */}
-        <header className="mb-12">
-          <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted mb-4">
+        <header style={{ marginBottom: 48 }}>
+          <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(245,239,224,0.30)', marginBottom: 14 }}>
             Concept
           </p>
-          <h1
-            className="font-sans text-4xl md:text-5xl font-semibold text-primary leading-tight mb-5"
-            style={{ letterSpacing: "-0.02em" }}
-          >
+          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(32px, 5vw, 52px)', fontWeight: 900, color: '#F5EFE0', letterSpacing: '-0.03em', lineHeight: 1.05, margin: '0 0 18px' }}>
             {frontmatter.title}
           </h1>
-          <p className="font-serif italic text-lg text-secondary leading-relaxed mb-6 max-w-prose">
+          <p style={{ fontFamily: 'var(--font-editorial)', fontStyle: 'italic', fontSize: 17, color: 'rgba(245,239,224,0.55)', lineHeight: 1.8, marginBottom: 20, maxWidth: '54ch' }}>
             {frontmatter.tagline}
           </p>
-          <p className="font-mono text-sm text-muted">{frontmatter.readTime}</p>
+          <p style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'rgba(245,239,224,0.30)' }}>{frontmatter.readTime}</p>
         </header>
 
-        <hr className="border-none border-t border-subtle mb-12" />
+        <hr style={{ border: 'none', borderTop: '1px solid rgba(245,239,224,0.07)', marginBottom: 48 }} />
 
         {/* MDX body */}
         <article>{content}</article>
 
         {/* Footer nav */}
-        <div className="mt-20 pt-8 border-t border-subtle flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div style={{ marginTop: 80, paddingTop: 32, borderTop: '1px solid rgba(245,239,224,0.07)', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
           <Link
             href="/learn"
-            className="font-sans text-sm text-secondary hover:text-primary transition-colors duration-150"
+            style={{ fontFamily: 'var(--font-ui)', fontSize: 13, color: 'rgba(245,239,224,0.45)', textDecoration: 'none', transition: 'color 150ms ease' }}
+            className="hover:text-primary"
           >
             ← Back to all concepts
           </Link>
           <Link
             href="/tools"
-            className="font-sans text-sm text-accent hover:text-accent-dim transition-colors duration-150"
+            style={{ fontFamily: 'var(--font-ui)', fontSize: 13, color: '#AAFF4D', textDecoration: 'none' }}
           >
             Browse tools →
           </Link>

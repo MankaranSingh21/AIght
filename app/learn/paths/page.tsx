@@ -12,31 +12,21 @@ type Difficulty = "Easy" | "Medium" | "Hard";
 
 function DifficultyBadge({ difficulty }: { difficulty: Difficulty }) {
   if (difficulty === "Easy") {
-    return <span className="tag tag-accent">{difficulty}</span>;
+    return (
+      <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.07em', padding: '2px 8px', borderRadius: 4, background: 'rgba(170,255,77,0.10)', color: '#AAFF4D', border: '1px solid rgba(170,255,77,0.25)', display: 'inline-flex', alignItems: 'center' }}>
+        {difficulty}
+      </span>
+    );
   }
   if (difficulty === "Medium") {
     return (
-      <span
-        className="tag"
-        style={{
-          background: "rgba(201, 169, 110, 0.1)",
-          color: "var(--accent-warm)",
-          borderColor: "rgba(201, 169, 110, 0.3)",
-        }}
-      >
+      <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.07em', padding: '2px 8px', borderRadius: 4, background: 'rgba(244,171,31,0.10)', color: 'var(--accent-warm)', border: '1px solid rgba(244,171,31,0.25)', display: 'inline-flex', alignItems: 'center' }}>
         {difficulty}
       </span>
     );
   }
   return (
-    <span
-      className="tag"
-      style={{
-        background: "rgba(224, 112, 112, 0.1)",
-        color: "var(--error)",
-        borderColor: "rgba(224, 112, 112, 0.3)",
-      }}
-    >
+    <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.07em', padding: '2px 8px', borderRadius: 4, background: 'rgba(224,112,112,0.10)', color: 'var(--error)', border: '1px solid rgba(224,112,112,0.25)', display: 'inline-flex', alignItems: 'center' }}>
       {difficulty}
     </span>
   );
@@ -44,98 +34,51 @@ function DifficultyBadge({ difficulty }: { difficulty: Difficulty }) {
 
 export default function PathsPage() {
   return (
-    <main className="min-h-screen bg-page">
+    <main style={{ minHeight: '100vh', background: 'var(--bg-base)' }}>
 
       {/* Header */}
-      <div
-        style={{
-          background: "var(--bg-surface)",
-          borderBottom: "1px solid var(--border-subtle)",
-          padding: "4rem 2.5rem 4rem",
-        }}
-      >
-        <div style={{ maxWidth: "var(--max-width-content)", margin: "0 auto" }}>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr auto",
-              gap: "2rem",
-              alignItems: "end",
-            }}
-            className="paths-header-grid"
-          >
+      <div style={{ background: 'rgba(255,250,240,0.02)', borderBottom: '1px solid rgba(245,239,224,0.07)', padding: '64px 48px' }}>
+        <div style={{ maxWidth: 'var(--max-width-content)', margin: '0 auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 32, alignItems: 'end' }} className="paths-header-grid">
             <div>
-              <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted mb-3">
+              <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(245,239,224,0.30)', marginBottom: 12 }}>
                 Field Guides
               </p>
-              <h1
-                className="font-sans font-semibold text-primary"
-                style={{
-                  fontSize: "clamp(2rem, 5vw, 3.25rem)",
-                  letterSpacing: "-0.025em",
-                  lineHeight: 1.1,
-                  marginBottom: "1rem",
-                }}
-              >
+              <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(32px, 5vw, 52px)', fontWeight: 900, color: '#F5EFE0', letterSpacing: '-0.03em', lineHeight: 1.05, marginBottom: 14, margin: '0 0 14px' }}>
                 AI in your field
               </h1>
-              <p className="font-serif italic text-secondary" style={{ fontSize: "var(--text-lg)", lineHeight: 1.7, maxWidth: "52ch" }}>
+              <p style={{ fontFamily: 'var(--font-editorial)', fontStyle: 'italic', fontSize: 17, color: 'rgba(245,239,224,0.55)', lineHeight: 1.8, maxWidth: '52ch' }}>
                 How the tools you&apos;re hearing about are reshaping every
                 discipline — and what to do about it.
               </p>
             </div>
 
             {/* Quiz CTA panel */}
-            <div
-              style={{
-                padding: "1.5rem",
-                borderRadius: "var(--radius-lg)",
-                border: "1px solid var(--border-emphasis)",
-                background: "var(--accent-primary-glow)",
-                minWidth: 220,
-                maxWidth: 280,
-              }}
-              className="quiz-cta-panel"
-            >
-              <p
-                className="font-mono text-xs uppercase tracking-[0.12em]"
-                style={{ color: "var(--accent-primary)", marginBottom: "0.625rem" }}
-              >
+            <div style={{ padding: 24, borderRadius: 16, border: '1px solid rgba(170,255,77,0.22)', background: 'rgba(170,255,77,0.06)', backdropFilter: 'blur(20px)', minWidth: 220, maxWidth: 280 }} className="quiz-cta-panel">
+              <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.10em', textTransform: 'uppercase', color: '#AAFF4D', marginBottom: 10 }}>
                 Not sure where you stand?
               </p>
-              <p className="font-sans text-base text-primary font-medium mb-3" style={{ letterSpacing: "-0.01em", lineHeight: 1.4 }}>
+              <p style={{ fontFamily: 'var(--font-ui)', fontSize: 15, fontWeight: 600, color: '#F5EFE0', letterSpacing: '-0.01em', lineHeight: 1.4, marginBottom: 14 }}>
                 Take the AI impact quiz
               </p>
-              <Link href="/quiz" className="btn-primary" style={{ display: "inline-block" }}>
+              <Link href="/quiz" className="btn-primary">
                 Start quiz →
               </Link>
             </div>
           </div>
 
           {/* Stats strip */}
-          <div
-            style={{
-              display: "flex",
-              gap: "2.5rem",
-              marginTop: "2.5rem",
-              paddingTop: "2rem",
-              borderTop: "1px solid var(--border-subtle)",
-              flexWrap: "wrap",
-            }}
-          >
+          <div style={{ display: 'flex', gap: 40, marginTop: 40, paddingTop: 32, borderTop: '1px solid rgba(245,239,224,0.07)', flexWrap: 'wrap' }}>
             {[
               { stat: "72–88%", label: "of organizations using AI in at least one function (McKinsey 2026)" },
-              { stat: "~170M", label: "new or transformed roles created by 2030 (WEF)" },
+              { stat: "~170M",  label: "new or transformed roles created by 2030 (WEF)" },
               { stat: "$13–16T", label: "added to global GDP by 2030 (McKinsey/PwC)" },
             ].map(({ stat, label }) => (
               <div key={stat}>
-                <p
-                  className="font-sans font-semibold"
-                  style={{ fontSize: "var(--text-2xl)", color: "var(--accent-primary)", letterSpacing: "-0.02em", lineHeight: 1.1 }}
-                >
+                <p style={{ fontFamily: 'var(--font-display)', fontSize: 26, fontWeight: 700, color: '#AAFF4D', letterSpacing: '-0.02em', lineHeight: 1.1, marginBottom: 4 }}>
                   {stat}
                 </p>
-                <p className="font-sans text-xs text-muted" style={{ maxWidth: "22ch", lineHeight: 1.5, marginTop: "0.25rem" }}>
+                <p style={{ fontFamily: 'var(--font-ui)', fontSize: 11, color: 'rgba(245,239,224,0.35)', maxWidth: '22ch', lineHeight: 1.5 }}>
                   {label}
                 </p>
               </div>
@@ -145,40 +88,30 @@ export default function PathsPage() {
       </div>
 
       {/* Field cards grid */}
-      <div
-        style={{
-          maxWidth: "var(--max-width-content)",
-          margin: "0 auto",
-          padding: "3rem 2.5rem 5rem",
-        }}
-      >
-        <div
-          className="grid gap-5"
-          style={{ gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))" }}
-        >
+      <div style={{ maxWidth: 'var(--max-width-content)', margin: '0 auto', padding: '48px 48px 80px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 20 }}>
           {fields.map((field) => (
             <Link
               key={field.slug}
               href={`/learn/paths/${field.slug}`}
-              className="group flex flex-col gap-3 p-6 bg-panel border border-subtle rounded-lg hover:border-emphasis hover:-translate-y-0.5 transition-all duration-200"
+              style={{ textDecoration: 'none', display: 'block' }}
+              className="group glass-card"
             >
-              <div className="flex items-start justify-between gap-4">
-                <h2
-                  className="font-sans text-xl font-semibold text-primary group-hover:text-accent transition-colors duration-150 leading-tight"
-                  style={{ letterSpacing: "-0.02em" }}
-                >
-                  {field.field}
-                </h2>
-                <DifficultyBadge difficulty={field.difficulty as Difficulty} />
+              <div style={{ padding: 24 }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, marginBottom: 12 }}>
+                  <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 700, color: '#F5EFE0', letterSpacing: '-0.02em', lineHeight: 1.3, transition: 'color 150ms ease', margin: 0 }}
+                    className="group-hover:text-accent">
+                    {field.field}
+                  </h2>
+                  <DifficultyBadge difficulty={field.difficulty as Difficulty} />
+                </div>
+                <p style={{ fontFamily: 'var(--font-editorial)', fontStyle: 'italic', fontSize: 13, color: 'rgba(245,239,224,0.50)', lineHeight: 1.7, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden', marginBottom: 14 }}>
+                  {field.tagline}
+                </p>
+                <p style={{ fontFamily: 'var(--font-ui)', fontSize: 13, color: '#AAFF4D', fontWeight: 500 }}>
+                  Explore path →
+                </p>
               </div>
-
-              <p className="font-serif italic text-sm text-secondary leading-relaxed flex-1 line-clamp-3">
-                {field.tagline}
-              </p>
-
-              <p className="font-sans text-sm text-accent mt-1">
-                Explore path →
-              </p>
             </Link>
           ))}
         </div>
