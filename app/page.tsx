@@ -13,7 +13,7 @@ import { getAllConcepts } from "@/lib/learn";
 import { getSignalPosts } from "@/lib/signal";
 import fields from "@/content/paths/fields.json";
 
-// ── Data helpers ──────────────────────────────────────────────────────────────
+// ── Data helpers ───────────────────────────────────────────────────────────────
 
 function mapTool(t: Partial<Tool>): ToolCardProps {
   return {
@@ -26,18 +26,86 @@ function mapTool(t: Partial<Tool>): ToolCardProps {
   };
 }
 
-// ── Signal post card ──────────────────────────────────────────────────────────
+// ── Decorative edge orb ────────────────────────────────────────────────────────
+// Full-bleed: sits outside the centred content column so the section
+// doesn't feel like a narrow text box on a black canvas.
 
-function SignalCard({
-  date,
-  title,
-  excerpt,
-  href,
+function EdgeOrb({
+  top, bottom, left, right, size = 560, color = "rgba(170,255,77,0.045)",
 }: {
-  date: string;
-  title: string;
-  excerpt: string;
-  href: string;
+  top?: number | string; bottom?: number | string;
+  left?: number | string; right?: number | string;
+  size?: number; color?: string;
+}) {
+  return (
+    <div
+      aria-hidden
+      style={{
+        position: "absolute",
+        top, bottom, left, right,
+        width: size, height: size,
+        borderRadius: "50%",
+        background: `radial-gradient(circle, ${color} 0%, transparent 70%)`,
+        filter: "blur(80px)",
+        pointerEvents: "none",
+      }}
+    />
+  );
+}
+
+// ── Skeleton states (no shimmer — just a breath pulse) ─────────────────────────
+
+function SkeletonSignalSection() {
+  return (
+    <section
+      className="section-full"
+      style={{ borderTop: "1px solid rgba(245,239,224,0.06)", background: "rgba(22,18,16,0.55)" }}
+    >
+      <EdgeOrb top={-120} right={-160} size={500} />
+      <div className="section-inner-editorial">
+        <div style={{ marginBottom: 32 }}>
+          <span className="skel" style={{ width: 48, height: 9, marginBottom: 10 }} />
+          <span className="skel" style={{ width: 220, height: 26 }} />
+        </div>
+        {[0, 1, 2].map((i) => (
+          <div key={i} style={{ borderBottom: "1px solid rgba(245,239,224,0.06)", padding: "24px 0" }}>
+            <span className="skel" style={{ width: 72, height: 9, marginBottom: 10 }} />
+            <span className="skel" style={{ width: `${68 + i * 8}%`, height: 18, marginBottom: 8 }} />
+            <span className="skel" style={{ width: `${80 + i * 5}%`, height: 13 }} />
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function SkeletonToolsSection() {
+  return (
+    <section
+      className="section-full"
+      style={{ borderTop: "1px solid rgba(245,239,224,0.06)" }}
+    >
+      <EdgeOrb top={-80} left={-200} />
+      <EdgeOrb bottom={-120} right={-100} color="rgba(0,255,209,0.03)" />
+      <div className="section-inner">
+        <div style={{ marginBottom: 40 }}>
+          <span className="skel" style={{ width: 100, height: 9, marginBottom: 10 }} />
+          <span className="skel" style={{ width: 240, height: 28 }} />
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(272px, 1fr))", gap: 32 }}>
+          {Array.from({ length: 6 }).map((_, i) => (
+            <span key={i} className="skel" style={{ height: 176, borderRadius: 12 }} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ── Signal post card ───────────────────────────────────────────────────────────
+
+function SignalCard({ date, title, excerpt, href }: {
+  date: string; title: string; excerpt: string; href: string;
 }) {
   return (
     <a
@@ -57,70 +125,38 @@ function SignalCard({
   );
 }
 
-// ── Concept card ──────────────────────────────────────────────────────────────
+// ── Concept card ───────────────────────────────────────────────────────────────
 
-function ConceptCard({
-  title,
-  tagline,
-  readTime,
-  slug,
-}: {
-  title: string;
-  tagline: string;
-  readTime: string;
-  slug: string;
+function ConceptCard({ title, tagline, readTime, slug }: {
+  title: string; tagline: string; readTime: string; slug: string;
 }) {
   return (
-    <Link
-      href={`/learn/${slug}`}
-      className="group flex flex-col gap-3 p-6 concept-card rounded-lg"
-    >
-      <p className="font-mono text-xs uppercase tracking-[0.15em] text-muted">
-        Concept
-      </p>
+    <Link href={`/learn/${slug}`} className="group flex flex-col gap-3 p-6 concept-card rounded-lg">
+      <p className="font-mono text-xs uppercase tracking-[0.15em] text-muted">Concept</p>
       <h3
         className="font-sans text-2xl font-semibold text-primary group-hover:text-accent transition-colors duration-150 leading-tight"
         style={{ letterSpacing: "-0.02em" }}
       >
         {title}
       </h3>
-      <p className="font-serif italic text-base text-secondary leading-relaxed flex-1">
-        {tagline}
-      </p>
+      <p className="font-serif italic text-base text-secondary leading-relaxed flex-1">{tagline}</p>
       <p className="font-mono text-sm text-muted">{readTime}</p>
     </Link>
   );
 }
 
-// ── Path card (field guide) ───────────────────────────────────────────────────
+// ── Field path card ────────────────────────────────────────────────────────────
 
 const FEATURED_SLUGS = ["biology", "medicine-healthcare", "creative-writing-literature", "education-teaching"];
 
-function PathCard({
-  field,
-  slug,
-  tagline,
-  difficulty,
-}: {
-  field: string;
-  slug: string;
-  tagline: string;
-  difficulty: string;
+function PathCard({ field, slug, tagline, difficulty }: {
+  field: string; slug: string; tagline: string; difficulty: string;
 }) {
   const badgeStyle =
-    difficulty === "Easy"
-      ? undefined
-      : difficulty === "Medium"
-      ? {
-          background: "rgba(201, 169, 110, 0.1)",
-          color: "var(--accent-warm)",
-          borderColor: "rgba(201, 169, 110, 0.3)",
-        }
-      : {
-          background: "rgba(224, 112, 112, 0.1)",
-          color: "var(--error)",
-          borderColor: "rgba(224, 112, 112, 0.3)",
-        };
+    difficulty === "Easy" ? undefined
+    : difficulty === "Medium"
+      ? { background: "rgba(201,169,110,0.1)", color: "var(--accent-warm)", borderColor: "rgba(201,169,110,0.3)" }
+      : { background: "rgba(224,112,112,0.1)", color: "var(--error)", borderColor: "rgba(224,112,112,0.3)" };
 
   return (
     <Link
@@ -134,52 +170,45 @@ function PathCard({
         >
           {field}
         </h3>
-        <span
-          className={difficulty === "Easy" ? "tag tag-accent" : "tag"}
-          style={badgeStyle}
-        >
+        <span className={difficulty === "Easy" ? "tag tag-accent" : "tag"} style={badgeStyle}>
           {difficulty}
         </span>
       </div>
-      <p className="font-serif italic text-sm text-secondary leading-relaxed flex-1 line-clamp-3">
-        {tagline}
-      </p>
+      <p className="font-serif italic text-sm text-secondary leading-relaxed flex-1 line-clamp-3">{tagline}</p>
       <p className="font-sans text-sm text-accent mt-1">Explore path →</p>
     </Link>
   );
 }
 
-// ── Async server sections ─────────────────────────────────────────────────────
+// ── Async server sections ──────────────────────────────────────────────────────
 
 async function SignalSection() {
   const posts = await getSignalPosts(3);
   if (posts.length === 0) return null;
 
   return (
-    <section className="px-6 md:px-12 lg:px-20 py-20 border-t border-subtle">
-      <div className="max-w-editorial mx-auto">
-        <div className="mb-8">
-          <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(245,239,224,0.30)', marginBottom: 8, margin: '0 0 8px' }}>
+    <section
+      className="section-full"
+      style={{ borderTop: "1px solid rgba(245,239,224,0.06)", background: "rgba(22,18,16,0.55)" }}
+    >
+      <EdgeOrb top={-100} right={-180} size={500} />
+      <EdgeOrb bottom={-80} left={-100} size={400} color="rgba(0,255,209,0.025)" />
+      <div className="section-inner-editorial">
+        <div style={{ marginBottom: 32 }}>
+          <p style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(245,239,224,0.30)", margin: "0 0 8px" }}>
             latest
           </p>
-          <h2
-            className="font-sans text-3xl font-semibold text-primary"
-            style={{ letterSpacing: "-0.02em" }}
-          >
+          <h2 className="font-sans text-3xl font-semibold text-primary" style={{ letterSpacing: "-0.02em" }}>
             From the archive
           </h2>
         </div>
 
         <div className="reveal-list">
-          {posts.map((post, i) => (
-            <SignalCard key={i} {...post} />
-          ))}
+          {posts.map((post, i) => <SignalCard key={i} {...post} />)}
         </div>
 
-        <div className="pt-8">
-          <Link href="/signal" className="btn-ghost">
-            Read all signal →
-          </Link>
+        <div style={{ paddingTop: 32 }}>
+          <Link href="/signal" className="btn-ghost">Read all signal →</Link>
         </div>
       </div>
     </section>
@@ -198,83 +227,81 @@ async function ToolsSection() {
   if (tools.length === 0) return null;
 
   return (
-    <section className="px-6 md:px-12 lg:px-20 py-20 border-t border-subtle">
-      <div className="max-w-content mx-auto">
-        <div className="mb-10">
-          <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(245,239,224,0.30)', marginBottom: 8, margin: '0 0 8px' }}>
+    <section
+      className="section-full"
+      style={{ borderTop: "1px solid rgba(245,239,224,0.06)" }}
+    >
+      <EdgeOrb top={-80} left={-220} />
+      <EdgeOrb bottom={-100} right={-120} color="rgba(0,255,209,0.03)" />
+      <div className="section-inner">
+        <div style={{ marginBottom: 40 }}>
+          <p style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(245,239,224,0.30)", margin: "0 0 8px" }}>
             recently added
           </p>
-          <h2
-            className="font-sans text-3xl font-semibold text-primary"
-            style={{ letterSpacing: "-0.02em" }}
-          >
+          <h2 className="font-sans text-3xl font-semibold text-primary" style={{ letterSpacing: "-0.02em" }}>
             Tools making waves
           </h2>
         </div>
 
         <ToolGrid3D tools={tools} itemsPerPage={6} />
 
-        <div className="mt-10">
-          <Link href="/tools" className="btn-ghost">
-            See the full archive →
-          </Link>
+        <div style={{ marginTop: 40 }}>
+          <Link href="/tools" className="btn-ghost">See the full archive →</Link>
         </div>
       </div>
     </section>
   );
 }
 
-// ── Page ──────────────────────────────────────────────────────────────────────
+// ── Page ───────────────────────────────────────────────────────────────────────
 
 export default function Home() {
   const concepts = getAllConcepts().slice(0, 3);
 
   return (
     <>
-      <main className="min-h-screen bg-page">
+      <main style={{ minHeight: "100vh", position: "relative", zIndex: 1 }}>
 
         {/* 1. Hero */}
         <Hero />
 
-        {/* Ticker */}
+        {/* Ticker strip */}
         <Ticker />
 
-        {/* 2. From the archive — live Signal posts from Medium */}
+        {/* 2. From the archive */}
         <ScrollReveal>
-          <Suspense fallback={null}>
+          <Suspense fallback={<SkeletonSignalSection />}>
             <SignalSection />
           </Suspense>
         </ScrollReveal>
 
-        {/* 3. Understand — Concept cards sourced from content/learn/ */}
+        {/* 3. Understand the tools you use */}
         {concepts.length > 0 && (
           <ScrollReveal>
-          <section className="px-6 md:px-12 lg:px-20 py-20 border-t border-subtle">
-            <div className="max-w-content mx-auto">
-              <div className="mb-10">
-                <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(245,239,224,0.30)', marginBottom: 8, margin: '0 0 8px' }}>
-                  learn
-                </p>
-                <h2
-                  style={{ fontFamily: 'var(--font-display)', fontSize: 32, fontWeight: 700, color: '#F5EFE0', letterSpacing: '-0.02em', margin: 0 }}
-                >
-                  Understand the tools you use
-                </h2>
-              </div>
+            <section
+              className="section-full"
+              style={{ borderTop: "1px solid rgba(245,239,224,0.06)", background: "rgba(26,22,18,0.45)" }}
+            >
+              <EdgeOrb top={-100} right={-100} size={480} />
+              <div className="section-inner">
+                <div style={{ marginBottom: 40 }}>
+                  <p style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(245,239,224,0.30)", margin: "0 0 8px" }}>
+                    learn
+                  </p>
+                  <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(28px,3vw,36px)", fontWeight: 700, color: "#F5EFE0", letterSpacing: "-0.02em", margin: 0 }}>
+                    Understand the tools you use
+                  </h2>
+                </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 reveal-grid">
-                {concepts.map((concept) => (
-                  <ConceptCard key={concept.slug} {...concept} />
-                ))}
-              </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 reveal-grid">
+                  {concepts.map((concept) => <ConceptCard key={concept.slug} {...concept} />)}
+                </div>
 
-              <div className="mt-10">
-                <Link href="/learn" className="btn-ghost">
-                  Read all concepts →
-                </Link>
+                <div style={{ marginTop: 40 }}>
+                  <Link href="/learn" className="btn-ghost">Read all concepts →</Link>
+                </div>
               </div>
-            </div>
-          </section>
+            </section>
           </ScrollReveal>
         )}
 
@@ -286,94 +313,93 @@ export default function Home() {
           if (featured.length === 0) return null;
           return (
             <ScrollReveal>
-            <section className="px-6 md:px-12 lg:px-20 py-20 border-t border-subtle">
-              <div className="max-w-content mx-auto">
-                <div className="mb-10">
-                  <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(245,239,224,0.30)', marginBottom: 8, margin: '0 0 8px' }}>
-                    field guides
-                  </p>
-                  <h2
-                    className="font-sans text-3xl font-semibold text-primary"
-                    style={{ letterSpacing: "-0.02em" }}
-                  >
-                    AI in your field
-                  </h2>
-                </div>
+              <section
+                className="section-full"
+                style={{ borderTop: "1px solid rgba(245,239,224,0.06)" }}
+              >
+                <EdgeOrb bottom={-60} left={-180} size={520} />
+                <div className="section-inner">
+                  <div style={{ marginBottom: 40 }}>
+                    <p style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(245,239,224,0.30)", margin: "0 0 8px" }}>
+                      field guides
+                    </p>
+                    <h2 className="font-sans text-3xl font-semibold text-primary" style={{ letterSpacing: "-0.02em" }}>
+                      AI in your field
+                    </h2>
+                  </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 reveal-grid">
-                  {featured.map((f) => (
-                    <PathCard
-                      key={f.slug}
-                      field={f.field}
-                      slug={f.slug}
-                      tagline={f.tagline}
-                      difficulty={f.difficulty}
-                    />
-                  ))}
-                </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 reveal-grid">
+                    {featured.map((f) => (
+                      <PathCard key={f.slug} field={f.field} slug={f.slug} tagline={f.tagline} difficulty={f.difficulty} />
+                    ))}
+                  </div>
 
-                <div className="mt-10">
-                  <Link href="/learn/paths" className="btn-ghost">
-                    See all fields →
-                  </Link>
+                  <div style={{ marginTop: 40 }}>
+                    <Link href="/learn/paths" className="btn-ghost">See all fields →</Link>
+                  </div>
                 </div>
-              </div>
-            </section>
+              </section>
             </ScrollReveal>
           );
         })()}
 
         {/* 5. Tools making waves */}
         <ScrollReveal>
-          <Suspense fallback={null}>
+          <Suspense fallback={<SkeletonToolsSection />}>
             <ToolsSection />
           </Suspense>
         </ScrollReveal>
 
-        {/* CTA — before newsletter */}
-        <section style={{
-          position: 'relative',
-          padding: '96px 48px',
-          borderTop: '1px solid rgba(245,239,224,0.06)',
-          overflow: 'hidden',
-          textAlign: 'center',
-        }}>
-          {/* Radial lime orb */}
-          <div style={{
-            position: 'absolute',
-            width: 480,
-            height: 480,
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(170,255,77,0.07) 0%, transparent 70%)',
-            filter: 'blur(80px)',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            pointerEvents: 'none',
-          }} />
-          <div style={{ position: 'relative', maxWidth: 560, margin: '0 auto' }}>
+        {/* 6. Newsletter CTA */}
+        <section
+          className="section-full"
+          style={{ borderTop: "1px solid rgba(245,239,224,0.06)" }}
+        >
+          {/* Wide centre orb — extends well past the content column */}
+          <div
+            aria-hidden
+            style={{
+              position: "absolute",
+              width: 700, height: 700, borderRadius: "50%",
+              background: "radial-gradient(circle, rgba(170,255,77,0.06) 0%, transparent 65%)",
+              filter: "blur(100px)",
+              top: "50%", left: "50%",
+              transform: "translate(-50%, -50%)",
+              pointerEvents: "none",
+            }}
+          />
+          <div
+            style={{
+              position: "relative",
+              zIndex: 1,
+              textAlign: "center",
+              padding: "96px 48px",
+              maxWidth: 560,
+              margin: "0 auto",
+            }}
+          >
             <h2 style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(32px, 4vw, 52px)',
+              fontFamily: "var(--font-display)",
+              fontSize: "clamp(32px,4vw,52px)",
               fontWeight: 900,
-              color: '#F5EFE0',
-              letterSpacing: '-0.03em',
+              color: "#F5EFE0",
+              letterSpacing: "-0.03em",
               lineHeight: 1.1,
-              margin: '0 0 20px',
+              margin: "0 0 20px",
             }}>
-              Stop doomscrolling.{' '}
-              <em style={{ color: '#AAFF4D', fontStyle: 'italic' }}>Start knowing.</em>
+              Stop doomscrolling.{" "}
+              <em style={{ color: "#AAFF4D", fontStyle: "italic" }}>Start knowing.</em>
             </h2>
             <p style={{
-              fontFamily: 'var(--font-editorial)',
+              fontFamily: "var(--font-editorial)",
               fontSize: 16,
               lineHeight: 1.8,
-              color: 'rgba(245,239,224,0.50)',
-              margin: '0 0 36px',
+              color: "rgba(245,239,224,0.50)",
+              margin: "0 0 36px",
             }}>
               No spam. Unsubscribe whenever.
             </p>
-            <div style={{ maxWidth: 400, margin: '0 auto' }}>
+            <div style={{ maxWidth: 400, margin: "0 auto" }}>
               <NewsletterForm />
             </div>
           </div>

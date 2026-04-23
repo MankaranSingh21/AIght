@@ -526,18 +526,20 @@ export default function ToolGrid3D({ tools, itemsPerPage = 12 }: Props) {
     );
   }
 
-  // ── SSR / pre-mount placeholder ──────────────────────────────────────────────
+  // ── SSR / pre-mount placeholder — skeleton grid ──────────────────────────────
 
   if (!isMounted) {
+    const skeletonCount = Math.min(pageTools.length || 6, 6);
     return (
-      <div
-        style={{
-          height: 880,
-          background: "rgba(255,250,240,0.02)",
-          borderRadius: 14,
-          border: "1px solid rgba(245,239,224,0.05)",
-        }}
-      />
+      <div style={{ display: "grid", gridTemplateColumns: `repeat(auto-fill, minmax(${CARD_W_PX}px, 1fr))`, gap: GAP_X_PX }}>
+        {Array.from({ length: skeletonCount }).map((_, i) => (
+          <div
+            key={i}
+            className="skel"
+            style={{ height: CARD_H_PX, borderRadius: 12, animationDelay: `${i * 120}ms` }}
+          />
+        ))}
+      </div>
     );
   }
 

@@ -342,6 +342,48 @@
     align-items: center;
   }
 
+  /* ── Skeleton loading states ───────────────────────────────── */
+  /* "Breath" pulse — no shimmer, just a gentle opacity fade */
+  .skel {
+    background: var(--bg-elevated);
+    border-radius: var(--radius-xs);
+    animation: breath 3s ease-in-out infinite;
+    display: block;
+  }
+  .skel-surface {
+    background: var(--bg-surface);
+    border-radius: var(--radius-xs);
+    animation: breath 3s ease-in-out infinite;
+    display: block;
+  }
+
+  /* ── Full-bleed section wrapper ─────────────────────────────── */
+  /* Set on <section> so decorative layers reach the screen edge
+     while the .section-inner max-width centres the copy */
+  .section-full {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+  }
+  .section-inner {
+    position: relative;
+    z-index: 1;
+    max-width: var(--max-width-content);
+    margin: 0 auto;
+    padding: var(--space-20) var(--space-10);
+  }
+  .section-inner-editorial {
+    position: relative;
+    z-index: 1;
+    max-width: var(--max-width-editorial);
+    margin: 0 auto;
+    padding: var(--space-20) var(--space-10);
+  }
+  @media (max-width: 768px) {
+    .section-inner,
+    .section-inner-editorial { padding: var(--space-16) var(--space-6); }
+  }
+
   /* ── Ticker ────────────────────────────────────────────────── */
   .ticker-track {
     display: flex;
@@ -359,6 +401,12 @@
 }
 
 /* ── Keyframes ─────────────────────────────────────────────────── */
+
+/* Skeleton breath — 0.4 → 0.7 → 0.4, very slow so it feels calm */
+@keyframes breath {
+  0%, 100% { opacity: 0.40; }
+  50%       { opacity: 0.70; }
+}
 
 @keyframes blink {
   0%, 100% { opacity: 1; }

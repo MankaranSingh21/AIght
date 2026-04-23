@@ -1,138 +1,131 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import * as THREE from 'three';
 
-interface Particle {
-  x: number;
-  y: number;
-  r: number;
-  speed: number;
-  phase: number;
-  bright: number;
-  _fx: number;
-  _fy: number;
-  _alpha: number;
-  _near: number;
+// ── Constants ──────────────────────────────────────────────────────────────────
+const N        = 32;      // particle count
+const MAX_SEG  = 140;     // pre-allocated line segment pairs
+const SPEED    = 0.00030; // world-units per frame, scaled by viewport height
+const THRESH_R = 0.27;    // connect if dist < this fraction of viewport height
+
+// ── Three.js scene ─────────────────────────────────────────────────────────────
+function AmbientField() {
+  const { viewport } = useThree();
+
+  const posArr = useRef(new Float32Array(N * 3));
+  const velArr = useRef(new Float32Array(N * 3));
+  const segArr = useRef(new Float32Array(MAX_SEG * 6));
+
+  const ptsRef = useRef<THREE.Points>(null);
+  const segRef = useRef<THREE.LineSegments>(null);
+  const ready  = useRef(false);
+
+  useFrame(() => {
+    const pts = ptsRef.current;
+    const seg = segRef.current;
+    if (!pts || !seg) return;
+
+    const W = viewport.width;
+    const H = viewport.height;
+    if (W === 0 || H === 0) return;
+
+    // One-time init — deferred until viewport is measured
+    if (!ready.current) {
+      ready.current = true;
+      const p = posArr.current;
+      const v = velArr.current;
+      const s = H * SPEED;
+      for (let i = 0; i < N; i++) {
+        p[i * 3]     = (Math.random() * 2 - 1) * W * 0.52;
+        p[i * 3 + 1] = (Math.random() * 2 - 1) * H * 0.52;
+        p[i * 3 + 2] = 0;
+        v[i * 3]     = (Math.random() - 0.5) * s * (W / H);
+        v[i * 3 + 1] = (Math.random() - 0.5) * s;
+        v[i * 3 + 2] = 0;
+      }
+      pts.geometry.attributes.position.needsUpdate = true;
+    }
+
+    const p  = posArr.current;
+    const v  = velArr.current;
+    const lp = segArr.current;
+    const hw = W * 0.5;
+    const hh = H * 0.5;
+
+    // Drift + wrap-around
+    for (let i = 0; i < N; i++) {
+      p[i * 3]     += v[i * 3];
+      p[i * 3 + 1] += v[i * 3 + 1];
+      if (p[i * 3]     >  hw) p[i * 3]     = -hw;
+      if (p[i * 3]     < -hw) p[i * 3]     =  hw;
+      if (p[i * 3 + 1] >  hh) p[i * 3 + 1] = -hh;
+      if (p[i * 3 + 1] < -hh) p[i * 3 + 1] =  hh;
+    }
+    pts.geometry.attributes.position.needsUpdate = true;
+
+    // Organic connections
+    const thresh = H * THRESH_R;
+    const t2 = thresh * thresh;
+    let lc = 0;
+    for (let i = 0; i < N && lc < MAX_SEG; i++) {
+      for (let j = i + 1; j < N && lc < MAX_SEG; j++) {
+        const dx = p[i * 3]     - p[j * 3];
+        const dy = p[i * 3 + 1] - p[j * 3 + 1];
+        if (dx * dx + dy * dy < t2) {
+          const b = lc * 6;
+          lp[b]     = p[i * 3];     lp[b + 1] = p[i * 3 + 1]; lp[b + 2] = 0;
+          lp[b + 3] = p[j * 3];     lp[b + 4] = p[j * 3 + 1]; lp[b + 5] = 0;
+          lc++;
+        }
+      }
+    }
+    seg.geometry.attributes.position.needsUpdate = true;
+    seg.geometry.setDrawRange(0, lc * 2);
+  });
+
+  return (
+    <>
+      <points ref={ptsRef}>
+        <bufferGeometry>
+          <bufferAttribute attach="attributes-position" args={[posArr.current, 3]} />
+        </bufferGeometry>
+        <pointsMaterial
+          color="#AAFF4D"
+          size={2.2}
+          sizeAttenuation={false}
+          transparent
+          opacity={0.45}
+          depthWrite={false}
+        />
+      </points>
+
+      <lineSegments ref={segRef}>
+        <bufferGeometry>
+          <bufferAttribute attach="attributes-position" args={[segArr.current, 3]} />
+        </bufferGeometry>
+        <lineBasicMaterial color="#AAFF4D" transparent opacity={0.07} depthWrite={false} />
+      </lineSegments>
+    </>
+  );
 }
 
 export default function ParticleCanvas() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const mouse = useRef({ x: -999, y: -999 });
-  const pts = useRef<Particle[]>([]);
-  const rafRef = useRef<number>(0);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const resize = () => {
-      canvas.width  = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-    resize();
-    window.addEventListener('resize', resize);
-    window.addEventListener('mousemove', e => {
-      mouse.current = { x: e.clientX, y: e.clientY };
-    });
-
-    const N = 90;
-    pts.current = Array.from({ length: N }, () => ({
-      x: Math.random() * window.innerWidth,
-      y: Math.random() * window.innerHeight,
-      r: Math.random() * 1.2 + 0.4,
-      speed: Math.random() * 0.3 + 0.1,
-      phase: Math.random() * Math.PI * 2,
-      bright: Math.random(),
-      _fx: 0, _fy: 0, _alpha: 0, _near: 0,
-    }));
-
-    const draw = (t: number) => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const mx = mouse.current.x, my = mouse.current.y;
-
-      for (const p of pts.current) {
-        const drift = Math.sin(t * 0.0004 * p.speed + p.phase) * 12;
-        const cx = p.x + drift * 0.6;
-        const cy = p.y + drift * 0.4;
-
-        const dx = cx - mx, dy = cy - my;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        const near = Math.max(0, 1 - dist / 160);
-
-        // Gentle repulsion from cursor
-        const rx = near > 0 ? (dx / (dist + 1)) * near * 18 : 0;
-        const ry = near > 0 ? (dy / (dist + 1)) * near * 18 : 0;
-        p._fx = cx + rx;
-        p._fy = cy + ry;
-        p._near = near;
-        p._alpha = 0.10 + p.bright * 0.08 + near * 0.5;
-
-        // Color: neon lime near cursor, parchment otherwise
-        const isNear = near > 0.1;
-        const R = isNear ? 170 : 245;
-        const G = isNear ? 255 : 239;
-        const B = isNear ? 77  : 224;
-
-        ctx.beginPath();
-        ctx.arc(p._fx, p._fy, p.r + near * 1.2, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${R},${G},${B},${p._alpha})`;
-        ctx.fill();
-
-        // Glow halo near cursor
-        if (near > 0.3) {
-          ctx.beginPath();
-          ctx.arc(p._fx, p._fy, (p.r + near * 2) * 2.5, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(170,255,77,${near * 0.05})`;
-          ctx.fill();
-        }
-      }
-
-      // Connection lines between nearby dots
-      for (let i = 0; i < pts.current.length; i++) {
-        const a = pts.current[i];
-        for (let j = i + 1; j < pts.current.length; j++) {
-          const b = pts.current[j];
-          const dx = a._fx - b._fx, dy = a._fy - b._fy;
-          const d = Math.sqrt(dx * dx + dy * dy);
-          if (d < 100) {
-            const nearBoost = Math.max(a._near, b._near);
-            const lineAlpha = (1 - d / 100) * (0.04 + nearBoost * 0.10);
-            const isNearLine = nearBoost > 0.2;
-            ctx.beginPath();
-            ctx.moveTo(a._fx, a._fy);
-            ctx.lineTo(b._fx, b._fy);
-            ctx.strokeStyle = isNearLine
-              ? `rgba(170,255,77,${lineAlpha})`
-              : `rgba(245,239,224,${lineAlpha})`;
-            ctx.lineWidth = 0.5;
-            ctx.stroke();
-          }
-        }
-      }
-
-      rafRef.current = requestAnimationFrame(draw);
-    };
-
-    rafRef.current = requestAnimationFrame(draw);
-
-    return () => {
-      cancelAnimationFrame(rafRef.current);
-      window.removeEventListener('resize', resize);
-    };
-  }, []);
-
   return (
-    <canvas
-      ref={canvasRef}
-      style={{
-        position: 'fixed',
-        inset: 0,
-        pointerEvents: 'none',
-        zIndex: 0,
-      }}
+    <div
       aria-hidden="true"
-    />
+      style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none', opacity: 0.70 }}
+    >
+      <Canvas
+        orthographic
+        camera={{ position: [0, 0, 1], zoom: 180 }}
+        gl={{ antialias: false, alpha: true, powerPreference: 'low-power' }}
+        dpr={1}
+        style={{ width: '100%', height: '100%' }}
+      >
+        <AmbientField />
+      </Canvas>
+    </div>
   );
 }

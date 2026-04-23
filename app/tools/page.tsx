@@ -13,6 +13,30 @@ export const metadata: Metadata = {
     "52+ curated AI tools worth your attention. Instant search and tag filters. No sponsored rankings, no affiliate links.",
 };
 
+// Reusable edge orb — sits outside the content column for full-bleed depth
+function EdgeOrb({
+  top, bottom, left, right, size = 560, color = "rgba(170,255,77,0.045)",
+}: {
+  top?: number | string; bottom?: number | string;
+  left?: number | string; right?: number | string;
+  size?: number; color?: string;
+}) {
+  return (
+    <div
+      aria-hidden
+      style={{
+        position: "absolute",
+        top, bottom, left, right,
+        width: size, height: size,
+        borderRadius: "50%",
+        background: `radial-gradient(circle, ${color} 0%, transparent 70%)`,
+        filter: "blur(80px)",
+        pointerEvents: "none",
+      }}
+    />
+  );
+}
+
 export default async function ToolsArchivePage() {
   const supabase = await createClient();
   const { data } = await supabase
@@ -31,30 +55,60 @@ export default async function ToolsArchivePage() {
 
   return (
     <>
-      <main style={{ minHeight: '100vh', background: 'var(--bg-base)' }}>
+      <main style={{ minHeight: "100vh", position: "relative", zIndex: 1 }}>
 
-        {/* Header */}
-        <section style={{ maxWidth: 'var(--max-width-content)', margin: '0 auto', padding: '64px 48px 40px' }}>
-          <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#AAFF4D', marginBottom: 14 }}>
-            every tool we&apos;ve found worth your time
-          </p>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(36px, 5vw, 56px)', fontWeight: 900, color: '#F5EFE0', letterSpacing: '-0.03em', lineHeight: 1.05, margin: '0 0 14px' }}>
-            The Full Archive
-          </h1>
-          <p style={{ fontFamily: 'var(--font-editorial)', fontSize: 16, lineHeight: 1.8, color: 'rgba(245,239,224,0.55)', maxWidth: '52ch' }}>
-            {tools.length} tools and counting. No sponsored rankings. No hustle energy.
-            Tap any card to explore.
-          </p>
+        {/* ── Full-bleed header ──────────────────────────────────────────── */}
+        <section
+          className="section-full"
+          style={{ paddingBottom: 0 }}
+        >
+          <EdgeOrb top={-80} right={-160} size={600} />
+          <EdgeOrb bottom={0} left={-200} size={480} color="rgba(0,255,209,0.03)" />
+
+          <div className="section-inner" style={{ paddingBottom: 48 }}>
+            <p style={{
+              fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.14em",
+              textTransform: "uppercase", color: "#AAFF4D", marginBottom: 14,
+            }}>
+              every tool we&apos;ve found worth your time
+            </p>
+            <h1 style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "clamp(40px, 6vw, 72px)",
+              fontWeight: 900,
+              color: "#F5EFE0",
+              letterSpacing: "-0.03em",
+              lineHeight: 1,
+              margin: "0 0 20px",
+            }}>
+              The Full Archive
+            </h1>
+            <p style={{
+              fontFamily: "var(--font-editorial)",
+              fontSize: 17,
+              lineHeight: 1.8,
+              color: "rgba(245,239,224,0.55)",
+              maxWidth: "52ch",
+              margin: 0,
+            }}>
+              {tools.length} tools and counting. No sponsored rankings. No hustle energy.
+              Tap any card to explore, click to open the detail.
+            </p>
+          </div>
+
+          {/* Full-width hairline */}
+          <div style={{ height: 1, background: "linear-gradient(90deg, transparent, rgba(245,239,224,0.08) 20%, rgba(245,239,224,0.08) 80%, transparent)" }} />
         </section>
 
-        {/* Divider */}
-        <div style={{ maxWidth: 'var(--max-width-content)', margin: '0 auto', padding: '0 48px' }}>
-          <div style={{ height: 1, background: 'rgba(245,239,224,0.07)' }} />
-        </div>
-
-        {/* Search + grid */}
-        <section style={{ maxWidth: 'var(--max-width-content)', margin: '0 auto', padding: '40px 48px 80px' }}>
-          <ToolsClient tools={tools} />
+        {/* ── Search + filter + grid ─────────────────────────────────────── */}
+        <section
+          className="section-full"
+          style={{ background: "rgba(16,14,11,0.5)" }}
+        >
+          <EdgeOrb top={100} right={-180} size={500} color="rgba(170,255,77,0.03)" />
+          <div className="section-inner" style={{ paddingTop: 48 }}>
+            <ToolsClient tools={tools} />
+          </div>
         </section>
 
       </main>
