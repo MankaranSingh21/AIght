@@ -336,4 +336,7 @@
   .quiz-cta-panel {
     max-width: 100% !important;
   }
+  .augmentation-grid {
+    grid-template-columns: 1fr !important;
+  }
 }

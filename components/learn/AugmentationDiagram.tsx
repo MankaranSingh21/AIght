@@ -156,6 +156,7 @@ export default function AugmentationDiagram({ slug }: { slug: string }) {
       </div>
 
       <div
+        className="augmentation-grid"
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(3, 1fr)',
