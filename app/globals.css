@@ -4,49 +4,59 @@
 
 @layer base {
   :root {
-    /* Backgrounds — warm near-black, not cold */
-    --bg-base:     #0E0D0B;
-    --bg-surface:  #1A1916;
-    --bg-elevated: #242320;
-    --bg-overlay:  #2E2C29;
+    /* ── Backgrounds — Warm Space ────────────────────────────── */
+    --bg-base:     #0C0A08;
+    --bg-surface:  #161210;
+    --bg-elevated: #1E1A16;
+    --bg-overlay:  #2A2520;
 
-    /* Accent — Ghibli green. Soft, warm, organic. Not neon. Not sage. */
-    --accent-primary:      #7DBF8C;
-    --accent-primary-dim:  #5A9469;
-    --accent-primary-glow: rgba(125, 191, 140, 0.12);
+    /* ── Neon accents — primary visual energy ─────────────────── */
+    --accent-primary:      #AAFF4D;          /* neon lime — CTAs, active */
+    --accent-primary-dim:  #88CC2E;
+    --accent-primary-glow: rgba(170,255,77,0.10);
+    --accent-primary-bright: #BBFF66;
+    --accent-secondary:    #00FFD1;          /* neon teal — links, secondary */
+    --accent-secondary-glow: rgba(0,255,209,0.10);
+    --accent-warm:         #F4AB1F;          /* amber — warm highlights */
+    --accent-warm-dim:     #C5861A;
+    --color-lavender:      #A373D7;          /* purple — third accent */
 
-    /* Secondary accent — warm amber. Use sparingly. */
-    --accent-warm:     #C9A96E;
-    --accent-warm-dim: #A0824A;
+    /* ── Text ─────────────────────────────────────────────────── */
+    --text-primary:   #F5EFE0;
+    --text-secondary: rgba(245,239,224,0.60);
+    --text-muted:     rgba(245,239,224,0.35);
+    --text-inverse:   #0C0A08;
 
-    /* Text — warm off-white, like aged paper */
-    --text-primary:   #F0EDE8;
-    --text-secondary: #A8A49E;
-    --text-muted:     #6B6760;
-    --text-inverse:   #0E0D0B;
+    /* ── Borders ──────────────────────────────────────────────── */
+    --border-subtle:   rgba(245,239,224,0.08);
+    --border-default:  rgba(245,239,224,0.12);
+    --border-emphasis: rgba(170,255,77,0.28);
 
-    /* Borders */
-    --border-subtle:   rgba(240, 237, 232, 0.06);
-    --border-default:  rgba(240, 237, 232, 0.12);
-    --border-emphasis: rgba(125, 191, 140, 0.25);
+    /* ── Glass / Blur ─────────────────────────────────────────── */
+    --glass-bg:           rgba(255,250,240,0.04);
+    --glass-bg-hover:     rgba(255,250,240,0.07);
+    --glass-border:       rgba(255,250,240,0.09);
+    --glass-border-hover: rgba(255,250,240,0.18);
 
-    /* Functional */
-    --success: #7DBF8C;
-    --warning: #C9A96E;
+    /* ── Shadows / Glows ──────────────────────────────────────── */
+    --shadow-glow-lime: 0 0 32px rgba(170,255,77,0.14), 0 0 80px rgba(170,255,77,0.06);
+    --shadow-glow-teal: 0 0 32px rgba(0,255,209,0.14), 0 0 80px rgba(0,255,209,0.06);
+    --shadow-card:      0 1px 2px rgba(0,0,0,0.4), 0 4px 16px rgba(0,0,0,0.3);
+    --shadow-card-hover:0 4px 32px rgba(0,0,0,0.5), 0 0 40px rgba(170,255,77,0.06);
+
+    /* ── Functional ───────────────────────────────────────────── */
+    --success: #AAFF4D;
+    --warning: #F4AB1F;
     --error:   #E07070;
 
-    /* Cursor */
-    --cursor-color: var(--accent-primary);
-
-    /* Accent bright — slightly lighter for border hover transitions */
-    --accent-primary-bright: #9ED4AB;
-
-    /* Fonts */
-    --font-ui:       'Space Grotesk', system-ui, sans-serif;
+    /* ── Fonts ────────────────────────────────────────────────── */
+    /* These vars are injected by next/font in layout.tsx */
+    --font-display:   'Fraunces', Georgia, serif;
+    --font-ui:        'Plus Jakarta Sans', system-ui, sans-serif;
     --font-editorial: 'Lora', Georgia, serif;
-    --font-mono:     'JetBrains Mono', 'Fira Code', monospace;
+    --font-mono:      'JetBrains Mono', 'Fira Code', monospace;
 
-    /* Type Scale */
+    /* ── Type Scale ───────────────────────────────────────────── */
     --text-xs:   0.75rem;
     --text-sm:   0.875rem;
     --text-base: 1rem;
@@ -57,7 +67,7 @@
     --text-4xl:  2.75rem;
     --text-5xl:  3.75rem;
 
-    /* Spacing — 4px base unit */
+    /* ── Spacing — 8px base ───────────────────────────────────── */
     --space-1:  0.25rem;
     --space-2:  0.5rem;
     --space-3:  0.75rem;
@@ -71,23 +81,27 @@
     --space-20: 5rem;
     --space-24: 6rem;
 
-    /* Border Radius */
-    --radius-sm:   4px;
+    /* ── Radii ────────────────────────────────────────────────── */
+    --radius-xs:   4px;
+    --radius-sm:   8px;
     --radius-md:   8px;
     --radius-lg:   12px;
     --radius-xl:   16px;
+    --radius-2xl:  24px;
     --radius-full: 9999px;
 
-    /* Max Widths */
-    --max-width-content:   1200px;
+    /* ── Max Widths ───────────────────────────────────────────── */
+    --max-width-content:   1280px;
     --max-width-editorial: 740px;
     --max-width-narrow:    480px;
 
-    /* Transitions */
+    /* ── Motion ───────────────────────────────────────────────── */
+    --ease-spring:   cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in-out:   cubic-bezier(0.4, 0, 0.2, 1);
     --transition-fast:   150ms ease;
-    --transition-base:   200ms ease;
+    --transition-base:   220ms ease;
     --transition-slow:   350ms ease;
-    --transition-reveal: 600ms cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-reveal: 700ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   html {
@@ -101,6 +115,13 @@
     background-color: var(--bg-base);
     color: var(--text-primary);
     min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Custom cursor — hide system cursor on pointer devices */
+  @media (pointer: fine) {
+    body { cursor: none; }
+    a, button, [role="button"], [data-hover] { cursor: none; }
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -110,13 +131,19 @@
   }
 
   ::selection {
-    background-color: var(--accent-primary-glow);
+    background-color: rgba(170,255,77,0.15);
     color: var(--accent-primary);
   }
+
+  /* Thin warm scrollbar */
+  ::-webkit-scrollbar { width: 3px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(245,239,224,0.08); border-radius: 2px; }
 }
 
 @layer components {
-  /* Editorial body — Lora, generous line height, 68ch max */
+
+  /* ── Display / Editorial body ─────────────────────────────── */
   .editorial-body {
     font-family: var(--font-editorial);
     font-size: var(--text-base);
@@ -126,48 +153,53 @@
     max-width: 68ch;
   }
 
-  /* UI heading — Space Grotesk, tight tracking */
   .ui-heading {
     font-family: var(--font-ui);
     line-height: 1.2;
     letter-spacing: -0.02em;
   }
 
-  /* Mono accent */
   .mono {
     font-family: var(--font-mono);
     line-height: 1.6;
   }
 
-  /* Logo cursor blink */
+  /* ── Logo cursor ──────────────────────────────────────────── */
   .logo-cursor {
     color: var(--accent-primary);
     animation: blink 1s step-end infinite;
   }
 
-  /* Buttons */
+  .eyebrow-cursor {
+    color: var(--accent-primary);
+    animation: blink 1s step-end 3, fade-out-cursor 0.4s ease 3s forwards;
+  }
+
+  /* ── Buttons ──────────────────────────────────────────────── */
   .btn-primary {
     background: var(--accent-primary);
     color: var(--text-inverse);
     font-family: var(--font-ui);
     font-size: var(--text-sm);
-    font-weight: 500;
+    font-weight: 700;
     padding: var(--space-3) var(--space-6);
     border-radius: var(--radius-md);
     border: none;
     cursor: pointer;
-    transition: background var(--transition-fast);
+    transition: box-shadow 200ms ease, background 150ms ease;
     display: inline-flex;
     align-items: center;
     text-decoration: none;
+    letter-spacing: -0.01em;
   }
   .btn-primary:hover {
-    background: var(--accent-primary-dim);
+    background: var(--accent-primary-bright);
+    box-shadow: 0 0 28px rgba(170,255,77,0.30);
   }
 
   .btn-ghost {
     background: transparent;
-    color: var(--text-primary);
+    color: var(--text-secondary);
     border: 1px solid var(--border-default);
     font-family: var(--font-ui);
     font-size: var(--text-sm);
@@ -181,22 +213,36 @@
     text-decoration: none;
   }
   .btn-ghost:hover {
-    border-color: var(--accent-primary);
-    color: var(--accent-primary);
+    border-color: var(--border-emphasis);
+    color: var(--text-primary);
   }
 
-  /* Eyebrow cursor — blinks 3 times then fades */
-  .eyebrow-cursor {
-    color: var(--accent-primary);
-    animation: blink 1s step-end 3, fade-out-cursor 0.4s ease 3s forwards;
+  /* ── Glass card ────────────────────────────────────────────── */
+  .glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-xl);
+    transition: background var(--transition-base) var(--ease-spring),
+                border-color var(--transition-base) var(--ease-spring),
+                box-shadow var(--transition-base) var(--ease-spring),
+                transform var(--transition-base) var(--ease-spring);
+  }
+  .glass-card:hover {
+    background: var(--glass-bg-hover);
+    border-color: var(--glass-border-hover);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    transform: translateY(-2px);
   }
 
-  /* Nav link — hover underline grows left-to-right */
+  /* ── Nav link ──────────────────────────────────────────────── */
   .nav-link {
     position: relative;
     font-family: var(--font-ui);
     font-size: var(--text-sm);
-    color: var(--text-secondary);
+    font-weight: 500;
+    color: var(--text-muted);
     padding: 6px var(--space-3);
     border-radius: var(--radius-md);
     text-decoration: none;
@@ -215,14 +261,10 @@
     transform-origin: left;
     transition: transform var(--transition-base);
   }
-  .nav-link:hover {
-    color: var(--text-primary);
-  }
-  .nav-link:hover::after {
-    transform: scaleX(1);
-  }
+  .nav-link:hover { color: var(--text-primary); }
+  .nav-link:hover::after { transform: scaleX(1); }
 
-  /* Concept card — border brightens + glow background on hover */
+  /* ── Concept card ──────────────────────────────────────────── */
   .concept-card {
     background: var(--bg-surface);
     border-left: 3px solid var(--accent-primary);
@@ -233,47 +275,37 @@
     background-color: var(--accent-primary-glow);
   }
 
-  /* SVG concept map — CSS tooltip, no JS */
-  .concept-node .concept-tooltip {
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 200ms ease;
-  }
-  .concept-node:hover .concept-tooltip {
-    opacity: 1;
-  }
+  /* ── SVG concept map tooltip ───────────────────────────────── */
+  .concept-node .concept-tooltip { opacity: 0; pointer-events: none; transition: opacity 200ms ease; }
+  .concept-node:hover .concept-tooltip { opacity: 1; }
 
-  /* Scroll-reveal sections */
+  /* ── Scroll-reveal sections ────────────────────────────────── */
   .reveal-section {
     opacity: 0;
     transform: translateY(24px);
-    transition: opacity 500ms ease, transform 500ms ease;
+    transition: opacity 600ms var(--ease-spring), transform 600ms var(--ease-spring);
   }
-  .reveal-section.is-revealed {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  /* Stagger direct grid/list children by 60ms */
+  .reveal-section.is-revealed { opacity: 1; transform: translateY(0); }
   .reveal-section .reveal-grid > *,
   .reveal-section .reveal-list > * {
     opacity: 0;
-    transform: translateY(16px);
-    transition: opacity 500ms ease, transform 500ms ease;
+    transform: translateY(18px);
+    transition: opacity 600ms var(--ease-spring), transform 600ms var(--ease-spring);
   }
   .reveal-section.is-revealed .reveal-grid > *:nth-child(1),
-  .reveal-section.is-revealed .reveal-list > *:nth-child(1) { opacity: 1; transform: translateY(0); transition-delay: 60ms; }
+  .reveal-section.is-revealed .reveal-list > *:nth-child(1) { opacity:1; transform:translateY(0); transition-delay:60ms; }
   .reveal-section.is-revealed .reveal-grid > *:nth-child(2),
-  .reveal-section.is-revealed .reveal-list > *:nth-child(2) { opacity: 1; transform: translateY(0); transition-delay: 120ms; }
+  .reveal-section.is-revealed .reveal-list > *:nth-child(2) { opacity:1; transform:translateY(0); transition-delay:120ms; }
   .reveal-section.is-revealed .reveal-grid > *:nth-child(3),
-  .reveal-section.is-revealed .reveal-list > *:nth-child(3) { opacity: 1; transform: translateY(0); transition-delay: 180ms; }
+  .reveal-section.is-revealed .reveal-list > *:nth-child(3) { opacity:1; transform:translateY(0); transition-delay:180ms; }
   .reveal-section.is-revealed .reveal-grid > *:nth-child(4),
-  .reveal-section.is-revealed .reveal-list > *:nth-child(4) { opacity: 1; transform: translateY(0); transition-delay: 240ms; }
+  .reveal-section.is-revealed .reveal-list > *:nth-child(4) { opacity:1; transform:translateY(0); transition-delay:240ms; }
   .reveal-section.is-revealed .reveal-grid > *:nth-child(5),
-  .reveal-section.is-revealed .reveal-list > *:nth-child(5) { opacity: 1; transform: translateY(0); transition-delay: 300ms; }
+  .reveal-section.is-revealed .reveal-list > *:nth-child(5) { opacity:1; transform:translateY(0); transition-delay:300ms; }
   .reveal-section.is-revealed .reveal-grid > *:nth-child(6),
-  .reveal-section.is-revealed .reveal-list > *:nth-child(6) { opacity: 1; transform: translateY(0); transition-delay: 360ms; }
+  .reveal-section.is-revealed .reveal-list > *:nth-child(6) { opacity:1; transform:translateY(0); transition-delay:360ms; }
 
-  /* Tags and chips */
+  /* ── Tags / chips ──────────────────────────────────────────── */
   .tag {
     font-family: var(--font-mono);
     font-size: var(--text-xs);
@@ -291,21 +323,42 @@
     color: var(--accent-primary);
     border-color: var(--border-emphasis);
   }
+  .tag.tag-teal {
+    background: var(--accent-secondary-glow);
+    color: var(--accent-secondary);
+    border-color: rgba(0,255,209,0.25);
+  }
+
+  /* ── Pill badge (neon, rounded) ────────────────────────────── */
+  .badge-pill {
+    font-family: var(--font-ui);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* ── Ticker ────────────────────────────────────────────────── */
+  .ticker-track {
+    display: flex;
+    white-space: nowrap;
+    animation: ticker 32s linear infinite;
+  }
+  .ticker-track:hover { animation-play-state: paused; }
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-
-  .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-  }
+  .text-balance { text-wrap: balance; }
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+  .font-display { font-family: var(--font-display); }
 }
+
+/* ── Keyframes ─────────────────────────────────────────────────── */
 
 @keyframes blink {
   0%, 100% { opacity: 1; }
@@ -322,21 +375,41 @@
   to   { opacity: 0; }
 }
 
-/* Field guides — responsive grid layouts */
-.field-content-grid {
-  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+@keyframes hero-line {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
+
+@keyframes widget-appear {
+  from { opacity: 0; transform: translateY(14px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0px rgba(170,255,77,0.8); }
+  50%       { opacity: 0.6; box-shadow: 0 0 8px rgba(170,255,77,0.8); }
+}
+
+@keyframes ticker {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes float-a {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+
+@keyframes float-b {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-5px); }
+}
+
+/* ── Field guides — responsive ─────────────────────────────────── */
+.field-content-grid { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
 @media (max-width: 768px) {
-  .field-content-grid {
-    grid-template-columns: 1fr;
-  }
-  .paths-header-grid {
-    grid-template-columns: 1fr;
-  }
-  .quiz-cta-panel {
-    max-width: 100% !important;
-  }
-  .augmentation-grid {
-    grid-template-columns: 1fr !important;
-  }
+  .field-content-grid   { grid-template-columns: 1fr; }
+  .paths-header-grid    { grid-template-columns: 1fr; }
+  .quiz-cta-panel       { max-width: 100% !important; }
+  .augmentation-grid    { grid-template-columns: 1fr !important; }
 }

@@ -1,90 +1,184 @@
 import Link from "next/link";
 import NewsletterForm from "./NewsletterForm";
 
+const NAV_LINKS = [
+  { href: "/",        label: "Home"           },
+  { href: "/learn",   label: "Learn"          },
+  { href: "/tools",   label: "Tools"          },
+  { href: "/signal",  label: "Signal"         },
+  { href: "/quiz",    label: "Quiz"           },
+  { href: "/privacy", label: "Privacy Policy" },
+  { href: "/terms",   label: "Terms"          },
+];
+
+const STATS = [
+  { stat: "52+",   label: "curated tools"         },
+  { stat: "100%",  label: "no sponsored rankings"  },
+  { stat: "0",     label: "affiliate links"        },
+];
+
 export default function Footer() {
   return (
-    <footer className="border-t border-subtle bg-panel">
-      <div className="max-w-content mx-auto px-6 md:px-12 py-14">
+    <footer style={{
+      borderTop: '1px solid rgba(245,239,224,0.06)',
+      background: 'rgba(255,250,240,0.02)',
+      backdropFilter: 'blur(20px)',
+      WebkitBackdropFilter: 'blur(20px)',
+    }}>
+      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '56px 48px 40px' }}>
 
-        {/* Social proof strip */}
-        <div className="flex flex-wrap items-center gap-8 mb-10 pb-10 border-b border-subtle">
-          {[
-            { stat: "52+",   label: "curated tools" },
-            { stat: "100%",  label: "no sponsored rankings" },
-            { stat: "0",     label: "affiliate links" },
-          ].map(({ stat, label }) => (
-            <div key={label} className="flex items-baseline gap-2">
-              <span className="font-sans text-2xl font-semibold text-accent">{stat}</span>
-              <span className="font-sans text-sm text-secondary">{label}</span>
+        {/* Stats strip */}
+        <div style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: 32,
+          marginBottom: 40,
+          paddingBottom: 40,
+          borderBottom: '1px solid rgba(245,239,224,0.06)',
+        }}>
+          {STATS.map(({ stat, label }) => (
+            <div key={label} style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+              <span style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: 22,
+                fontWeight: 700,
+                color: '#AAFF4D',
+              }}>{stat}</span>
+              <span style={{
+                fontFamily: 'var(--font-ui)',
+                fontSize: 13,
+                color: 'rgba(245,239,224,0.40)',
+              }}>{label}</span>
             </div>
           ))}
         </div>
 
-        {/* 3-column layout */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-10">
+        {/* 3-col layout */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 40 }}>
 
-          {/* Brand column */}
-          <div className="space-y-3">
-            <p className="font-mono text-xl font-medium text-primary">
-              AIght<span className="logo-cursor">_</span>
+          {/* Brand */}
+          <div>
+            <p style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 20,
+              fontWeight: 700,
+              letterSpacing: '-0.02em',
+              marginBottom: 10,
+              margin: '0 0 10px',
+            }}>
+              <span style={{ color: '#F5EFE0' }}>AI</span>
+              <span style={{ color: '#AAFF4D' }}>ght</span>
+              <span className="logo-cursor" style={{ fontFamily: 'var(--font-mono)', color: '#AAFF4D' }}>_</span>
             </p>
-            <p className="font-sans text-sm text-secondary leading-relaxed max-w-xs">
+            <p style={{
+              fontFamily: 'var(--font-editorial)',
+              fontSize: 13,
+              lineHeight: 1.7,
+              color: 'rgba(245,239,224,0.40)',
+              maxWidth: '28ch',
+              margin: 0,
+            }}>
               A literary magazine covering AI.
               Curated slowly, on purpose.
             </p>
           </div>
 
-          {/* Navigation column */}
-          <nav className="space-y-2">
-            <p className="font-sans text-xs uppercase tracking-widest text-muted mb-3">
+          {/* Nav */}
+          <nav>
+            <p style={{
+              fontFamily: 'var(--font-ui)',
+              fontSize: 10,
+              fontWeight: 700,
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+              color: 'rgba(245,239,224,0.25)',
+              marginBottom: 14,
+              margin: '0 0 14px',
+            }}>
               Navigate
             </p>
-            {[
-              { href: "/",        label: "Home" },
-              { href: "/learn",   label: "Learn" },
-              { href: "/tools",   label: "Tools" },
-              { href: "/signal",  label: "Signal" },
-              { href: "/privacy", label: "Privacy Policy" },
-              { href: "/terms",   label: "Terms of Service" },
-            ].map(({ href, label }) => (
-              <div key={href}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {NAV_LINKS.map(({ href, label }) => (
                 <Link
+                  key={href}
                   href={href}
-                  className="font-sans text-sm text-secondary hover:text-primary transition-colors duration-150"
+                  style={{
+                    fontFamily: 'var(--font-ui)',
+                    fontSize: 13,
+                    color: 'rgba(245,239,224,0.45)',
+                    textDecoration: 'none',
+                    transition: 'color 150ms ease',
+                  }}
+                  onMouseEnter={e => (e.currentTarget.style.color = '#F5EFE0')}
+                  onMouseLeave={e => (e.currentTarget.style.color = 'rgba(245,239,224,0.45)')}
                 >
                   {label}
                 </Link>
-              </div>
-            ))}
+              ))}
+            </div>
           </nav>
 
-          {/* Newsletter column */}
-          <div className="space-y-3">
-            <p className="font-sans text-xs uppercase tracking-widest text-muted mb-3">
+          {/* Newsletter */}
+          <div>
+            <p style={{
+              fontFamily: 'var(--font-ui)',
+              fontSize: 10,
+              fontWeight: 700,
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+              color: 'rgba(245,239,224,0.25)',
+              margin: '0 0 14px',
+            }}>
               Stay in the signal
             </p>
-            <p className="font-sans text-sm text-secondary leading-relaxed">
+            <p style={{
+              fontFamily: 'var(--font-editorial)',
+              fontSize: 13,
+              lineHeight: 1.7,
+              color: 'rgba(245,239,224,0.40)',
+              margin: '0 0 16px',
+            }}>
               New tools, new stacks, and the occasional note from the archive.
               No spam — ever.
             </p>
-            <div className="mt-3">
-              <NewsletterForm />
-            </div>
+            <NewsletterForm />
           </div>
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-10 pt-6 border-t border-subtle flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="font-sans text-xs text-muted">
-            © {new Date().getFullYear()} AIght. Built by{" "}
+        <div style={{
+          marginTop: 40,
+          paddingTop: 24,
+          borderTop: '1px solid rgba(245,239,224,0.06)',
+          display: 'flex',
+          flexWrap: 'wrap',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: 12,
+        }}>
+          <p style={{
+            fontFamily: 'var(--font-ui)',
+            fontSize: 12,
+            color: 'rgba(245,239,224,0.25)',
+            margin: 0,
+          }}>
+            © {new Date().getFullYear()} AIght. Built by{' '}
             <a
               href="mailto:singhmankaran05@gmail.com"
-              className="hover:text-primary transition-colors duration-150"
+              style={{ color: 'rgba(245,239,224,0.40)', textDecoration: 'none', transition: 'color 150ms' }}
+              onMouseEnter={e => (e.currentTarget.style.color = '#F5EFE0')}
+              onMouseLeave={e => (e.currentTarget.style.color = 'rgba(245,239,224,0.40)')}
             >
               Mankaran Singh
             </a>
           </p>
-          <p className="font-sans text-xs text-muted italic">
+          <p style={{
+            fontFamily: 'var(--font-editorial)',
+            fontStyle: 'italic',
+            fontSize: 12,
+            color: 'rgba(245,239,224,0.20)',
+            margin: 0,
+          }}>
             Built slowly, on purpose.
           </p>
         </div>

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { createClient } from "@/utils/supabase/server";
 import Hero from "@/components/Hero";
 import Footer from "@/components/Footer";
+import Ticker from "@/components/Ticker";
 import ToolCard, { type ToolCardProps } from "@/components/ToolCard";
 import NewsletterForm from "@/components/NewsletterForm";
 import ScrollReveal from "@/components/ScrollReveal";
@@ -157,7 +158,7 @@ async function SignalSection() {
     <section className="px-6 md:px-12 lg:px-20 py-20 border-t border-subtle">
       <div className="max-w-editorial mx-auto">
         <div className="mb-8">
-          <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted mb-2">
+          <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(245,239,224,0.30)', marginBottom: 8, margin: '0 0 8px' }}>
             latest
           </p>
           <h2
@@ -199,7 +200,7 @@ async function ToolsSection() {
     <section className="px-6 md:px-12 lg:px-20 py-20 border-t border-subtle">
       <div className="max-w-content mx-auto">
         <div className="mb-10">
-          <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted mb-2">
+          <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(245,239,224,0.30)', marginBottom: 8, margin: '0 0 8px' }}>
             recently added
           </p>
           <h2
@@ -246,6 +247,9 @@ export default function Home() {
         {/* 1. Hero */}
         <Hero />
 
+        {/* Ticker */}
+        <Ticker />
+
         {/* 2. From the archive — live Signal posts from Medium */}
         <ScrollReveal>
           <Suspense fallback={null}>
@@ -259,12 +263,11 @@ export default function Home() {
           <section className="px-6 md:px-12 lg:px-20 py-20 border-t border-subtle">
             <div className="max-w-content mx-auto">
               <div className="mb-10">
-                <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted mb-2">
+                <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(245,239,224,0.30)', marginBottom: 8, margin: '0 0 8px' }}>
                   learn
                 </p>
                 <h2
-                  className="font-sans text-3xl font-semibold text-primary"
-                  style={{ letterSpacing: "-0.02em" }}
+                  style={{ fontFamily: 'var(--font-display)', fontSize: 32, fontWeight: 700, color: '#F5EFE0', letterSpacing: '-0.02em', margin: 0 }}
                 >
                   Understand the tools you use
                 </h2>
@@ -297,7 +300,7 @@ export default function Home() {
             <section className="px-6 md:px-12 lg:px-20 py-20 border-t border-subtle">
               <div className="max-w-content mx-auto">
                 <div className="mb-10">
-                  <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted mb-2">
+                  <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(245,239,224,0.30)', marginBottom: 8, margin: '0 0 8px' }}>
                     field guides
                   </p>
                   <h2
@@ -338,19 +341,52 @@ export default function Home() {
           </Suspense>
         </ScrollReveal>
 
-        {/* 5. Newsletter */}
-        <section className="px-6 md:px-12 lg:px-20 py-20 border-t border-subtle">
-          <div className="max-w-narrow mx-auto">
-            <h2
-              className="font-sans text-2xl font-semibold text-primary mb-2"
-              style={{ letterSpacing: "-0.02em" }}
-            >
-              Stay in the signal.
+        {/* CTA — before newsletter */}
+        <section style={{
+          position: 'relative',
+          padding: '96px 48px',
+          borderTop: '1px solid rgba(245,239,224,0.06)',
+          overflow: 'hidden',
+          textAlign: 'center',
+        }}>
+          {/* Radial lime orb */}
+          <div style={{
+            position: 'absolute',
+            width: 480,
+            height: 480,
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(170,255,77,0.07) 0%, transparent 70%)',
+            filter: 'blur(80px)',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            pointerEvents: 'none',
+          }} />
+          <div style={{ position: 'relative', maxWidth: 560, margin: '0 auto' }}>
+            <h2 style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(32px, 4vw, 52px)',
+              fontWeight: 900,
+              color: '#F5EFE0',
+              letterSpacing: '-0.03em',
+              lineHeight: 1.1,
+              margin: '0 0 20px',
+            }}>
+              Stop doomscrolling.{' '}
+              <em style={{ color: '#AAFF4D', fontStyle: 'italic' }}>Start knowing.</em>
             </h2>
-            <p className="font-sans text-sm text-secondary mb-6">
+            <p style={{
+              fontFamily: 'var(--font-editorial)',
+              fontSize: 16,
+              lineHeight: 1.8,
+              color: 'rgba(245,239,224,0.50)',
+              margin: '0 0 36px',
+            }}>
               No spam. Unsubscribe whenever.
             </p>
-            <NewsletterForm />
+            <div style={{ maxWidth: 400, margin: '0 auto' }}>
+              <NewsletterForm />
+            </div>
           </div>
         </section>
 

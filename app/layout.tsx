@@ -1,14 +1,24 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, Lora, JetBrains_Mono } from "next/font/google";
+import { Plus_Jakarta_Sans, Fraunces, Lora, JetBrains_Mono } from "next/font/google";
 import Navbar from "@/components/Navbar";
+import GlobalEffects from "@/components/GlobalEffects";
 import PostHogProvider from "./providers/PostHogProvider";
 import { Toaster } from "sonner";
 import "./globals.css";
 
-const spaceGrotesk = Space_Grotesk({
+const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-ui",
   display: "swap",
+  weight: ["400", "500", "600", "700", "800"],
+});
+
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  variable: "--font-display",
+  display: "swap",
+  weight: ["300", "700", "900"],
+  style: ["normal", "italic"],
 });
 
 const lora = Lora({
@@ -28,11 +38,11 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.aightai.in";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "AIght — your cozy corner for AI tools",
+    default: "AIght — the signal beneath the noise",
     template: "%s — AIght",
   },
   description:
-    "A ruthlessly curated AI tool directory. No hype, no sponsored rankings. Just honest signal.",
+    "Discover AI tools relevant to your field, understand their risks, and stay current — without the doomscroll.",
   keywords: ["AI tools", "AI directory", "AI learning", "curated AI"],
   authors: [{ name: "Mankaran Singh" }],
   creator: "Mankaran Singh",
@@ -41,13 +51,13 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: SITE_URL,
     siteName: "AIght",
-    title: "AIght — your cozy corner for AI tools",
+    title: "AIght — the signal beneath the noise",
     description:
-      "A ruthlessly curated AI tool directory. No spam, no affiliate links.",
+      "A ruthlessly curated AI tool directory. No hype, no sponsored rankings. Just honest signal.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "AIght — your cozy corner for AI tools",
+    title: "AIght — the signal beneath the noise",
     description: "A ruthlessly curated AI tool directory. No spam, no affiliate links.",
     creator: "@aightai",
   },
@@ -85,16 +95,18 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${spaceGrotesk.variable} ${lora.variable} ${jetbrainsMono.variable} antialiased`}
+        className={`${plusJakartaSans.variable} ${fraunces.variable} ${lora.variable} ${jetbrainsMono.variable} antialiased`}
       >
         <PostHogProvider>
+          {/* Global ambient effects — particle canvas + custom cursor */}
+          <GlobalEffects />
           <Navbar />
           {children}
           <Toaster
             position="bottom-right"
             toastOptions={{
               classNames: {
-                toast:       "!bg-panel !border !border-subtle !rounded-lg !font-sans !text-primary",
+                toast:       "!bg-elevated !border !border-subtle !rounded-lg !font-sans !text-primary",
                 title:       "!font-sans !font-semibold !text-primary !text-sm",
                 description: "!font-sans !text-secondary !text-xs",
                 success:     "!border-emphasis",
