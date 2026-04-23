@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
 import { Search, X } from "lucide-react";
-import ToolCard, { type ToolCardProps } from "./ToolCard";
+import dynamic from "next/dynamic";
+import type { ToolCardProps } from "./ToolCard";
+
+const ToolGrid3D = dynamic(() => import("./ToolGrid3D"), { ssr: false });
 
 const CATEGORIES = [
   { id: "all",          label: "All tools"    },
@@ -192,29 +193,10 @@ export default function ToolsClient({ tools, initialCategory = "all" }: Props) {
           </button>
         </div>
       ) : (
-        <motion.div
-          style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "var(--space-6)" }}
-          initial="hidden"
-          animate="show"
-          variants={{ hidden: {}, show: { transition: { staggerChildren: 0.04 } } }}
-        >
-          <AnimatePresence mode="popLayout">
-            {filtered.map((tool) => (
-              <motion.div
-                key={tool.slug}
-                layout
-                initial={{ opacity: 0, scale: 0.97 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.97 }}
-                transition={{ duration: 0.2, ease: "easeOut" }}
-              >
-                <Link href={`/tool/${tool.slug}`} style={{ display: 'block', textDecoration: 'none' }}>
-                  <ToolCard {...tool} />
-                </Link>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </motion.div>
+        <ToolGrid3D
+          key={`${activeCategory}-${[...selectedTags].sort().join(",")}-${query}`}
+          tools={filtered}
+        />
       )}
     </div>
   );

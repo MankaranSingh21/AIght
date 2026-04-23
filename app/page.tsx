@@ -4,7 +4,8 @@ import { createClient } from "@/utils/supabase/server";
 import Hero from "@/components/Hero";
 import Footer from "@/components/Footer";
 import Ticker from "@/components/Ticker";
-import ToolCard, { type ToolCardProps } from "@/components/ToolCard";
+import ToolGrid3D from "@/components/ToolGrid3D";
+import type { ToolCardProps } from "@/components/ToolCard";
 import NewsletterForm from "@/components/NewsletterForm";
 import ScrollReveal from "@/components/ScrollReveal";
 import type { Tool } from "@/utils/supabase/types";
@@ -211,19 +212,7 @@ async function ToolsSection() {
           </h2>
         </div>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-            gap: "var(--space-6)",
-          }}
-        >
-          {tools.map((tool) => (
-            <Link key={tool.slug} href={`/tool/${tool.slug}`} className="block">
-              <ToolCard {...tool} />
-            </Link>
-          ))}
-        </div>
+        <ToolGrid3D tools={tools} itemsPerPage={6} />
 
         <div className="mt-10">
           <Link href="/tools" className="btn-ghost">
