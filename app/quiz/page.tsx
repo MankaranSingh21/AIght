@@ -58,7 +58,6 @@ const QUESTIONS: Record<string, { number: number; question: string; options: str
   },
 };
 
-// Maps each step to a dot index (1–4) for the progress indicator
 const STEP_DOT: Record<QuizStep, number> = {
   field: 1, q1: 2, q2: 2, q3: 3, q4: 3, q5: 4, results: 4,
 };
@@ -194,7 +193,12 @@ export default function QuizPage() {
   const [flashedOption, setFlashedOption] = useState<string | null>(null);
   const [score, setScore] = useState(0);
   const [animated, setAnimated] = useState(false);
+  const [displayScore, setDisplayScore] = useState(0);
+  const [copied, setCopied] = useState(false);
+
   const quizRef = useRef<HTMLDivElement>(null);
+  const rafRef = useRef<number>(0);
+  const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Scroll quiz container into view on each step change, accounting for fixed nav
   useEffect(() => {
@@ -210,6 +214,27 @@ export default function QuizPage() {
       return () => clearTimeout(t);
     }
   }, [step]);
+
+  // Count-up animation for score number
+  useEffect(() => {
+    if (!animated || step !== 'results') return;
+    const startTime = performance.now();
+    const duration = 1200;
+    const target = score;
+
+    function tick(now: number) {
+      const elapsed = now - startTime;
+      const t = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - t, 3); // easeOutCubic
+      setDisplayScore(Math.round(eased * target));
+      if (t < 1) {
+        rafRef.current = requestAnimationFrame(tick);
+      }
+    }
+
+    rafRef.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafRef.current);
+  }, [animated, score, step]);
 
   function handleFieldSelect(field: FieldData) {
     setSelectedField(field);
@@ -232,7 +257,6 @@ export default function QuizPage() {
 
       if (next === 'results') {
         if (!selectedField) return;
-        // Compute score immediately with the fresh answer map
         const allAnswers = { ...answers, [qKey]: answer };
         const base = DIFFICULTY_BASE[selectedField.difficulty] ?? 50;
         const raw =
@@ -243,6 +267,7 @@ export default function QuizPage() {
           (Q_SCORES.q4[allAnswers.q4] ?? 0) +
           (Q_SCORES.q5[allAnswers.q5] ?? 0);
         setScore(Math.min(90, Math.max(10, raw)));
+        setDisplayScore(0);
         setAnimated(false);
         setStep('results');
       } else {
@@ -252,12 +277,26 @@ export default function QuizPage() {
   }
 
   function handleRetake() {
+    cancelAnimationFrame(rafRef.current);
+    if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
     setStep('field');
     setSelectedField(null);
     setAnswers({});
     setScore(0);
+    setDisplayScore(0);
     setAnimated(false);
     setFlashedOption(null);
+    setCopied(false);
+  }
+
+  function handleShare() {
+    if (!selectedField) return;
+    const text = `I just took the AI disruption quiz on AIght. My field (${selectedField.field}) scored ${score}/100 for disruption risk. Find out yours: aightai.in/quiz`;
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(true);
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+      copyTimerRef.current = setTimeout(() => setCopied(false), 2000);
+    });
   }
 
   // SVG circle meter
@@ -354,58 +393,75 @@ export default function QuizPage() {
           {/* ── Results ── */}
           {step === 'results' && selectedField && (
             <div className="max-w-editorial mx-auto">
-              {/* Score meter */}
+
+              {/* Score meter with radial glow */}
               <div className="flex flex-col items-center mb-14" style={fadeUp(0)}>
-                <svg
-                  width="200"
-                  height="200"
-                  viewBox="0 0 200 200"
-                  role="img"
-                  aria-label={`Risk score: ${score} out of 100`}
-                >
-                  <circle
-                    cx="100" cy="100" r={radius}
-                    fill="none" stroke="var(--bg-elevated)" strokeWidth="10"
-                  />
-                  <circle
-                    cx="100" cy="100" r={radius}
-                    fill="none" stroke={strokeColor} strokeWidth="10" strokeLinecap="round"
-                    strokeDasharray={circumference}
-                    strokeDashoffset={dashOffset}
+                <div style={{ position: 'relative', width: 200, height: 200, marginBottom: 'var(--space-4)' }}>
+                  {/* Radial glow — box-shadow spread, no filter blur */}
+                  <div
                     style={{
-                      transform: 'rotate(-90deg)',
-                      transformOrigin: '100px 100px',
-                      transition: 'stroke-dashoffset 1000ms ease-out',
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: 200,
+                      height: 200,
+                      borderRadius: '50%',
+                      boxShadow: '0 0 70px 35px var(--accent-primary-glow)',
+                      pointerEvents: 'none',
                     }}
                   />
-                  <text
-                    x="100" y="92"
-                    textAnchor="middle" dominantBaseline="middle"
-                    style={{
-                      fontFamily: 'var(--font-ui)',
-                      fontSize: '2.5rem',
-                      fontWeight: 600,
-                      fill: 'var(--text-primary)',
-                      letterSpacing: '-0.02em',
-                    }}
+                  <svg
+                    width="200"
+                    height="200"
+                    viewBox="0 0 200 200"
+                    role="img"
+                    aria-label={`Risk score: ${score} out of 100`}
+                    style={{ position: 'relative' }}
                   >
-                    {score}
-                  </text>
-                  <text
-                    x="100" y="126"
-                    textAnchor="middle"
-                    style={{
-                      fontFamily: 'var(--font-mono)',
-                      fontSize: '0.65rem',
-                      fill: 'var(--text-muted)',
-                      letterSpacing: '0.08em',
-                    }}
-                  >
-                    / 100
-                  </text>
-                </svg>
+                    <circle
+                      cx="100" cy="100" r={radius}
+                      fill="none" stroke="var(--bg-elevated)" strokeWidth="10"
+                    />
+                    <circle
+                      cx="100" cy="100" r={radius}
+                      fill="none" stroke={strokeColor} strokeWidth="10" strokeLinecap="round"
+                      strokeDasharray={circumference}
+                      strokeDashoffset={dashOffset}
+                      style={{
+                        transform: 'rotate(-90deg)',
+                        transformOrigin: '100px 100px',
+                        transition: 'stroke-dashoffset 1000ms ease-out',
+                      }}
+                    />
+                    <text
+                      x="100" y="92"
+                      textAnchor="middle" dominantBaseline="middle"
+                      style={{
+                        fontFamily: 'var(--font-ui)',
+                        fontSize: '2.5rem',
+                        fontWeight: 600,
+                        fill: 'var(--text-primary)',
+                        letterSpacing: '-0.02em',
+                      }}
+                    >
+                      {displayScore}
+                    </text>
+                    <text
+                      x="100" y="126"
+                      textAnchor="middle"
+                      style={{
+                        fontFamily: 'var(--font-mono)',
+                        fontSize: '0.65rem',
+                        fill: 'var(--text-muted)',
+                        letterSpacing: '0.08em',
+                      }}
+                    >
+                      / 100
+                    </text>
+                  </svg>
+                </div>
                 <h2
-                  className="font-sans text-2xl font-semibold mt-4 text-center"
+                  className="font-sans text-2xl font-semibold text-center"
                   style={{ color: strokeColor, letterSpacing: '-0.02em' }}
                 >
                   {getRiskLabel(score)}
@@ -435,23 +491,41 @@ export default function QuizPage() {
                 <Link href={`/learn/paths/${selectedField.slug}`} className="btn-primary">
                   Your learning path →
                 </Link>
+                <button onClick={handleShare} className="btn-ghost">
+                  {copied ? 'Copied ✓' : 'Share your score'}
+                </button>
                 <button onClick={handleRetake} className="btn-ghost">
-                  Retake quiz
+                  Start over
                 </button>
               </div>
 
-              {/* Concept chips */}
-              <div className="flex flex-wrap gap-3" style={fadeUp(360)}>
-                {selectedField.concepts.slice(0, 3).map((concept) => (
-                  <Link
-                    key={concept}
-                    href={`/learn/${conceptToSlug(concept)}`}
-                    className="tag tag-accent"
+              {/* People in your field are also learning */}
+              {selectedField.concepts.length > 0 && (
+                <div style={fadeUp(360)}>
+                  <p
+                    style={{
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: 'var(--text-xs)',
+                      color: 'var(--text-muted)',
+                      letterSpacing: '0.05em',
+                      marginBottom: 'var(--space-3)',
+                    }}
                   >
-                    {concept}
-                  </Link>
-                ))}
-              </div>
+                    People in your field are also learning:
+                  </p>
+                  <div className="flex flex-wrap gap-3">
+                    {selectedField.concepts.slice(0, 3).map((concept) => (
+                      <Link
+                        key={concept}
+                        href={`/learn/${conceptToSlug(concept)}`}
+                        className="tag tag-accent"
+                      >
+                        {concept}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
