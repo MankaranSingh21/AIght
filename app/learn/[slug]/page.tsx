@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { compileMDX } from "next-mdx-remote/rsc";
 import { getAllConcepts, getConceptSource } from "@/lib/learn";
 import RagSimulation from "@/components/learn/RagSimulation";
+import McpSimulation from "@/components/learn/McpSimulation";
 import type { JSX } from "react";
 
 type Props = {
@@ -33,6 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 const mdxComponents = {
   RagSimulation,
+  McpSimulation,
   h2: (props: JSX.IntrinsicElements["h2"]) => (
     <h2
       className="font-sans text-3xl font-semibold text-primary mt-14 mb-5 leading-tight"
