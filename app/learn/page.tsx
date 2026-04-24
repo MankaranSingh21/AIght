@@ -1,16 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import dynamic from "next/dynamic";
+import ConceptCarouselClient from "@/components/learn/ConceptCarouselClient";
 
 export const metadata: Metadata = {
   title: "Learn — AIght",
   description: "Honest explanations of the concepts behind the AI tools you use.",
 };
-
-const ConceptCarousel = dynamic(
-  () => import("@/components/learn/ConceptCarousel"),
-  { ssr: false }
-);
 
 function EdgeOrb({
   top, bottom, left, right, size = 560, color = "rgba(170,255,77,0.045)",
@@ -83,7 +78,7 @@ export default function LearnPage() {
       <section style={{ position: "relative", background: "rgba(20,17,14,0.45)", overflow: "hidden" }}>
         <EdgeOrb top={60} right={-160} size={500} color="rgba(170,255,77,0.03)" />
         <EdgeOrb bottom={-60} left={-180} size={480} color="rgba(0,255,209,0.025)" />
-        <ConceptCarousel />
+        <ConceptCarouselClient />
       </section>
 
       {/* ── Bridge section ──────────────────────────────────────────────── */}
