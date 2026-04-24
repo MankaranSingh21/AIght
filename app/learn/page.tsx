@@ -1,11 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getAllConcepts } from "@/lib/learn";
+import dynamic from "next/dynamic";
 
 export const metadata: Metadata = {
   title: "Learn — AIght",
   description: "Honest explanations of the concepts behind the AI tools you use.",
 };
+
+const ConceptCarousel = dynamic(
+  () => import("@/components/learn/ConceptCarousel"),
+  { ssr: false }
+);
 
 function EdgeOrb({
   top, bottom, left, right, size = 560, color = "rgba(170,255,77,0.045)",
@@ -31,8 +36,6 @@ function EdgeOrb({
 }
 
 export default function LearnPage() {
-  const concepts = getAllConcepts();
-
   return (
     <main style={{ minHeight: "100vh", position: "relative", zIndex: 1 }}>
 
@@ -76,75 +79,111 @@ export default function LearnPage() {
         <div style={{ height: 1, background: "linear-gradient(90deg, transparent, rgba(245,239,224,0.08) 20%, rgba(245,239,224,0.08) 80%, transparent)" }} />
       </section>
 
-      {/* ── Concept cards grid ───────────────────────────────────────────── */}
-      <section
-        className="section-full"
-        style={{ background: "rgba(20,17,14,0.45)" }}
-      >
+      {/* ── Carousel ────────────────────────────────────────────────────── */}
+      <section style={{ position: "relative", background: "rgba(20,17,14,0.45)", overflow: "hidden" }}>
         <EdgeOrb top={60} right={-160} size={500} color="rgba(170,255,77,0.03)" />
         <EdgeOrb bottom={-60} left={-180} size={480} color="rgba(0,255,209,0.025)" />
+        <ConceptCarousel />
+      </section>
 
-        <div className="section-inner">
-          {concepts.length === 0 ? (
-            <p style={{ fontFamily: "var(--font-ui)", fontSize: 14, color: "rgba(245,239,224,0.35)" }}>
-              No concepts yet.
-            </p>
-          ) : (
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))", gap: 24 }}>
-              {concepts.map((concept) => (
-                <Link
-                  key={concept.slug}
-                  href={`/learn/${concept.slug}`}
-                  style={{ textDecoration: "none", display: "block" }}
-                  className="concept-card group"
-                >
-                  <div style={{ padding: 28 }}>
-                    <p style={{
-                      fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.14em",
-                      textTransform: "uppercase", color: "rgba(245,239,224,0.30)", marginBottom: 14,
-                    }}>
-                      Concept
-                    </p>
-                    <h2
-                      className="group-hover:text-accent"
-                      style={{
-                        fontFamily: "var(--font-display)", fontSize: 22, fontWeight: 700,
-                        color: "#F5EFE0", letterSpacing: "-0.02em", lineHeight: 1.2,
-                        margin: "0 0 12px", transition: "color 150ms ease",
-                      }}
-                    >
-                      {concept.title}
-                    </h2>
-                    <p style={{
-                      fontFamily: "var(--font-editorial)", fontStyle: "italic",
-                      fontSize: 14, color: "rgba(245,239,224,0.50)", lineHeight: 1.7, marginBottom: 18,
-                    }}>
-                      {concept.tagline}
-                    </p>
-                    <p style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "rgba(245,239,224,0.28)" }}>
-                      {concept.readTime}
-                    </p>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          )}
-
-          <div style={{ marginTop: 48, display: "flex", alignItems: "center", gap: 20 }}>
-            <Link href="/learn/paths" className="btn-ghost">
-              AI in your field →
-            </Link>
-            <Link
-              href="/learn/map"
-              style={{
-                fontFamily: "var(--font-ui)", fontSize: 13, color: "rgba(245,239,224,0.45)",
-                textDecoration: "none", transition: "color 150ms ease",
-              }}
-              className="hover:text-accent"
+      {/* ── Bridge section ──────────────────────────────────────────────── */}
+      <section style={{
+        borderTop: "1px solid rgba(245,239,224,0.07)",
+        background: "rgba(255,250,240,0.02)",
+        padding: "64px 0",
+      }}>
+        <div style={{
+          maxWidth: "var(--max-width-content)",
+          margin: "0 auto",
+          padding: "0 clamp(24px, 5vw, 48px)",
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: 32,
+        }}
+          className="learn-bridge-grid"
+        >
+          {/* Concept map */}
+          <Link
+            href="/learn/map"
+            style={{ textDecoration: "none", display: "block" }}
+            className="group"
+          >
+            <div style={{
+              padding: "28px 32px",
+              borderRadius: 12,
+              border: "1px solid rgba(245,239,224,0.07)",
+              background: "rgba(255,250,240,0.03)",
+              backdropFilter: "blur(12px)",
+              transition: "border-color 200ms ease",
+              height: "100%",
+            }}
+              className="group-hover:border-accent"
             >
-              The landscape →
-            </Link>
-          </div>
+              <p style={{
+                fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.14em",
+                textTransform: "uppercase", color: "rgba(245,239,224,0.30)", marginBottom: 14,
+              }}>
+                The landscape
+              </p>
+              <h3 style={{
+                fontFamily: "var(--font-display)", fontSize: 22, fontWeight: 700,
+                color: "#F5EFE0", letterSpacing: "-0.02em", lineHeight: 1.2,
+                margin: "0 0 10px", transition: "color 150ms ease",
+              }}
+                className="group-hover:text-accent"
+              >
+                How these concepts connect →
+              </h3>
+              <p style={{
+                fontFamily: "var(--font-editorial)", fontStyle: "italic",
+                fontSize: 14, color: "rgba(245,239,224,0.45)", lineHeight: 1.7, margin: 0,
+              }}>
+                RAG feeds agents. Embeddings power retrieval. Transformers make it all possible.
+                See the map.
+              </p>
+            </div>
+          </Link>
+
+          {/* Field guides */}
+          <Link
+            href="/learn/paths"
+            style={{ textDecoration: "none", display: "block" }}
+            className="group"
+          >
+            <div style={{
+              padding: "28px 32px",
+              borderRadius: 12,
+              border: "1px solid rgba(245,239,224,0.07)",
+              background: "rgba(255,250,240,0.03)",
+              backdropFilter: "blur(12px)",
+              transition: "border-color 200ms ease",
+              height: "100%",
+            }}
+              className="group-hover:border-accent"
+            >
+              <p style={{
+                fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.14em",
+                textTransform: "uppercase", color: "rgba(245,239,224,0.30)", marginBottom: 14,
+              }}>
+                Field guides
+              </p>
+              <h3 style={{
+                fontFamily: "var(--font-display)", fontSize: 22, fontWeight: 700,
+                color: "#F5EFE0", letterSpacing: "-0.02em", lineHeight: 1.2,
+                margin: "0 0 10px", transition: "color 150ms ease",
+              }}
+                className="group-hover:text-accent"
+              >
+                AI in your field →
+              </h3>
+              <p style={{
+                fontFamily: "var(--font-editorial)", fontStyle: "italic",
+                fontSize: 14, color: "rgba(245,239,224,0.45)", lineHeight: 1.7, margin: 0,
+              }}>
+                What these concepts actually mean for medicine, law, design, finance — and 16 other fields.
+              </p>
+            </div>
+          </Link>
         </div>
       </section>
 
