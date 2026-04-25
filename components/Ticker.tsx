@@ -1,8 +1,9 @@
 'use client';
 
 const ITEMS = [
-  '2,400+ AI tools',
-  '140+ fields covered',
+  '52+ curated tools',
+  '20 fields covered',
+  '0 affiliate links',
   'Daily signal updates',
   'Healthcare',
   'Law & Legal',

@@ -9,9 +9,9 @@ const HeroWidgets = dynamic(() => import('./HeroWidgets'), { ssr: false });
 interface MousePos { x: number; y: number; }
 
 const STATS = [
-  { num: '2,400+', label: 'AI tools indexed' },
-  { num: '140+',   label: 'Fields covered'   },
-  { num: 'Daily',  label: 'Signal updates'   },
+  { num: '52+',  label: 'Curated tools'   },
+  { num: '20',   label: 'Fields covered'  },
+  { num: '0',    label: 'Affiliate links' },
 ];
 
 export default function Hero() {

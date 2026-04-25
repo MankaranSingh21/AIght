@@ -217,11 +217,15 @@ async function SignalSection() {
 
 async function ToolsSection() {
   const supabase = await createClient();
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("tools")
     .select("slug, name, vibe_description, category, url, tags")
     .order("created_at", { ascending: false })
     .limit(6);
+
+  if (error) {
+    console.error("[ToolsSection] Supabase error:", error.code, error.message);
+  }
 
   const tools = (data ?? []).map(mapTool);
   if (tools.length === 0) return null;
