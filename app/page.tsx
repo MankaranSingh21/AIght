@@ -4,7 +4,7 @@ import { createClient } from "@/utils/supabase/server";
 import Hero from "@/components/Hero";
 import Footer from "@/components/Footer";
 import Ticker from "@/components/Ticker";
-import ToolGrid3D from "@/components/ToolGrid3D";
+import ToolCard from "@/components/ToolCard";
 import type { ToolCardProps } from "@/components/ToolCard";
 import NewsletterForm from "@/components/NewsletterForm";
 import ScrollReveal from "@/components/ScrollReveal";
@@ -17,12 +17,13 @@ import fields from "@/content/paths/fields.json";
 
 function mapTool(t: Partial<Tool>): ToolCardProps {
   return {
-    slug:     t.slug ?? "",
-    name:     t.name ?? "",
-    tagline:  t.vibe_description ?? "",
-    category: t.category ?? "AI Tool",
-    url:      t.url ?? null,
-    tags:     t.tags ?? [],
+    slug:       t.slug ?? "",
+    name:       t.name ?? "",
+    tagline:    t.vibe_description ?? "",
+    category:   t.category ?? "AI Tool",
+    url:        t.url ?? null,
+    tags:       t.tags ?? [],
+    created_at: t.created_at ?? undefined,
   };
 }
 
@@ -219,7 +220,7 @@ async function ToolsSection() {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("tools")
-    .select("slug, name, vibe_description, category, url, tags")
+    .select("slug, name, vibe_description, category, url, tags, created_at")
     .order("created_at", { ascending: false })
     .limit(6);
 
@@ -247,7 +248,15 @@ async function ToolsSection() {
           </h2>
         </div>
 
-        <ToolGrid3D tools={tools} itemsPerPage={6} />
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+            gap: "var(--space-6)",
+          }}
+        >
+          {tools.map((tool) => <ToolCard key={tool.slug} {...tool} />)}
+        </div>
 
         <div style={{ marginTop: 40 }}>
           <Link href="/tools" className="btn-ghost">See the full archive →</Link>
