@@ -123,7 +123,7 @@ export default function PathsPage() {
               <p style={{ fontFamily: "var(--font-ui)", fontSize: 15, fontWeight: 600, color: "#F5EFE0", letterSpacing: "-0.01em", lineHeight: 1.4, marginBottom: 16 }}>
                 Take the AI impact quiz
               </p>
-              <Link href="/quiz" className="btn-primary">Start quiz →</Link>
+              <Link href="/learn/paths/quiz" className="btn-primary">Start quiz →</Link>
             </div>
           </div>
 

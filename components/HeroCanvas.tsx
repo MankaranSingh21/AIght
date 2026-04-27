@@ -21,8 +21,8 @@ interface Blob {
   color: string;
 }
 
-const GREEN = "#7DBF8C";
-const AMBER = "#C9A96E";
+const GREEN = "#AAFF4D";
+const AMBER = "#F4AB1F";
 const PARTICLE_COUNT = 90;
 const LINE_DIST = 72;
 
@@ -129,7 +129,7 @@ export default function HeroCanvas() {
           const dist = Math.sqrt(dx * dx + dy * dy);
           if (dist < LINE_DIST) {
             const alpha = (1 - dist / LINE_DIST) * 0.12;
-            ctx!.strokeStyle = `rgba(125,191,140,${alpha.toFixed(3)})`;
+            ctx!.strokeStyle = `rgba(170,255,77,${alpha.toFixed(3)})`;
             ctx!.lineWidth = 0.5;
             ctx!.beginPath();
             ctx!.moveTo(particles[i].x, particles[i].y);

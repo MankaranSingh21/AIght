@@ -4,9 +4,9 @@ import { useRef, useEffect, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 
-// Design tokens — must match globals.css
-const GREEN = new THREE.Color('#7DBF8C'); // --accent-primary
-const AMBER = new THREE.Color('#C9A96E'); // --accent-warm
+// Design tokens — must match globals.css (--accent-primary, --accent-warm)
+const GREEN = new THREE.Color('#AAFF4D');
+const AMBER = new THREE.Color('#F4AB1F');
 
 const N_DESKTOP = 80;    // ≤120 per spec
 const N_MOBILE  = 60;
@@ -151,7 +151,7 @@ function AmbientField({ n, showLines }: { n: number; showLines: boolean }) {
           <bufferGeometry>
             <bufferAttribute attach="attributes-position" args={[segArr.current, 3]} />
           </bufferGeometry>
-          <lineBasicMaterial color="#7DBF8C" transparent opacity={0.06} depthWrite={false} />
+          <lineBasicMaterial color="#AAFF4D" transparent opacity={0.06} depthWrite={false} />
         </lineSegments>
       )}
     </>

@@ -117,8 +117,8 @@ const DEFAULT_LAYERS: AugLayer[] = [
 
 const ZONE_COLORS = {
   automate: { bg: 'rgba(224,112,112,0.08)', border: 'rgba(224,112,112,0.2)', text: '#E07070', label: 'rgba(224,112,112,0.7)' },
-  augment:  { bg: 'rgba(201,169,110,0.08)', border: 'rgba(201,169,110,0.2)', text: '#C9A96E', label: 'rgba(201,169,110,0.7)' },
-  grow:     { bg: 'rgba(125,191,140,0.08)', border: 'rgba(125,191,140,0.2)', text: '#7DBF8C', label: 'rgba(125,191,140,0.7)' },
+  augment:  { bg: 'var(--accent-warm-glow, rgba(244,171,31,0.08))', border: 'rgba(244,171,31,0.2)', text: 'var(--accent-warm)', label: 'rgba(244,171,31,0.7)' },
+  grow:     { bg: 'var(--accent-primary-glow)', border: 'var(--border-emphasis)', text: 'var(--accent-primary)', label: 'rgba(170,255,77,0.7)' },
 };
 
 export default function AugmentationDiagram({ slug }: { slug: string }) {
@@ -151,8 +151,8 @@ export default function AugmentationDiagram({ slug }: { slug: string }) {
         }}
       >
         <div style={{ flex: 1, background: 'rgba(224,112,112,0.5)' }} />
-        <div style={{ flex: 1, background: 'rgba(201,169,110,0.5)' }} />
-        <div style={{ flex: 1, background: 'rgba(125,191,140,0.5)' }} />
+        <div style={{ flex: 1, background: 'rgba(244,171,31,0.5)' }} />
+        <div style={{ flex: 1, background: 'rgba(170,255,77,0.5)' }} />
       </div>
 
       <div

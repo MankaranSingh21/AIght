@@ -147,7 +147,7 @@ export default function Hero() {
             <Link href="/tools" className="btn-primary">
               Explore tools →
             </Link>
-            <Link href="/quiz" className="btn-ghost">
+            <Link href="/learn/paths/quiz" className="btn-ghost">
               See what&apos;s relevant
             </Link>
           </div>

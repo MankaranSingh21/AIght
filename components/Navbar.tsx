@@ -8,7 +8,7 @@ const NAV_LINKS = [
   { href: '/learn',  label: 'Learn'  },
   { href: '/tools',  label: 'Tools'  },
   { href: '/signal', label: 'Signal' },
-  { href: '/quiz',   label: 'Quiz'   },
+  { href: '/learn/paths/quiz', label: 'Quiz' },
 ];
 
 export default function Navbar() {
