@@ -277,9 +277,29 @@
     background-color: var(--accent-primary-glow);
   }
 
-  /* ── SVG concept map tooltip ───────────────────────────────── */
-  .concept-node .concept-tooltip { opacity: 0; pointer-events: none; transition: opacity 200ms ease; }
+  /* ── SVG concept map ──────────────────────────────────────── */
+  /* Tooltip — hidden by default, shown on hover */
+  .concept-node .concept-tooltip { opacity: 0; pointer-events: none; transition: opacity 150ms ease; }
   .concept-node:hover .concept-tooltip { opacity: 1; }
+  /* Mobile: tooltip always visible */
+  @media (max-width: 767px) { .concept-tooltip { opacity: 1 !important; } }
+  /* Node hover — pure CSS (transform-box needed for SVG transform-origin) */
+  .concept-node { transform-box: fill-box; transform-origin: center; transition: transform 200ms ease; }
+  .concept-node:hover { transform: scale(1.03); }
+  .concept-node-rect { transition: stroke 200ms ease; }
+  .concept-node:hover .concept-node-rect { stroke: var(--border-emphasis); }
+  .concept-node-title { transition: fill 200ms ease; }
+  .concept-node:hover .concept-node-title { fill: var(--accent-primary); }
+  .concept-node:focus .concept-node-rect { stroke: var(--accent-primary); stroke-width: 1.5px; }
+  /* START HERE pulse ring */
+  .map-start-pulse {
+    animation: map-pulse 2s ease-in-out infinite;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  /* "Explore the map" inline link */
+  .map-explore-link { color: var(--text-muted); transition: color 150ms ease; }
+  .map-explore-link:hover { color: var(--accent-primary); }
 
   /* ── Scroll-reveal sections ────────────────────────────────── */
   .reveal-section {
@@ -476,6 +496,47 @@
 @keyframes float-b {
   0%, 100% { transform: translateY(0px); }
   50%       { transform: translateY(-5px); }
+}
+
+@keyframes map-pulse {
+  0%   { transform: scale(1);   opacity: 0.8; }
+  100% { transform: scale(3.2); opacity: 0;   }
+}
+
+/* ── Learn article dropcap ─────────────────────────────────────── */
+.learn-article > p:first-of-type::first-letter {
+  font-size: 4.5em;
+  float: left;
+  line-height: 0.85;
+  padding-right: var(--space-2);
+  color: var(--accent-primary);
+  font-family: var(--font-editorial);
+}
+
+/* ── MDX footnotes ─────────────────────────────────────────────── */
+[data-footnotes] {
+  margin-top: var(--space-16);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--border-subtle);
+}
+[data-footnotes] ol {
+  list-style: decimal;
+  margin-left: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+[data-footnotes] li,
+[data-footnotes] p {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin: 0;
+}
+[data-footnotes] a {
+  color: var(--text-muted);
+  text-underline-offset: 2px;
 }
 
 /* ── Field guides — responsive ─────────────────────────────────── */

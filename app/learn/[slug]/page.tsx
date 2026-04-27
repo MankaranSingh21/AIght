@@ -5,6 +5,13 @@ import { compileMDX } from "next-mdx-remote/rsc";
 import { getAllConcepts, getConceptSource } from "@/lib/learn";
 import RagSimulation from "@/components/learn/RagSimulation";
 import McpSimulation from "@/components/learn/McpSimulation";
+import EmbeddingsViz from "@/components/learn/EmbeddingsViz";
+import AgentsSimulation from "@/components/learn/AgentsSimulation";
+import AttentionViz from "@/components/learn/AttentionViz";
+import FineTuningComparison from "@/components/learn/FineTuningComparison";
+import Pullquote from "@/components/learn/Pullquote";
+import CodeBlock from "@/components/learn/CodeBlock";
+import ReadingProgressBar from "@/components/learn/ReadingProgressBar";
 import type { JSX } from "react";
 
 type Props = {
@@ -35,14 +42,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 const mdxComponents = {
   RagSimulation,
   McpSimulation,
+  EmbeddingsViz,
+  AgentsSimulation,
+  AttentionViz,
+  FineTuningComparison,
+  Pullquote,
+  pre: (props: JSX.IntrinsicElements["pre"]) => <CodeBlock {...props} />,
   h2: (props: JSX.IntrinsicElements["h2"]) => (
     <h2
       style={{
-        fontFamily: 'var(--font-display)',
+        fontFamily: "var(--font-display)",
         fontSize: 28,
         fontWeight: 700,
-        color: '#F5EFE0',
-        letterSpacing: '-0.02em',
+        color: "#F5EFE0",
+        letterSpacing: "-0.02em",
         lineHeight: 1.2,
         marginTop: 56,
         marginBottom: 20,
@@ -53,11 +66,11 @@ const mdxComponents = {
   h3: (props: JSX.IntrinsicElements["h3"]) => (
     <h3
       style={{
-        fontFamily: 'var(--font-display)',
+        fontFamily: "var(--font-display)",
         fontSize: 22,
         fontWeight: 700,
-        color: '#F5EFE0',
-        letterSpacing: '-0.02em',
+        color: "#F5EFE0",
+        letterSpacing: "-0.02em",
         lineHeight: 1.2,
         marginTop: 40,
         marginBottom: 14,
@@ -68,13 +81,13 @@ const mdxComponents = {
   p: (props: JSX.IntrinsicElements["p"]) => (
     <p
       style={{
-        fontFamily: 'var(--font-editorial)',
+        fontFamily: "var(--font-editorial)",
         fontSize: 16,
-        color: 'rgba(245,239,224,0.75)',
+        color: "rgba(245,239,224,0.75)",
         lineHeight: 1.85,
-        letterSpacing: '0.01em',
+        letterSpacing: "0.01em",
         marginBottom: 22,
-        maxWidth: '68ch',
+        maxWidth: "68ch",
       }}
       {...props}
     />
@@ -82,74 +95,72 @@ const mdxComponents = {
   blockquote: (props: JSX.IntrinsicElements["blockquote"]) => (
     <blockquote
       style={{
-        fontFamily: 'var(--font-editorial)',
-        fontStyle: 'italic',
+        fontFamily: "var(--font-editorial)",
+        fontStyle: "italic",
         fontSize: 22,
-        color: 'var(--accent-warm)',
-        borderLeft: '3px solid var(--accent-warm)',
+        color: "var(--accent-warm)",
+        borderLeft: "3px solid var(--accent-warm)",
         paddingLeft: 24,
-        margin: '40px 0',
-        maxWidth: '58ch',
+        margin: "40px 0",
+        maxWidth: "58ch",
         lineHeight: 1.6,
       }}
       {...props}
     />
   ),
   hr: () => (
-    <hr style={{ border: 'none', borderTop: '1px solid rgba(245,239,224,0.07)', margin: '64px 0' }} />
-  ),
-  pre: (props: JSX.IntrinsicElements["pre"]) => (
-    <pre
+    <hr
       style={{
-        fontFamily: 'var(--font-mono)',
-        fontSize: 13,
-        background: 'var(--bg-elevated)',
-        borderRadius: 8,
-        padding: 24,
-        overflowX: 'auto',
-        margin: '28px 0',
-        lineHeight: 1.7,
-        border: '1px solid rgba(245,239,224,0.07)',
+        border: "none",
+        borderTop: "1px solid rgba(245,239,224,0.07)",
+        margin: "64px 0",
       }}
-      {...props}
     />
   ),
   code: (props: JSX.IntrinsicElements["code"]) => (
     <code
       style={{
-        fontFamily: 'var(--font-mono)',
+        fontFamily: "var(--font-mono)",
         fontSize: 13,
-        background: 'var(--bg-elevated)',
-        padding: '2px 6px',
+        background: "var(--bg-elevated)",
+        padding: "2px 6px",
         borderRadius: 4,
-        color: '#AAFF4D',
+        color: "var(--accent-primary)",
       }}
       {...props}
     />
   ),
   strong: (props: JSX.IntrinsicElements["strong"]) => (
-    <strong style={{ fontWeight: 600, color: '#F5EFE0', fontStyle: 'normal' }} {...props} />
+    <strong
+      style={{ fontWeight: 600, color: "#F5EFE0", fontStyle: "normal" }}
+      {...props}
+    />
   ),
   a: (props: JSX.IntrinsicElements["a"]) => (
     <a
-      style={{ color: '#AAFF4D', textDecoration: 'underline', textUnderlineOffset: 2, transition: 'color 150ms ease' }}
+      style={{
+        color: "var(--accent-primary)",
+        textDecoration: "underline",
+        textUnderlineOffset: 2,
+        transition: "color 150ms ease",
+      }}
       {...props}
     />
   ),
   ul: (props: JSX.IntrinsicElements["ul"]) => (
     <ul
       style={{
-        fontFamily: 'var(--font-editorial)',
+        fontFamily: "var(--font-editorial)",
         fontSize: 16,
-        color: 'rgba(245,239,224,0.75)',
+        color: "rgba(245,239,224,0.75)",
         lineHeight: 1.85,
-        listStyleType: 'disc',
-        listStylePosition: 'outside',
+        listStyleType: "disc",
+        listStylePosition: "outside",
         marginLeft: 20,
         marginBottom: 22,
-        maxWidth: '68ch',
-        display: 'flex',
-        flexDirection: 'column',
+        maxWidth: "68ch",
+        display: "flex",
+        flexDirection: "column",
         gap: 8,
       }}
       {...props}
@@ -158,17 +169,17 @@ const mdxComponents = {
   ol: (props: JSX.IntrinsicElements["ol"]) => (
     <ol
       style={{
-        fontFamily: 'var(--font-editorial)',
+        fontFamily: "var(--font-editorial)",
         fontSize: 16,
-        color: 'rgba(245,239,224,0.75)',
+        color: "rgba(245,239,224,0.75)",
         lineHeight: 1.85,
-        listStyleType: 'decimal',
-        listStylePosition: 'outside',
+        listStyleType: "decimal",
+        listStylePosition: "outside",
         marginLeft: 20,
         marginBottom: 22,
-        maxWidth: '68ch',
-        display: 'flex',
-        flexDirection: 'column',
+        maxWidth: "68ch",
+        display: "flex",
+        flexDirection: "column",
         gap: 8,
       }}
       {...props}
@@ -193,13 +204,29 @@ export default async function LearnConceptPage({ params }: Props) {
   });
 
   return (
-    <main style={{ minHeight: '100vh', background: 'var(--bg-base)' }}>
-      <div style={{ maxWidth: 'var(--max-width-editorial)', margin: '0 auto', padding: '64px 48px 96px' }}>
+    <main style={{ minHeight: "100vh", background: "var(--bg-base)" }}>
+      <ReadingProgressBar />
 
+      <div
+        style={{
+          maxWidth: "var(--max-width-editorial)",
+          margin: "0 auto",
+          padding: "64px 48px 96px",
+        }}
+      >
         {/* Back */}
         <Link
           href="/learn"
-          style={{ fontFamily: 'var(--font-ui)', fontSize: 13, color: 'rgba(245,239,224,0.45)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6, marginBottom: 48 }}
+          style={{
+            fontFamily: "var(--font-ui)",
+            fontSize: 13,
+            color: "rgba(245,239,224,0.45)",
+            textDecoration: "none",
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 6,
+            marginBottom: 48,
+          }}
           className="hover:text-primary"
         >
           ← All concepts
@@ -207,40 +234,104 @@ export default async function LearnConceptPage({ params }: Props) {
 
         {/* Article header */}
         <header style={{ marginBottom: 48 }}>
-          <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(245,239,224,0.30)', marginBottom: 14 }}>
+          <p
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: 10,
+              letterSpacing: "0.14em",
+              textTransform: "uppercase",
+              color: "rgba(245,239,224,0.30)",
+              marginBottom: 14,
+            }}
+          >
             Concept
           </p>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(32px, 5vw, 52px)', fontWeight: 900, color: '#F5EFE0', letterSpacing: '-0.03em', lineHeight: 1.05, margin: '0 0 18px' }}>
+          <h1
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "clamp(32px, 5vw, 52px)",
+              fontWeight: 900,
+              color: "#F5EFE0",
+              letterSpacing: "-0.03em",
+              lineHeight: 1.05,
+              margin: "0 0 18px",
+            }}
+          >
             {frontmatter.title}
           </h1>
-          <p style={{ fontFamily: 'var(--font-editorial)', fontStyle: 'italic', fontSize: 17, color: 'rgba(245,239,224,0.55)', lineHeight: 1.8, marginBottom: 20, maxWidth: '54ch' }}>
+          <p
+            style={{
+              fontFamily: "var(--font-editorial)",
+              fontStyle: "italic",
+              fontSize: 17,
+              color: "rgba(245,239,224,0.55)",
+              lineHeight: 1.8,
+              marginBottom: 20,
+              maxWidth: "54ch",
+            }}
+          >
             {frontmatter.tagline}
           </p>
-          <p style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'rgba(245,239,224,0.30)' }}>{frontmatter.readTime}</p>
+          <p
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: 11,
+              color: "rgba(245,239,224,0.30)",
+            }}
+          >
+            {frontmatter.readTime}
+          </p>
         </header>
 
-        <hr style={{ border: 'none', borderTop: '1px solid rgba(245,239,224,0.07)', marginBottom: 48 }} />
+        <hr
+          style={{
+            border: "none",
+            borderTop: "1px solid rgba(245,239,224,0.07)",
+            marginBottom: 48,
+          }}
+        />
 
         {/* MDX body */}
-        <article>{content}</article>
+        <article className="learn-article">{content}</article>
 
         {/* Footer nav */}
-        <div style={{ marginTop: 80, paddingTop: 32, borderTop: '1px solid rgba(245,239,224,0.07)', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
+        <div
+          style={{
+            marginTop: 80,
+            paddingTop: 32,
+            borderTop: "1px solid rgba(245,239,224,0.07)",
+            display: "flex",
+            flexWrap: "wrap",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 16,
+          }}
+        >
           <Link
             href="/learn"
-            style={{ fontFamily: 'var(--font-ui)', fontSize: 13, color: 'rgba(245,239,224,0.45)', textDecoration: 'none', transition: 'color 150ms ease' }}
+            style={{
+              fontFamily: "var(--font-ui)",
+              fontSize: 13,
+              color: "rgba(245,239,224,0.45)",
+              textDecoration: "none",
+              transition: "color 150ms ease",
+            }}
             className="hover:text-primary"
           >
             ← Back to all concepts
           </Link>
           <Link
             href="/tools"
-            style={{ fontFamily: 'var(--font-ui)', fontSize: 13, color: '#AAFF4D', textDecoration: 'none' }}
+            style={{
+              fontFamily: "var(--font-ui)",
+              fontSize: 13,
+              color: "var(--accent-primary)",
+              textDecoration: "none",
+            }}
           >
             Browse tools →
           </Link>
         </div>
-
       </div>
     </main>
   );

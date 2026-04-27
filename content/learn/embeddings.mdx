@@ -47,6 +47,8 @@ scores = [cosine_similarity(query_vec, e) for e in doc_embeddings]
 
 ---
 
+<EmbeddingsViz />
+
 ## Why this matters for AI tools
 
 Embeddings are the foundation of most of what feels "smart" about modern AI search and retrieval. When you upload a document and an AI answers questions about it accurately, something like this happened: your document was chunked and embedded, your question was embedded, and the chunks whose embeddings were closest to your question's embedding were retrieved and fed to the model.

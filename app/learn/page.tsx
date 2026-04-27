@@ -79,6 +79,13 @@ export default function LearnPage() {
         <EdgeOrb top={60} right={-160} size={500} color="rgba(170,255,77,0.03)" />
         <EdgeOrb bottom={-60} left={-180} size={480} color="rgba(0,255,209,0.025)" />
         <ConceptCarouselClient />
+        <div style={{ textAlign: 'center', padding: '0 0 40px', position: 'relative', zIndex: 1 }}>
+          <Link href="/learn/map" className="map-explore-link"
+            style={{ fontFamily: 'var(--font-mono)', fontSize: 12,
+                     textDecoration: 'none', letterSpacing: '0.06em' }}>
+            Explore the map →
+          </Link>
+        </div>
       </section>
 
       {/* ── Bridge section ──────────────────────────────────────────────── */}

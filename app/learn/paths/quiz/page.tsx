@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef, Suspense } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import fieldsData from '@/content/paths/fields.json';
 
 /* ─── Types ─────────────────────────────────────────────────────────────────── */
@@ -697,38 +698,66 @@ const CAT_DESCRIPTION: Record<RiskCategory, string> = {
 
 function ScoreArc({ score, category }: { score: number; category: RiskCategory }) {
   const [displayed, setDisplayed] = useState(0);
+  const [glowing,   setGlowing]   = useState(false);
+
   useEffect(() => {
-    const t = setTimeout(() => setDisplayed(score), 300);
-    return () => clearTimeout(t);
+    const duration = 1200;
+    let raf: number;
+    const t = setTimeout(() => {
+      const start = performance.now();
+      const tick = (now: number) => {
+        const progress = Math.min((now - start) / duration, 1);
+        const eased    = 1 - Math.pow(1 - progress, 3); // easeOutCubic
+        setDisplayed(Math.round(eased * score));
+        if (progress < 1) {
+          raf = requestAnimationFrame(tick);
+        } else {
+          setDisplayed(score);
+          setGlowing(true);
+        }
+      };
+      raf = requestAnimationFrame(tick);
+    }, 300);
+    return () => { clearTimeout(t); cancelAnimationFrame(raf); };
   }, [score]);
+
   const r    = 76;
   const circ = 2 * Math.PI * r;
-  const dash = (displayed / 100) * circ;
   const col  = CAT_COLOR[category];
+  const dash = (displayed / 100) * circ;
+
   return (
-    <svg width="200" height="200" viewBox="0 0 200 200" aria-label={`Impact score: ${score}`}>
-      <circle cx="100" cy="100" r={r} fill="none"
-        style={{ stroke: 'rgba(245,239,224,0.08)', strokeWidth: 10 }} />
-      <circle cx="100" cy="100" r={r} fill="none"
-        style={{
-          stroke: col, strokeWidth: 10, strokeLinecap: 'round',
-          strokeDasharray: `${dash} ${circ}`,
-          transform: 'rotate(-90deg)', transformOrigin: 'center',
-          transition: 'stroke-dasharray 1200ms cubic-bezier(0.16,1,0.3,1)',
-        }} />
-      <text x="100" y="90" textAnchor="middle"
-        style={{ fontFamily: 'var(--font-display)', fontSize: 44, fill: col, fontWeight: 600 }}>
-        {displayed}
-      </text>
-      <text x="100" y="110" textAnchor="middle"
-        style={{ fontFamily: 'var(--font-mono)', fontSize: 10, fill: 'var(--text-muted)', letterSpacing: '0.1em' }}>
-        IMPACT SCORE
-      </text>
-      <text x="100" y="126" textAnchor="middle"
-        style={{ fontFamily: 'var(--font-mono)', fontSize: 9, fill: col, letterSpacing: '0.05em' }}>
-        / 100
-      </text>
-    </svg>
+    <div style={{
+      display: 'inline-block', borderRadius: '50%',
+      boxShadow: glowing
+        ? `0 0 0 12px ${col}18, 0 0 0 24px ${col}08`
+        : '0 0 0 0px transparent',
+      transition: 'box-shadow 700ms ease',
+    }}>
+      <svg width="200" height="200" viewBox="0 0 200 200" aria-label={`Impact score: ${score}`}>
+        <circle cx="100" cy="100" r={r} fill="none"
+          style={{ stroke: 'rgba(245,239,224,0.08)', strokeWidth: 10 }} />
+        <circle cx="100" cy="100" r={r} fill="none"
+          style={{
+            stroke: col, strokeWidth: 10, strokeLinecap: 'round',
+            strokeDasharray: `${dash} ${circ}`,
+            transform: 'rotate(-90deg)', transformOrigin: 'center',
+            transition: 'stroke-dasharray 40ms linear',
+          }} />
+        <text x="100" y="90" textAnchor="middle"
+          style={{ fontFamily: 'var(--font-display)', fontSize: 44, fill: col, fontWeight: 600 }}>
+          {displayed}
+        </text>
+        <text x="100" y="110" textAnchor="middle"
+          style={{ fontFamily: 'var(--font-mono)', fontSize: 10, fill: 'var(--text-muted)', letterSpacing: '0.1em' }}>
+          IMPACT SCORE
+        </text>
+        <text x="100" y="126" textAnchor="middle"
+          style={{ fontFamily: 'var(--font-mono)', fontSize: 9, fill: col, letterSpacing: '0.05em' }}>
+          / 100
+        </text>
+      </svg>
+    </div>
   );
 }
 
@@ -822,7 +851,7 @@ function QuestionBlock({ q, answers, setAnswer, onNext }: {
 
   const handleSingle = (v: string) => {
     setAnswer(q.id, v);
-    setTimeout(onNext, 220);
+    setTimeout(onNext, 160);
   };
   const handleMulti = (v: string) => {
     const cur = (val as string[]) ?? [];
@@ -887,8 +916,16 @@ function QuestionBlock({ q, answers, setAnswer, onNext }: {
             ))}
           </div>
           <button onClick={onNext} disabled={!isAnswered}
-            className="btn-primary" style={{ marginTop: 24, opacity: isAnswered ? 1 : 0.4 }}>
-            Continue →
+            style={{
+              marginTop: 20, background: 'none', border: 'none',
+              cursor: isAnswered ? 'pointer' : 'default',
+              fontFamily: 'var(--font-mono)', fontSize: 12,
+              color: isAnswered ? 'var(--accent-primary)' : 'var(--text-muted)',
+              letterSpacing: '0.04em', padding: 0,
+              opacity: isAnswered ? 1 : 0.4,
+              transition: 'color 150ms ease, opacity 150ms ease',
+            }}>
+            Next →
           </button>
         </>
       )}
@@ -927,8 +964,13 @@ function QuestionBlock({ q, answers, setAnswer, onNext }: {
           <input type="range" min={0} max={100} value={sliderVal}
             className="quiz-slider"
             onChange={e => setAnswer(q.id, parseInt(e.target.value, 10))} />
-          <button onClick={onNext} className="btn-primary" style={{ marginTop: 24 }}>
-            Continue →
+          <button onClick={onNext}
+            style={{
+              marginTop: 20, background: 'none', border: 'none', cursor: 'pointer',
+              fontFamily: 'var(--font-mono)', fontSize: 12,
+              color: 'var(--accent-primary)', letterSpacing: '0.04em', padding: 0,
+            }}>
+            Next →
           </button>
         </div>
       )}
@@ -951,12 +993,37 @@ function QuestionBlock({ q, answers, setAnswer, onNext }: {
             onFocus={e => { e.target.style.borderColor = 'var(--accent-primary)'; }}
             onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; }}
           />
-          <button onClick={onNext} className="btn-primary" style={{ marginTop: 16 }}>
-            {val ? 'Continue →' : 'Skip →'}
+          <button onClick={onNext}
+            style={{
+              marginTop: 16, background: 'none', border: 'none', cursor: 'pointer',
+              fontFamily: 'var(--font-mono)', fontSize: 12,
+              color: 'var(--accent-primary)', letterSpacing: '0.04em', padding: 0,
+            }}>
+            {val ? 'Next →' : 'Skip →'}
           </button>
         </>
       )}
     </div>
+  );
+}
+
+/* ─── Share Button ──────────────────────────────────────────────────────────── */
+
+function ShareButton({ score, fieldName }: { score: number; fieldName: string }) {
+  const [copied, setCopied] = useState(false);
+  const handleShare = async () => {
+    try {
+      await navigator.clipboard.writeText(
+        `I scored ${score}/100 on the AI disruption quiz for ${fieldName}. Find yours: aightai.in/quiz`
+      );
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch { /* clipboard unavailable */ }
+  };
+  return (
+    <button onClick={handleShare} className="btn-ghost" style={{ fontSize: 13 }}>
+      {copied ? 'Copied ✓' : 'Share your score →'}
+    </button>
   );
 }
 
@@ -1339,7 +1406,7 @@ function ReportScreen({ result, field, answers, onRetake }: {
         {/* CTAs */}
         <div style={{
           display: 'flex', gap: 14, flexWrap: 'wrap', alignItems: 'center',
-          paddingTop: 8, ...sectionStyle, transitionDelay: '540ms',
+          paddingTop: 8, ...sectionStyle, transitionDelay: '480ms',
         }}>
           <Link href={`/learn/paths/${field.slug}`} className="btn-primary">
             Explore your field guide →
@@ -1350,16 +1417,24 @@ function ReportScreen({ result, field, answers, onRetake }: {
           <Link href="/learn" className="btn-ghost">
             Start learning
           </Link>
+        </div>
+
+        {/* Share + retake */}
+        <div style={{
+          display: 'flex', gap: 20, flexWrap: 'wrap', alignItems: 'center',
+          paddingTop: 16, ...sectionStyle, transitionDelay: '600ms',
+        }}>
+          <ShareButton score={score} fieldName={field.field} />
           <button onClick={onRetake} style={{
             background: 'none', border: 'none', cursor: 'pointer',
-            fontFamily: 'var(--font-ui)', fontSize: 13,
-            color: 'var(--text-muted)', padding: '8px 0',
+            fontFamily: 'var(--font-mono)', fontSize: 12,
+            color: 'var(--text-muted)', padding: 0, letterSpacing: '0.03em',
             transition: 'color 150ms ease',
           }}
             onMouseEnter={e => { (e.target as HTMLElement).style.color = 'var(--text-primary)'; }}
             onMouseLeave={e => { (e.target as HTMLElement).style.color = 'var(--text-muted)'; }}
           >
-            Retake quiz
+            Start over
           </button>
         </div>
       </div>
@@ -1518,19 +1593,22 @@ function IntroScreen({ onStart }: { onStart: () => void }) {
 
 /* ─── Main Page ─────────────────────────────────────────────────────────────── */
 
-export default function QuizPage() {
-  const [screen, setScreen]         = useState<Screen>('intro');
-  const [sectionIdx, setSectionIdx] = useState(0);
+function QuizPageInner({ preFieldSlug }: { preFieldSlug: string | null }) {
+  const validPreField   = preFieldSlug && FIELDS.some(f => f.slug === preFieldSlug) ? preFieldSlug : null;
+
+  const [screen, setScreen]           = useState<Screen>(validPreField ? 'quiz' : 'intro');
+  const [sectionIdx, setSectionIdx]   = useState(validPreField ? 1 : 0);
   const [questionIdx, setQuestionIdx] = useState(0);
-  const [answers, setAnswers]       = useState<Answers>({});
-  const [visible, setVisible]       = useState(true);
-  const [result, setResult]         = useState<ScoreResult | null>(null);
+  const [answers, setAnswers]         = useState<Answers>(validPreField ? { field: validPreField } : {});
+  const [visible, setVisible]         = useState(true);
+  const [result, setResult]           = useState<ScoreResult | null>(null);
+  const quizContainerRef              = useRef<HTMLDivElement>(null);
 
   const fieldSlug = answers.field as string | undefined;
 
   const sections: Section[] = useMemo(() => {
-    const group  = getFieldGroup(fieldSlug ?? '');
-    const s4     = DOMAIN[group] ?? DOMAIN.default;
+    const group = getFieldGroup(fieldSlug ?? '');
+    const s4    = DOMAIN[group] ?? DOMAIN.default;
     return [S1, S2, S3, s4, S5, S6];
   }, [fieldSlug]);
 
@@ -1544,7 +1622,13 @@ export default function QuizPage() {
 
   function navigate(fn: () => void) {
     setVisible(false);
-    setTimeout(() => { fn(); setVisible(true); }, 160);
+    setTimeout(() => {
+      fn();
+      setVisible(true);
+      requestAnimationFrame(() => {
+        quizContainerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }, 200);
   }
 
   function advance() {
@@ -1555,14 +1639,11 @@ export default function QuizPage() {
         setSectionIdx(s => s + 1);
         setQuestionIdx(0);
       } else {
-        // Final question answered — go to calculating
         setScreen('calculating');
         const field = FIELDS.find(f => f.slug === fieldSlug) ?? FIELDS[0];
         const r = computeScore(answers, field);
         setResult(r);
-        setTimeout(() => {
-          setScreen('report');
-        }, 2800);
+        setTimeout(() => setScreen('report'), 2800);
       }
     });
   }
@@ -1594,6 +1675,8 @@ export default function QuizPage() {
   }
 
   const answeredCount = Object.keys(answers).length;
+  // Show "← Change field" when field was injected via URL and user is still in early sections
+  const showChangeField = validPreField !== null && sectionIdx >= 1 && sectionIdx <= 2;
 
   return (
     <div style={{ minHeight: '100vh' }}>
@@ -1637,12 +1720,29 @@ export default function QuizPage() {
       </div>
 
       {/* Question area */}
-      <div style={{
+      <div ref={quizContainerRef} style={{
         maxWidth: 740, margin: '0 auto',
         padding: '52px clamp(20px, 5vw, 48px) 80px',
+        scrollMarginTop: 120,
       }}>
         {/* Section header */}
         <div style={{ marginBottom: 40 }}>
+          {showChangeField && (
+            <button
+              onClick={() => { setSectionIdx(0); setQuestionIdx(0); }}
+              style={{
+                background: 'none', border: 'none', cursor: 'pointer',
+                fontFamily: 'var(--font-mono)', fontSize: 11,
+                color: 'var(--text-muted)', padding: '0 0 14px',
+                letterSpacing: '0.04em', display: 'block',
+                transition: 'color 150ms ease',
+              }}
+              onMouseEnter={e => { (e.target as HTMLElement).style.color = 'var(--accent-primary)'; }}
+              onMouseLeave={e => { (e.target as HTMLElement).style.color = 'var(--text-muted)'; }}
+            >
+              ← Change field
+            </button>
+          )}
           <p style={{
             fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.14em',
             textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: 6,
@@ -1660,8 +1760,10 @@ export default function QuizPage() {
         {/* Question card — fades on navigation */}
         <div style={{
           opacity: visible ? 1 : 0,
-          transform: visible ? 'translateY(0)' : 'translateY(10px)',
-          transition: 'opacity 160ms ease, transform 160ms ease',
+          transform: visible ? 'translateY(0)' : 'translateY(-8px)',
+          transition: visible
+            ? 'opacity 300ms ease 100ms, transform 300ms ease 100ms'
+            : 'opacity 200ms ease, transform 200ms ease',
         }}>
           <div style={{
             padding: '32px 36px', borderRadius: 14,
@@ -1699,5 +1801,18 @@ export default function QuizPage() {
         }
       `}</style>
     </div>
+  );
+}
+
+function QuizPageWrapper() {
+  const searchParams = useSearchParams();
+  return <QuizPageInner preFieldSlug={searchParams.get('field')} />;
+}
+
+export default function QuizPage() {
+  return (
+    <Suspense fallback={null}>
+      <QuizPageWrapper />
+    </Suspense>
   );
 }

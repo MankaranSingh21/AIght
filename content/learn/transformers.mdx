@@ -39,6 +39,8 @@ def self_attention(query, keys, values, scale):
 
 ---
 
+<AttentionViz />
+
 ## Why this was a significant change
 
 The previous generation of models processed text sequentially, which meant that relating a word near the end of a paragraph to a word at the beginning required threading through every intermediate step. Information degraded over distance. Long documents were hard.

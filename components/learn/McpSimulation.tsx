@@ -103,10 +103,10 @@ export default function McpSimulation() {
   return (
     <div
       style={{
-        background: 'var(--bg-elevated)',
-        border: '1px solid var(--border-default)',
+        background: 'var(--bg-surface)',
+        border: '1px solid var(--border-subtle)',
         borderRadius: 'var(--radius-xl)',
-        padding: 'var(--space-8)',
+        padding: 'var(--space-10)',
         margin: 'var(--space-10) 0',
       }}
     >
@@ -121,7 +121,7 @@ export default function McpSimulation() {
           marginBottom: 'var(--space-4)',
         }}
       >
-        INTERACTIVE — connect tools to the AI
+        ◉ INTERACTIVE
       </p>
 
       {/* Diagram */}

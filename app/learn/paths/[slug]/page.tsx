@@ -4,7 +4,6 @@ import Link from "next/link";
 import fields from "@/content/paths/fields.json";
 import FieldBackground from "@/components/learn/FieldBackground";
 import AugmentationDiagram from "@/components/learn/AugmentationDiagram";
-import FieldImpactQuiz from "@/components/learn/FieldImpactQuiz";
 
 type Difficulty = "Easy" | "Medium" | "Hard";
 
@@ -95,12 +94,9 @@ export default async function PathPage({
           </div>
 
           <div style={{ display: 'flex', gap: 14, alignItems: 'center', flexWrap: 'wrap', marginTop: 40 }}>
-            <FieldImpactQuiz
-              fieldName={field.field}
-              impactData={field.impact_data}
-              concepts={field.concepts}
-              tools={field.tools}
-            />
+            <Link href={`/learn/paths/quiz?field=${field.slug}`} className="btn-primary">
+              Start your path →
+            </Link>
             <span style={{ fontFamily: 'var(--font-ui)', fontSize: 13, color: 'rgba(245,239,224,0.35)' }}>
               See your personal disruption score in 2 minutes
             </span>
@@ -201,13 +197,9 @@ export default async function PathPage({
               <p style={{ fontFamily: 'var(--font-editorial)', fontSize: 13, color: 'rgba(245,239,224,0.50)', lineHeight: 1.65, marginBottom: 16 }}>
                 Three questions. An honest score tailored to your specific role.
               </p>
-              <FieldImpactQuiz
-                fieldName={field.field}
-                impactData={field.impact_data}
-                concepts={field.concepts}
-                tools={field.tools}
-                triggerLabel="Take the quiz →"
-              />
+              <Link href={`/learn/paths/quiz?field=${field.slug}`} className="btn-primary" style={{ display: 'block', textAlign: 'center' }}>
+                Take the quiz →
+              </Link>
             </div>
 
             {/* Tools to know */}
@@ -259,13 +251,9 @@ export default async function PathPage({
             </p>
           </div>
           <div style={{ display: 'flex', gap: 14, alignItems: 'center', flexWrap: 'wrap' }}>
-            <FieldImpactQuiz
-              fieldName={field.field}
-              impactData={field.impact_data}
-              concepts={field.concepts}
-              tools={field.tools}
-              triggerLabel="Run AI impact quiz →"
-            />
+            <Link href={`/learn/paths/quiz?field=${field.slug}`} className="btn-primary">
+              Run AI impact quiz →
+            </Link>
             <Link href="/learn/paths" className="btn-ghost">Explore other fields</Link>
           </div>
         </div>
