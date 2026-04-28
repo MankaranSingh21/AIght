@@ -3,7 +3,7 @@ import { updateSession } from "@/utils/supabase/middleware";
 
 // Routes that require an authenticated session.
 // Any pathname that starts with one of these prefixes is protected.
-const PROTECTED_PREFIXES = ["/roadmaps", "/admin"];
+const PROTECTED_PREFIXES = ["/admin"];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
