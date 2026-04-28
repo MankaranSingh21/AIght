@@ -226,7 +226,7 @@
     color: var(--text-primary);
   }
 
-  /* ── Tool card ─────────────────────────────────────────────── */
+  /* ── Tool card — key-cap style ─────────────────────────────── */
   .tool-card {
     position: relative;
     display: flex;
@@ -235,12 +235,14 @@
     border-radius: var(--radius-lg);
     border: 1px solid var(--border-subtle);
     background: var(--bg-surface);
-    transition: border-color 200ms ease, transform 200ms ease;
+    /* shadow and transform driven by inline JS for key-press fidelity */
     height: 100%;
+    cursor: pointer;
   }
-  .tool-card:hover {
-    border-color: var(--border-emphasis);
-    transform: translateY(-2px);
+
+  @keyframes panelReveal {
+    from { opacity: 0; transform: translateX(6px); }
+    to   { opacity: 1; transform: translateX(0); }
   }
 
   /* ── Glass card ────────────────────────────────────────────── */

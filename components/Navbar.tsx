@@ -90,7 +90,9 @@ export default function Navbar() {
         {/* Nav links */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
           {NAV_LINKS.map(({ href, label }) => {
-            const active = pathname === href || pathname.startsWith(href + '/');
+            const active = href === '/learn'
+              ? pathname === '/learn' || (pathname.startsWith('/learn/') && !pathname.startsWith('/learn/paths/quiz'))
+              : pathname === href || pathname.startsWith(href + '/');
             return (
               <Link
                 key={href}
@@ -157,20 +159,6 @@ export default function Navbar() {
               minWidth:    0,
             }}
           />
-          {!searchVal && (
-            <span style={{
-              fontFamily:  'var(--font-mono)',
-              fontSize:    10,
-              color:       'rgba(245,239,224,0.20)',
-              padding:     '1px 5px',
-              borderRadius: 4,
-              border:      '1px solid rgba(245,239,224,0.12)',
-              lineHeight:  1.4,
-              flexShrink:  0,
-            }}>
-              ⌘K
-            </span>
-          )}
         </form>
 
       </div>

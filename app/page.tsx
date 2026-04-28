@@ -24,6 +24,7 @@ function mapTool(t: Partial<Tool>): ToolCardProps {
     url:        t.url ?? null,
     tags:       t.tags ?? [],
     created_at: t.created_at ?? undefined,
+    accent:     t.accent ?? null,
   };
 }
 
@@ -220,7 +221,7 @@ async function ToolsSection() {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("tools")
-    .select("slug, name, vibe_description, category, url, tags, created_at")
+    .select("slug, name, vibe_description, category, url, tags, created_at, accent")
     .order("created_at", { ascending: false })
     .limit(6);
 

@@ -2,8 +2,11 @@
 
 import { useState, useMemo, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
+import dynamic from "next/dynamic";
 import ToolCard from "./ToolCard";
 import type { ToolCardProps } from "./ToolCard";
+
+const ToolsPCBCanvas = dynamic(() => import("./ToolsPCBCanvas"), { ssr: false });
 
 const CATEGORIES = [
   { id: "all",          label: "All tools"    },
@@ -69,6 +72,13 @@ export default function ToolsClient({ tools, initialCategory = "all" }: Props) {
 
       {/* Search — max-width 560px, centered */}
       <div style={{ maxWidth: 560, margin: "0 auto 28px", position: "relative" }}>
+        <svg
+          width="14" height="14" viewBox="0 0 16 16" fill="none"
+          style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", pointerEvents: "none", flexShrink: 0 }}
+        >
+          <circle cx="7" cy="7" r="5.5" stroke="rgba(245,239,224,0.30)" strokeWidth="1.5" />
+          <path d="M11.5 11.5L14 14" stroke="rgba(245,239,224,0.30)" strokeWidth="1.5" strokeLinecap="round" />
+        </svg>
         <input
           ref={searchRef}
           type="search"
@@ -77,10 +87,10 @@ export default function ToolsClient({ tools, initialCategory = "all" }: Props) {
           onChange={(e) => setInputQuery(e.target.value)}
           style={{
             width: "100%",
-            paddingLeft: 16,
-            paddingRight: inputQuery ? 40 : 16,
-            paddingTop: 12,
-            paddingBottom: 12,
+            paddingLeft: 36,
+            paddingRight: inputQuery ? 40 : 52,
+            paddingTop: 13,
+            paddingBottom: 13,
             borderRadius: "var(--radius-md)",
             fontFamily: "var(--font-ui)",
             fontSize: "var(--text-sm)",
@@ -88,13 +98,19 @@ export default function ToolsClient({ tools, initialCategory = "all" }: Props) {
             background: "var(--bg-elevated)",
             border: "1px solid var(--border-default)",
             outline: "none",
-            transition: "border-color 150ms ease",
+            transition: "border-color 150ms ease, box-shadow 150ms ease",
             boxSizing: "border-box",
           }}
-          onFocus={(e) => (e.currentTarget.style.borderColor = "var(--border-emphasis)")}
-          onBlur={(e)  => (e.currentTarget.style.borderColor = "var(--border-default)")}
+          onFocus={(e) => {
+            e.currentTarget.style.borderColor = "var(--border-emphasis)";
+            e.currentTarget.style.boxShadow = "0 0 0 3px var(--accent-primary-glow)";
+          }}
+          onBlur={(e) => {
+            e.currentTarget.style.borderColor = "var(--border-default)";
+            e.currentTarget.style.boxShadow = "none";
+          }}
         />
-        {inputQuery && (
+        {inputQuery ? (
           <button
             onClick={() => setInputQuery("")}
             aria-label="Clear search"
@@ -115,6 +131,23 @@ export default function ToolsClient({ tools, initialCategory = "all" }: Props) {
           >
             ×
           </button>
+        ) : (
+          <span style={{
+            position: "absolute",
+            right: 12,
+            top: "50%",
+            transform: "translateY(-50%)",
+            fontFamily: "var(--font-mono)",
+            fontSize: 11,
+            color: "rgba(245,239,224,0.18)",
+            padding: "2px 6px",
+            borderRadius: 4,
+            border: "1px solid rgba(245,239,224,0.10)",
+            lineHeight: 1.4,
+            pointerEvents: "none",
+          }}>
+            /
+          </span>
         )}
       </div>
 
@@ -171,7 +204,9 @@ export default function ToolsClient({ tools, initialCategory = "all" }: Props) {
         </div>
       </div>
 
-      {/* Grid or empty state */}
+      {/* Grid or empty state — PCB canvas sits behind the grid */}
+      <div style={{ position: "relative" }}>
+        <ToolsPCBCanvas />
       {isEmpty ? (
         <div
           style={{
@@ -219,8 +254,8 @@ export default function ToolsClient({ tools, initialCategory = "all" }: Props) {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-            gap: "var(--space-6)",
+            gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))",
+            gap: "var(--space-3)",
           }}
         >
           {sorted.map((tool) => (
@@ -228,6 +263,7 @@ export default function ToolsClient({ tools, initialCategory = "all" }: Props) {
           ))}
         </div>
       )}
+      </div>{/* end PCB wrapper */}
 
     </div>
   );

@@ -42,7 +42,7 @@ export default async function ToolsArchivePage() {
   const supabase = await createClient();
   const { data } = await supabase
     .from("tools")
-    .select("slug, name, vibe_description, category, url, tags, created_at, is_sponsored")
+    .select("slug, name, vibe_description, category, url, tags, created_at, is_sponsored, accent")
     .order("is_sponsored", { ascending: false })
     .order("created_at", { ascending: false });
 
@@ -55,6 +55,7 @@ export default async function ToolsArchivePage() {
     tags:         t.tags ?? [],
     created_at:   t.created_at ?? undefined,
     is_sponsored: t.is_sponsored ?? null,
+    accent:       t.accent ?? null,
   }));
 
   return (
@@ -96,7 +97,7 @@ export default async function ToolsArchivePage() {
               margin: 0,
             }}>
               {tools.length} tools and counting. No sponsored rankings. No hustle energy.
-              Tap any card to explore, click to open the detail.
+              Browse the archive. Click any card for the full breakdown.
             </p>
           </div>
 
