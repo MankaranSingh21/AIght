@@ -1,0 +1,88 @@
+---
+title: "Multimodal Models"
+tagline: "When AI learned to see, listen, and read at the same time"
+readTime: "7 min read"
+slug: "multimodal"
+---
+
+For the first few years of the modern AI era, language models were exactly that — language models. Text in, text out. You typed. They wrote.
+
+Then came the obvious question: why should intelligence be constrained to one channel? Humans don't experience the world through words alone. We see, hear, read, and speak in a single integrated stream of cognition. A doctor reading an X-ray and a doctor reading a patient note are using the same underlying capacity. Why should AI be different?
+
+Multimodal models are the answer to that question. They accept multiple types of input — images, audio, video, documents — and can reason across all of them within a single response. GPT-4o, Gemini 1.5, and Claude 3's vision capabilities are all multimodal systems.
+
+---
+
+## How images get into a language model
+
+A language model processes tokens. Images are not tokens. Something has to translate.
+
+The standard approach uses a separate vision encoder — typically a Vision Transformer (ViT) — to convert an image into a series of numeric embeddings. These image embeddings are then projected into the same vector space as text tokens, so the language model sees them as "visual tokens" sitting alongside the regular word tokens.
+
+```
+Image pixels
+    ↓
+Vision encoder (ViT)
+    ↓
+Image patch embeddings
+    ↓
+Projection layer (same dimensionality as text tokens)
+    ↓
+Language model processes [text tokens] + [image tokens] together
+    ↓
+Text output
+```
+
+This architecture — vision encoder plus language model, bridged by a projection layer — is called a Vision-Language Model (VLM). It's how most current multimodal systems are built.
+
+The key insight is that images get divided into patches (typically 14×14 or 16×16 pixels each), each patch becomes a token, and those tokens are processed by the attention mechanism alongside the text. The model learns, through training on image-text pairs, what these visual tokens mean in relation to language.
+
+---
+
+## What multimodal models can actually do
+
+The capabilities that emerge are wider than "describe this image."
+
+**Visual reasoning.** "Here is a graph of sales data. What trend is most concerning?" The model isn't just reading a caption — it's interpreting a chart, relating the visual information to a question, and producing analysis.
+
+**Document understanding.** A photographed invoice, a handwritten note, a PDF with complex tables — multimodal models can read layouts that pure OCR struggles with, because they understand context, not just character sequences.
+
+**Code from screenshots.** "Here's a screenshot of a UI I want to build. Write the HTML and CSS." This is a pattern developers actually use.
+
+**Visual QA in domain contexts.** Medical imaging analysis, satellite image interpretation, quality control in manufacturing — in each case, the model is answering questions about what it sees.
+
+**Interleaved content.** You can pass a document that mixes images and text — a research paper with figures, for example — and the model processes them together rather than treating text and images as separate inputs.
+
+<Pullquote>Multimodal isn't just "also accepts images." It's a single reasoning system where visual and textual information inform each other in the same pass.</Pullquote>
+
+---
+
+## Audio and video
+
+Image understanding was the first frontier. Audio and video are harder.
+
+**Audio** requires its own encoder — similar in concept to the vision encoder, but processing spectrograms or waveforms. GPT-4o and Gemini can accept audio directly. Models trained on audio can transcribe, identify speakers, describe ambient sounds, and reason about tone. The voice-to-voice capabilities in GPT-4o use this: audio in, model processes it as tokens, audio out via a separate synthesis step.
+
+**Video** is audio and images multiplied by time. A one-minute video at 24 frames per second is 1,440 images. Even with aggressive frame sampling, this is token-intensive. Current approaches include: sampling a fixed number of frames across the video, encoding only keyframes, and using specialized temporal models that understand motion rather than treating each frame independently. Gemini 1.5's million-token context was partly motivated by the need to handle long video.
+
+---
+
+## The limitations that matter in practice
+
+**Resolution limits.** Vision models process images at a fixed resolution or in fixed-size patches. Very high-resolution images — technical drawings, satellite imagery — often get downsampled, which can lose detail. Some models tile the image into multiple chunks to preserve more detail at the cost of more tokens.
+
+**Not truly integrated perception.** Current multimodal models process visual inputs through a pipeline, not as a unified perceptual system. The visual information influences the language output, but it doesn't update the model's weights — it's inference-time conditioning, not genuine sight.
+
+**Hallucination extends to images.** Models can confidently describe things in an image that aren't there, especially under ambiguity or at image edges. The same pattern-completion tendency that makes text models hallucinate facts makes vision models hallucinate details.
+
+**Video understanding is immature.** Describing a single frame and describing what happened over thirty seconds are very different tasks. Most models are better at the former. Temporal reasoning — understanding cause, effect, and sequence in video — remains a weak point.
+
+---
+
+## Why it matters beyond the demos
+
+The interesting question isn't "can the model read an image" — it clearly can. The interesting question is what becomes possible when the bottleneck of "translation into text" disappears.
+
+A doctor can now hand a model an X-ray and a patient history simultaneously. A lawyer can process a contract's scanned pages without converting them first. A factory engineer can point a camera at equipment and describe a problem in natural language. The interface to AI stops requiring that the user first convert their world into words.
+
+That shift — from text interface to perceptual interface — is still early. The models are capable. The workflows that use these capabilities well are being figured out now.

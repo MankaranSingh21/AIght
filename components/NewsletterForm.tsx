@@ -2,12 +2,14 @@
 
 import { useState, useTransition } from "react";
 import { subscribeNewsletter } from "@/app/actions/newsletter";
+import { usePostHog } from "posthog-js/react";
 
 export default function NewsletterForm() {
   const [email, setEmail]           = useState("");
   const [done, setDone]             = useState(false);
   const [error, setError]           = useState("");
   const [isPending, startTransition] = useTransition();
+  const posthog                      = usePostHog();
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -19,6 +21,7 @@ export default function NewsletterForm() {
       } else {
         setDone(true);
         setEmail("");
+        posthog?.capture("newsletter_subscribe");
       }
     });
   }

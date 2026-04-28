@@ -42,17 +42,19 @@ export default async function ToolsArchivePage() {
   const supabase = await createClient();
   const { data } = await supabase
     .from("tools")
-    .select("slug, name, vibe_description, category, url, tags, created_at")
+    .select("slug, name, vibe_description, category, url, tags, created_at, is_sponsored")
+    .order("is_sponsored", { ascending: false })
     .order("created_at", { ascending: false });
 
   const tools: ToolCardProps[] = (data ?? []).map((t: Partial<Tool>) => ({
-    slug:       t.slug ?? "",
-    name:       t.name ?? "",
-    tagline:    t.vibe_description ?? "",
-    category:   t.category ?? "AI Tool",
-    url:        t.url ?? null,
-    tags:       t.tags ?? [],
-    created_at: t.created_at ?? undefined,
+    slug:         t.slug ?? "",
+    name:         t.name ?? "",
+    tagline:      t.vibe_description ?? "",
+    category:     t.category ?? "AI Tool",
+    url:          t.url ?? null,
+    tags:         t.tags ?? [],
+    created_at:   t.created_at ?? undefined,
+    is_sponsored: t.is_sponsored ?? null,
   }));
 
   return (

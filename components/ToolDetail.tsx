@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { usePostHog } from "posthog-js/react";
 
 export type UseCase = {
   audience: string;
@@ -78,6 +79,17 @@ function UseCaseCard({ useCase }: { useCase: UseCase }) {
 }
 
 export default function ToolDetail({ tool }: { tool: ToolDetailData }) {
+  const posthog = usePostHog();
+
+  function trackOutbound() {
+    posthog?.capture("tool_outbound_click", {
+      tool_slug: tool.slug,
+      tool_name: tool.name,
+      tool_category: tool.category,
+      tool_pricing: tool.pricing,
+    });
+  }
+
   return (
     <main style={{ minHeight: '100vh', background: 'var(--bg-base)' }}>
       <div style={{ maxWidth: 900, margin: '0 auto', padding: '40px 48px 96px', display: 'flex', flexDirection: 'column', gap: 64 }}>
@@ -220,6 +232,7 @@ export default function ToolDetail({ tool }: { tool: ToolDetailData }) {
               rel="noopener noreferrer"
               className="btn-ghost"
               style={{ fontSize: 14 }}
+              onClick={trackOutbound}
             >
               Visit {tool.name} ↗
             </a>

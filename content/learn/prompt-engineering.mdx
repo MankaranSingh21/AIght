@@ -1,0 +1,122 @@
+---
+title: "Prompt Engineering"
+tagline: "The craft of talking to a model that will take you exactly as literally as it decides to"
+readTime: "7 min read"
+slug: "prompt-engineering"
+---
+
+There's a running joke in AI circles: prompt engineering is the discipline of figuring out that you should have said "please."
+
+It's funnier because it's half true. Language models are genuinely sensitive to small changes in phrasing. Ask "what are the pros and cons of X?" and you get a balanced list. Ask "why is X a good idea?" and the model leans toward agreement. Same knowledge, different frame, different answer.
+
+Prompt engineering is the practice of deliberately structuring what you give a model to reliably get the output you want. It sounds simple. It's mostly craft.
+
+---
+
+## Why prompts matter more than most people expect
+
+A language model is a conditional probability machine. Given the tokens you've provided, it predicts the next most likely token. Over and over. Everything you include in the prompt — every word, every structure, every example — shifts those probabilities.
+
+This has a few implications that surprise people when they first encounter them.
+
+**Framing shapes content.** "Summarise this article" and "summarise this article for a skeptical senior executive who has thirty seconds" will produce different outputs. Not because the model is performing — but because different contexts activate different patterns of text the model has seen in training.
+
+**Order affects emphasis.** Information near the start and end of a long context tends to receive more weight in the output. Burying your main constraint in the middle of a long prompt is genuinely risky.
+
+**Specificity is usually better.** "Write a good email" will produce something generic. "Write a three-sentence follow-up email from a consultant to a client who missed a deadline, professional but warm, no passive aggression" produces something usable.
+
+---
+
+## The main techniques
+
+### Zero-shot
+
+You describe the task and let the model handle it without examples. Works well for straightforward tasks that fit patterns in the training data.
+
+```
+Classify the sentiment of this review as Positive, Negative, or Neutral.
+
+Review: "The delivery was fast but the packaging was damaged."
+```
+
+No examples needed. The model has seen thousands of sentiment classification tasks in training.
+
+### Few-shot
+
+You include examples of the input/output format before your actual query. This is the single highest-leverage technique for getting consistent formatting and style.
+
+```
+Classify the sentiment of each review.
+
+Review: "Exactly what I ordered, very happy."
+Sentiment: Positive
+
+Review: "Arrived two weeks late, customer service was unhelpful."
+Sentiment: Negative
+
+Review: "It works fine, nothing special."
+Sentiment: Neutral
+
+Review: "The delivery was fast but the packaging was damaged."
+Sentiment:
+```
+
+Three or four examples are usually enough. The model extrapolates the pattern.
+
+### Chain-of-thought
+
+You instruct the model to work through its reasoning before giving a final answer. This is especially effective for problems that require logical steps — math, multi-step reasoning, code debugging.
+
+```
+Solve the following problem step by step, showing your work.
+
+A train travels 120km in 1.5 hours. How long would it take to travel 200km 
+at the same speed?
+```
+
+The "step by step" instruction isn't decoration. It changes what the model produces. By generating intermediate reasoning tokens, the model effectively gives itself more surface area to get the right answer — working the problem rather than pattern-matching to an answer shape.
+
+<Pullquote>Saying "think step by step" is not a hack. It's a structural change — you're asking the model to generate intermediate computation before committing to a conclusion.</Pullquote>
+
+### System prompts
+
+Most production AI applications separate the user's input from the application developer's instructions. The system prompt sets the model's persona, constraints, and defaults before the user says anything.
+
+```
+You are a technical writer helping developers document their APIs. 
+Your explanations are precise and assume familiarity with REST concepts. 
+You never speculate about implementation details you can't see. 
+When you're uncertain, you say so.
+```
+
+System prompts are how "ChatGPT for X" products work. The underlying model is the same. What changes is what it's been told to be.
+
+---
+
+## What makes a prompt reliable
+
+The best prompts have a few qualities in common.
+
+**A clear role or context.** Not just "you are an assistant" but "you are an assistant helping a first-year medical student understand pharmacology concepts." The more specific the frame, the more consistent the output.
+
+**Explicit constraints.** If length matters, say so. If format matters, say so. If tone matters, say so. "Under 150 words" is more reliable than "concise."
+
+**One primary task.** Prompts that ask for too many things at once — "summarise this, identify gaps, suggest improvements, and rewrite the weakest section" — tend to produce output that does all four things poorly. Break complex tasks into steps.
+
+**Output specification.** If you want JSON, say "respond in JSON." If you want a list, ask for a list. Models can produce any format — they default to whatever is most common in their training data for that type of task.
+
+---
+
+## Where prompt engineering hits its limits
+
+Prompt engineering can shape how a model uses its knowledge. It can't create knowledge the model doesn't have. It can improve consistency, but not reliability on tasks that require precise factual recall — for that, you need retrieval (RAG) or fine-tuning.
+
+It also doesn't age well. A prompt optimized for one model version may produce notably different results on a newer version of the same model. Evaluating against a test set matters more than intuition about what "should" work.
+
+And there's something philosophically slippery about the whole endeavor: you're writing instructions for a system that will interpret those instructions through its own probabilistic lens. You can get much closer to your intent with careful prompting. You cannot fully specify it.
+
+---
+
+That gap between instruction and interpretation is not a bug. It's what makes these systems useful for open-ended tasks — they fill the gap with something plausible. Prompt engineering is the practice of making that filling more predictable.
+
+The models keep changing. The underlying skill — being precise about what you actually want — doesn't.

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { usePostHog } from "posthog-js/react";
 
 export type ToolCardProps = {
   slug: string;
@@ -11,6 +12,7 @@ export type ToolCardProps = {
   tags: string[];
   url?: string | null;
   created_at?: string;
+  is_sponsored?: boolean | null;
 };
 
 const STORAGE_KEY = "aight_bookmarks";
@@ -50,9 +52,11 @@ export default function ToolCard({
   category,
   tags,
   created_at,
+  is_sponsored,
 }: ToolCardProps) {
   const showNew = isNew(created_at);
   const [bookmarked, setBookmarked] = useState(false);
+  const posthog = usePostHog();
 
   useEffect(() => {
     setBookmarked(getBookmarks().includes(slug));
@@ -63,14 +67,42 @@ export default function ToolCard({
     e.stopPropagation();
     const next = toggleBookmark(slug);
     setBookmarked(next);
+    posthog?.capture(next ? "tool_bookmarked" : "tool_unbookmarked", {
+      tool_slug: slug,
+      tool_name: name,
+      tool_category: category,
+    });
   }
 
   return (
     <Link href={`/tool/${slug}`} style={{ textDecoration: "none", display: "block" }}>
       <div className="tool-card">
 
+        {/* Sponsored badge */}
+        {is_sponsored && (
+          <span
+            style={{
+              position: "absolute",
+              top: 12,
+              left: 12,
+              zIndex: 2,
+              fontFamily: "var(--font-mono)",
+              fontSize: 10,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              color: "var(--text-muted)",
+              background: "var(--bg-overlay)",
+              border: "1px solid var(--border-subtle)",
+              padding: "2px 8px",
+              borderRadius: "var(--radius-xs)",
+            }}
+          >
+            Sponsored
+          </span>
+        )}
+
         {/* New badge */}
-        {showNew && (
+        {showNew && !is_sponsored && (
           <span
             style={{
               position: "absolute",

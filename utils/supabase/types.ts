@@ -14,4 +14,5 @@ export type Tool = {
   learning_guide: string | null;
   related_concepts: string[];
   created_at: string;
+  is_sponsored: boolean | null;
 };

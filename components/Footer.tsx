@@ -10,6 +10,7 @@ const NAV_LINKS = [
   { href: "/signal",  label: "Signal"         },
   { href: "/about",   label: "About"          },
   { href: "/learn/paths/quiz", label: "Quiz"  },
+  { href: "/support", label: "Support"         },
   { href: "/privacy", label: "Privacy Policy" },
   { href: "/terms",   label: "Terms"          },
 ];

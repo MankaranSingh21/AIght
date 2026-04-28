@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo, useRef, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import QuizToolRecs from '@/components/QuizToolRecs';
+import { usePostHog } from 'posthog-js/react';
 import fieldsData from '@/content/paths/fields.json';
 
 /* ─── Types ─────────────────────────────────────────────────────────────────── */
@@ -1612,6 +1613,7 @@ function QuizPageInner({ preFieldSlug }: { preFieldSlug: string | null }) {
   const [visible, setVisible]         = useState(true);
   const [result, setResult]           = useState<ScoreResult | null>(null);
   const quizContainerRef              = useRef<HTMLDivElement>(null);
+  const posthog                        = usePostHog();
 
   const fieldSlug = answers.field as string | undefined;
 
@@ -1652,6 +1654,12 @@ function QuizPageInner({ preFieldSlug }: { preFieldSlug: string | null }) {
         const field = FIELDS.find(f => f.slug === fieldSlug) ?? FIELDS[0];
         const r = computeScore(answers, field);
         setResult(r);
+        posthog?.capture('quiz_completed', {
+          field_slug: field.slug,
+          field_name: field.field,
+          risk_score: r.score,
+          risk_category: r.category,
+        });
         setTimeout(() => setScreen('report'), 2800);
       }
     });
