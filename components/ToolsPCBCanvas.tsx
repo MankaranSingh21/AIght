@@ -233,7 +233,7 @@ export default function ToolsPCBCanvas() {
         camera={{ position: [0, 0, 10], zoom: 80 }}
         gl={{ antialias: false, alpha: true, powerPreference: 'low-power' }}
         dpr={[1, 1.5]}
-        style={{ width: '100%', height: '100%' }}
+        style={{ width: '100%', height: '100%', pointerEvents: 'none' }}
       >
         <PCBScene mouse={mouse} />
       </Canvas>

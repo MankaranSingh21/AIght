@@ -181,7 +181,7 @@ export default function ParticleCanvas() {
         camera={{ position: [0, 0, 10], zoom: 180 }}
         gl={{ antialias: false, alpha: true, powerPreference: 'low-power' }}
         dpr={[1, 2]}
-        style={{ width: '100%', height: '100%' }}
+        style={{ width: '100%', height: '100%', pointerEvents: 'none' }}
       >
         <AmbientField n={mobile ? N_MOBILE : N_DESKTOP} showLines={!mobile} />
       </Canvas>
