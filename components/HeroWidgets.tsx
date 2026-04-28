@@ -4,13 +4,14 @@ import { useState, useEffect } from 'react';
 
 interface MousePos { x: number; y: number; }
 
-const TOOLS = [
-  { name: 'Notion AI',       cat: 'Productivity', score: 94, risk: 'low'  as const },
-  { name: 'ElevenLabs',      cat: 'Audio AI',     score: 88, risk: 'high' as const },
-  { name: 'GitHub Copilot',  cat: 'Code',         score: 91, risk: 'low'  as const },
+export interface HeroTool { name: string; cat: string; }
+
+const FALLBACK_TOOLS: HeroTool[] = [
+  { name: 'Notion AI',      cat: 'Productivity' },
+  { name: 'ElevenLabs',     cat: 'Audio AI'     },
+  { name: 'GitHub Copilot', cat: 'Code'         },
 ];
 const FIELDS = ['Healthcare', 'Law & Legal', 'Engineering', 'Design', 'Education', 'Finance'];
-const RISK_COLOR = { low: '#AAFF4D', medium: '#F4AB1F', high: '#FF7070' } as const;
 
 // ── Glass card shell ──────────────────────────────────────────────────────────
 function Glass({
@@ -42,7 +43,7 @@ function Glass({
 }
 
 // ── Tool row inside trending card ─────────────────────────────────────────────
-function ToolRow({ t }: { t: typeof TOOLS[0] }) {
+function ToolRow({ t }: { t: HeroTool }) {
   const [hov, setHov] = useState(false);
   return (
     <div
@@ -71,13 +72,10 @@ function ToolRow({ t }: { t: typeof TOOLS[0] }) {
         {t.name.split(' ').map(w => w[0]).join('').slice(0, 2)}
       </div>
       <div style={{ flex: 1 }}>
-        <div style={{ fontFamily: 'var(--font-ui)', fontSize: 12, fontWeight: 600, color: '#F5EFE0' }}>{t.name}</div>
-        <div style={{ fontFamily: 'var(--font-ui)', fontSize: 9, color: 'rgba(245,239,224,0.4)', textTransform: 'uppercase', letterSpacing: '0.07em' }}>{t.cat}</div>
+        <div style={{ fontFamily: 'var(--font-ui)', fontSize: 12, fontWeight: 600, color: 'var(--text-primary)' }}>{t.name}</div>
+        <div style={{ fontFamily: 'var(--font-ui)', fontSize: 9, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.07em' }}>{t.cat}</div>
       </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-        <div style={{ width: 5, height: 5, borderRadius: '50%', background: RISK_COLOR[t.risk] }} />
-        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, fontWeight: 700, color: RISK_COLOR[t.risk] }}>{t.score}</span>
-      </div>
+      <div style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--accent-primary)', opacity: 0.7 }} />
     </div>
   );
 }
@@ -111,7 +109,8 @@ function FieldCycler() {
 }
 
 // ── Main HeroWidgets component ────────────────────────────────────────────────
-export default function HeroWidgets({ mouse }: { mouse: MousePos }) {
+export default function HeroWidgets({ mouse, tools }: { mouse: MousePos; tools?: HeroTool[] }) {
+  const displayTools = tools && tools.length > 0 ? tools : FALLBACK_TOOLS;
   const [shown, setShown] = useState<number[]>([]);
 
   useEffect(() => {
@@ -171,7 +170,7 @@ export default function HeroWidgets({ mouse }: { mouse: MousePos }) {
               <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: '#AAFF4D' }}>live</span>
             </div>
           </div>
-          {TOOLS.map(t => <ToolRow key={t.name} t={t} />)}
+          {displayTools.map(t => <ToolRow key={t.name} t={t} />)}
           <div style={{ marginTop: 12, paddingTop: 10, borderTop: '1px solid rgba(245,239,224,0.08)', display: 'flex', justifyContent: 'space-between' }}>
             <span style={{ fontFamily: 'var(--font-editorial)', fontSize: 11, color: 'rgba(245,239,224,0.4)', fontStyle: 'italic' }}>40+ tools indexed</span>
             <span style={{ fontFamily: 'var(--font-ui)', fontSize: 11, fontWeight: 600, color: '#AAFF4D', cursor: 'pointer' }}>All tools →</span>

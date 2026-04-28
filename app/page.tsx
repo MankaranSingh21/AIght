@@ -268,15 +268,28 @@ async function ToolsSection() {
 
 // ── Page ───────────────────────────────────────────────────────────────────────
 
-export default function Home() {
+export default async function Home() {
   const concepts = getAllConcepts().slice(0, 3);
+
+  // Fetch 3 newest tools for hero widget — passed as props so the hero
+  // shows real data instead of hardcoded placeholder names.
+  const supabase = await createClient();
+  const { data: heroData } = await supabase
+    .from("tools")
+    .select("name, category")
+    .order("created_at", { ascending: false })
+    .limit(3);
+  const heroTools = (heroData ?? []).map((t) => ({
+    name: t.name ?? "",
+    cat:  t.category ?? "AI Tool",
+  }));
 
   return (
     <>
       <main style={{ minHeight: "100vh", position: "relative", zIndex: 1 }}>
 
         {/* 1. Hero */}
-        <Hero />
+        <Hero heroTools={heroTools} />
 
         {/* Ticker strip */}
         <Ticker />

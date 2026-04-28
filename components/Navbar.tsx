@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 const NAV_LINKS = [
   { href: '/learn',  label: 'Learn'  },
@@ -12,14 +12,26 @@ const NAV_LINKS = [
 ];
 
 export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
-  const pathname = usePathname();
+  const [scrolled, setScrolled]       = useState(false);
+  const [searchVal, setSearchVal]     = useState('');
+  const [searchFocused, setFocused]   = useState(false);
+  const searchInputRef                = useRef<HTMLInputElement>(null);
+  const pathname                      = usePathname();
+  const router                        = useRouter();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  function handleSearchSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const q = searchVal.trim();
+    router.push(q ? `/tools?q=${encodeURIComponent(q)}` : '/tools');
+    setSearchVal('');
+    searchInputRef.current?.blur();
+  }
 
   return (
     <nav style={{
@@ -107,46 +119,59 @@ export default function Navbar() {
           })}
         </div>
 
-        {/* Search pill */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 8,
-          padding: '7px 14px',
-          borderRadius: 9999,
-          background: 'rgba(245,239,224,0.04)',
-          border: '1px solid rgba(245,239,224,0.09)',
-          width: 168,
-          cursor: 'text',
-          transition: 'border-color 150ms ease',
-        }}
-        onMouseEnter={e => (e.currentTarget.style.borderColor = 'rgba(245,239,224,0.16)')}
-        onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(245,239,224,0.09)')}
+        {/* Search pill — functional search input */}
+        <form
+          onSubmit={handleSearchSubmit}
+          style={{
+            display:      'flex',
+            alignItems:   'center',
+            gap:          8,
+            padding:      '7px 14px',
+            borderRadius: 9999,
+            background:   'rgba(245,239,224,0.04)',
+            border:       `1px solid ${searchFocused ? 'rgba(170,255,77,0.28)' : 'rgba(245,239,224,0.09)'}`,
+            width:        168,
+            transition:   'border-color 150ms ease',
+          }}
         >
           <svg width="12" height="12" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0 }}>
-            <circle cx="7" cy="7" r="5.5" stroke="rgba(245,239,224,0.30)" strokeWidth="1.5" />
-            <path d="M11.5 11.5L14 14" stroke="rgba(245,239,224,0.30)" strokeWidth="1.5" strokeLinecap="round" />
+            <circle cx="7" cy="7" r="5.5" stroke={searchFocused ? 'rgba(170,255,77,0.55)' : 'rgba(245,239,224,0.30)'} strokeWidth="1.5" />
+            <path d="M11.5 11.5L14 14" stroke={searchFocused ? 'rgba(170,255,77,0.55)' : 'rgba(245,239,224,0.30)'} strokeWidth="1.5" strokeLinecap="round" />
           </svg>
-          <span style={{
-            fontFamily: 'var(--font-ui)',
-            fontSize: 12,
-            color: 'rgba(245,239,224,0.25)',
-            flex: 1,
-          }}>
-            Search tools…
-          </span>
-          <span style={{
-            fontFamily: 'var(--font-mono)',
-            fontSize: 10,
-            color: 'rgba(245,239,224,0.20)',
-            padding: '1px 5px',
-            borderRadius: 4,
-            border: '1px solid rgba(245,239,224,0.12)',
-            lineHeight: 1.4,
-          }}>
-            ⌘K
-          </span>
-        </div>
+          <input
+            ref={searchInputRef}
+            type="text"
+            value={searchVal}
+            onChange={e => setSearchVal(e.target.value)}
+            onFocus={() => setFocused(true)}
+            onBlur={() => setFocused(false)}
+            placeholder="Search tools…"
+            style={{
+              fontFamily:  'var(--font-ui)',
+              fontSize:    12,
+              color:       'var(--text-primary)',
+              background:  'transparent',
+              border:      'none',
+              outline:     'none',
+              flex:        1,
+              minWidth:    0,
+            }}
+          />
+          {!searchVal && (
+            <span style={{
+              fontFamily:  'var(--font-mono)',
+              fontSize:    10,
+              color:       'rgba(245,239,224,0.20)',
+              padding:     '1px 5px',
+              borderRadius: 4,
+              border:      '1px solid rgba(245,239,224,0.12)',
+              lineHeight:  1.4,
+              flexShrink:  0,
+            }}>
+              ⌘K
+            </span>
+          )}
+        </form>
 
       </div>
     </nav>

@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
+import type { HeroTool } from './HeroWidgets';
 
 const HeroWidgets = dynamic(() => import('./HeroWidgets'), { ssr: false });
 
@@ -14,7 +15,7 @@ const STATS = [
   { num: '0',    label: 'Affiliate links' },
 ];
 
-export default function Hero() {
+export default function Hero({ heroTools }: { heroTools?: HeroTool[] }) {
   const [mouse, setMouse] = useState<MousePos>({ x: 0.5, y: 0.5 });
   const [revealed, setRevealed] = useState(false);
 
@@ -189,7 +190,7 @@ export default function Hero() {
 
         {/* RIGHT — floating widgets */}
         <div style={{ position: 'relative' }}>
-          <HeroWidgets mouse={mouse} />
+          <HeroWidgets mouse={mouse} tools={heroTools} />
         </div>
       </div>
     </section>

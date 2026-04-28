@@ -1,5 +1,4 @@
 import ToolCard from "@/components/ToolCard";
-import ButtonShowcase from "./ButtonShowcase";
 
 // This is a Server Component — the interactive showcases are isolated as Client Components below.
 
@@ -85,12 +84,6 @@ export default function DesignSystemPage() {
             <Swatch name="Neon Lime" hex="#AAFF4D" className="bg-[#AAFF4D]" />
             <Swatch name="Neon Teal" hex="#00FFD1" className="bg-[#00FFD1]" />
           </div>
-        </section>
-
-        {/* ── Buttons ── */}
-        <section>
-          <SectionLabel>03 — Buttons</SectionLabel>
-          <ButtonShowcase />
         </section>
 
         {/* ── Tool Cards ── */}

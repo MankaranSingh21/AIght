@@ -15,39 +15,97 @@ export default function Error({
   }, [error]);
 
   return (
-    <div className="min-h-[calc(100vh-56px)] bg-parchment flex items-center justify-center px-6 relative overflow-hidden">
-      {/* Ambient blobs */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-moss-200/20 rounded-full blur-3xl -translate-y-1/2 pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 w-72 h-72 bg-amber-200/15 rounded-full blur-3xl translate-y-1/3 pointer-events-none" />
+    <div
+      style={{
+        minHeight: "calc(100vh - 64px)",
+        background: "var(--bg-base)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "24px",
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
+      {/* Ambient glow */}
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: "25%",
+          width: 384,
+          height: 384,
+          background: "var(--accent-primary-glow)",
+          borderRadius: "50%",
+          filter: "blur(80px)",
+          transform: "translateY(-50%)",
+          pointerEvents: "none",
+        }}
+      />
 
-      <div className="relative z-10 text-center max-w-sm space-y-6">
-        <p className="font-serif text-7xl font-bold text-espresso/15 select-none">✦</p>
+      <div style={{ position: "relative", zIndex: 10, textAlign: "center", maxWidth: 360 }}>
+        <p
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: "var(--text-4xl)",
+            color: "var(--accent-primary)",
+            opacity: 0.15,
+            marginBottom: 24,
+            userSelect: "none",
+          }}
+        >
+          ✦
+        </p>
 
-        <div className="space-y-3">
-          <h2 className="font-serif text-3xl font-bold text-espresso leading-snug">
+        <div style={{ marginBottom: 24 }}>
+          <h2
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "var(--text-3xl)",
+              fontWeight: 600,
+              color: "var(--text-primary)",
+              letterSpacing: "-0.02em",
+              lineHeight: 1.2,
+              marginBottom: 12,
+            }}
+          >
             Something broke.
           </h2>
-          <p className="font-body text-sm text-forest/60 leading-relaxed">
+          <p
+            style={{
+              fontFamily: "var(--font-ui)",
+              fontSize: "var(--text-sm)",
+              color: "var(--text-secondary)",
+              lineHeight: 1.7,
+            }}
+          >
             An unexpected error occurred. We caught it before it could do any
-            real damage — but we&rsquo;d still like to know about it.
+            real damage.
           </p>
           {error.digest && (
-            <p className="font-body text-2xs text-forest/30 uppercase tracking-widest">
+            <p
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "var(--text-xs)",
+                color: "var(--text-muted)",
+                textTransform: "uppercase",
+                letterSpacing: "0.1em",
+                marginTop: 8,
+              }}
+            >
               Error ID: {error.digest}
             </p>
           )}
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
-          <button
-            onClick={reset}
-            className="font-body text-sm font-semibold px-5 py-2.5 rounded-xl bg-moss-500 hover:bg-moss-600 text-parchment transition-colors duration-150"
-          >
+        <div style={{ display: "flex", flexDirection: "column", gap: 12, alignItems: "center" }}>
+          <button onClick={reset} className="btn-primary">
             Try again
           </button>
           <Link
             href="/"
-            className="font-body text-sm font-semibold px-5 py-2.5 rounded-xl border border-moss-200 hover:bg-moss-50 text-forest transition-colors duration-150"
+            className="btn-ghost"
+            style={{ textDecoration: "none" }}
           >
             ← Back home
           </Link>

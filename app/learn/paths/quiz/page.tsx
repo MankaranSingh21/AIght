@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo, useRef, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import QuizToolRecs from '@/components/QuizToolRecs';
 import fieldsData from '@/content/paths/fields.json';
 
 /* ─── Types ─────────────────────────────────────────────────────────────────── */
@@ -1403,10 +1404,18 @@ function ReportScreen({ result, field, answers, onRetake }: {
           </p>
         </blockquote>
 
+        {/* Tool recommendations based on responsibilities */}
+        <div style={{ ...sectionStyle, transitionDelay: '520ms' }}>
+          <QuizToolRecs
+            responsibilities={Array.isArray(answers.responsibilities) ? answers.responsibilities as string[] : []}
+            riskCategory={category}
+          />
+        </div>
+
         {/* CTAs */}
         <div style={{
           display: 'flex', gap: 14, flexWrap: 'wrap', alignItems: 'center',
-          paddingTop: 8, ...sectionStyle, transitionDelay: '480ms',
+          paddingTop: 8, ...sectionStyle, transitionDelay: '560ms',
         }}>
           <Link href={`/learn/paths/${field.slug}`} className="btn-primary">
             Explore your field guide →

@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useState, useEffect } from "react";
 
 export type ToolCardProps = {
   slug: string;
@@ -9,6 +12,29 @@ export type ToolCardProps = {
   url?: string | null;
   created_at?: string;
 };
+
+const STORAGE_KEY = "aight_bookmarks";
+
+function getBookmarks(): string[] {
+  if (typeof window === "undefined") return [];
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "[]");
+  } catch {
+    return [];
+  }
+}
+
+function toggleBookmark(slug: string): boolean {
+  const current = getBookmarks();
+  const idx = current.indexOf(slug);
+  if (idx === -1) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify([...current, slug]));
+    return true;
+  }
+  current.splice(idx, 1);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(current));
+  return false;
+}
 
 function isNew(created_at?: string): boolean {
   if (!created_at) return false;
@@ -26,6 +52,18 @@ export default function ToolCard({
   created_at,
 }: ToolCardProps) {
   const showNew = isNew(created_at);
+  const [bookmarked, setBookmarked] = useState(false);
+
+  useEffect(() => {
+    setBookmarked(getBookmarks().includes(slug));
+  }, [slug]);
+
+  function handleBookmark(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    const next = toggleBookmark(slug);
+    setBookmarked(next);
+  }
 
   return (
     <Link href={`/tool/${slug}`} style={{ textDecoration: "none", display: "block" }}>
@@ -156,36 +194,67 @@ export default function ToolCard({
           )}
         </div>
 
-        {/* Live badge */}
+        {/* Footer: Live badge + Bookmark */}
         <div
           style={{
             padding: "var(--space-3) var(--space-6) var(--space-4)",
             display: "flex",
             alignItems: "center",
-            gap: "var(--space-2)",
+            justifyContent: "space-between",
             borderTop: "1px solid var(--border-subtle)",
           }}
         >
-          <span
+          <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
+            <span
+              style={{
+                width: 6,
+                height: 6,
+                borderRadius: "50%",
+                background: "var(--accent-primary)",
+                flexShrink: 0,
+              }}
+            />
+            <span
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "var(--text-xs)",
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                color: "var(--text-muted)",
+              }}
+            >
+              Live
+            </span>
+          </div>
+
+          <button
+            onClick={handleBookmark}
+            aria-label={bookmarked ? "Remove bookmark" : "Bookmark this tool"}
+            title={bookmarked ? "Remove bookmark" : "Save for later"}
             style={{
-              width: 6,
-              height: 6,
-              borderRadius: "50%",
-              background: "var(--accent-primary)",
-              flexShrink: 0,
-            }}
-          />
-          <span
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "var(--text-xs)",
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-              color: "var(--text-muted)",
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              padding: "2px 4px",
+              color: bookmarked ? "var(--accent-primary)" : "var(--text-muted)",
+              transition: "color 150ms ease",
+              lineHeight: 1,
+              display: "flex",
+              alignItems: "center",
             }}
           >
-            Live
-          </span>
+            {bookmarked ? (
+              // Filled bookmark
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M3 2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v12.5a.5.5 0 0 1-.777.416L8 12.101l-4.223 2.815A.5.5 0 0 1 3 14.5V2z"/>
+              </svg>
+            ) : (
+              // Outline bookmark
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M3 2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v12.5a.5.5 0 0 1-.777.416L8 12.101l-4.223 2.815A.5.5 0 0 1 3 14.5V2z"/>
+              </svg>
+            )}
+          </button>
         </div>
 
       </div>

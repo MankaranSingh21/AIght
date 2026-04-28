@@ -13,6 +13,10 @@ export default function GlowCursor() {
     // Only activate on pointer-fine devices (mouse)
     if (!window.matchMedia('(pointer: fine)').matches) return;
 
+    const css = getComputedStyle(document.documentElement);
+    const ringIdle  = css.getPropertyValue('--cursor-ring').trim();
+    const ringHover = css.getPropertyValue('--cursor-ring-hover').trim();
+
     const onMove = (e: MouseEvent) => {
       tgt.current = { x: e.clientX, y: e.clientY };
     };
@@ -40,13 +44,13 @@ export default function GlowCursor() {
       if (!ringRef.current) return;
       ringRef.current.style.width  = '44px';
       ringRef.current.style.height = '44px';
-      ringRef.current.style.borderColor = 'rgba(170,255,77,0.45)';
+      ringRef.current.style.borderColor = ringHover;
     };
     const onLeave = () => {
       if (!ringRef.current) return;
       ringRef.current.style.width  = '36px';
       ringRef.current.style.height = '36px';
-      ringRef.current.style.borderColor = 'rgba(170,255,77,0.20)';
+      ringRef.current.style.borderColor = ringIdle;
     };
 
     const attach = () => {
@@ -81,8 +85,8 @@ export default function GlowCursor() {
           width: 36,
           height: 36,
           borderRadius: '50%',
-          border: '1px solid rgba(170,255,77,0.20)',
-          background: 'radial-gradient(circle, rgba(170,255,77,0.04) 0%, transparent 70%)',
+          border: '1px solid var(--cursor-ring)',
+          background: 'radial-gradient(circle, var(--cursor-bg) 0%, transparent 70%)',
           transition: 'width 200ms ease, height 200ms ease, border-color 200ms ease',
           willChange: 'transform',
         }}
@@ -100,8 +104,8 @@ export default function GlowCursor() {
           width: 6,
           height: 6,
           borderRadius: '50%',
-          background: '#AAFF4D',
-          boxShadow: '0 0 8px rgba(170,255,77,0.90)',
+          background: 'var(--cursor-dot)',
+          boxShadow: '0 0 8px var(--cursor-dot-glow)',
           willChange: 'transform',
         }}
         aria-hidden="true"

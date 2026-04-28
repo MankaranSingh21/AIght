@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { compileMDX } from "next-mdx-remote/rsc";
 import { getAllConcepts, getConceptSource } from "@/lib/learn";
+import { createServiceClient } from "@/utils/supabase/service";
 import RagSimulation from "@/components/learn/RagSimulation";
 import McpSimulation from "@/components/learn/McpSimulation";
 import EmbeddingsViz from "@/components/learn/EmbeddingsViz";
@@ -203,6 +204,16 @@ export default async function LearnConceptPage({ params }: Props) {
     options: { parseFrontmatter: true },
   });
 
+  // Fetch tools that list this concept in their related_concepts array
+  const supabase = createServiceClient();
+  const { data: relatedToolsData } = await supabase
+    .from("tools")
+    .select("slug, name, vibe_description, category")
+    .contains("related_concepts", [slug])
+    .order("created_at", { ascending: false })
+    .limit(4);
+  const relatedTools = relatedToolsData ?? [];
+
   return (
     <main style={{ minHeight: "100vh", background: "var(--bg-base)" }}>
       <ReadingProgressBar />
@@ -293,6 +304,115 @@ export default async function LearnConceptPage({ params }: Props) {
 
         {/* MDX body */}
         <article className="learn-article">{content}</article>
+
+        {/* Related tools */}
+        {relatedTools.length > 0 && (
+          <section
+            style={{
+              marginTop: 64,
+              paddingTop: 40,
+              borderTop: "1px solid rgba(245,239,224,0.07)",
+            }}
+          >
+            <p
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: 10,
+                letterSpacing: "0.14em",
+                textTransform: "uppercase",
+                color: "rgba(245,239,224,0.30)",
+                marginBottom: 20,
+              }}
+            >
+              Tools that use this
+            </p>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 1,
+              }}
+            >
+              {relatedTools.map((tool) => (
+                <Link
+                  key={tool.slug}
+                  href={`/tool/${tool.slug}`}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    padding: "14px 0",
+                    borderBottom: "1px solid rgba(245,239,224,0.06)",
+                    textDecoration: "none",
+                    gap: 16,
+                  }}
+                  className="group"
+                >
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <span
+                      style={{
+                        fontFamily: "var(--font-ui)",
+                        fontSize: 15,
+                        fontWeight: 500,
+                        color: "var(--text-primary)",
+                        display: "block",
+                        marginBottom: 2,
+                        transition: "color 150ms ease",
+                      }}
+                      className="group-hover:text-accent"
+                    >
+                      {tool.name}
+                    </span>
+                    {tool.vibe_description && (
+                      <span
+                        style={{
+                          fontFamily: "var(--font-editorial)",
+                          fontStyle: "italic",
+                          fontSize: 13,
+                          color: "var(--text-secondary)",
+                          display: "block",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {tool.vibe_description}
+                      </span>
+                    )}
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
+                    <span className="tag">{tool.category ?? "AI Tool"}</span>
+                    <span
+                      style={{
+                        fontFamily: "var(--font-mono)",
+                        fontSize: 12,
+                        color: "var(--accent-primary)",
+                        opacity: 0,
+                        transition: "opacity 150ms ease",
+                      }}
+                      className="group-hover:opacity-100"
+                    >
+                      →
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+            <div style={{ marginTop: 20 }}>
+              <Link
+                href={`/tools?q=${encodeURIComponent(slug)}`}
+                style={{
+                  fontFamily: "var(--font-ui)",
+                  fontSize: 13,
+                  color: "var(--accent-primary)",
+                  textDecoration: "none",
+                }}
+              >
+                See all tools using {frontmatter.title} →
+              </Link>
+            </div>
+          </section>
+        )}
 
         {/* Footer nav */}
         <div

@@ -153,5 +153,36 @@ export default async function ToolPage({ params }: Props) {
     related_concepts: tool.related_concepts ?? [],
   };
 
-  return <ToolDetail tool={toolDetail} />;
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.aightai.in";
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": tool.name,
+    "description": tool.vibe_description ?? undefined,
+    "applicationCategory": tool.category ?? "AI Tool",
+    "url": tool.url ?? undefined,
+    "offers": {
+      "@type": "Offer",
+      "price": tool.is_free ? "0" : undefined,
+      "priceCurrency": tool.is_free ? "USD" : undefined,
+      "availability": "https://schema.org/OnlineOnly",
+    },
+    "featureList": (tool.tags ?? []).join(", ") || undefined,
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "AIght",
+      "url": SITE_URL,
+    },
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <ToolDetail tool={toolDetail} />
+    </>
+  );
 }

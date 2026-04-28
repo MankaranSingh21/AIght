@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
+import { useSearchParams } from "next/navigation";
 import ToolCard from "./ToolCard";
 import type { ToolCardProps } from "./ToolCard";
 
@@ -22,10 +23,19 @@ type Props = {
 };
 
 export default function ToolsClient({ tools, initialCategory = "all" }: Props) {
-  const [inputQuery, setInputQuery]         = useState("");
-  const [query, setQuery]                   = useState("");
+  const searchParams    = useSearchParams();
+  const initialQ        = searchParams.get("q") ?? "";
+  const searchRef       = useRef<HTMLInputElement>(null);
+
+  const [inputQuery, setInputQuery]         = useState(initialQ);
+  const [query, setQuery]                   = useState(initialQ);
   const [activeCategory, setActiveCategory] = useState(initialCategory);
   const [sort, setSort]                     = useState<SortOrder>("recent");
+
+  // Auto-focus search input when arriving from navbar search
+  useEffect(() => {
+    if (initialQ && searchRef.current) searchRef.current.focus();
+  }, [initialQ]);
 
   // Debounce search 200ms
   useEffect(() => {
@@ -60,6 +70,7 @@ export default function ToolsClient({ tools, initialCategory = "all" }: Props) {
       {/* Search — max-width 560px, centered */}
       <div style={{ maxWidth: 560, margin: "0 auto 28px", position: "relative" }}>
         <input
+          ref={searchRef}
           type="search"
           placeholder="Search tools, tags, or categories…"
           value={inputQuery}

@@ -3,7 +3,6 @@ import { Plus_Jakarta_Sans, Fraunces, Lora, JetBrains_Mono } from "next/font/goo
 import Navbar from "@/components/Navbar";
 import GlobalEffects from "@/components/GlobalEffects";
 import PostHogProvider from "./providers/PostHogProvider";
-import { Toaster } from "sonner";
 import "./globals.css";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -102,18 +101,6 @@ export default function RootLayout({
           <GlobalEffects />
           <Navbar />
           {children}
-          <Toaster
-            position="bottom-right"
-            toastOptions={{
-              classNames: {
-                toast:       "!bg-elevated !border !border-subtle !rounded-lg !font-sans !text-primary",
-                title:       "!font-sans !font-semibold !text-primary !text-sm",
-                description: "!font-sans !text-secondary !text-xs",
-                success:     "!border-emphasis",
-                error:       "!border-danger",
-              },
-            }}
-          />
         </PostHogProvider>
       </body>
     </html>
