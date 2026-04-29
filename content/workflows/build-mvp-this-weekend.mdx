@@ -1,0 +1,53 @@
+---
+title: "Build and ship an MVP this weekend"
+tagline: "One person. No team. A working web app by Sunday evening. Here's the actual sequence."
+readTime: "6 min read"
+outcome: "Ship a working, deployed web app in 48 hours"
+tool_slugs: ["claude", "lovable", "bolt-new", "cursor"]
+slug: "build-mvp-this-weekend"
+---
+
+The question of "can one person ship a product in a weekend" stopped being interesting two years ago. The answer is yes. The more useful question now is: which tools, in which order, with what kind of scope control, produce something you're not embarrassed to put in front of users on Monday?
+
+This workflow isn't about vibe-coding your way to a broken prototype. It's about the specific sequence that produces a working, deployed, testable thing — not just a screenshot.
+
+---
+
+## Before you start — Define the scope ruthlessly
+
+The most common reason weekend projects fail isn't technical. It's scope. The MVP that ships does one thing well. The one that doesn't ship tried to do five things adequately.
+
+Write down the one sentence a user would use to describe your app to a friend. If you can't do that, you're not ready to build. Come back when you can.
+
+## Step 1 — Architecture and spec with Claude
+
+Start with a conversation, not a codebase. Describe what you're building to Claude and ask it to help you define the data model, the API surface, and the technology choices. Push back on its suggestions. Make it explain why it chose a particular stack.
+
+What you're producing is a one-page technical spec: what the app does, what data it stores, how it's structured, what the three or four key screens are. This takes an hour and saves you from refactoring at 11pm on Saturday.
+
+<ToolMention slug="claude" />
+
+## Step 2 — Generate the scaffold with Lovable or Bolt
+
+Once you have the spec, use a generative app builder to create the initial scaffold. Both Lovable and Bolt are good at this step — pick based on whether you want more visual control (Lovable) or faster raw output (Bolt). Paste your spec directly into the prompt.
+
+Don't try to make it perfect. You're trying to get to working UI with the right structure. Most of what the generator produces, you'll keep. Some of it, you'll throw away. That's fine.
+
+<ToolMention slug="lovable" />
+<ToolMention slug="bolt-new" />
+
+## Step 3 — Refine and debug with Cursor
+
+Once you have a working scaffold, switch to Cursor for the refinement pass. The AI-aware editor is the right tool for the work of actually making it do what you said it would. Fix the logic bugs, wire up real data, handle the edge cases the generator ignored.
+
+Cursor's inline suggestions are fastest when you write a comment describing what you want, then let it complete the implementation. The iteration loop — describe, generate, test, fix — is where most of your Sunday goes.
+
+<ToolMention slug="cursor" />
+
+---
+
+## What you've shipped by Sunday evening
+
+A working web app, deployed, with real functionality that you've tested by hand. Not a mockup. Not a Loom demo of something that barely works. Something with a URL you can share.
+
+The last step — the one most weekend projects skip — is user feedback before Monday. Send the URL to three people who would actually use it. The feedback you get in the first hour after shipping is more valuable than anything you'll build in the second weekend.

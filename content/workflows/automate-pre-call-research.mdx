@@ -1,0 +1,44 @@
+---
+title: "Automate your pre-call research"
+tagline: "Thirty minutes of manual googling, compressed into three. Here's the workflow."
+readTime: "4 min read"
+outcome: "Arrive at every sales or partner call actually prepared"
+tool_slugs: ["perplexity", "claude", "n8n"]
+slug: "automate-pre-call-research"
+---
+
+Pre-call research is one of those tasks that's obviously worth doing and chronically under-done, because the cost of doing it manually is too high relative to the number of calls most people take. You know you should read the company's recent press, understand the person's background, and have a hypothesis about what they actually need. You also know that when the calendar is full, those thirty minutes don't exist.
+
+This workflow automates the mechanical parts. The insight — what to say when you're on the call — is still yours.
+
+---
+
+## Step 1 — Build the research trigger in n8n
+
+Set up an n8n workflow that watches your calendar for new meetings. When a new event is created with an external participant, it triggers an automatic research job. The automation extracts the company domain from the participant's email, plus any context in the calendar invite.
+
+You can run this without code. n8n's visual builder handles the logic. The output at this stage is a clean set of inputs — company name, website, LinkedIn URL if you have it — piped into the next step.
+
+<ToolMention slug="n8n" />
+
+## Step 2 — Research with Perplexity
+
+Feed the company information to Perplexity via its API (or, if you're doing this manually, just open a Perplexity session and paste the context). Ask it specifically: recent news, funding rounds, product launches, publicly stated priorities, and any press about the person you're meeting.
+
+The output is a sourced synthesis. It won't find everything — private companies especially are thin on coverage — but for anything with a public footprint, you get in two minutes what used to take twenty.
+
+<ToolMention slug="perplexity" />
+
+## Step 3 — Draft the briefing with Claude
+
+Paste the Perplexity research into Claude with a prompt: "You're preparing me for a 30-minute call with [name] from [company]. Based on this research, write a one-page briefing: their likely priorities, what they'd find valuable in this conversation, three good opening questions, and any risks or awkward topics to be aware of."
+
+The briefing lands in your inbox an hour before the call. You read it in three minutes. You walk in with context.
+
+<ToolMention slug="claude" />
+
+---
+
+## What this costs vs. what it returns
+
+Once the n8n workflow is set up, the marginal cost per call is near zero. You'll spend more time reading the briefing than the system spent producing it. The ROI isn't just the calls where the research obviously helps — it's also the calls where you might have skipped it and been visibly underprepared. Those matter more than people acknowledge.
