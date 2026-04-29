@@ -1,6 +1,18 @@
 // Mirrors the public.tools table in schema.sql
 export type ToolStatus = 'stable' | 'beta' | 'rising' | 'deprecated';
 
+export type PricingDetail = {
+  free_tier: string;
+  cliff: string;
+  paid_monthly: string;
+  last_verified: string;
+};
+
+export type AlternativeEntry = {
+  slug: string;
+  reason: string;
+};
+
 export type Tool = {
   id: string;
   name: string;
@@ -20,4 +32,6 @@ export type Tool = {
   weaknesses: string[];
   status: ToolStatus;
   deprecated_reason: string | null;
+  pricing_detail: PricingDetail | null;
+  alternatives: AlternativeEntry[];
 };

@@ -10,6 +10,19 @@ export type UseCase = {
   description: string;
 };
 
+export type PricingDetail = {
+  free_tier: string;
+  cliff: string;
+  paid_monthly: string;
+  last_verified: string;
+};
+
+export type Alternative = {
+  slug: string;
+  name: string;
+  reason: string;
+};
+
 export type ToolDetailData = {
   name: string;
   slug: string;
@@ -25,6 +38,8 @@ export type ToolDetailData = {
   weaknesses?: string[];
   status?: "stable" | "beta" | "rising" | "deprecated";
   deprecated_reason?: string | null;
+  pricing_detail?: PricingDetail | null;
+  alternatives?: Alternative[];
 };
 
 function getYouTubeEmbedUrl(url: string): string {
@@ -285,6 +300,84 @@ export default function ToolDetail({ tool }: { tool: ToolDetailData }) {
                   style={{ textDecoration: 'none' }}
                 >
                   {concept} →
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Pricing Reality */}
+        {tool.pricing_detail && (
+          <section style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+            <div>
+              <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(244,171,31,0.70)', marginBottom: 8 }}>
+                what "free" actually means
+              </p>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 32, fontWeight: 700, color: '#F5EFE0', letterSpacing: '-0.02em', margin: 0 }}>
+                Pricing, honestly
+              </h2>
+            </div>
+            <div style={{ borderRadius: 14, border: '1px solid rgba(244,171,31,0.12)', background: 'rgba(244,171,31,0.03)', overflow: 'hidden' }}>
+              {/* Free tier */}
+              <div style={{ padding: '20px 24px', borderBottom: '1px solid rgba(244,171,31,0.10)' }}>
+                <p style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.10em', textTransform: 'uppercase', color: '#AAFF4D', marginBottom: 8 }}>
+                  Free tier
+                </p>
+                <p style={{ fontFamily: 'var(--font-editorial)', fontSize: 15, color: 'rgba(245,239,224,0.65)', lineHeight: 1.7, margin: 0 }}>
+                  {tool.pricing_detail.free_tier}
+                </p>
+              </div>
+              {/* The cliff */}
+              <div style={{ padding: '20px 24px', borderBottom: '1px solid rgba(244,171,31,0.10)', background: 'rgba(244,171,31,0.04)' }}>
+                <p style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.10em', textTransform: 'uppercase', color: 'var(--accent-warm)', marginBottom: 8 }}>
+                  Where it cliffs
+                </p>
+                <p style={{ fontFamily: 'var(--font-editorial)', fontSize: 15, color: 'rgba(245,239,224,0.65)', lineHeight: 1.7, margin: 0 }}>
+                  {tool.pricing_detail.cliff}
+                </p>
+              </div>
+              {/* Paid cost */}
+              <div style={{ padding: '20px 24px' }}>
+                <p style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.10em', textTransform: 'uppercase', color: 'rgba(245,239,224,0.35)', marginBottom: 8 }}>
+                  What paid actually costs
+                </p>
+                <p style={{ fontFamily: 'var(--font-editorial)', fontSize: 15, color: 'rgba(245,239,224,0.65)', lineHeight: 1.7, margin: 0 }}>
+                  {tool.pricing_detail.paid_monthly}
+                </p>
+              </div>
+            </div>
+            <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'rgba(245,239,224,0.25)', letterSpacing: '0.06em' }}>
+              Verified {tool.pricing_detail.last_verified}
+            </p>
+          </section>
+        )}
+
+        {/* Alternatives */}
+        {tool.alternatives && tool.alternatives.length > 0 && (
+          <section style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+            <div>
+              <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(245,239,224,0.30)', marginBottom: 8 }}>
+                if this doesn't click
+              </p>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 32, fontWeight: 700, color: '#F5EFE0', letterSpacing: '-0.02em', margin: 0 }}>
+                Also worth trying
+              </h2>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+              {tool.alternatives.map((alt) => (
+                <Link
+                  key={alt.slug}
+                  href={`/tool/${alt.slug}`}
+                  style={{ textDecoration: 'none', display: 'block', padding: '18px 0', borderBottom: '1px solid rgba(245,239,224,0.06)' }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, flexWrap: 'wrap' }}>
+                    <span style={{ fontFamily: 'var(--font-ui)', fontSize: 15, fontWeight: 600, color: 'var(--accent-primary)', flexShrink: 0 }}>
+                      {alt.name}
+                    </span>
+                    <span style={{ fontFamily: 'var(--font-editorial)', fontStyle: 'italic', fontSize: 14, color: 'rgba(245,239,224,0.50)', lineHeight: 1.65 }}>
+                      {alt.reason}
+                    </span>
+                  </div>
                 </Link>
               ))}
             </div>

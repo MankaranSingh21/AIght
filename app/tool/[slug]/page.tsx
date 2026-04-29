@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { createClient } from "@/utils/supabase/server";
-import ToolDetail, { type ToolDetailData, type UseCase } from "@/components/ToolDetail";
-import type { Tool } from "@/utils/supabase/types";
+import ToolDetail, { type ToolDetailData, type UseCase, type Alternative } from "@/components/ToolDetail";
+import type { Tool, AlternativeEntry } from "@/utils/supabase/types";
 
 // ── Use-case copy keyed by category ───────────────────────────────────────
 // Editorial content — lives here until we add a use_cases table.
@@ -139,6 +139,21 @@ export default async function ToolPage({ params }: Props) {
 
   const tool = t as Tool;
 
+  // Secondary query: resolve alternative tool names from slugs
+  const altEntries: AlternativeEntry[] = tool.alternatives ?? [];
+  const altSlugs = altEntries.map((a) => a.slug);
+  let resolvedAlts: Alternative[] = [];
+  if (altSlugs.length > 0) {
+    const { data: altData } = await supabase
+      .from("tools")
+      .select("slug, name")
+      .in("slug", altSlugs);
+    const nameMap = new Map((altData ?? []).map((r: { slug: string; name: string }) => [r.slug, r.name]));
+    resolvedAlts = altEntries
+      .filter((a) => nameMap.has(a.slug))
+      .map((a) => ({ slug: a.slug, name: nameMap.get(a.slug)!, reason: a.reason }));
+  }
+
   const toolDetail: ToolDetailData = {
     name: tool.name,
     slug: tool.slug,
@@ -154,6 +169,8 @@ export default async function ToolPage({ params }: Props) {
     weaknesses: tool.weaknesses ?? [],
     status: tool.status ?? "stable",
     deprecated_reason: tool.deprecated_reason ?? null,
+    pricing_detail: tool.pricing_detail ?? null,
+    alternatives: resolvedAlts,
   };
 
   const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.aightai.in";
