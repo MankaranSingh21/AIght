@@ -3,7 +3,7 @@ import Link from "next/link";
 import ConceptCarouselClient from "@/components/learn/ConceptCarouselClient";
 
 export const metadata: Metadata = {
-  title: "Learn — AIght",
+  title: "Learn",
   description: "Honest explanations of the concepts behind the AI tools you use.",
 };
 

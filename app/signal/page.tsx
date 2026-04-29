@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getSignalPosts } from "@/lib/signal";
+import { getSignalPosts, EDITOR_POSTS } from "@/lib/signal";
 
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "Signal — AIght",
+  title: "Signal",
   description: "Editorial on AI tools, models, and what they actually mean.",
 };
 
@@ -30,34 +30,63 @@ export default async function SignalPage() {
           </p>
         </div>
 
-        {/* Post list */}
-        {posts.length === 0 ? (
-          <p style={{ fontFamily: 'var(--font-ui)', fontSize: 14, color: 'rgba(245,239,224,0.35)', padding: '48px 0' }}>
-            Nothing published yet. Check back soon.
+        {/* From the editor — always-visible editorial posts */}
+        <div style={{ marginBottom: 56 }}>
+          <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(245,239,224,0.30)', marginBottom: 0 }}>
+            From the editor
           </p>
-        ) : (
-          <div>
-            {posts.map((post, i) => (
-              <a
-                key={i}
-                href={post.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ display: 'block', padding: '32px 0', borderBottom: '1px solid rgba(245,239,224,0.07)', textDecoration: 'none' }}
-                className="group"
-              >
-                <p style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'rgba(245,239,224,0.30)', marginBottom: 8 }}>{post.date}</p>
-                <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontWeight: 700, color: '#F5EFE0', letterSpacing: '-0.02em', lineHeight: 1.3, marginBottom: 10, transition: 'color 150ms ease' }}
-                  className="group-hover:text-accent group-hover:translate-x-0.5">
-                  {post.title}
-                </h2>
-                <p style={{ fontFamily: 'var(--font-editorial)', fontSize: 14, color: 'rgba(245,239,224,0.50)', lineHeight: 1.7, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                  {post.excerpt}
-                </p>
-              </a>
-            ))}
-          </div>
-        )}
+          {EDITOR_POSTS.map((post, i) => (
+            <Link
+              key={i}
+              href={post.href}
+              style={{ display: 'block', padding: '28px 0', borderBottom: '1px solid rgba(245,239,224,0.07)', textDecoration: 'none' }}
+              className="group"
+            >
+              <p style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'rgba(245,239,224,0.30)', marginBottom: 8 }}>{post.date}</p>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontWeight: 700, color: '#F5EFE0', letterSpacing: '-0.02em', lineHeight: 1.3, marginBottom: 10, transition: 'color 150ms ease' }}
+                className="group-hover:text-accent">
+                {post.title}
+              </h2>
+              <p style={{ fontFamily: 'var(--font-editorial)', fontSize: 14, color: 'rgba(245,239,224,0.50)', lineHeight: 1.7, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                {post.excerpt}
+              </p>
+            </Link>
+          ))}
+        </div>
+
+        {/* RSS feed posts */}
+        <div style={{ marginBottom: 32 }}>
+          <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(245,239,224,0.30)', marginBottom: 0 }}>
+            From Medium
+          </p>
+          {posts.length === 0 ? (
+            <p style={{ fontFamily: 'var(--font-ui)', fontSize: 14, color: 'rgba(245,239,224,0.35)', padding: '48px 0' }}>
+              Nothing published yet. Check back soon.
+            </p>
+          ) : (
+            <div>
+              {posts.map((post, i) => (
+                <a
+                  key={i}
+                  href={post.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ display: 'block', padding: '28px 0', borderBottom: '1px solid rgba(245,239,224,0.07)', textDecoration: 'none' }}
+                  className="group"
+                >
+                  <p style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'rgba(245,239,224,0.30)', marginBottom: 8 }}>{post.date}</p>
+                  <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontWeight: 700, color: '#F5EFE0', letterSpacing: '-0.02em', lineHeight: 1.3, marginBottom: 10, transition: 'color 150ms ease' }}
+                    className="group-hover:text-accent">
+                    {post.title}
+                  </h2>
+                  <p style={{ fontFamily: 'var(--font-editorial)', fontSize: 14, color: 'rgba(245,239,224,0.50)', lineHeight: 1.7, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                    {post.excerpt}
+                  </p>
+                </a>
+              ))}
+            </div>
+          )}
+        </div>
 
         {/* Footer nav */}
         <div style={{ marginTop: 64, paddingTop: 32, borderTop: '1px solid rgba(245,239,224,0.07)', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>

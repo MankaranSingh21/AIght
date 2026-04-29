@@ -3,7 +3,7 @@ import ToolCard from "@/components/ToolCard";
 // This is a Server Component — the interactive showcases are isolated as Client Components below.
 
 export const metadata = {
-  title: "Design System — AIght",
+  title: "Design System",
   description: "The living style guide. Fonts, colors, buttons, and cards.",
 };
 

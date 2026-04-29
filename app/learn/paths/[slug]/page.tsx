@@ -34,7 +34,7 @@ export async function generateMetadata({
   const field = fields.find((f) => f.slug === slug);
   if (!field) return {};
   return {
-    title: `${field.field} — AI in your field — AIght`,
+    title: `${field.field} — AI in your field`,
     description: field.tagline,
   };
 }

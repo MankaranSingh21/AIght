@@ -3,7 +3,7 @@ import Link from "next/link";
 import fields from "@/content/paths/fields.json";
 
 export const metadata: Metadata = {
-  title: "AI in your field — AIght",
+  title: "AI in your field",
   description:
     "How the tools you're hearing about are reshaping every discipline — and what to do about it.",
 };

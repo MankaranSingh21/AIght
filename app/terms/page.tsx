@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Terms of Service — AIght",
+  title: "Terms of Service",
   description: "The terms governing your use of the AIght platform.",
 };
 

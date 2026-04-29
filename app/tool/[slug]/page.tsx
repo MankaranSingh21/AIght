@@ -118,9 +118,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     .eq("slug", slug)
     .single();
 
-  if (!data) return { title: "Tool not found — AIght" };
+  if (!data) return { title: "Tool not found" };
   return {
-    title: `${data.name} — AIght`,
+    title: data.name,
     description: data.vibe_description ?? undefined,
   };
 }

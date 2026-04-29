@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import ConceptMap from "./ConceptMap";
 
 export const metadata: Metadata = {
-  title: "The landscape — AIght",
+  title: "The landscape",
   description: "Six concepts. Two tracks. Everything connects.",
 };
 

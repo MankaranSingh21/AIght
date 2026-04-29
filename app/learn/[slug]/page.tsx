@@ -28,7 +28,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const source = getConceptSource(slug);
-  if (!source) return { title: "Not Found — AIght" };
+  if (!source) return { title: "Not Found" };
 
   const { frontmatter } = await compileMDX<{
     title: string;

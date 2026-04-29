@@ -9,6 +9,31 @@ export type SignalPost = {
 
 const FEED_URL = "https://medium.com/feed/@singhmankaran05";
 
+// Always-visible editorial posts from the editor — shown above RSS feed.
+export const EDITOR_POSTS: SignalPost[] = [
+  {
+    date: "Apr 22, 2025",
+    title: "Why context windows changed everything (and nobody talks about it)",
+    excerpt:
+      "The benchmark wars are loud. Context window size barely gets a headline. But the jump from 4k to 128k tokens is the single change that made AI assistants feel like colleagues instead of calculators — and it quietly rewrote what's possible with RAG, agents, and long-form reasoning.",
+    href: "/learn/context-windows",
+  },
+  {
+    date: "Apr 10, 2025",
+    title: "The honest case for fine-tuning (and when it's the wrong answer)",
+    excerpt:
+      "Everyone recommends RAG first. That's usually right. But there's a specific class of problem — consistent tone, domain-specific jargon, structured output formats — where fine-tuning is the only tool that actually works. Here's how to tell which situation you're in before spending the budget.",
+    href: "/learn/fine-tuning",
+  },
+  {
+    date: "Mar 25, 2025",
+    title: "MCP is the most underrated thing to happen to AI tooling this year",
+    excerpt:
+      "Model Context Protocol quietly solved the integration problem that was making AI agents painful to build. Not by being clever — by being boring. A single standard that any LLM and any tool can speak. The implications for how we build software are still unfolding.",
+    href: "/learn/mcp",
+  },
+];
+
 // Shown when the RSS feed is unavailable or returns no posts.
 const FALLBACK_POSTS: SignalPost[] = [
   {
