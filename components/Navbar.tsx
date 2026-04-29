@@ -12,18 +12,41 @@ const NAV_LINKS = [
   { href: '/learn/paths/quiz', label: 'Quiz' },
 ];
 
+const STORAGE_KEY = 'aight_bookmarks';
+
+function getBookmarkCount(): number {
+  if (typeof window === 'undefined') return 0;
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '[]').length;
+  } catch {
+    return 0;
+  }
+}
+
 export default function Navbar() {
-  const [scrolled, setScrolled]       = useState(false);
-  const [searchVal, setSearchVal]     = useState('');
-  const [searchFocused, setFocused]   = useState(false);
-  const searchInputRef                = useRef<HTMLInputElement>(null);
-  const pathname                      = usePathname();
-  const router                        = useRouter();
+  const [scrolled, setScrolled]           = useState(false);
+  const [searchVal, setSearchVal]         = useState('');
+  const [searchFocused, setFocused]       = useState(false);
+  const [bookmarkCount, setBookmarkCount] = useState(0);
+  const searchInputRef                    = useRef<HTMLInputElement>(null);
+  const pathname                          = usePathname();
+  const router                            = useRouter();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  useEffect(() => {
+    setBookmarkCount(getBookmarkCount());
+    const sync = () => setBookmarkCount(getBookmarkCount());
+    window.addEventListener('storage', sync);
+    window.addEventListener('aight_bookmarks_changed', sync);
+    return () => {
+      window.removeEventListener('storage', sync);
+      window.removeEventListener('aight_bookmarks_changed', sync);
+    };
   }, []);
 
   function handleSearchSubmit(e: React.FormEvent) {
@@ -121,6 +144,57 @@ export default function Navbar() {
             );
           })}
         </div>
+
+        {/* Bookmark icon link */}
+        <Link
+          href="/bookmarks"
+          aria-label="Saved tools"
+          style={{
+            position: 'relative',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: 32,
+            height: 32,
+            borderRadius: 8,
+            color: pathname === '/bookmarks' ? '#AAFF4D' : 'rgba(245,239,224,0.45)',
+            background: pathname === '/bookmarks' ? 'rgba(170,255,77,0.07)' : 'transparent',
+            transition: 'color 150ms ease, background 150ms ease',
+            flexShrink: 0,
+          }}
+        >
+          {pathname === '/bookmarks' ? (
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M3 2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v12.5a.5.5 0 0 1-.777.416L8 12.101l-4.223 2.815A.5.5 0 0 1 3 14.5V2z"/>
+            </svg>
+          ) : (
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <path d="M3 2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v12.5a.5.5 0 0 1-.777.416L8 12.101l-4.223 2.815A.5.5 0 0 1 3 14.5V2z"/>
+            </svg>
+          )}
+          {bookmarkCount > 0 && (
+            <span style={{
+              position: 'absolute',
+              top: 2,
+              right: 2,
+              minWidth: 14,
+              height: 14,
+              borderRadius: 7,
+              background: '#AAFF4D',
+              color: '#0C0A08',
+              fontFamily: 'var(--font-mono)',
+              fontSize: 8,
+              fontWeight: 700,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '0 3px',
+              lineHeight: 1,
+            }}>
+              {bookmarkCount > 99 ? '99+' : bookmarkCount}
+            </span>
+          )}
+        </Link>
 
         {/* Search pill — functional search input */}
         <form

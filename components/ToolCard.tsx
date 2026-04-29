@@ -33,11 +33,12 @@ function toggleBookmark(slug: string): boolean {
   const idx = current.indexOf(slug);
   if (idx === -1) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify([...current, slug]));
-    return true;
+  } else {
+    current.splice(idx, 1);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(current));
   }
-  current.splice(idx, 1);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(current));
-  return false;
+  window.dispatchEvent(new Event('aight_bookmarks_changed'));
+  return idx === -1;
 }
 
 function isNew(created_at?: string): boolean {
