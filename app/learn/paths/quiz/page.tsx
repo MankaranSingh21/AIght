@@ -1727,12 +1727,30 @@ function QuizPageInner({ preFieldSlug }: { preFieldSlug: string | null }) {
               }} />
             ))}
           </div>
-          <p style={{
-            fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--text-muted)',
-            letterSpacing: '0.08em', whiteSpace: 'nowrap',
-          }}>
-            {answeredCount} / {totalQuestions} answered
-          </p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            {/* Conic-gradient progress ring */}
+            <div style={{
+              width: 28, height: 28, borderRadius: '50%', flexShrink: 0,
+              background: `conic-gradient(var(--accent-primary) 0% ${Math.round((answeredCount / totalQuestions) * 100)}%, rgba(245,239,224,0.08) ${Math.round((answeredCount / totalQuestions) * 100)}% 100%)`,
+              position: 'relative',
+              transition: 'background 400ms ease',
+            }}>
+              <div style={{ position: 'absolute', inset: 5, borderRadius: '50%', background: 'var(--bg-base)' }} />
+              <span style={{
+                position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontFamily: 'var(--font-mono)', fontSize: 7, color: 'var(--accent-primary)',
+                lineHeight: 1,
+              }}>
+                {Math.round((answeredCount / totalQuestions) * 100)}
+              </span>
+            </div>
+            <p style={{
+              fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--text-muted)',
+              letterSpacing: '0.08em', whiteSpace: 'nowrap', margin: 0,
+            }}>
+              {answeredCount} / {totalQuestions}
+            </p>
+          </div>
         </div>
       </div>
 

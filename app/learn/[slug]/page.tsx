@@ -13,6 +13,7 @@ import FineTuningComparison from "@/components/learn/FineTuningComparison";
 import Pullquote from "@/components/learn/Pullquote";
 import CodeBlock from "@/components/learn/CodeBlock";
 import ReadingProgressBar from "@/components/learn/ReadingProgressBar";
+import ConceptHeader3DClient from "@/components/learn/ConceptHeader3DClient";
 import type { JSX } from "react";
 
 type Props = {
@@ -35,7 +36,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }>({ source, options: { parseFrontmatter: true } });
 
   return {
-    title: `${frontmatter.title} — AIght`,
+    title: frontmatter.title,
     description: frontmatter.tagline,
   };
 }
@@ -218,11 +219,14 @@ export default async function LearnConceptPage({ params }: Props) {
     <main style={{ minHeight: "100vh", background: "var(--bg-base)" }}>
       <ReadingProgressBar />
 
+      {/* Full-width 3D constellation header */}
+      <ConceptHeader3DClient slug={slug} />
+
       <div
         style={{
           maxWidth: "var(--max-width-editorial)",
           margin: "0 auto",
-          padding: "64px 48px 96px",
+          padding: "24px 48px 96px",
         }}
       >
         {/* Back */}
