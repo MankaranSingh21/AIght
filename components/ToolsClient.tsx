@@ -10,15 +10,24 @@ const ToolsPCBCanvas = dynamic(() => import("./ToolsPCBCanvas"), { ssr: false })
 
 const CATEGORIES = [
   { id: "all",          label: "All tools"    },
-  { id: "Research",     label: "Research"     },
-  { id: "AI Chat",      label: "AI Chat"      },
-  { id: "Dev Tools",    label: "Dev Tools"    },
-  { id: "Productivity", label: "Productivity" },
-  { id: "Image Gen",    label: "Image Gen"    },
-  { id: "Video Gen",    label: "Video Gen"    },
+  { id: "AI CHAT",      label: "AI Chat"      },
+  { id: "DEV TOOLS",    label: "Dev Tools"    },
+  { id: "IMAGE GEN",    label: "Image Gen"    },
+  { id: "VIDEO GEN",    label: "Video Gen"    },
+  { id: "RESEARCH",     label: "Research"     },
+  { id: "PRODUCTIVITY", label: "Productivity" },
+  { id: "AUTOMATION",   label: "Automation"   },
+  { id: "AUDIO",        label: "Audio"        },
 ];
 
 type SortOrder = "recent" | "az";
+type StatusFilter = "all" | "rising" | "beta";
+
+const STATUS_FILTERS: { id: StatusFilter; label: string }[] = [
+  { id: "all",    label: "All statuses" },
+  { id: "rising", label: "Rising ↑"     },
+  { id: "beta",   label: "Beta"         },
+];
 
 type Props = {
   tools: ToolCardProps[];
@@ -34,6 +43,7 @@ export default function ToolsClient({ tools, initialCategory = "all" }: Props) {
   const [query, setQuery]                   = useState(initialQ);
   const [activeCategory, setActiveCategory] = useState(initialCategory);
   const [sort, setSort]                     = useState<SortOrder>("recent");
+  const [statusFilter, setStatusFilter]     = useState<StatusFilter>("all");
 
   // Auto-focus search input when arriving from navbar search
   useEffect(() => {
@@ -50,6 +60,7 @@ export default function ToolsClient({ tools, initialCategory = "all" }: Props) {
     const q = query.toLowerCase().trim();
     return tools.filter((t) => {
       if (activeCategory !== "all" && t.category !== activeCategory) return false;
+      if (statusFilter !== "all" && t.status !== statusFilter) return false;
       if (!q) return true;
       return (
         t.name.toLowerCase().includes(q) ||
@@ -58,7 +69,7 @@ export default function ToolsClient({ tools, initialCategory = "all" }: Props) {
         t.tags.some((tag) => tag.toLowerCase().includes(q))
       );
     });
-  }, [tools, query, activeCategory]);
+  }, [tools, query, activeCategory, statusFilter]);
 
   const sorted = useMemo(() => {
     if (sort === "az") return [...filtered].sort((a, b) => a.name.localeCompare(b.name));
@@ -168,6 +179,30 @@ export default function ToolsClient({ tools, initialCategory = "all" }: Props) {
         })}
       </div>
 
+      {/* Status filter chips */}
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 20, alignItems: "center" }}>
+        <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.10em", textTransform: "uppercase", color: "var(--text-muted)", marginRight: 4 }}>
+          Status
+        </span>
+        {STATUS_FILTERS.map((sf) => {
+          const active = statusFilter === sf.id;
+          let activeStyle = {};
+          if (active && sf.id === "rising") activeStyle = { background: "var(--accent-primary-glow)", color: "var(--accent-primary)", borderColor: "var(--border-emphasis)" };
+          else if (active && sf.id === "beta") activeStyle = { background: "rgba(244,171,31,0.10)", color: "var(--accent-warm)", borderColor: "rgba(244,171,31,0.25)" };
+          else if (active) activeStyle = { background: "var(--accent-primary-glow)", color: "var(--accent-primary)", borderColor: "var(--border-emphasis)" };
+          return (
+            <button
+              key={sf.id}
+              onClick={() => setStatusFilter(sf.id)}
+              className={active ? "tag tag-accent" : "tag"}
+              style={{ cursor: "pointer", border: "none", ...(active ? activeStyle : {}) }}
+            >
+              {sf.label}
+            </button>
+          );
+        })}
+      </div>
+
       {/* Tool count (left) + Sort chips (right) */}
       <div
         style={{
@@ -233,9 +268,9 @@ export default function ToolsClient({ tools, initialCategory = "all" }: Props) {
             <br />
             The archive grows slowly, on purpose.
           </p>
-          {(inputQuery || activeCategory !== "all") && (
+          {(inputQuery || activeCategory !== "all" || statusFilter !== "all") && (
             <button
-              onClick={() => { setInputQuery(""); setActiveCategory("all"); }}
+              onClick={() => { setInputQuery(""); setActiveCategory("all"); setStatusFilter("all"); }}
               style={{
                 fontFamily: "var(--font-mono)",
                 fontSize: "var(--text-sm)",

@@ -151,6 +151,9 @@ export default async function ToolPage({ params }: Props) {
     video_url: tool.video_url,
     learning_guide: tool.learning_guide,
     related_concepts: tool.related_concepts ?? [],
+    weaknesses: tool.weaknesses ?? [],
+    status: tool.status ?? "stable",
+    deprecated_reason: tool.deprecated_reason ?? null,
   };
 
   const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.aightai.in";

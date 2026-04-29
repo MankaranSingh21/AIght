@@ -1,4 +1,6 @@
 // Mirrors the public.tools table in schema.sql
+export type ToolStatus = 'stable' | 'beta' | 'rising' | 'deprecated';
+
 export type Tool = {
   id: string;
   name: string;
@@ -15,4 +17,7 @@ export type Tool = {
   related_concepts: string[];
   created_at: string;
   is_sponsored: boolean | null;
+  weaknesses: string[];
+  status: ToolStatus;
+  deprecated_reason: string | null;
 };

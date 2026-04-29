@@ -14,6 +14,7 @@ export type ToolCardProps = {
   created_at?: string;
   is_sponsored?: boolean | null;
   accent?: string | null;
+  status?: "stable" | "beta" | "rising" | "deprecated";
 };
 
 const STORAGE_KEY = "aight_bookmarks";
@@ -56,8 +57,9 @@ export default function ToolCard({
   created_at,
   is_sponsored,
   accent,
+  status = "stable",
 }: ToolCardProps) {
-  const showNew = isNew(created_at);
+  const showNew = isNew(created_at) && status === "stable";
   const [bookmarked, setBookmarked] = useState(false);
   const [pressed, setPressed] = useState(false);
   const [showPanel, setShowPanel] = useState(false);
@@ -148,28 +150,30 @@ export default function ToolCard({
             </span>
           )}
 
-          {/* New badge */}
-          {showNew && !is_sponsored && (
-            <span
-              style={{
-                position: "absolute",
-                top: 10,
-                right: 10,
-                zIndex: 2,
-                fontFamily: "var(--font-mono)",
-                fontSize: 10,
-                letterSpacing: "0.08em",
-                textTransform: "uppercase",
-                color: "var(--accent-primary)",
-                background: "var(--accent-primary-glow)",
-                border: "1px solid var(--border-emphasis)",
-                padding: "2px 8px",
-                borderRadius: "var(--radius-sm)",
-              }}
-            >
-              New
-            </span>
-          )}
+          {/* Status / New badge */}
+          {!is_sponsored && (() => {
+            if (status === "rising") return (
+              <span style={{ position: "absolute", top: 10, right: 10, zIndex: 2, fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--accent-primary)", background: "var(--accent-primary-glow)", border: "1px solid var(--border-emphasis)", padding: "2px 8px", borderRadius: "var(--radius-sm)" }}>
+                Rising ↑
+              </span>
+            );
+            if (status === "beta") return (
+              <span style={{ position: "absolute", top: 10, right: 10, zIndex: 2, fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--accent-warm)", background: "rgba(244,171,31,0.10)", border: "1px solid rgba(244,171,31,0.25)", padding: "2px 8px", borderRadius: "var(--radius-sm)" }}>
+                Beta
+              </span>
+            );
+            if (status === "deprecated") return (
+              <span style={{ position: "absolute", top: 10, right: 10, zIndex: 2, fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--error)", background: "rgba(224,112,112,0.10)", border: "1px solid rgba(224,112,112,0.25)", padding: "2px 8px", borderRadius: "var(--radius-sm)" }}>
+                Deprecated
+              </span>
+            );
+            if (showNew) return (
+              <span style={{ position: "absolute", top: 10, right: 10, zIndex: 2, fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--accent-primary)", background: "var(--accent-primary-glow)", border: "1px solid var(--border-emphasis)", padding: "2px 8px", borderRadius: "var(--radius-sm)" }}>
+                New
+              </span>
+            );
+            return null;
+          })()}
 
           {/* Header — 96px, accent radial glow, category legend top-left + watermark */}
           <div

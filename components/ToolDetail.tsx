@@ -22,6 +22,9 @@ export type ToolDetailData = {
   video_url?: string | null;
   learning_guide?: string | null;
   related_concepts?: string[];
+  weaknesses?: string[];
+  status?: "stable" | "beta" | "rising" | "deprecated";
+  deprecated_reason?: string | null;
 };
 
 function getYouTubeEmbedUrl(url: string): string {
@@ -32,6 +35,25 @@ function getYouTubeEmbedUrl(url: string): string {
   if (longMatch) return `https://www.youtube.com/embed/${longMatch[1]}`;
   return url;
 }
+
+function statusStyle(status: NonNullable<ToolDetailData["status"]>): React.CSSProperties {
+  if (status === "rising") {
+    return { background: 'rgba(170,255,77,0.10)', color: '#AAFF4D', border: '1px solid rgba(170,255,77,0.25)', fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.08em', padding: '2px 8px', borderRadius: 4, display: 'inline-flex', alignItems: 'center' };
+  }
+  if (status === "beta") {
+    return { background: 'rgba(244,171,31,0.10)', color: 'var(--accent-warm)', border: '1px solid rgba(244,171,31,0.25)', fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.08em', padding: '2px 8px', borderRadius: 4, display: 'inline-flex', alignItems: 'center' };
+  }
+  if (status === "deprecated") {
+    return { background: 'rgba(224,112,112,0.10)', color: 'var(--error)', border: '1px solid rgba(224,112,112,0.25)', fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.08em', padding: '2px 8px', borderRadius: 4, display: 'inline-flex', alignItems: 'center' };
+  }
+  return {};
+}
+
+const STATUS_LABEL: Record<string, string> = {
+  rising: "Rising ↑",
+  beta: "Beta",
+  deprecated: "Deprecated",
+};
 
 function pricingStyle(pricing: ToolDetailData["pricing"]): React.CSSProperties {
   if (pricing === "Free" || pricing === "Open Source") {
@@ -103,6 +125,21 @@ export default function ToolDetail({ tool }: { tool: ToolDetailData }) {
           ← Back to all tools
         </Link>
 
+        {/* Deprecated notice — shown before header if tool is deprecated */}
+        {tool.status === "deprecated" && (
+          <div style={{ borderRadius: 10, border: '1px solid rgba(224,112,112,0.20)', background: 'rgba(224,112,112,0.06)', padding: '16px 20px', display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 16, lineHeight: 1, flexShrink: 0 }}>⚠</span>
+            <div>
+              <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.10em', textTransform: 'uppercase', color: 'var(--error)', margin: '0 0 4px' }}>
+                No longer recommended
+              </p>
+              <p style={{ fontFamily: 'var(--font-editorial)', fontSize: 14, color: 'rgba(245,239,224,0.55)', lineHeight: 1.6, margin: 0 }}>
+                {tool.deprecated_reason ?? "This tool is deprecated. We keep it archived for reference."}
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* Header */}
         <section style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
           <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', gap: 14 }}>
@@ -112,6 +149,11 @@ export default function ToolDetail({ tool }: { tool: ToolDetailData }) {
             <span style={{ ...pricingStyle(tool.pricing), marginTop: 10 }}>
               {tool.pricing}
             </span>
+            {tool.status && tool.status !== "stable" && (
+              <span style={{ ...statusStyle(tool.status), marginTop: 10 }}>
+                {STATUS_LABEL[tool.status]}
+              </span>
+            )}
           </div>
 
           <p style={{ fontFamily: 'var(--font-editorial)', fontSize: 18, color: 'rgba(245,239,224,0.60)', lineHeight: 1.75, maxWidth: '54ch', fontStyle: 'italic' }}>
@@ -175,6 +217,32 @@ export default function ToolDetail({ tool }: { tool: ToolDetailData }) {
             ))}
           </div>
         </section>
+
+        {/* Where it struggles */}
+        {tool.weaknesses && tool.weaknesses.length > 0 && (
+          <section style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+            <div>
+              <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(224,112,112,0.70)', marginBottom: 8 }}>
+                honest assessment
+              </p>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 32, fontWeight: 700, color: '#F5EFE0', letterSpacing: '-0.02em', margin: 0 }}>
+                Where it struggles
+              </h2>
+            </div>
+            <div style={{ borderLeft: '3px solid rgba(224,112,112,0.30)', paddingLeft: 24, display: 'flex', flexDirection: 'column', gap: 14 }}>
+              {tool.weaknesses.map((w, i) => (
+                <div key={i} style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'rgba(224,112,112,0.50)', flexShrink: 0, lineHeight: 1.8, minWidth: 18 }}>
+                    {i + 1}.
+                  </span>
+                  <p style={{ fontFamily: 'var(--font-editorial)', fontSize: 15, color: 'rgba(245,239,224,0.58)', lineHeight: 1.75, margin: 0 }}>
+                    {w}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* Learning Guide */}
         {tool.learning_guide && (
