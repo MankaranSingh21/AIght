@@ -5,9 +5,10 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 
 const NAV_LINKS = [
-  { href: '/learn',  label: 'Learn'  },
-  { href: '/tools',  label: 'Tools'  },
-  { href: '/signal', label: 'Signal' },
+  { href: '/learn',      label: 'Learn'     },
+  { href: '/tools',      label: 'Tools'     },
+  { href: '/use-cases',  label: 'Use Cases' },
+  { href: '/signal',     label: 'Signal'    },
   { href: '/learn/paths/quiz', label: 'Quiz' },
 ];
 

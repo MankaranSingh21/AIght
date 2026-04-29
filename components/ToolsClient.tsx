@@ -9,15 +9,15 @@ import type { ToolCardProps } from "./ToolCard";
 const ToolsPCBCanvas = dynamic(() => import("./ToolsPCBCanvas"), { ssr: false });
 
 const CATEGORIES = [
-  { id: "all",          label: "All tools"    },
-  { id: "AI CHAT",      label: "AI Chat"      },
-  { id: "DEV TOOLS",    label: "Dev Tools"    },
-  { id: "IMAGE GEN",    label: "Image Gen"    },
-  { id: "VIDEO GEN",    label: "Video Gen"    },
-  { id: "RESEARCH",     label: "Research"     },
-  { id: "PRODUCTIVITY", label: "Productivity" },
-  { id: "AUTOMATION",   label: "Automation"   },
-  { id: "AUDIO",        label: "Audio"        },
+  { id: "all",          label: "All tools",    href: null                          },
+  { id: "AI CHAT",      label: "AI Chat",      href: "/tools/category/ai-chat"     },
+  { id: "DEV TOOLS",    label: "Dev Tools",    href: "/tools/category/dev-tools"   },
+  { id: "IMAGE GEN",    label: "Image Gen",    href: "/tools/category/image-gen"   },
+  { id: "VIDEO GEN",    label: "Video Gen",    href: "/tools/category/video-gen"   },
+  { id: "RESEARCH",     label: "Research",     href: "/tools/category/research"    },
+  { id: "PRODUCTIVITY", label: "Productivity", href: "/tools/category/productivity" },
+  { id: "AUTOMATION",   label: "Automation",   href: "/tools/category/automation"  },
+  { id: "AUDIO",        label: "Audio",        href: "/tools/category/audio"       },
 ];
 
 type SortOrder = "recent" | "az";
@@ -166,15 +166,29 @@ export default function ToolsClient({ tools, initialCategory = "all" }: Props) {
       <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 28 }}>
         {CATEGORIES.map((cat) => {
           const active = activeCategory === cat.id;
+          const sharedStyle = { cursor: "pointer" };
+          // "All tools" stays as an in-page filter button; others link to category pages
+          if (!cat.href) {
+            return (
+              <button
+                key={cat.id}
+                onClick={() => setActiveCategory(cat.id)}
+                className={active ? "tag tag-accent" : "tag"}
+                style={{ ...sharedStyle, border: "none" }}
+              >
+                {cat.label}
+              </button>
+            );
+          }
           return (
-            <button
+            <a
               key={cat.id}
-              onClick={() => setActiveCategory(cat.id)}
-              className={active ? "tag tag-accent" : "tag"}
-              style={{ cursor: "pointer", border: "none" }}
+              href={cat.href}
+              className="tag"
+              style={{ ...sharedStyle, textDecoration: "none" }}
             >
-              {cat.label}
-            </button>
+              {cat.label} →
+            </a>
           );
         })}
       </div>

@@ -1,0 +1,74 @@
+[
+  {
+    "slug": "write-faster",
+    "label": "Write faster",
+    "description": "Whether it's a blog post, a proposal, or a chapter you've been avoiding — these tools break through the blank page and keep you moving without taking over your voice.",
+    "tool_slugs": ["claude", "chatgpt", "sudowrite", "wispr-flow", "editgpt", "novelcrafter"]
+  },
+  {
+    "slug": "research-without-rabbit-holes",
+    "label": "Research without rabbit holes",
+    "description": "Ask a real question, get a real answer with real sources — then keep digging on what matters. These tools are the difference between a research session and a research spiral.",
+    "tool_slugs": ["perplexity", "notebooklm", "consensus", "deepseek"]
+  },
+  {
+    "slug": "build-an-app-without-a-team",
+    "label": "Build an app without a team",
+    "description": "Prototype, ship, iterate. These tools let one person move like a small engineering team — not by replacing developers, but by removing the parts that don't require one.",
+    "tool_slugs": ["lovable", "bolt-new", "cursor", "windsurf", "replit-agent", "n8n"]
+  },
+  {
+    "slug": "generate-video-without-a-crew",
+    "label": "Generate video without a crew",
+    "description": "Text in, video out. Not perfect, not final-cut-ready — but genuinely useful for concepts, explainers, and creative directions that used to require booking a shoot.",
+    "tool_slugs": ["runway", "kling-3-0", "luma-dream-machine"]
+  },
+  {
+    "slug": "understand-any-document",
+    "label": "Understand any document",
+    "description": "From a 200-page PDF to a dense legal contract — these tools read it, index it, and let you ask questions as if you had a subject-matter expert on call.",
+    "tool_slugs": ["notebooklm", "perplexity", "claude", "chatgpt"]
+  },
+  {
+    "slug": "automate-repetitive-work",
+    "label": "Automate repetitive work",
+    "description": "If you do something more than twice a week in the same sequence, it should probably be a workflow. These tools let you build that without writing a single line of code.",
+    "tool_slugs": ["zapier", "n8n"]
+  },
+  {
+    "slug": "make-images-for-your-work",
+    "label": "Make images for your work",
+    "description": "Moodboards, illustrations, social assets, product concepts — generated in seconds. The question is no longer whether you can make it, but which style fits the idea.",
+    "tool_slugs": ["midjourney", "flux-2", "ideogram-3-0", "canva-magic-studio", "recraft-v3", "microsoft-designer"]
+  },
+  {
+    "slug": "make-meetings-useful",
+    "label": "Make meetings actually useful",
+    "description": "Stop taking notes in meetings so you can actually be in them. These tools join the call, capture everything, and hand you a summary before you've opened your next tab.",
+    "tool_slugs": ["fathom", "notion-ai"]
+  },
+  {
+    "slug": "create-a-presentation",
+    "label": "Create a presentation that doesn't look like work",
+    "description": "The content is yours. The layout, design, and structure don't have to be a separate job. These tools take a rough brief and return something you'd actually send.",
+    "tool_slugs": ["gamma", "tome", "canva-magic-studio"]
+  },
+  {
+    "slug": "learn-something-complex",
+    "label": "Learn something complex, faster",
+    "description": "Concepts that used to require a textbook and three YouTube explainers can now be taught at your exact level, in your own context, with immediate follow-up questions.",
+    "tool_slugs": ["notebooklm", "perplexity", "anki-ai-add-ons", "quizlet-q-chat", "claude"]
+  },
+  {
+    "slug": "produce-audio-content",
+    "label": "Produce audio content at scale",
+    "description": "Narrate your articles, create voiceovers for your videos, or build a consistent audio presence — without booking a studio or developing a radio voice.",
+    "tool_slugs": ["elevenlabs"]
+  },
+  {
+    "slug": "code-with-an-ai-pair",
+    "label": "Code with an AI that knows your codebase",
+    "description": "Not autocomplete — a collaborator that understands the whole project, catches the edge cases you missed, and explains why it made the change it made.",
+    "tool_slugs": ["cursor", "windsurf", "aider", "claude", "chatgpt"]
+  }
+]

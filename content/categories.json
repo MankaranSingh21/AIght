@@ -1,0 +1,58 @@
+{
+  "AI CHAT": {
+    "slug": "ai-chat",
+    "headline": "AI Chat — the model that thinks with you",
+    "overview": "AI chat models are the conversational layer on top of large language models. You describe a problem in plain language; they reason through it, draft a response, and keep the context of everything you've said in the conversation. They're not search engines — they synthesise rather than retrieve.",
+    "why_now": "The 2023–2025 generation of models crossed a threshold: they became genuinely useful for open-ended intellectual work, not just template completion. The gap between what a competent human assistant and a frontier AI can produce in a single session closed fast.",
+    "related_concepts": ["transformers", "context-windows", "prompt-engineering"]
+  },
+  "DEV TOOLS": {
+    "slug": "dev-tools",
+    "headline": "Dev Tools — an engineer in your editor",
+    "overview": "AI dev tools embed language models directly into the coding environment. They understand your codebase — not just the file you have open — and can write, refactor, test, and explain code in context. The best ones feel less like autocomplete and more like a technically competent pair programmer who reads fast and has no ego.",
+    "why_now": "Models trained on code crossed a capability threshold in 2023–2024 where they could reliably generate correct, idiomatic code for non-trivial problems. The tooling caught up fast: IDE integrations, context-aware agents, and whole-file refactoring moved from research demos to daily use.",
+    "related_concepts": ["agents", "context-windows", "mcp"]
+  },
+  "IMAGE GEN": {
+    "slug": "image-gen",
+    "headline": "Image Gen — the idea, rendered",
+    "overview": "Image generation models convert text descriptions into images. They're trained on vast amounts of visual data and have learned to associate concepts with visual representations across styles, subjects, and media. The output ranges from photorealistic to abstract, and the quality gap with traditional illustration has narrowed dramatically.",
+    "why_now": "Diffusion models — the architecture underlying most image generators — matured rapidly between 2022 and 2024. Midjourney v6, Flux, and their successors produce images that compete with professional illustration for many commercial use cases. The conversation shifted from 'can it?' to 'which style, which model, which workflow?'",
+    "related_concepts": ["multimodal", "embeddings"]
+  },
+  "VIDEO GEN": {
+    "slug": "video-gen",
+    "headline": "Video Gen — moving images from still ideas",
+    "overview": "Video generation models extend image generation into the temporal dimension — they synthesise coherent motion across frames, not just a single frozen moment. The results are still imperfect, but useful: concept visualization, reference footage, short-form social content, and creative experiments that used to require a camera and crew.",
+    "why_now": "Sora's 2024 debut made the category feel real. What followed — Runway Gen-3, Kling, Luma — showed that cinematic video generation was a genuine near-term product category, not a research demo. The constraint has shifted from 'can it move?' to 'can it move consistently?'",
+    "related_concepts": ["multimodal"]
+  },
+  "RESEARCH": {
+    "slug": "research",
+    "headline": "Research — answers, not just links",
+    "overview": "AI research tools are built for the act of understanding — digesting sources, surfacing evidence, connecting ideas across papers and documents. They differ from search engines in that they synthesise rather than list. The best ones cite their sources, flag uncertainty, and let you interrogate the answer rather than just read it.",
+    "why_now": "The combination of large context windows (letting models ingest whole documents) and retrieval-augmented generation (grounding answers in specific sources) made AI research tools genuinely reliable for the first time in 2023–2024. NotebookLM and Perplexity became serious tools, not curiosities.",
+    "related_concepts": ["rag", "context-windows", "embeddings"]
+  },
+  "PRODUCTIVITY": {
+    "slug": "productivity",
+    "headline": "Productivity — the parts of work that shouldn't take this long",
+    "overview": "Productivity AI covers the broad category of tools that make existing tasks faster or easier — writing, scheduling, note-taking, presentation building, study aids. They don't replace the work; they remove the friction around it. The best ones are invisible: you stop noticing you're using AI and start noticing the work gets done.",
+    "why_now": "The integration of language models into everyday software — word processors, note apps, presentation tools — happened fast in 2023–2024. AI stopped being a separate tool you had to switch to and became a layer on top of the tools you already used.",
+    "related_concepts": ["prompt-engineering", "agents"]
+  },
+  "AUTOMATION": {
+    "slug": "automation",
+    "headline": "Automation — if you do it twice, a workflow should do it",
+    "overview": "Automation tools connect software products, trigger actions based on events, and run processes without human intervention. AI makes them smarter: instead of rigid 'if X then Y' rules, you can add judgement — summarise this, classify that, decide which path based on content. The line between workflow and agent is blurring.",
+    "why_now": "The no-code automation space matured alongside AI: Zapier and n8n now have native AI steps, meaning you can build workflows that read, reason, and respond — not just move data between buckets. The result is that knowledge work that was previously too variable to automate is now automatable.",
+    "related_concepts": ["agents", "mcp"]
+  },
+  "AUDIO": {
+    "slug": "audio",
+    "headline": "Audio — your voice, at scale",
+    "overview": "AI audio tools synthesise speech from text, clone voices from samples, and produce narration that is increasingly indistinguishable from a human recording. They're used for content creation, accessibility, localization, and anywhere that producing audio manually would be too slow or expensive to justify.",
+    "why_now": "ElevenLabs and similar tools in 2023–2024 pushed voice synthesis quality past a practical threshold. The uncanny valley — that slightly-off quality that made AI voices feel robotic — narrowed to the point where it only appears under scrutiny. For most content use cases, the quality is now good enough.",
+    "related_concepts": ["multimodal"]
+  }
+}
