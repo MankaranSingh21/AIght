@@ -23,6 +23,12 @@ const CATEGORIES = [
 type SortOrder = "recent" | "az";
 type StatusFilter = "all" | "rising" | "beta";
 
+/** Indices that get a 2-column span — creates bento rhythm: 0, 3, 7, 11, 15... */
+const WIDE_INDICES = new Set([0, 3, 7, 11, 15, 19, 23, 27, 31]);
+function bentoSpan(i: number): number {
+  return WIDE_INDICES.has(i) ? 2 : 1;
+}
+
 const STATUS_FILTERS: { id: StatusFilter; label: string }[] = [
   { id: "all",    label: "All statuses" },
   { id: "rising", label: "Rising ↑"     },
@@ -300,15 +306,9 @@ export default function ToolsClient({ tools, initialCategory = "all" }: Props) {
           )}
         </div>
       ) : (
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))",
-            gap: "var(--space-3)",
-          }}
-        >
-          {sorted.map((tool) => (
-            <ToolCard key={tool.slug} {...tool} />
+        <div className="tool-bento-grid">
+          {sorted.map((tool, i) => (
+            <ToolCard key={tool.slug} {...tool} spanCols={bentoSpan(i)} />
           ))}
         </div>
       )}

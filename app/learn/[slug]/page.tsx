@@ -14,6 +14,13 @@ import Pullquote from "@/components/learn/Pullquote";
 import CodeBlock from "@/components/learn/CodeBlock";
 import ReadingProgressBar from "@/components/learn/ReadingProgressBar";
 import ConceptHeader3DClient from "@/components/learn/ConceptHeader3DClient";
+import ArticleReveal from "@/components/learn/ArticleReveal";
+import MarginNote from "@/components/learn/MarginNote";
+import SectionBreak from "@/components/learn/SectionBreak";
+import Callout from "@/components/learn/Callout";
+import StepDiagram, { Step } from "@/components/learn/StepDiagram";
+import CompareTable, { CompareRow } from "@/components/learn/CompareTable";
+import StatPill from "@/components/learn/StatPill";
 import type { JSX } from "react";
 
 type Props = {
@@ -49,6 +56,14 @@ const mdxComponents = {
   AttentionViz,
   FineTuningComparison,
   Pullquote,
+  MarginNote,
+  SectionBreak,
+  Callout,
+  StepDiagram,
+  Step,
+  CompareTable,
+  CompareRow,
+  StatPill,
   pre: (props: JSX.IntrinsicElements["pre"]) => <CodeBlock {...props} />,
   h2: (props: JSX.IntrinsicElements["h2"]) => (
     <h2
@@ -306,8 +321,10 @@ export default async function LearnConceptPage({ params }: Props) {
           }}
         />
 
-        {/* MDX body */}
-        <article className="learn-article">{content}</article>
+        {/* MDX body — scroll-reveal wrapper gives lyrics-style focus */}
+        <article className="learn-article">
+          <ArticleReveal>{content}</ArticleReveal>
+        </article>
 
         {/* Related tools */}
         {relatedTools.length > 0 && (

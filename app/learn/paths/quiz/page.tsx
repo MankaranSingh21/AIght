@@ -4,6 +4,8 @@ import { useState, useEffect, useMemo, useRef, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import QuizToolRecs from '@/components/QuizToolRecs';
+import dynamic from 'next/dynamic';
+const DownloadReportButton = dynamic(() => import('@/components/quiz/DownloadReportButton'), { ssr: false });
 import { usePostHog } from 'posthog-js/react';
 import fieldsData from '@/content/paths/fields.json';
 
@@ -1046,6 +1048,21 @@ function ReportScreen({ result, field, answers, onRetake }: {
   const augPct       = Math.round((100 - score) * 0.35);
   const growPct      = 100 - riskPct - augPct;
 
+  const pdfData = {
+    fieldName:   field.field,
+    roleTitle:   (answers.role_title as string | undefined),
+    score,
+    category,
+    riskPct,
+    augPct,
+    growPct,
+    breakdown,
+    tools:       field.tools ?? [],
+    plan90,
+    vision1yr,
+    generatedAt: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+  };
+
   const sectionStyle: React.CSSProperties = {
     opacity: visible ? 1 : 0,
     transform: visible ? 'translateY(0)' : 'translateY(16px)',
@@ -1429,12 +1446,13 @@ function ReportScreen({ result, field, answers, onRetake }: {
           </Link>
         </div>
 
-        {/* Share + retake */}
+        {/* Share + download + retake */}
         <div style={{
           display: 'flex', gap: 20, flexWrap: 'wrap', alignItems: 'center',
           paddingTop: 16, ...sectionStyle, transitionDelay: '600ms',
         }}>
           <ShareButton score={score} fieldName={field.field} />
+          <DownloadReportButton data={pdfData} />
           <button onClick={onRetake} style={{
             background: 'none', border: 'none', cursor: 'pointer',
             fontFamily: 'var(--font-mono)', fontSize: 12,

@@ -1,0 +1,69 @@
+---
+title: "Hallucination & Grounding"
+tagline: "Why AI models confidently make things up — and how to stop them"
+readTime: "8 min read"
+slug: "hallucination"
+---
+
+AI models don't lie. They don't know they're wrong. That's the uncomfortable truth at the center of one of AI's most discussed problems.
+
+When a language model states a false fact with perfect confidence — citing a paper that doesn't exist, inventing a court case, describing an event that never happened — it isn't being deceptive. It's doing exactly what it was trained to do: predict the most plausible continuation of text. The plausible continuation sometimes happens to be false.
+
+<MarginNote side="right">The term "hallucination" comes from psychology. In AI, it's now standard — though some researchers prefer "confabulation," since that implies filling gaps with invented memory rather than perceiving what isn't there.</MarginNote>
+
+This is what researchers call **hallucination**: outputs that are fluent, confident, and wrong.
+
+<SectionBreak />
+
+## Why it happens
+
+Language models are trained to predict the next token given everything that came before. During training, they absorb statistical patterns from enormous amounts of text. What they learn is essentially: "given this context, what kind of text typically follows?"
+
+<StepDiagram>
+  <Step label="Training">Model learns token-prediction patterns from billions of documents</Step>
+  <Step label="Inference">Given a prompt, model predicts most probable continuation</Step>
+  <Step label="The gap">Probability ≠ truth. Plausible text can be factually wrong</Step>
+  <Step label="Hallucination">Model outputs confident falsehood with no internal alarm</Step>
+</StepDiagram>
+
+The problem is that "statistically likely" and "factually true" are different things. A model trained on text that frequently discusses Nobel laureates will learn that Nobel laureates tend to have certain characteristics. If asked about an obscure researcher, it might construct plausible-sounding biography by pattern-matching — even if no real biography exists.
+
+There's no internal truth-checker. The model has no way to verify whether something it's generating actually happened. It doesn't have access to a ground-truth database at inference time. It's working from learned patterns, not from verified facts.
+
+<Callout type="warning">
+Hallucination rates vary significantly by task. Factual recall on rare or obscure topics is highest-risk. Common, well-documented facts are lower-risk. Always apply more skepticism to niche claims.
+</Callout>
+
+<SectionBreak />
+
+## The grounding solution
+
+**Grounding** is the practice of anchoring model outputs to verified sources — making the model work from real documents rather than from its own memory.
+
+The most common form is **retrieval-augmented generation (RAG)**: instead of asking the model to recall facts from training, you retrieve relevant documents at query time and give them to the model as context. The model's job becomes synthesis and explanation, not recall.
+
+<MarginNote side="right">RAG doesn't eliminate hallucination — models can still misread or misrepresent grounding documents — but it moves the failure mode from invisible to auditable.</MarginNote>
+
+This changes the failure mode in a useful way. Instead of the model making up facts, it's working from real text you provided. When it gets something wrong, it's misreading a document you can inspect — not inventing from nothing.
+
+Other grounding strategies:
+- **Citations**: require the model to link every claim to a source passage
+- **Constrained generation**: limit the model to only outputting information present in a given document
+- **Structured output**: for factual tasks, output JSON with field-level source references
+- **Verification pipelines**: run a second model pass specifically checking factual claims against a knowledge base
+
+<Callout type="insight">
+The most reliable systems treat language models as **reasoning engines**, not **knowledge stores**. Give them the knowledge. Let them reason about it.
+</Callout>
+
+<SectionBreak />
+
+## What you can't fix
+
+Grounding helps enormously for factual tasks with defined source material. It doesn't solve everything.
+
+Creative tasks have no ground truth to check against. Long conversations drift — earlier grounding documents fall out of context. Models can misread their own sources, quoting a passage while subtly misrepresenting what it says. And for tasks that require integrating knowledge across many documents, any individual document might not contain the full picture.
+
+The honest answer: hallucination is a fundamental property of probabilistic text generation, not a bug that will eventually be patched away. The right approach is designing systems that minimize exposure to it — grounding where possible, verification where necessary, and appropriate skepticism as a baseline.
+
+Trust the model's reasoning. Verify the model's facts.

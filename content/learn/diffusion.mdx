@@ -1,0 +1,83 @@
+---
+title: "Diffusion Models"
+tagline: "How AI generates images by learning to reverse chaos"
+readTime: "8 min read"
+slug: "diffusion"
+---
+
+Every AI-generated image you've seen — from Midjourney portraits to Stable Diffusion landscapes — was made by a model that learned to start with random noise and gradually find signal.
+
+This is the core idea behind diffusion models: rather than learning to draw images directly, they learn to **denoise** them. The training process is deceptively simple. The magic is in what the model learns along the way.
+
+<MarginNote side="right">Diffusion models borrowed their mathematical foundation from non-equilibrium thermodynamics — the physics of how physical systems move toward and away from equilibrium states.</MarginNote>
+
+<SectionBreak />
+
+## How the training works
+
+The insight comes from asking a seemingly backward question: instead of learning to create images, what if we learn to *destroy* them — and then reverse the process?
+
+<StepDiagram>
+  <Step label="Start">Take a real photograph</Step>
+  <Step label="Add noise">Gradually corrupt it with random Gaussian noise over ~1000 steps</Step>
+  <Step label="Pure noise">After enough steps, just static — original image is unrecoverable</Step>
+  <Step label="Train reversal">Model learns to predict and remove each noise step backward</Step>
+  <Step label="Generate">Start from pure noise, reverse 1000 steps — image emerges</Step>
+</StepDiagram>
+
+At training time, the model sees images at every stage of corruption and learns to predict: "given this noisy image at step T, what does the slightly less noisy version at step T-1 look like?"
+
+Repeat that 1000 times, and you have a path from pure noise to a coherent image.
+
+<Callout type="insight">
+The model never sees the generation process during training — only the denoising step. This is what makes the math tractable. Training a model to generate images directly is extremely hard. Training one to predict noise is much simpler.
+</Callout>
+
+<SectionBreak />
+
+## How text conditioning works
+
+A diffusion model trained only on images can generate images — but random ones. To steer the generation toward a specific subject, style, or composition, the model needs to understand text.
+
+This is where **CLIP** (Contrastive Language-Image Pretraining) comes in. CLIP is trained separately to map images and text descriptions into the same mathematical space — so "a photograph of a golden retriever in autumn leaves" ends up close to the vector representation of images fitting that description.
+
+<MarginNote side="right">Stable Diffusion's text encoder is CLIP. When you type a prompt, it's first converted to a CLIP vector, which is then used to guide every denoising step — nudging each step toward images that match the description.</MarginNote>
+
+During diffusion model training, text embeddings from CLIP are fed into each denoising step as conditioning information. The model learns: "when the text says X, steer the denoising toward images that look like X."
+
+At generation time: type a prompt → encode with CLIP → use that encoding to guide 50–1000 denoising steps from random noise → image.
+
+<SectionBreak />
+
+## Why it produces coherent detail
+
+One counterintuitive property of diffusion models: they produce remarkably coherent images even at fine detail, despite never having a global "plan" for the image.
+
+The reason is that the denoising process operates hierarchically in practice. Early steps (high noise) establish large-scale structure — composition, rough shapes, color relationships. Later steps (low noise) fill in fine details within that established structure.
+
+<CompareTable left="Early denoising steps" right="Late denoising steps">
+  <CompareRow label="Noise level" left="Very high — most of the image is static" right="Very low — mostly committed image with small noise" />
+  <CompareRow label="What changes" left="Large-scale composition, dominant colors, rough shapes" right="Fine texture, sharp edges, lighting details" />
+  <CompareRow label="Impact of error" left="High — a wrong early step affects everything downstream" right="Low — recoverable in subsequent steps" />
+  <CompareRow label="Text influence" left="Strong — high-level semantics guide structure" right="Subtle — detail refinement within established structure" />
+</CompareTable>
+
+This is also why **CFG scale** (classifier-free guidance) matters. Higher guidance pushes the generation more strongly toward the text prompt at every step — which produces more "on-prompt" images but can cause over-saturation and artifacts.
+
+<SectionBreak />
+
+## The model zoo
+
+Diffusion models come in several flavors, and the differences matter for what you're building:
+
+**Stable Diffusion** (and its variants — SDXL, SD3) is open-source and can be run locally. Enormous community ecosystem, extensive fine-tuned variants for specific styles. Slower than API options.
+
+**Midjourney** runs proprietary diffusion models tuned for aesthetic quality. The results often have a distinct look — high coherence, painterly quality — but you can't self-host it.
+
+**DALL-E 3** integrates with GPT-4 for prompt understanding before generation, which means it handles complex compositional prompts better than raw CLIP conditioning.
+
+<Callout type="tip">
+For production use: DALL-E 3 handles complex compositions, Stable Diffusion gives you control and privacy, Midjourney produces the most immediately impressive aesthetics. Pick based on what your use case actually needs.
+</Callout>
+
+The underlying math is the same. The training data, fine-tuning, and guidance techniques are what differentiate them.

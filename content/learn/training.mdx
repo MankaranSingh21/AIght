@@ -1,0 +1,86 @@
+---
+title: "How AI Models Are Trained"
+tagline: "From raw text to a model that can reason — the full pipeline"
+readTime: "10 min read"
+slug: "training"
+---
+
+Every AI model you've ever used started as random noise.
+
+Billions of parameters — numerical weights inside a neural network — initialized to essentially nothing. Then, through a process of repeated prediction and correction that runs for weeks on thousands of specialized chips, those weights gradually organized into something that can write, reason, and converse.
+
+<MarginNote side="right">GPT-4 reportedly trained on roughly 25,000 A100 GPUs. At cloud pricing, the compute cost alone would be tens of millions of dollars.</MarginNote>
+
+Understanding how that happens doesn't require a PhD. It requires one key insight: **a model gets better by being wrong.**
+
+<SectionBreak />
+
+## Phase 1 — Pretraining
+
+The first phase is called pretraining. The model sees an enormous quantity of text — web pages, books, code, academic papers — and learns a single task: **predict the next token**.
+
+<StepDiagram>
+  <Step label="Feed text">The cat sat on the...</Step>
+  <Step label="Predict">Model guesses next token: "mat"</Step>
+  <Step label="Compare">Check against actual next token</Step>
+  <Step label="Update">Adjust weights to reduce error</Step>
+  <Step label="Repeat">Trillions of times across all training data</Step>
+</StepDiagram>
+
+That's it. No labels, no human feedback, no explicit teaching of facts. Just: see text, predict next token, get corrected, update, repeat. At a massive enough scale, this simple task forces the model to learn grammar, facts, reasoning patterns, and world knowledge — because all of those are required to predict text well.
+
+A model that doesn't understand causality will predict poorly. A model that doesn't know common facts will predict poorly. Prediction accuracy is a proxy for understanding.
+
+<Callout type="insight">
+Pretraining is unsupervised — it requires no human labels. This is why models can be trained on internet-scale data. The "label" for every piece of text is just the next word.
+</Callout>
+
+After pretraining, the model is a powerful but raw text predictor. It will complete your sentence — not necessarily in the way you intended, and not necessarily helpfully.
+
+<SectionBreak />
+
+## Phase 2 — Instruction tuning
+
+Raw pretraining produces a model that can continue text. It doesn't produce a model that follows instructions. For that, a second phase is needed.
+
+**Instruction tuning** (also called supervised fine-tuning) trains the model on curated examples of instruction-following. A dataset of prompts and ideal responses — written or reviewed by humans — teaches the model to behave as an assistant rather than a text completer.
+
+<MarginNote side="right">The quality of this dataset matters enormously. A small, high-quality instruction dataset often outperforms a large, noisy one — this is what research like Stanford's Alpaca demonstrated.</MarginNote>
+
+The result is a model that responds to "Summarize this article" by summarizing, not by continuing the article.
+
+<SectionBreak />
+
+## Phase 3 — RLHF
+
+The final phase is where modern models get their characteristic polish: **Reinforcement Learning from Human Feedback (RLHF)**.
+
+The process works in two steps:
+
+**Reward model training.** Humans compare pairs of model outputs and choose which is better. These preferences train a separate "reward model" that learns to predict human preference scores for any given output.
+
+**Policy optimization.** The main model is then fine-tuned using reinforcement learning — it generates outputs, the reward model scores them, and the main model's weights are updated to produce higher-scoring outputs over time.
+
+<CompareTable left="With RLHF" right="Without RLHF">
+  <CompareRow label="Refusals" left="Calibrated — declines harmful requests, handles edge cases" right="None or naive — either refuses too much or too little" />
+  <CompareRow label="Tone" left="Consistently helpful, appropriately hedged" right="Can be terse, overconfident, or verbose randomly" />
+  <CompareRow label="Format" left="Structured when structure helps, conversational when not" right="Inconsistent" />
+  <CompareRow label="Safety" left="Trained on human judgments of harm" right="Only pretraining data distribution" />
+</CompareTable>
+
+RLHF is why Claude feels different from a raw GPT model. The underlying capability comes from pretraining. The helpfulness and tone comes from RLHF.
+
+<SectionBreak />
+
+## What training doesn't give you
+
+Training gives the model compressed knowledge from its training data. It doesn't give the model:
+
+- Knowledge of events after the training cutoff
+- Access to real-time information
+- The ability to know what it doesn't know
+- Guaranteed factual accuracy on rare topics
+
+These aren't flaws that will be engineered away. They're the nature of a statistical model trained on a fixed dataset. Knowing this shapes how you use AI well — you bring current information, verify critical facts, and treat the model's knowledge cutoff as a hard boundary.
+
+The model is not a database. It's a compressed, reasoning-capable representation of what it was trained on. Use it accordingly.

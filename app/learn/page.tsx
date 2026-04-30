@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import ConceptCarouselClient from "@/components/learn/ConceptCarouselClient";
+import { getAllConcepts } from "@/lib/learn";
 
 export const metadata: Metadata = {
   title: "Learn",
@@ -31,6 +32,7 @@ function EdgeOrb({
 }
 
 export default function LearnPage() {
+  const allConcepts = getAllConcepts();
   return (
     <main style={{ minHeight: "100vh", position: "relative", zIndex: 1 }}>
 
@@ -186,6 +188,96 @@ export default function LearnPage() {
               </p>
             </div>
           </Link>
+        </div>
+      </section>
+
+      {/* ── All concepts ────────────────────────────────────────────────── */}
+      <section style={{
+        borderTop: "1px solid rgba(245,239,224,0.07)",
+        padding: "64px 0 80px",
+      }}>
+        <div style={{
+          maxWidth: "var(--max-width-content)",
+          margin: "0 auto",
+          padding: "0 clamp(24px, 5vw, 48px)",
+        }}>
+          <p style={{
+            fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.14em",
+            textTransform: "uppercase", color: "rgba(245,239,224,0.30)", marginBottom: 32,
+          }}>
+            All concepts — {allConcepts.length} articles
+          </p>
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+            gap: 1,
+          }}>
+            {allConcepts.map((concept) => (
+              <Link
+                key={concept.slug}
+                href={`/learn/${concept.slug}`}
+                style={{ textDecoration: "none" }}
+                className="group"
+              >
+                <div style={{
+                  padding: "20px 0",
+                  borderBottom: "1px solid rgba(245,239,224,0.06)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: 16,
+                }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <h3 style={{
+                      fontFamily: "var(--font-ui)",
+                      fontSize: 15,
+                      fontWeight: 600,
+                      color: "var(--text-primary)",
+                      margin: "0 0 4px",
+                      letterSpacing: "-0.01em",
+                      transition: "color 150ms ease",
+                    }}
+                      className="group-hover:text-accent"
+                    >
+                      {concept.title}
+                    </h3>
+                    <p style={{
+                      fontFamily: "var(--font-editorial)",
+                      fontStyle: "italic",
+                      fontSize: 13,
+                      color: "rgba(245,239,224,0.45)",
+                      margin: 0,
+                      lineHeight: 1.5,
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}>
+                      {concept.tagline}
+                    </p>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
+                    <span style={{
+                      fontFamily: "var(--font-mono)", fontSize: 10,
+                      color: "rgba(245,239,224,0.25)",
+                      letterSpacing: "0.06em",
+                    }}>
+                      {concept.readTime}
+                    </span>
+                    <span style={{
+                      fontFamily: "var(--font-mono)", fontSize: 12,
+                      color: "var(--accent-primary)",
+                      opacity: 0,
+                      transition: "opacity 150ms ease",
+                    }}
+                      className="group-hover:opacity-100"
+                    >
+                      →
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 

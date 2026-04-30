@@ -1,0 +1,81 @@
+---
+title: "Multiagent Systems"
+tagline: "What happens when AI models coordinate with each other"
+readTime: "9 min read"
+slug: "multiagent"
+---
+
+One AI model has limitations. A collection of AI models, coordinated deliberately, can exceed what any single model could do alone.
+
+This is the premise behind multiagent systems: rather than routing every task through one increasingly complex prompt, you distribute work across specialized agents — each with its own role, tools, and context window — and orchestrate them toward a shared goal.
+
+<MarginNote side="right">OpenAI's research paper "Practices for Governing Agentic AI Systems" uses the term "constellation" for tightly coordinated agent networks. The astronomy metaphor is apt: each star is useful alone, but the pattern matters.</MarginNote>
+
+The difference from a single agent isn't capability — it's architecture. And architecture determines what kinds of problems become tractable.
+
+<SectionBreak />
+
+## Why one agent isn't enough
+
+A single agent running in a loop hits real constraints:
+
+**Context limits.** Complex tasks generate a lot of intermediate results. Tool call outputs, sub-results, plans, corrections — all of it accumulates in one context window. Long enough runs lose track of earlier context as it gets compressed or truncated.
+
+**Specialization tradeoffs.** A generalist agent can research, write, and code — but not as well as agents that specialize in each. A single system prompt can't optimize for all three simultaneously.
+
+**Parallelization.** Sequential tasks are slow. If you need to research ten competitors, a single agent does them one at a time. Ten parallel research agents finish in roughly the same time as one.
+
+<Callout type="insight">
+Multiagent design is really about managing complexity. When a task is simple enough to fit in one context window and one prompt, one agent is better. The overhead of coordination only pays off past a certain complexity threshold.
+</Callout>
+
+<SectionBreak />
+
+## Orchestration patterns
+
+There are two dominant ways to structure agent coordination:
+
+<StepDiagram>
+  <Step label="Orchestrator">One model receives the goal and breaks it into subtasks</Step>
+  <Step label="Dispatch">Subtasks are routed to specialized sub-agents</Step>
+  <Step label="Execution">Each agent runs with its own tools and context</Step>
+  <Step label="Aggregation">Results return to orchestrator for synthesis</Step>
+  <Step label="Output">Orchestrator produces final response</Step>
+</StepDiagram>
+
+**Hub-and-spoke**: one orchestrator agent manages multiple worker agents. The orchestrator plans, delegates, and synthesizes. Workers execute specific tasks. This is clear but creates a bottleneck at the orchestrator.
+
+**Peer-to-peer**: agents communicate directly with each other, passing results along a pipeline. A research agent hands off to a writing agent, which hands off to a review agent. More parallelizable but harder to debug — errors propagate and can be hard to trace.
+
+<MarginNote side="right">Most production systems use hub-and-spoke for reliability, even though peer pipelines are more efficient in theory. When a peer fails, finding the root cause is significantly harder.</MarginNote>
+
+<SectionBreak />
+
+## What makes coordination hard
+
+Multiagent systems multiply the failure modes of single agents.
+
+**State synchronization**: if two agents are working on related tasks, they can produce contradictory outputs that only get reconciled at the end — after significant wasted compute.
+
+**Trust between agents**: when one agent receives output from another, should it trust it? A compromised or hallucinating sub-agent can propagate bad data through the whole system. Production systems often add a verification step between agents.
+
+**Prompt injection across boundaries**: if an agent reads external content (web pages, documents) and another agent processes that output, malicious content in the original source can hijack the downstream agent's behavior through the intermediate output.
+
+<Callout type="warning">
+Agent-to-agent communication is a security surface. Content retrieved from the web, emails, or documents can contain adversarial instructions that get passed to other agents. Sanitize and validate inter-agent outputs the same way you'd validate user input.
+</Callout>
+
+<SectionBreak />
+
+## When to use it
+
+Multiagent architecture pays off when:
+
+- Tasks are naturally parallelizable (research across many sources)
+- Context length would otherwise be exceeded in a single agent run
+- Different subtasks require genuinely different tools or expertise
+- You want failures in one part of the pipeline to be isolated and retryable
+
+It adds overhead and complexity you don't want when tasks are straightforward enough for a single well-designed agent. The temptation to over-architect is real. A good prompt and a single capable agent will outperform an overengineered multi-agent system on anything simple.
+
+The best multiagent systems feel simple from the outside. The complexity is in the coordination layer — invisible unless something goes wrong.

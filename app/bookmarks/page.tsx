@@ -212,13 +212,9 @@ export default function BookmarksPage() {
 
         {/* Tool grid */}
         {tools && tools.length > 0 && (
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))",
-            gap: "var(--space-5)",
-          }}>
-            {tools.map((tool) => (
-              <ToolCard key={tool.slug} {...tool} />
+          <div className="tool-bento-grid">
+            {tools.map((tool, i) => (
+              <ToolCard key={tool.slug} {...tool} spanCols={[0, 3, 7, 11].includes(i) ? 2 : 1} />
             ))}
           </div>
         )}

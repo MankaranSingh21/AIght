@@ -235,14 +235,115 @@
     border-radius: var(--radius-lg);
     border: 1px solid var(--border-subtle);
     background: var(--bg-surface);
+    background-image:
+      radial-gradient(circle, rgba(245,239,224,0.04) 1px, transparent 1px);
+    background-size: 12px 12px;
     /* shadow and transform driven by inline JS for key-press fidelity */
-    height: 100%;
     cursor: pointer;
+  }
+
+  /* ── Bento keyboard grid ───────────────────────────────────── */
+  .tool-bento-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+    position: relative;
+    /* PCB trace lines behind all keys */
+    background-image:
+      linear-gradient(rgba(245,239,224,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(245,239,224,0.025) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  @media (max-width: 900px) {
+    .tool-bento-grid {
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    }
+    .tool-bento-grid > * {
+      grid-column: span 1 !important;
+      transform: none !important;
+    }
+  }
+  @media (max-width: 600px) {
+    .tool-bento-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
   }
 
   @keyframes panelReveal {
     from { opacity: 0; transform: translateX(6px); }
     to   { opacity: 1; transform: translateX(0); }
+  }
+
+  /* ── Article scroll reveal (lyrics-style) ──────────────────── */
+  .article-reveal-wrapper {
+    position: relative;
+    overflow: visible;
+  }
+
+  .reveal-node {
+    transition: opacity 420ms ease, filter 420ms ease, transform 420ms ease;
+    will-change: opacity, filter;
+  }
+
+  .reveal-node.is-upcoming {
+    opacity: 0.32;
+    filter: blur(0);
+    transform: translateY(3px);
+  }
+
+  .reveal-node.is-active {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+
+  .reveal-node.is-past {
+    opacity: 0.5;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+
+  /* ── Margin notes ──────────────────────────────────────────── */
+  .margin-note {
+    /* Mobile default: inline amber callout */
+    display: block;
+    margin: 12px 0;
+    padding: 10px 14px;
+    background: rgba(244,171,31,0.07);
+    border-left: 2px solid var(--accent-warm) !important;
+    border-right: none !important;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  }
+
+  @media (min-width: 1100px) {
+    .article-reveal-wrapper {
+      /* Give margin notes space to breathe outside the column */
+      overflow: visible;
+    }
+    .margin-note {
+      /* Float into the margin */
+      position: absolute;
+      width: 160px;
+      background: transparent;
+      padding: 0;
+      border-radius: 0;
+      margin: 0;
+    }
+    .margin-note[data-side="right"] {
+      left: calc(100% + 32px);
+      border-left: 1px solid var(--accent-primary) !important;
+      padding-left: 10px;
+      border-right: none !important;
+    }
+    .margin-note[data-side="left"] {
+      right: calc(100% + 32px);
+      left: auto;
+      border-right: 1px solid var(--accent-primary) !important;
+      border-left: none !important;
+      padding-right: 10px;
+      text-align: right;
+    }
   }
 
   /* ── Glass card ────────────────────────────────────────────── */

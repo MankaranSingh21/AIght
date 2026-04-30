@@ -10,9 +10,10 @@ export default function Pullquote({ children }: { children: ReactNode }) {
         color: "var(--accent-warm)",
         borderLeft: "3px solid var(--accent-warm)",
         paddingLeft: "var(--space-6)",
-        margin: "var(--space-12) 0",
+        margin: "var(--space-12) -48px",
         lineHeight: 1.5,
-        maxWidth: "52ch",
+        maxWidth: "none",
+        width: "calc(100% + 96px)",
       }}
     >
       {children}

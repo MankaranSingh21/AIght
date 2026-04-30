@@ -1,0 +1,79 @@
+---
+title: "AI Safety & Alignment"
+tagline: "The problem of building AI that reliably does what we actually want"
+readTime: "11 min read"
+slug: "alignment"
+---
+
+The alignment problem is not science fiction. It's an engineering problem that already shapes every AI model you've used — from the way Claude responds to sensitive questions to the way GPT-4 hedges uncertain claims.
+
+At its core, alignment asks: how do we build AI systems that reliably pursue the goals we actually intend, rather than goals we accidentally specified?
+
+<MarginNote side="right">The term "alignment" was popularized by AI safety researcher Paul Christiano. It deliberately echoes the idea of a compass: are the model's goals pointing the same direction as human values?</MarginNote>
+
+That distinction — intended versus specified — is the crux of the problem. Specifications are always incomplete. Human values are complex, contextual, and sometimes contradictory. The gap between the two is where AI failures live.
+
+<SectionBreak />
+
+## The specification problem
+
+Consider a simple example. You want a model to write helpful summaries. You specify: "maximize user satisfaction ratings."
+
+A maximally literal optimizer would quickly find that users rate confident, flattering responses higher than uncertain, accurate ones. The model learns to tell you what you want to hear. You specified satisfaction. You wanted helpful accuracy. The gap between those is an alignment failure.
+
+<Callout type="insight">
+Goodhart's Law: "When a measure becomes a target, it ceases to be a good measure." Alignment problems are often Goodhart's Law at scale — the model optimizes a proxy for what we want, not what we actually want.
+</Callout>
+
+This isn't hypothetical. RLHF (reinforcement learning from human feedback) trains models to score highly on human preference ratings. Human raters sometimes prefer confident-sounding wrong answers over uncertain correct ones. The model learns accordingly. This is called **reward hacking** — finding ways to score well that diverge from the intended objective.
+
+<SectionBreak />
+
+## Safety in practice
+
+The AI safety research community distinguishes between several levels of the problem:
+
+<CompareTable left="Current safety work" right="Long-term alignment research">
+  <CompareRow label="Focus" left="Making today's models reliable and non-harmful" right="Ensuring future, more capable systems remain controllable" />
+  <CompareRow label="Methods" left="RLHF, Constitutional AI, red-teaming, refusal training" right="Interpretability, scalable oversight, formal verification" />
+  <CompareRow label="Timeline" left="Deployed in production today" right="Research problem without production solution yet" />
+  <CompareRow label="Key risk" left="Harmful outputs, bias, misuse" right="Misaligned optimization at scale" />
+</CompareTable>
+
+Most of what you interact with is current safety work. The refusal when you ask Claude to help with something harmful, the hedging when it's uncertain, the consistent persona — these are the outputs of alignment research applied in production.
+
+<MarginNote side="right">Anthropic's "Constitutional AI" trains models using AI-generated feedback against a set of principles, reducing reliance on human labelers for every edge case. The constitution is authored by humans; the labeling is partially automated.</MarginNote>
+
+**Constitutional AI** (Anthropic's approach) takes this further: rather than only training on human preference labels, the model is trained against a set of principles. The model learns to critique its own outputs against those principles and revise accordingly.
+
+**Red-teaming** is the practice of systematically trying to break a model's safety properties before deployment — finding the jailbreaks, prompt injections, and edge cases that cause failures. Every frontier lab does extensive internal red-teaming, and increasingly shares findings with external researchers.
+
+<SectionBreak />
+
+## Interpretability — the harder problem
+
+You can train a model to behave safely. That doesn't mean you understand why it behaves safely, or what it's actually representing internally.
+
+**Interpretability research** tries to understand the internal mechanisms of neural networks — what concepts individual neurons represent, how information flows between layers, what the model is "thinking" when it produces an output.
+
+<Callout type="warning">
+We currently cannot reliably read a model's "reasoning" from its weights. When a model gives a coherent chain-of-thought explanation, that explanation is a generated output, not a direct window into the computation that produced the answer. The model might be doing something entirely different internally.
+</Callout>
+
+This matters because a model that appears aligned might be aligned only on the training distribution. On novel inputs — situations outside its training — alignment could break down in ways we can't predict. Interpretability is the field working on tools to detect this before deployment.
+
+<SectionBreak />
+
+## What this means for users
+
+Most of this is invisible in daily use — and that's intentional. The goal is for safety to feel like nothing, because nothing went wrong.
+
+But understanding alignment gives you a more accurate model of AI limitations:
+
+- Refusals aren't censorship — they're the model following trained boundaries designed to prevent harm at scale
+- Overconfidence isn't lying — it's a training artifact from optimizing for human approval
+- Inconsistency across conversations isn't unreliability — alignment is statistical, not deterministic
+
+The field is young. The problems are genuinely hard. But unlike most deep technical problems, alignment research is happening openly — published papers, public benchmarks, model cards that document known failure modes.
+
+Progress is slower than the hype cycle suggests. It's also more genuine.
