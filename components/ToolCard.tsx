@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { usePostHog } from "posthog-js/react";
+import { PixelCanvas } from "@/components/ui/pixel-canvas";
 
 export type ToolCardProps = {
   slug: string;
@@ -141,6 +142,15 @@ export default function ToolCard({
             borderColor: showPanel ? "var(--border-emphasis)" : undefined,
           }}
         >
+          {/* Pixel canvas — animates in on hover via web component */}
+          <PixelCanvas
+            gap={8}
+            speed={30}
+            colors={[`${accentColor}0D`, `${accentColor}1A`, `${accentColor}26`]}
+            variant="default"
+            noFocus
+          />
+
           {/* Sponsored badge */}
           {is_sponsored && (
             <span style={{
@@ -178,6 +188,8 @@ export default function ToolCard({
             flex: 1,
             padding: "var(--space-5)",
             gap: "var(--space-2)",
+            position: "relative",
+            zIndex: 1,
           }}>
             {/* Category chip — replaces the header band */}
             <span style={{
@@ -239,6 +251,8 @@ export default function ToolCard({
             alignItems: "center",
             justifyContent: "space-between",
             borderTop: "1px solid var(--border-subtle)",
+            position: "relative",
+            zIndex: 1,
           }}>
             <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
               <span style={{
