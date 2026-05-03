@@ -40,6 +40,32 @@ interface ScoreResult {
 /* ─── Static option sets ────────────────────────────────────────────────────── */
 
 const FIELDS = fieldsData as FieldEntry[];
+
+const OTHER_FIELD: FieldEntry = {
+  field: 'Other / General',
+  slug: 'other',
+  tagline: 'A field outside our current list — assessed on general knowledge-work factors.',
+  tools: [],
+  concepts: ['agents', 'rag', 'fine-tuning'],
+  action_paragraph: 'AI is reshaping most knowledge work. The factors that protect you are consistent: depth of judgment, human relationships, and proactive learning.',
+  impact_data: {
+    replacement_risk: 50,
+    roles_at_risk: [],
+    roles_growing: [],
+    timeline: [
+      { year: 2024, label: 'Now', description: 'AI tools are accessible across most industries' },
+      { year: 2026, label: 'Near term', description: 'Automation of routine knowledge tasks is accelerating' },
+      { year: 2028, label: 'Medium term', description: 'Role transformation across most knowledge work domains' },
+      { year: 2030, label: 'Longer term', description: 'New role categories emerging around AI oversight and curation' },
+    ],
+  },
+};
+
+function findField(slug: string | undefined): FieldEntry {
+  if (!slug || slug === 'other') return OTHER_FIELD;
+  return FIELDS.find(f => f.slug === slug) ?? OTHER_FIELD;
+}
+
 const FIELD_OPTS: Opt[] = [
   ...FIELDS.map(f => ({ value: f.slug, label: f.field })),
   { value: 'other', label: 'Other / Not listed' },
@@ -698,6 +724,93 @@ const CAT_DESCRIPTION: Record<RiskCategory, string> = {
   low:    'Your role is well-positioned. The human skills at its core are genuinely hard for AI to replicate. The opportunity is not survival but leadership: you can shape how AI enters your field.',
 };
 
+/* ─── How Scoring Works tooltip ────────────────────────────────────────────── */
+
+function ScoringInfoButton() {
+  const [open, setOpen] = useState(false);
+  return (
+    <div style={{ position: 'relative', display: 'inline-block' }}>
+      <button
+        onClick={() => setOpen(o => !o)}
+        aria-label="How is this score calculated?"
+        style={{
+          background: 'none', border: '1px solid var(--border-subtle)',
+          borderRadius: '50%', width: 18, height: 18, cursor: 'pointer',
+          fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--text-muted)',
+          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+          transition: 'border-color 150ms ease, color 150ms ease',
+          flexShrink: 0,
+        }}
+        onMouseEnter={e => {
+          (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--accent-primary)';
+          (e.currentTarget as HTMLButtonElement).style.color = 'var(--accent-primary)';
+        }}
+        onMouseLeave={e => {
+          (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--border-subtle)';
+          (e.currentTarget as HTMLButtonElement).style.color = 'var(--text-muted)';
+        }}
+      >
+        ?
+      </button>
+      {open && (
+        <div style={{
+          position: 'absolute', top: 24, left: 0, zIndex: 50,
+          width: 300, padding: '16px 18px', borderRadius: 10,
+          background: 'var(--bg-elevated)', border: '1px solid var(--border-default)',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+        }}>
+          <p style={{
+            fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.1em',
+            textTransform: 'uppercase', color: 'var(--text-muted)', margin: '0 0 10px',
+          }}>
+            How scoring works
+          </p>
+          <p style={{
+            fontFamily: 'var(--font-ui)', fontSize: 13, color: 'var(--text-secondary)',
+            lineHeight: 1.6, margin: '0 0 10px',
+          }}>
+            Your score starts from field-level displacement data (sourced from McKinsey, WEF, and Oxford research), then adjusts based on 8 personal factors:
+          </p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+            {[
+              ['Routine task proportion', 'More repetition = higher exposure'],
+              ['Creative & judgment work', 'Original thinking lowers risk'],
+              ['Human interaction depth', 'High-empathy roles are harder to automate'],
+              ['Current AI adoption', 'Daily users score lower — they adapt faster'],
+              ['Seniority & experience', 'Senior roles carry more contextual judgment'],
+              ['Learning openness', 'The strongest protective factor in the model'],
+              ['Domain-specific context', 'Your answers to Section 4 fine-tune the score'],
+            ].map(([factor, note]) => (
+              <div key={factor} style={{ display: 'flex', gap: 8 }}>
+                <span style={{ color: 'var(--accent-primary)', fontSize: 9, marginTop: 3, flexShrink: 0 }}>◆</span>
+                <p style={{ fontFamily: 'var(--font-ui)', fontSize: 12, color: 'var(--text-secondary)', margin: 0, lineHeight: 1.5 }}>
+                  <strong style={{ color: 'var(--text-primary)' }}>{factor}</strong> — {note}
+                </p>
+              </div>
+            ))}
+          </div>
+          <p style={{
+            fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--text-muted)',
+            margin: '12px 0 0', lineHeight: 1.5,
+          }}>
+            Score ≥ 56 → High Disruption &nbsp;·&nbsp; 31–55 → Augmentation Zone &nbsp;·&nbsp; ≤ 30 → Growth Position
+          </p>
+          <button
+            onClick={() => setOpen(false)}
+            style={{
+              marginTop: 10, background: 'none', border: 'none', cursor: 'pointer',
+              fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--text-muted)',
+              padding: 0,
+            }}
+          >
+            Close ×
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* ─── Score Arc SVG ─────────────────────────────────────────────────────────── */
 
 function ScoreArc({ score, category }: { score: number; category: RiskCategory }) {
@@ -1113,15 +1226,18 @@ function ReportScreen({ result, field, answers, onRetake }: {
         >
           <ScoreArc score={score} category={category} />
           <div>
-            <span style={{
-              display: 'inline-block',
-              fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.1em',
-              textTransform: 'uppercase', color: col,
-              border: `1px solid ${col}`, borderRadius: 4, padding: '3px 10px',
-              marginBottom: 14, opacity: 0.9,
-            }}>
-              {CAT_LABEL[category]}
-            </span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+              <span style={{
+                display: 'inline-block',
+                fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.1em',
+                textTransform: 'uppercase', color: col,
+                border: `1px solid ${col}`, borderRadius: 4, padding: '3px 10px',
+                opacity: 0.9,
+              }}>
+                {CAT_LABEL[category]}
+              </span>
+              <ScoringInfoButton />
+            </div>
             <p style={{
               fontFamily: 'var(--font-editorial)', fontSize: 17, lineHeight: 1.8,
               color: 'var(--text-primary)', margin: '0 0 20px', maxWidth: '54ch',
@@ -1669,7 +1785,7 @@ function QuizPageInner({ preFieldSlug }: { preFieldSlug: string | null }) {
         setQuestionIdx(0);
       } else {
         setScreen('calculating');
-        const field = FIELDS.find(f => f.slug === fieldSlug) ?? FIELDS[0];
+        const field = findField(fieldSlug);
         const r = computeScore(answers, field);
         setResult(r);
         posthog?.capture('quiz_completed', {
@@ -1705,11 +1821,16 @@ function QuizPageInner({ preFieldSlug }: { preFieldSlug: string | null }) {
   if (screen === 'intro') return <IntroScreen onStart={() => setScreen('quiz')} />;
   if (screen === 'calculating') return <CalculatingScreen />;
   if (screen === 'report' && result) {
-    const field = FIELDS.find(f => f.slug === fieldSlug) ?? FIELDS[0];
+    const field = findField(fieldSlug);
     return <ReportScreen result={result} field={field} answers={answers} onRetake={retake} />;
   }
 
-  const answeredCount = Object.keys(answers).length;
+  // Position-based progress — counts questions passed through, not stored answer keys
+  // (slider defaults aren't stored in answers, causing Object.keys to under-count)
+  const answeredCount = useMemo(
+    () => sections.slice(0, sectionIdx).reduce((n, s) => n + s.questions.length, 0) + questionIdx,
+    [sections, sectionIdx, questionIdx],
+  );
   // Show "← Change field" when field was injected via URL and user is still in early sections
   const showChangeField = validPreField !== null && sectionIdx >= 1 && sectionIdx <= 2;
 

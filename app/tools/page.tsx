@@ -6,7 +6,8 @@ import Footer from "@/components/Footer";
 import type { ToolCardProps } from "@/components/ToolCard";
 import type { Tool } from "@/utils/supabase/types";
 
-export const dynamic = "force-dynamic";
+// ISR — revalidate the full page every 6 hours instead of force-dynamic
+export const revalidate = 21600;
 
 export const metadata: Metadata = {
   title: "The Full Archive",

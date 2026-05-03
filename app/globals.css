@@ -111,10 +111,16 @@
     --transition-reveal: 700ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
+  /* Prevent horizontal scroll and ensure consistent box model */
+  *, *::before, *::after { box-sizing: border-box; }
+  img, video, iframe { max-width: 100%; height: auto; }
+
   html {
     background-color: var(--bg-base);
     color: var(--text-primary);
     scroll-behavior: smooth;
+    overflow-x: hidden;
+    max-width: 100%;
   }
 
   body {
@@ -125,12 +131,18 @@
     color: var(--text-primary);
     min-height: 100vh;
     overflow-x: hidden;
+    max-width: 100%;
+    /* Safeguard: cursor visible unless GlowCursor activates cursor:none on mount */
+    cursor: default;
   }
 
-  /* Custom cursor — hide system cursor on pointer devices */
-  @media (pointer: fine) {
-    body { cursor: none; }
-    a, button, [role="button"], [data-hover] { cursor: none; }
+  /* GlowCursor adds cursor:none to body via JS — this block handles interactive elements */
+  body.js-cursor-active,
+  body.js-cursor-active a,
+  body.js-cursor-active button,
+  body.js-cursor-active [role="button"],
+  body.js-cursor-active [data-hover] {
+    cursor: none !important;
   }
 
   h1, h2, h3, h4, h5, h6 {

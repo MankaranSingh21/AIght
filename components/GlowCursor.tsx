@@ -12,6 +12,7 @@ export default function GlowCursor() {
   useEffect(() => {
     // Only activate on pointer-fine devices (mouse)
     if (!window.matchMedia('(pointer: fine)').matches) return;
+    document.body.classList.add('js-cursor-active');
 
     const css = getComputedStyle(document.documentElement);
     const ringIdle  = css.getPropertyValue('--cursor-ring').trim();
@@ -68,6 +69,7 @@ export default function GlowCursor() {
       window.removeEventListener('mousemove', onMove);
       cancelAnimationFrame(rafRef.current);
       mo.disconnect();
+      document.body.classList.remove('js-cursor-active');
     };
   }, []);
 
