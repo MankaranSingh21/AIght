@@ -3,7 +3,36 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { mapToolToCardProps } from "@/lib/tool-mapping";
 
-// ... (keep SLUG_TO_DB, getCategoryData, generateStaticParams)
+import ToolCard, { type ToolCardProps } from "@/components/ToolCard";
+import Footer from "@/components/Footer";
+import { createClient } from "@/utils/supabase/server";
+import type { Tool } from "@/utils/supabase/types";
+import categoriesData from "@/content/categories.json";
+
+type Props = {
+  params: Promise<{ category: string }>;
+};
+
+const SLUG_TO_DB: Record<string, string> = {
+  "ai-chat": "AI CHAT",
+  "dev-tools": "DEV TOOLS",
+  "image-gen": "IMAGE GEN",
+  "video-gen": "VIDEO GEN",
+  "research": "RESEARCH",
+  "productivity": "PRODUCTIVITY",
+  "automation": "AUTOMATION",
+  "audio": "AUDIO",
+};
+
+function getCategoryData(slug: string) {
+  return Object.values(categoriesData).find((cat) => cat.slug === slug);
+}
+
+export async function generateStaticParams() {
+  return Object.values(categoriesData).map((cat) => ({
+    category: cat.slug,
+  }));
+}
 
 export default async function CategoryPage({ params }: Props) {
   const { category } = await params;

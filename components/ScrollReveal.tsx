@@ -2,7 +2,13 @@
 
 import { useEffect, useRef } from 'react';
 
-export default function ScrollReveal({ children }: { children: React.ReactNode }) {
+export default function ScrollReveal({ 
+  children, 
+  delay = 0 
+}: { 
+  children: React.ReactNode;
+  delay?: number;
+}) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -12,7 +18,9 @@ export default function ScrollReveal({ children }: { children: React.ReactNode }
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          el.classList.add('is-revealed');
+          setTimeout(() => {
+            el.classList.add('is-revealed');
+          }, delay);
           observer.disconnect();
         }
       },
@@ -20,7 +28,7 @@ export default function ScrollReveal({ children }: { children: React.ReactNode }
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, [delay]);
 
   return (
     <div ref={ref} className="reveal-section">

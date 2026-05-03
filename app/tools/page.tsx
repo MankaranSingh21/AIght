@@ -5,7 +5,40 @@ import ToolsClient from "@/components/ToolsClient";
 import Footer from "@/components/Footer";
 import { mapToolToCardProps } from "@/lib/tool-mapping";
 
-// ... (keep metadata and EdgeOrb)
+import ToolCard, { type ToolCardProps } from "@/components/ToolCard";
+import type { Tool } from "@/utils/supabase/types";
+
+export const metadata: Metadata = {
+  title: "AI Tools Archive | AIght",
+  description: "Browse the full archive of AI tools curated for builders, founders, and creators.",
+};
+
+function EdgeOrb({ 
+  top, bottom, left, right, 
+  size = 500, 
+  color = "rgba(170,255,77,0.04)" 
+}: { 
+  top?: number | string; 
+  bottom?: number | string; 
+  left?: number | string; 
+  right?: number | string; 
+  size?: number; 
+  color?: string; 
+}) {
+  return (
+    <div style={{
+      position: "absolute",
+      top, bottom, left, right,
+      width: size,
+      height: size,
+      borderRadius: "100%",
+      background: `radial-gradient(circle at center, ${color} 0%, transparent 70%)`,
+      filter: "blur(40px)",
+      pointerEvents: "none",
+      zIndex: -1,
+    }} />
+  );
+}
 
 export default async function ToolsArchivePage() {
   const supabase = await createClient();

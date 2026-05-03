@@ -1,0 +1,9 @@
+.next/
+node_modules/
+.git/
+out/
+build/
+*.tsbuildinfo
+.claude/
+.cursor/
+.aider*

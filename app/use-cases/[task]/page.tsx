@@ -4,7 +4,31 @@ import Link from "next/link";
 import { getUseCase, getAllUseCases } from "@/lib/use-cases";
 import { mapToolToCardProps } from "@/lib/tool-mapping";
 
-// ... (keep generateStaticParams, generateMetadata)
+import ToolCard, { type ToolCardProps } from "@/components/ToolCard";
+import Footer from "@/components/Footer";
+import { createClient } from "@/utils/supabase/server";
+import type { Tool } from "@/utils/supabase/types";
+
+type Props = {
+  params: Promise<{ task: string }>;
+};
+
+export async function generateStaticParams() {
+  const useCases = getAllUseCases();
+  return useCases.map((uc) => ({
+    task: uc.slug,
+  }));
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { task } = await params;
+  const uc = getUseCase(task);
+  if (!uc) return { title: "Not Found" };
+  return {
+    title: `${uc.label} | AIght`,
+    description: uc.description,
+  };
+}
 
 export default async function UseCaseDetailPage({ params }: Props) {
   const { task } = await params;

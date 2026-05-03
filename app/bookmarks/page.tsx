@@ -4,8 +4,27 @@ import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/client";
 import { mapToolToCardProps } from "@/lib/tool-mapping";
+import ToolCard, { type ToolCardProps } from "@/components/ToolCard";
 
-// ... (keep storage key, slugs, markdown)
+const STORAGE_KEY = "aight_bookmarks";
+
+function getSlugs(): string[] {
+  if (typeof window === "undefined") return [];
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "[]");
+  } catch {
+    return [];
+  }
+}
+
+function buildMarkdown(tools: ToolCardProps[]): string {
+  const header = `### My AI Stack\n*Generated on AIght*\n\n`;
+  const items = tools.map(t => {
+    const url = t.url ? ` — [Link](${t.url})` : '';
+    return `- **${t.name}**: ${t.tagline}${url}`;
+  }).join("\n");
+  return header + items;
+}
 
 export default function BookmarksPage() {
   const [tools, setTools]     = useState<ToolCardProps[] | null>(null); // null = loading
