@@ -1761,6 +1761,13 @@ function QuizPageInner({ preFieldSlug }: { preFieldSlug: string | null }) {
   const currentQuestion = currentSection?.questions[questionIdx];
   const totalQuestions  = sections.reduce((n, s) => n + s.questions.length, 0);
 
+  // Position-based progress — must be above early returns to satisfy rules of hooks
+  // (slider defaults aren't stored in answers, so Object.keys would under-count)
+  const answeredCount = useMemo(
+    () => sections.slice(0, sectionIdx).reduce((n, s) => n + s.questions.length, 0) + questionIdx,
+    [sections, sectionIdx, questionIdx],
+  );
+
   function setAnswer(id: string, val: AnswerValue) {
     setAnswers(prev => ({ ...prev, [id]: val }));
   }
@@ -1825,12 +1832,6 @@ function QuizPageInner({ preFieldSlug }: { preFieldSlug: string | null }) {
     return <ReportScreen result={result} field={field} answers={answers} onRetake={retake} />;
   }
 
-  // Position-based progress — counts questions passed through, not stored answer keys
-  // (slider defaults aren't stored in answers, causing Object.keys to under-count)
-  const answeredCount = useMemo(
-    () => sections.slice(0, sectionIdx).reduce((n, s) => n + s.questions.length, 0) + questionIdx,
-    [sections, sectionIdx, questionIdx],
-  );
   // Show "← Change field" when field was injected via URL and user is still in early sections
   const showChangeField = validPreField !== null && sectionIdx >= 1 && sectionIdx <= 2;
 
