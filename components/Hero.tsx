@@ -4,6 +4,12 @@ import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import type { HeroTool } from './HeroWidgets';
+import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+
+function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 
 const HeroWidgets = dynamic(() => import('./HeroWidgets'), { ssr: false });
 
@@ -32,119 +38,75 @@ export default function Hero({ heroTools }: { heroTools?: HeroTool[] }) {
     });
   }, []);
 
-  const lineStyle = (delay: number): React.CSSProperties => ({
-    opacity:   revealed ? 1 : 0,
-    transform: revealed ? 'none' : 'translateY(18px)',
-    transition: `opacity 0.7s cubic-bezier(0.16,1,0.3,1) ${delay}ms, transform 0.7s cubic-bezier(0.16,1,0.3,1) ${delay}ms`,
-  });
+  const getLineClass = (revealed: boolean) => 
+    cn(
+      "transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]",
+      revealed ? "opacity-100 translate-y-0" : "opacity-0 translate-y-[18px]"
+    );
 
   return (
     <section
       onMouseMove={onMouseMove}
-      style={{
-        position: 'relative',
-        overflow: 'hidden',
-        padding: '96px 48px 80px',
-        maxWidth: 1280,
-        margin: '0 auto',
-      }}
+      className="relative overflow-hidden pt-24 md:pt-32 pb-20 px-6 md:px-12 max-w-content mx-auto"
     >
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
-        gap: 40,
-        alignItems: 'center',
-      }}>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-10 items-center">
 
         {/* LEFT — copy */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+        <div className="flex flex-col">
 
           {/* Eyebrow pill */}
-          <div style={lineStyle(0)}>
-            <div style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 8,
-              padding: '6px 14px',
-              borderRadius: 9999,
-              background: 'rgba(170,255,77,0.08)',
-              border: '1px solid rgba(170,255,77,0.20)',
-              marginBottom: 28,
-            }}>
-              <span style={{
-                width: 6, height: 6, borderRadius: '50%',
-                background: '#AAFF4D',
-                boxShadow: '0 0 6px #AAFF4D',
-                animation: 'pulse-dot 2s infinite',
-                flexShrink: 0,
-              }} />
-              <span style={{
-                fontFamily: 'var(--font-ui)',
-                fontSize: 11,
-                fontWeight: 600,
-                letterSpacing: '0.09em',
-                textTransform: 'uppercase',
-                color: '#AAFF4D',
-              }}>
-                AI learning, reimagined
+          <div 
+            className={getLineClass(revealed)}
+            style={{ transitionDelay: '0ms' }}
+          >
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-accent-glow border border-accent/20 mb-7">
+              <span className="w-1.5 h-1.5 rounded-full bg-accent shadow-[0_0_6px_var(--accent-primary)] animate-[pulse-dot_2s_infinite] shrink-0" />
+              <span className="font-sans text-[11px] font-semibold tracking-widest uppercase text-accent">
+                Ruthlessly curated. No affiliate links.
               </span>
             </div>
           </div>
 
           {/* Headline */}
-          <h1 style={{ margin: 0, marginBottom: 24, lineHeight: 1.05 }}>
-            <span style={{
-              display: 'block',
-              fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(44px, 5.5vw, 72px)',
-              fontWeight: 900,
-              color: '#F5EFE0',
-              letterSpacing: '-0.03em',
-              ...lineStyle(80),
-            }}>
+          <h1 className="m-0 mb-6 leading-[1.05]">
+            <span 
+              className={cn("block font-display text-[44px] md:text-[5.5vw] lg:text-7xl font-black text-primary tracking-tight", getLineClass(revealed))}
+              style={{ transitionDelay: '80ms' }}
+            >
               The signal
             </span>
-            <span style={{
-              display: 'block',
-              fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(44px, 5.5vw, 72px)',
-              fontWeight: 900,
-              fontStyle: 'italic',
-              color: '#AAFF4D',
-              letterSpacing: '-0.03em',
-              ...lineStyle(180),
-            }}>
+            <span 
+              className={cn("block font-display text-[44px] md:text-[5.5vw] lg:text-7xl font-black italic text-accent tracking-tight", getLineClass(revealed))}
+              style={{ transitionDelay: '180ms' }}
+            >
               beneath
             </span>
-            <span style={{
-              display: 'block',
-              fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(44px, 5.5vw, 72px)',
-              fontWeight: 300,
-              color: 'rgba(245,239,224,0.22)',
-              letterSpacing: '-0.03em',
-              ...lineStyle(280),
-            }}>
+            <span 
+              className={cn("block font-display text-[44px] md:text-[5.5vw] lg:text-7xl font-light text-primary/20 tracking-tight", getLineClass(revealed))}
+              style={{ transitionDelay: '280ms' }}
+            >
               the noise.
             </span>
           </h1>
 
           {/* Body */}
-          <p style={{
-            fontFamily: 'var(--font-editorial)',
-            fontSize: 17,
-            lineHeight: 1.8,
-            color: 'rgba(245,239,224,0.60)',
-            maxWidth: '44ch',
-            margin: '0 0 36px',
-            ...lineStyle(360),
-          }}>
-            A curated archive of AI tools worth your attention.
-            No hype, no sponsored rankings. Just honest signal.
+          <p 
+            className={cn(
+              "font-serif text-[17px] leading-relaxed text-secondary max-w-[44ch] mb-9",
+              getLineClass(revealed)
+            )}
+            style={{ transitionDelay: '360ms' }}
+          >
+            A literary, anti-hype archive of AI tools worth your attention. 
+            We do the deep dives so you don&apos;t have to. No sponsored rankings, 
+            no hustle energy—just honest signal.
           </p>
 
           {/* CTAs */}
-          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 48, ...lineStyle(440) }}>
+          <div 
+            className={cn("flex flex-wrap gap-3 mb-12", getLineClass(revealed))}
+            style={{ transitionDelay: '440ms' }}
+          >
             <Link href="/tools" className="btn-primary">
               Explore tools →
             </Link>
@@ -154,33 +116,19 @@ export default function Hero({ heroTools }: { heroTools?: HeroTool[] }) {
           </div>
 
           {/* Stats strip */}
-          <div style={{
-            display: 'flex',
-            gap: 32,
-            paddingTop: 24,
-            borderTop: '1px solid rgba(245,239,224,0.07)',
-            ...lineStyle(520),
-          }}>
+          <div 
+            className={cn(
+              "flex gap-8 pt-6 border-t border-primary/10",
+              getLineClass(revealed)
+            )}
+            style={{ transitionDelay: '520ms' }}
+          >
             {STATS.map(({ num, label }) => (
               <div key={label}>
-                <div style={{
-                  fontFamily: 'var(--font-display)',
-                  fontSize: 22,
-                  fontWeight: 700,
-                  color: '#F5EFE0',
-                  lineHeight: 1,
-                  marginBottom: 4,
-                }}>
+                <div className="font-display text-2xl font-bold text-primary mb-1">
                   {num}
                 </div>
-                <div style={{
-                  fontFamily: 'var(--font-ui)',
-                  fontSize: 11,
-                  fontWeight: 500,
-                  letterSpacing: '0.07em',
-                  textTransform: 'uppercase',
-                  color: 'rgba(245,239,224,0.35)',
-                }}>
+                <div className="font-sans text-[11px] font-medium tracking-wider uppercase text-muted">
                   {label}
                 </div>
               </div>
@@ -189,7 +137,7 @@ export default function Hero({ heroTools }: { heroTools?: HeroTool[] }) {
         </div>
 
         {/* RIGHT — floating widgets */}
-        <div style={{ position: 'relative' }}>
+        <div className="relative hidden lg:block">
           <HeroWidgets mouse={mouse} tools={heroTools} />
         </div>
       </div>

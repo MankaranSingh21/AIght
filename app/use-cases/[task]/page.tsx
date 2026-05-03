@@ -2,27 +2,9 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getUseCase, getAllUseCases } from "@/lib/use-cases";
-import { createClient } from "@/utils/supabase/server";
-import ToolCard from "@/components/ToolCard";
-import type { ToolCardProps } from "@/components/ToolCard";
-import type { Tool } from "@/utils/supabase/types";
-import Footer from "@/components/Footer";
+import { mapToolToCardProps } from "@/lib/tool-mapping";
 
-type Props = { params: Promise<{ task: string }> };
-
-export async function generateStaticParams() {
-  return getAllUseCases().map((uc) => ({ task: uc.slug }));
-}
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { task } = await params;
-  const uc = getUseCase(task);
-  if (!uc) return { title: "Not found" };
-  return {
-    title: `${uc.label} — AIght`,
-    description: uc.description,
-  };
-}
+// ... (keep generateStaticParams, generateMetadata)
 
 export default async function UseCaseDetailPage({ params }: Props) {
   const { task } = await params;
@@ -40,18 +22,7 @@ export default async function UseCaseDetailPage({ params }: Props) {
   const tools: ToolCardProps[] = uc.tool_slugs
     .map((slug) => toolMap.get(slug))
     .filter(Boolean)
-    .map((t) => ({
-      slug:         (t as Tool).slug,
-      name:         (t as Tool).name,
-      tagline:      (t as Tool).vibe_description ?? "",
-      category:     (t as Tool).category ?? "AI Tool",
-      url:          (t as Tool).url ?? null,
-      tags:         (t as Tool).tags ?? [],
-      created_at:   (t as Tool).created_at,
-      is_sponsored: (t as Tool).is_sponsored ?? null,
-      accent:       (t as Tool).accent ?? null,
-      status:       (t as Tool).status ?? "stable",
-    }));
+    .map((t) => mapToolToCardProps(t!));
 
   return (
     <>

@@ -4,6 +4,7 @@ import { createClient } from "@/utils/supabase/server";
 import Hero from "@/components/Hero";
 import Footer from "@/components/Footer";
 import Ticker from "@/components/Ticker";
+import SelectionProcess from "@/components/SelectionProcess";
 import ToolCard from "@/components/ToolCard";
 import type { ToolCardProps } from "@/components/ToolCard";
 import NewsletterForm from "@/components/NewsletterForm";
@@ -13,20 +14,7 @@ import { getAllConcepts } from "@/lib/learn";
 import { getSignalPosts } from "@/lib/signal";
 import fields from "@/content/paths/fields.json";
 
-// ── Data helpers ───────────────────────────────────────────────────────────────
-
-function mapTool(t: Partial<Tool>): ToolCardProps {
-  return {
-    slug:       t.slug ?? "",
-    name:       t.name ?? "",
-    tagline:    t.vibe_description ?? "",
-    category:   t.category ?? "AI Tool",
-    url:        t.url ?? null,
-    tags:       t.tags ?? [],
-    created_at: t.created_at ?? undefined,
-    accent:     t.accent ?? null,
-  };
-}
+import { mapToolToCardProps } from "@/lib/tool-mapping";
 
 // ── Decorative edge orb ────────────────────────────────────────────────────────
 // Full-bleed: sits outside the centred content column so the section
@@ -221,7 +209,7 @@ async function ToolsSection() {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("tools")
-    .select("slug, name, vibe_description, category, url, tags, created_at, accent")
+    .select("*")
     .order("created_at", { ascending: false })
     .limit(6);
 
@@ -229,7 +217,7 @@ async function ToolsSection() {
     console.error("[ToolsSection] Supabase error:", error.code, error.message);
   }
 
-  const tools = (data ?? []).map(mapTool);
+  const tools = (data ?? []).map((t) => mapToolToCardProps(t));
   if (tools.length === 0) return null;
 
   return (
@@ -294,6 +282,9 @@ export default async function Home() {
 
         {/* Ticker strip */}
         <Ticker />
+
+        {/* How we choose */}
+        <SelectionProcess />
 
         {/* 2. From the archive */}
         <ScrollReveal>

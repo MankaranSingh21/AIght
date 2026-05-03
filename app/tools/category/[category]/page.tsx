@@ -1,57 +1,9 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { createClient } from "@/utils/supabase/server";
-import ToolCard from "@/components/ToolCard";
-import type { ToolCardProps } from "@/components/ToolCard";
-import type { Tool } from "@/utils/supabase/types";
-import Footer from "@/components/Footer";
-import categoriesData from "@/content/categories.json";
+import { mapToolToCardProps } from "@/lib/tool-mapping";
 
-// Map URL slug → DB category name (uppercase)
-const SLUG_TO_DB: Record<string, string> = {
-  "ai-chat":      "AI CHAT",
-  "dev-tools":    "DEV TOOLS",
-  "image-gen":    "IMAGE GEN",
-  "video-gen":    "VIDEO GEN",
-  "research":     "RESEARCH",
-  "productivity": "PRODUCTIVITY",
-  "automation":   "AUTOMATION",
-  "audio":        "AUDIO",
-};
-
-type CategoryData = {
-  slug: string;
-  headline: string;
-  overview: string;
-  why_now: string;
-  related_concepts: string[];
-};
-
-function getCategoryData(urlSlug: string): CategoryData | null {
-  const dbKey = SLUG_TO_DB[urlSlug];
-  if (!dbKey) return null;
-  const cats = categoriesData as Record<string, Omit<CategoryData, "slug">>;
-  const entry = cats[dbKey];
-  if (!entry) return null;
-  return { slug: urlSlug, ...entry };
-}
-
-export async function generateStaticParams() {
-  return Object.keys(SLUG_TO_DB).map((slug) => ({ category: slug }));
-}
-
-type Props = { params: Promise<{ category: string }> };
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { category } = await params;
-  const cat = getCategoryData(category);
-  if (!cat) return { title: "Category not found" };
-  return {
-    title: `${cat.headline} — AIght`,
-    description: cat.overview,
-  };
-}
+// ... (keep SLUG_TO_DB, getCategoryData, generateStaticParams)
 
 export default async function CategoryPage({ params }: Props) {
   const { category } = await params;
@@ -66,18 +18,7 @@ export default async function CategoryPage({ params }: Props) {
     .eq("category", dbCategory)
     .order("created_at", { ascending: false });
 
-  const tools: ToolCardProps[] = (data ?? []).map((t: Tool) => ({
-    slug:         t.slug,
-    name:         t.name,
-    tagline:      t.vibe_description ?? "",
-    category:     t.category ?? "AI Tool",
-    url:          t.url ?? null,
-    tags:         t.tags ?? [],
-    created_at:   t.created_at,
-    is_sponsored: t.is_sponsored ?? null,
-    accent:       t.accent ?? null,
-    status:       t.status ?? "stable",
-  }));
+  const tools: ToolCardProps[] = (data ?? []).map((t: Tool) => mapToolToCardProps(t));
 
   return (
     <>

@@ -6,6 +6,12 @@ import { useState, useEffect } from "react";
 import { usePostHog } from "posthog-js/react";
 import { MagicCard } from "@/components/ui/magic-card";
 import { BorderBeam } from "@/components/ui/border-beam";
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 
 export type ToolCardProps = {
   slug: string;
@@ -19,6 +25,9 @@ export type ToolCardProps = {
   accent?: string | null;
   status?: "stable" | "beta" | "rising" | "deprecated";
   spanCols?: number;
+  difficulty?: "Beginner" | "Intermediate" | "Advanced";
+  pricing?: "Free" | "Freemium" | "Paid";
+  bestFor?: string;
 };
 
 const STORAGE_KEY = "aight_bookmarks";
@@ -59,6 +68,33 @@ function slugRotation(slug: string): number {
   return [-1.5, -0.75, 0, 0.75, 1.5][bucket];
 }
 
+function MetadataPill({ 
+  label 
+}: { 
+  label: string; 
+}) {
+  const getVariantStyles = () => {
+    switch (label) {
+      case "Beginner": return "text-accent bg-accent-glow border-accent/20";
+      case "Intermediate": return "text-warm bg-warm/10 border-warm/20";
+      case "Advanced": return "text-lavender bg-lavender/10 border-lavender/20";
+      case "Free": return "text-accent bg-accent-glow border-accent/20";
+      case "Freemium": return "text-accent bg-accent-glow border-accent/20";
+      case "Paid": return "text-secondary bg-primary/5 border-primary/10";
+      default: return "text-muted bg-primary/[0.03] border-primary/10";
+    }
+  };
+
+  return (
+    <span className={cn(
+      "font-mono text-[9px] uppercase tracking-wider px-2 py-0.5 rounded-sm border transition-colors duration-200",
+      getVariantStyles()
+    )}>
+      {label}
+    </span>
+  );
+}
+
 function StatusBadge({
   status,
   showNew,
@@ -66,70 +102,32 @@ function StatusBadge({
   status: string;
   showNew: boolean;
 }) {
-  const base: React.CSSProperties = {
-    position: "absolute",
-    top: 10,
-    right: 10,
-    zIndex: 2,
-    fontFamily: "var(--font-mono)",
-    fontSize: 10,
-    letterSpacing: "0.08em",
-    textTransform: "uppercase",
-    padding: "2px 8px",
-    borderRadius: "var(--radius-sm)",
-  };
+  const baseClass = "absolute top-2.5 right-2.5 z-[2] font-mono text-[10px] tracking-wider uppercase px-2 py-0.5 rounded-sm border transition-all duration-200";
+  
   if (status === "rising") {
     return (
-      <span
-        style={{
-          ...base,
-          color: "var(--accent-primary)",
-          background: "var(--accent-primary-glow)",
-          border: "1px solid var(--border-emphasis)",
-        }}
-      >
+      <span className={cn(baseClass, "text-accent bg-accent-glow border-emphasis shadow-[0_0_12px_rgba(170,255,77,0.15)]")}>
         Rising
       </span>
     );
   }
   if (status === "beta") {
     return (
-      <span
-        style={{
-          ...base,
-          color: "var(--accent-warm)",
-          background: "rgba(244,171,31,0.10)",
-          border: "1px solid rgba(244,171,31,0.25)",
-        }}
-      >
+      <span className={cn(baseClass, "text-warm bg-warm/10 border-warm/25")}>
         Beta
       </span>
     );
   }
   if (status === "deprecated") {
     return (
-      <span
-        style={{
-          ...base,
-          color: "var(--error)",
-          background: "rgba(224,112,112,0.10)",
-          border: "1px solid rgba(224,112,112,0.25)",
-        }}
-      >
+      <span className={cn(baseClass, "text-danger bg-danger/10 border-danger/25")}>
         Deprecated
       </span>
     );
   }
   if (showNew) {
     return (
-      <span
-        style={{
-          ...base,
-          color: "var(--accent-primary)",
-          background: "var(--accent-primary-glow)",
-          border: "1px solid var(--border-emphasis)",
-        }}
-      >
+      <span className={cn(baseClass, "text-accent bg-accent-glow border-emphasis")}>
         New
       </span>
     );
@@ -156,72 +154,27 @@ function CardFooter({
 }) {
   const posthog = usePostHog();
   return (
-    <div
-      style={{
-        borderTop: "1px solid var(--border-subtle)",
-        minHeight: 44,
-        position: "relative",
-        overflow: "hidden",
-      }}
-    >
+    <div className="relative border-t border-subtle min-h-[44px] overflow-hidden">
       {/* Resting: Live dot + bookmark */}
       <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "0 var(--space-5)",
-          opacity: hovered ? 0 : 1,
-          transform: hovered ? "translateY(-6px)" : "translateY(0)",
-          transition: "opacity 150ms ease, transform 150ms ease",
-          pointerEvents: hovered ? "none" : "auto",
-        }}
+        className={cn(
+          "absolute inset-0 flex items-center justify-between px-5 transition-all duration-200",
+          hovered ? "opacity-0 -translate-y-1.5 pointer-events-none" : "opacity-100 translate-y-0"
+        )}
       >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "var(--space-2)",
-          }}
-        >
-          <span
-            style={{
-              width: 5,
-              height: 5,
-              borderRadius: "50%",
-              background: "var(--accent-primary)",
-              flexShrink: 0,
-              boxShadow: "0 0 6px var(--accent-primary)",
-            }}
-          />
-          <span
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "var(--text-xs)",
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-              color: "var(--text-muted)",
-            }}
-          >
+        <div className="flex items-center gap-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-accent shrink-0 shadow-[0_0_6px_var(--accent-primary)]" />
+          <span className="font-mono text-xs tracking-widest uppercase text-muted">
             Live
           </span>
         </div>
         <button
           onClick={onBookmark}
           aria-label={bookmarked ? "Remove bookmark" : "Bookmark this tool"}
-          style={{
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            padding: "2px 4px",
-            color: bookmarked ? "var(--accent-primary)" : "var(--text-muted)",
-            transition: "color 150ms ease",
-            lineHeight: 1,
-            display: "flex",
-            alignItems: "center",
-          }}
+          className={cn(
+            "bg-transparent border-none cursor-pointer p-1 transition-colors duration-150 flex items-center",
+            bookmarked ? "text-accent" : "text-muted hover:text-primary"
+          )}
         >
           {bookmarked ? (
             <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
@@ -244,18 +197,10 @@ function CardFooter({
 
       {/* Hover: Visit + Details CTAs */}
       <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          display: "flex",
-          alignItems: "center",
-          gap: 8,
-          padding: "0 var(--space-5)",
-          opacity: hovered ? 1 : 0,
-          transform: hovered ? "translateY(0)" : "translateY(10px)",
-          transition: "opacity 180ms ease, transform 180ms ease",
-          pointerEvents: hovered ? "auto" : "none",
-        }}
+        className={cn(
+          "absolute inset-0 flex items-center gap-2.5 px-5 transition-all duration-200",
+          hovered ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 translate-y-2 pointer-events-none"
+        )}
       >
         {url && (
           <a
@@ -269,22 +214,8 @@ function CardFooter({
                 tool_name: name,
               });
             }}
-            style={{
-              fontFamily: "var(--font-ui)",
-              fontSize: 12,
-              fontWeight: 600,
-              color: "var(--text-inverse)",
-              background: accentColor,
-              border: "none",
-              borderRadius: "var(--radius-sm)",
-              padding: "5px 12px",
-              cursor: "pointer",
-              textDecoration: "none",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 4,
-              whiteSpace: "nowrap",
-            }}
+            className="font-sans text-[11px] font-bold text-inverse px-3 py-1 rounded-sm no-underline whitespace-nowrap"
+            style={{ backgroundColor: accentColor }}
           >
             Visit
           </a>
@@ -292,16 +223,7 @@ function CardFooter({
         <Link
           href={`/tool/${slug}`}
           onClick={(e) => e.stopPropagation()}
-          style={{
-            fontFamily: "var(--font-ui)",
-            fontSize: 12,
-            fontWeight: 500,
-            color: "var(--text-muted)",
-            textDecoration: "none",
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 4,
-          }}
+          className="font-sans text-[11px] font-medium text-muted hover:text-primary no-underline transition-colors"
         >
           Details
         </Link>
@@ -322,6 +244,9 @@ export default function ToolCard({
   accent,
   status = "stable",
   spanCols,
+  difficulty = "Beginner",
+  pricing = "Free",
+  bestFor,
 }: ToolCardProps) {
   const showNew = isNew(created_at) && status === "stable";
   const [bookmarked, setBookmarked] = useState(false);
@@ -364,9 +289,11 @@ export default function ToolCard({
 
   return (
     <div
+      className={cn(
+        "relative transition-all duration-200",
+        hovered ? "z-20" : "z-auto"
+      )}
       style={{
-        position: "relative",
-        zIndex: hovered ? 20 : "auto",
         gridColumn: spanCols ? `span ${spanCols}` : undefined,
       }}
       onMouseEnter={() => setHovered(true)}
@@ -377,10 +304,10 @@ export default function ToolCard({
     >
       <div
         onClick={() => router.push(`/tool/${slug}`)}
-        style={{ display: "block", cursor: "pointer" }}
+        className="block h-full cursor-pointer"
       >
         <div
-          className="tool-card"
+          className="tool-card h-full"
           onMouseDown={() => setPressed(true)}
           onMouseUp={() => setPressed(false)}
           style={{
@@ -392,23 +319,7 @@ export default function ToolCard({
           }}
         >
           {is_sponsored && (
-            <span
-              style={{
-                position: "absolute",
-                top: 10,
-                left: 10,
-                zIndex: 2,
-                fontFamily: "var(--font-mono)",
-                fontSize: 10,
-                letterSpacing: "0.08em",
-                textTransform: "uppercase",
-                color: "var(--text-muted)",
-                background: "var(--bg-overlay)",
-                border: "1px solid var(--border-subtle)",
-                padding: "2px 8px",
-                borderRadius: "var(--radius-sm)",
-              }}
-            >
+            <span className="absolute top-2.5 left-2.5 z-[2] font-mono text-[10px] tracking-wider uppercase text-muted bg-overlay border border-subtle px-2 py-0.5 rounded-sm">
               Sponsored
             </span>
           )}
@@ -423,80 +334,38 @@ export default function ToolCard({
             gradientOpacity={1}
             className="flex-col flex-1"
           >
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                flex: 1,
-                padding: "var(--space-5)",
-                gap: "var(--space-2)",
-              }}
-            >
-              <span
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: 9,
-                  letterSpacing: "0.14em",
-                  textTransform: "uppercase",
-                  color: accentColor,
-                  opacity: 0.75,
-                  lineHeight: 1,
-                  marginBottom: 4,
-                }}
+            <div className="flex flex-col flex-1 p-5 gap-2">
+              <span 
+                className="font-mono text-[9px] tracking-[0.14em] uppercase opacity-75 leading-none mb-1"
+                style={{ color: accentColor }}
               >
                 {category}
               </span>
 
-              <h3
-                style={{
-                  fontFamily: "var(--font-ui)",
-                  fontSize: "var(--text-xl)",
-                  fontWeight: 700,
-                  color: "var(--text-primary)",
-                  lineHeight: 1.2,
-                  margin: 0,
-                  letterSpacing: "-0.03em",
-                }}
-              >
+              <h3 className="font-sans text-xl font-bold text-primary leading-tight m-0 tracking-tight">
                 {name}
               </h3>
 
-              <p
-                style={{
-                  fontFamily: "var(--font-ui)",
-                  fontSize: "var(--text-sm)",
-                  lineHeight: 1.6,
-                  color: "var(--text-secondary)",
-                  margin: 0,
-                  flex: 1,
-                  display: "-webkit-box",
-                  WebkitLineClamp: 2,
-                  WebkitBoxOrient: "vertical",
-                  overflow: "hidden",
-                }}
-              >
+              {/* Metadata row */}
+              <div className="flex flex-wrap gap-1.5 mt-0.5 mb-1">
+                <MetadataPill label={difficulty} />
+                <MetadataPill label={pricing} />
+                {bestFor && <MetadataPill label={bestFor} />}
+              </div>
+
+              <p className="font-sans text-sm leading-relaxed text-secondary m-0 flex-1 line-clamp-2 overflow-hidden">
                 {tagline}
               </p>
 
               {tags.length > 0 && (
-                <div
-                  style={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    gap: "var(--space-1)",
-                    marginTop: 4,
-                  }}
-                >
+                <div className="flex flex-wrap gap-1 mt-1">
                   {tags.slice(0, 3).map((tag) => (
-                    <span key={tag} className="tag" style={{ fontSize: 10 }}>
+                    <span key={tag} className="tag text-[10px]">
                       #{tag}
                     </span>
                   ))}
                   {tags.length > 3 && (
-                    <span
-                      className="tag"
-                      style={{ fontSize: 10, opacity: 0.6 }}
-                    >
+                    <span className="tag text-[10px] opacity-60">
                       +{tags.length - 3}
                     </span>
                   )}

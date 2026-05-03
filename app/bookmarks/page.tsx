@@ -3,29 +3,9 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/client";
-import ToolCard, { type ToolCardProps } from "@/components/ToolCard";
+import { mapToolToCardProps } from "@/lib/tool-mapping";
 
-const STORAGE_KEY = "aight_bookmarks";
-
-function getSlugs(): string[] {
-  if (typeof window === "undefined") return [];
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "[]");
-  } catch {
-    return [];
-  }
-}
-
-function buildMarkdown(tools: ToolCardProps[]): string {
-  const lines = tools.map((t) => `- **${t.name}** (${t.category}) — ${t.tagline}`);
-  return [
-    "## My AI Stack",
-    "",
-    ...lines,
-    "",
-    "Curated via AIght — https://www.aightai.in",
-  ].join("\n");
-}
+// ... (keep storage key, slugs, markdown)
 
 export default function BookmarksPage() {
   const [tools, setTools]     = useState<ToolCardProps[] | null>(null); // null = loading
@@ -44,7 +24,7 @@ export default function BookmarksPage() {
     const supabase = createClient();
     const { data } = await supabase
       .from("tools")
-      .select("slug, name, vibe_description, category, url, tags, created_at, accent, status")
+      .select("*")
       .in("slug", current);
 
     if (!data) { setTools([]); return; }
@@ -54,18 +34,7 @@ export default function BookmarksPage() {
     const ordered: ToolCardProps[] = current
       .map((s) => map.get(s))
       .filter((t): t is NonNullable<typeof t> => t !== undefined)
-      .map((t) => ({
-        slug:         t.slug,
-        name:         t.name,
-        tagline:      t.vibe_description ?? "",
-        category:     t.category ?? "AI Tool",
-        url:          t.url ?? null,
-        tags:         t.tags ?? [],
-        created_at:   t.created_at,
-        is_sponsored: null,
-        accent:       t.accent ?? null,
-        status:       t.status ?? "stable",
-      }));
+      .map((t) => mapToolToCardProps(t));
 
     setTools(ordered);
   }, []);

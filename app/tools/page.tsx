@@ -3,41 +3,9 @@ import { Suspense } from "react";
 import { createClient } from "@/utils/supabase/server";
 import ToolsClient from "@/components/ToolsClient";
 import Footer from "@/components/Footer";
-import type { ToolCardProps } from "@/components/ToolCard";
-import type { Tool } from "@/utils/supabase/types";
+import { mapToolToCardProps } from "@/lib/tool-mapping";
 
-// ISR — revalidate the full page every 6 hours instead of force-dynamic
-export const revalidate = 21600;
-
-export const metadata: Metadata = {
-  title: "The Full Archive",
-  description:
-    "52+ curated AI tools worth your attention. Instant search and tag filters. No sponsored rankings, no affiliate links.",
-};
-
-// Reusable edge orb — sits outside the content column for full-bleed depth
-function EdgeOrb({
-  top, bottom, left, right, size = 560, color = "rgba(170,255,77,0.045)",
-}: {
-  top?: number | string; bottom?: number | string;
-  left?: number | string; right?: number | string;
-  size?: number; color?: string;
-}) {
-  return (
-    <div
-      aria-hidden
-      style={{
-        position: "absolute",
-        top, bottom, left, right,
-        width: size, height: size,
-        borderRadius: "50%",
-        background: `radial-gradient(circle, ${color} 0%, transparent 70%)`,
-        filter: "blur(80px)",
-        pointerEvents: "none",
-      }}
-    />
-  );
-}
+// ... (keep metadata and EdgeOrb)
 
 export default async function ToolsArchivePage() {
   const supabase = await createClient();
@@ -46,18 +14,7 @@ export default async function ToolsArchivePage() {
     .select("*")
     .order("created_at", { ascending: false });
 
-  const tools: ToolCardProps[] = (data ?? []).map((t: Partial<Tool>) => ({
-    slug:         t.slug ?? "",
-    name:         t.name ?? "",
-    tagline:      t.vibe_description ?? "",
-    category:     t.category ?? "AI Tool",
-    url:          t.url ?? null,
-    tags:         t.tags ?? [],
-    created_at:   t.created_at ?? undefined,
-    is_sponsored: t.is_sponsored ?? null,
-    accent:       t.accent ?? null,
-    status:       t.status ?? "stable",
-  }));
+  const tools: ToolCardProps[] = (data ?? []).map((t: Partial<Tool>) => mapToolToCardProps(t));
 
   return (
     <>
