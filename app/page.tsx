@@ -258,10 +258,7 @@ async function ToolsSection() {
 // ── Page ───────────────────────────────────────────────────────────────────────
 
 export default async function Home() {
-  const concepts = getAllConcepts().slice(0, 3);
-
-  // Fetch 3 newest tools for hero widget — passed as props so the hero
-  // shows real data instead of hardcoded placeholder names.
+  // Fetch 3 newest tools for hero widget
   const supabase = await createClient();
   const { data: heroData } = await supabase
     .from("tools")
@@ -283,47 +280,14 @@ export default async function Home() {
         {/* Ticker strip */}
         <Ticker />
 
-        {/* How we choose */}
-        <SelectionProcess />
-
-        {/* 2. From the archive */}
+        {/* 2. Trending Tools Grid (6–8 cards) */}
         <ScrollReveal>
-          <Suspense fallback={<SkeletonSignalSection />}>
-            <SignalSection />
+          <Suspense fallback={<SkeletonToolsSection />}>
+            <ToolsSection />
           </Suspense>
         </ScrollReveal>
 
-        {/* 3. Understand the tools you use */}
-        {concepts.length > 0 && (
-          <ScrollReveal>
-            <section
-              className="section-full"
-              style={{ borderTop: "1px solid rgba(245,239,224,0.06)", background: "rgba(26,22,18,0.45)" }}
-            >
-              <EdgeOrb top={-100} right={-100} size={480} />
-              <div className="section-inner">
-                <div style={{ marginBottom: 40 }}>
-                  <p style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(245,239,224,0.30)", margin: "0 0 8px" }}>
-                    learn
-                  </p>
-                  <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(28px,3vw,36px)", fontWeight: 700, color: "#F5EFE0", letterSpacing: "-0.02em", margin: 0 }}>
-                    Understand the tools you use
-                  </h2>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 reveal-grid">
-                  {concepts.map((concept) => <ConceptCard key={concept.slug} {...concept} />)}
-                </div>
-
-                <div style={{ marginTop: 40 }}>
-                  <Link href="/learn" className="btn-ghost">Read all concepts →</Link>
-                </div>
-              </div>
-            </section>
-          </ScrollReveal>
-        )}
-
-        {/* 4. AI in your field */}
+        {/* 3. Fields Overview */}
         {(() => {
           const featured = FEATURED_SLUGS
             .map((s) => fields.find((f) => f.slug === s))
@@ -333,7 +297,7 @@ export default async function Home() {
             <ScrollReveal>
               <section
                 className="section-full"
-                style={{ borderTop: "1px solid rgba(245,239,224,0.06)" }}
+                style={{ borderTop: "1px solid rgba(245,239,224,0.06)", background: "rgba(26,22,18,0.2)" }}
               >
                 <EdgeOrb bottom={-60} left={-180} size={520} />
                 <div className="section-inner">
@@ -361,19 +325,11 @@ export default async function Home() {
           );
         })()}
 
-        {/* 5. Tools making waves */}
-        <ScrollReveal>
-          <Suspense fallback={<SkeletonToolsSection />}>
-            <ToolsSection />
-          </Suspense>
-        </ScrollReveal>
-
-        {/* 6. Newsletter CTA */}
+        {/* 4. Newsletter & Browse CTA */}
         <section
           className="section-full"
           style={{ borderTop: "1px solid rgba(245,239,224,0.06)" }}
         >
-          {/* Wide centre orb — extends well past the content column */}
           <div
             aria-hidden
             style={{
@@ -415,10 +371,14 @@ export default async function Home() {
               color: "rgba(245,239,224,0.50)",
               margin: "0 0 36px",
             }}>
-              No spam. Unsubscribe whenever.
+              Join 5,000+ builders getting weekly signal. No hype, no affiliate links.
             </p>
             <div style={{ maxWidth: 400, margin: "0 auto" }}>
               <NewsletterForm />
+            </div>
+            <div style={{ marginTop: 48, display: "flex", justifyContent: "center", gap: 24 }}>
+              <Link href="/tools" className="font-sans text-sm text-secondary hover:text-accent transition-colors no-underline">Browse Tools →</Link>
+              <Link href="/signal" className="font-sans text-sm text-secondary hover:text-accent transition-colors no-underline">Read Signal →</Link>
             </div>
           </div>
         </section>

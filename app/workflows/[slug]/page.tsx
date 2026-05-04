@@ -162,9 +162,38 @@ export default async function WorkflowPage({ params }: Props) {
     options: { parseFrontmatter: true },
   });
 
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.aightai.in";
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": frontmatter.title,
+    "description": frontmatter.tagline,
+    "author": {
+      "@type": "Organization",
+      "name": "AIght",
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "AIght",
+      "logo": {
+        "@type": "ImageObject",
+        "url": `${SITE_URL}/favicon.ico`,
+      },
+    },
+    "datePublished": new Date().toISOString(),
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `${SITE_URL}/workflows/${slug}`,
+    },
+  };
+
   return (
     <>
       <main style={{ minHeight: "100vh", background: "var(--bg-base)" }}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <ReadingProgressBar />
 
         {/* Narrow editorial header band */}

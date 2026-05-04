@@ -171,6 +171,14 @@ export default async function ToolPage({ params }: Props) {
     deprecated_reason: tool.deprecated_reason ?? null,
     pricing_detail: tool.pricing_detail ?? null,
     alternatives: resolvedAlts,
+    utility_score: tool.utility_score ?? 0,
+    privacy_score: tool.privacy_score ?? 0,
+    speed_score: tool.speed_score ?? 0,
+    cost_score: tool.cost_score ?? 0,
+    transparency_score: tool.transparency_score ?? 0,
+    risk_level: tool.risk_level ?? "Low",
+    is_open_source: tool.is_open_source ?? false,
+    updated_at: tool.updated_at ?? tool.created_at ?? undefined,
   };
 
   const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.aightai.in";

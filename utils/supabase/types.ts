@@ -34,4 +34,24 @@ export type Tool = {
   deprecated_reason: string | null;
   pricing_detail: PricingDetail | null;
   alternatives: AlternativeEntry[];
+  utility_score: number;
+  privacy_score: number;
+  speed_score: number;
+  cost_score: number;
+  transparency_score: number;
+  risk_level: 'Low' | 'Medium' | 'High';
+  is_open_source: boolean;
+  updated_at: string;
+};
+
+export type ToolSubmission = {
+  id: string;
+  tool_name: string;
+  url: string;
+  category: string | null;
+  reason: string | null;
+  pricing: string | null;
+  open_source: boolean;
+  status: 'pending' | 'approved' | 'rejected';
+  created_at: string;
 };

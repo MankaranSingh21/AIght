@@ -858,5 +858,91 @@
         { "year": 2030, "label": "AI as interpretive collaborator", "description": "Historians co-author papers with AI systems that surface overlooked patterns across vast corpora" }
       ]
     }
+  },
+  {
+    "field": "Software Engineering",
+    "slug": "software-engineering",
+    "tagline": "AI is moving from autocomplete to autonomous agents, transforming coding into high-level system orchestration where the 'how' is automated so you can focus on the 'what'.",
+    "transformations": [
+      "AI-native IDEs and agents like Cursor and Windsurf understand entire codebases, allowing engineers to refactor, debug, and implement features across multiple files with natural language commands.",
+      "Large language models specialized for code generate idiomatic boilerplate, unit tests, and documentation, reducing routine 'grunt work' by up to 80% for senior developers.",
+      "Autonomous coding agents and 'software engineers' like Devin or OpenDevin handle end-to-end tasks from bug fixing to deployment, shifting the human role toward architecture and review."
+    ],
+    "tools": [
+      {
+        "name": "Cursor",
+        "what_it_does": "AI-native code editor that indexes your whole project for context-aware coding and refactoring"
+      },
+      {
+        "name": "Windsurf (Codeium)",
+        "what_it_does": "Agentic IDE that can autonomously navigate codebases and perform multi-step engineering tasks"
+      },
+      {
+        "name": "GitHub Copilot",
+        "what_it_does": "The industry-standard AI pair programmer that provides real-time autocomplete and chat assistance"
+      }
+    ],
+    "concepts": [
+      "Agentic workflows in software engineering",
+      "Model Context Protocol (MCP) for tool integration",
+      "Retrieval-augmented generation for codebases"
+    ],
+    "action_paragraph": "Software engineers must shift their focus from writing syntax to architecting systems and reviewing AI-generated code, using agentic IDEs like Cursor for every feature implementation to maximize velocity. Dedicate time to building custom Model Context Protocol (MCP) servers to give AI agents access to internal tools and documentation, implement rigorous automated testing to validate AI outputs, and master the art of system design over manual implementation. Treat AI as a highly competent junior dev that needs clear direction and constant review, ensuring you remain the ultimate authority on security, performance, and long-term maintainability.",
+    "difficulty": "Medium",
+    "difficulty_reason": "Engineers are early adopters, but the shift from 'doing' to 'orchestrating' requires a significant mental model change and mastery of new agentic tooling.",
+    "impact_data": {
+      "replacement_risk": 58,
+      "roles_at_risk": ["Junior web developer (boilerplate/UI)", "Routine QA / Manual tester", "Documentation writer", "Maintenance engineer"],
+      "roles_growing": ["AI system architect", "AI/ML engineer", "Engineering team orchestrator", "Security and compliance auditor"],
+      "timeline": [
+        { "year": 2024, "label": "AI-native IDEs go mainstream", "description": "Cursor and similar tools become the preferred environment for high-velocity teams" },
+        { "year": 2026, "label": "Agentic engineering is standard", "description": "Most routine features and bug fixes are initiated and drafted by AI agents" },
+        { "year": 2028, "label": "No-code for pro-coders", "description": "Natural language becomes the primary interface for system construction; syntax is secondary" },
+        { "year": 2030, "label": "Orchestration-first engineering", "description": "Human engineers manage fleets of specialized AI agents to build and maintain global-scale systems" }
+      ]
+    }
+  },
+  {
+    "field": "Sales & Business Development",
+    "slug": "sales-business-development",
+    "tagline": "AI is automating the 'outer loop' of sales—research, outreach, and scheduling—letting reps focus on the high-stakes 'inner loop' of building trust and closing deals.",
+    "transformations": [
+      "AI agents perform deep research on prospects by analyzing websites, social media, and annual reports to generate hyper-personalized outreach that converts at 3x the rate of templates.",
+      "Predictive lead scoring and intent data analyze millions of signals to identify exactly who is ready to buy and why, allowing reps to prioritize the highest-value opportunities.",
+      "Conversational AI and RAG-powered assistants coach reps in real time during calls, surfacing relevant case studies, handling objections, and automating post-call follow-ups."
+    ],
+    "tools": [
+      {
+        "name": "Apollo.io",
+        "what_it_does": "B2B database with AI-powered lead scoring, outreach automation, and intent signals"
+      },
+      {
+        "name": "Gong",
+        "what_it_does": "Revenue intelligence platform that analyzes sales calls for coaching, sentiment, and deal risks"
+      },
+      {
+        "name": "Clay",
+        "what_it_does": "AI-powered sales prospecting tool that automates research and personalized outreach at scale"
+      }
+    ],
+    "concepts": [
+      "Predictive intent signals",
+      "Retrieval-augmented generation for personalization",
+      "Conversational intelligence for sales coaching"
+    ],
+    "action_paragraph": "Sales professionals must adopt AI research tools like Clay to automate prospect qualification and personalized drafting, while using conversational intelligence platforms like Gong to audit their own performance and refine their pitch. Shift from high-volume manual outreach to high-quality AI-assisted orchestration, focusing saved time on deep relationship building and complex negotiation. Master the art of prompting for personalization, maintain a human-in-the-loop for all critical communications, and treat AI as a tireless sales development rep that handles the grunt work so you can lead the strategy.",
+    "difficulty": "Easy",
+    "difficulty_reason": "Modern sales stacks are already highly digitized; AI tools integrate easily into CRM and email workflows with minimal technical friction.",
+    "impact_data": {
+      "replacement_risk": 45,
+      "roles_at_risk": ["Sales Development Rep (routine outreach)", "Lead researcher", "Data entry specialist", "Routine account manager"],
+      "roles_growing": ["Strategic account executive", "Sales AI orchestrator", "Relationship manager", "Revenue operations specialist"],
+      "timeline": [
+        { "year": 2024, "label": "AI personalization at scale", "description": "Tools like Clay and Apollo enable 1:1 personalization for thousands of prospects daily" },
+        { "year": 2026, "label": "Autonomous prospecting standard", "description": "AI agents handle the entire top-of-funnel research and initial outreach cycle" },
+        { "year": 2028, "label": "Real-time AI sales coaching", "description": "Most sales calls are assisted by live AI models providing instant guidance and data" },
+        { "year": 2030, "label": "Hyper-automated revenue cycles", "description": "AI manages the routine parts of the sales lifecycle; reps focus on enterprise strategy and empathy-led closing" }
+      ]
+    }
   }
 ]

@@ -230,8 +230,39 @@ export default async function LearnConceptPage({ params }: Props) {
     .limit(4);
   const relatedTools = relatedToolsData ?? [];
 
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.aightai.in";
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": frontmatter.title,
+    "description": frontmatter.tagline,
+    "image": `${SITE_URL}/learn/${slug}/opengraph-image`,
+    "author": {
+      "@type": "Organization",
+      "name": "AIght",
+      "url": SITE_URL,
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "AIght",
+      "logo": {
+        "@type": "ImageObject",
+        "url": `${SITE_URL}/favicon.ico`,
+      },
+    },
+    "datePublished": new Date().toISOString(), // In a real app, this should come from frontmatter or git
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `${SITE_URL}/learn/${slug}`,
+    },
+  };
+
   return (
     <main style={{ minHeight: "100vh", background: "var(--bg-base)" }}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <ReadingProgressBar />
 
       {/* Full-width 3D constellation header */}

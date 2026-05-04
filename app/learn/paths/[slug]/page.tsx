@@ -61,8 +61,38 @@ export default async function PathPage({
   const field = fields.find((f) => f.slug === slug);
   if (!field) notFound();
 
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.aightai.in";
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": `${field.field} Field Guide`,
+    "description": field.tagline,
+    "image": `${SITE_URL}/learn/paths/${slug}/opengraph-image`,
+    "author": {
+      "@type": "Organization",
+      "name": "AIght",
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "AIght",
+      "logo": {
+        "@type": "ImageObject",
+        "url": `${SITE_URL}/favicon.ico`,
+      },
+    },
+    "datePublished": new Date().toISOString(),
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `${SITE_URL}/learn/paths/${slug}`,
+    },
+  };
+
   return (
     <main style={{ minHeight: '100vh', background: 'var(--bg-base)' }}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
 
       {/* Hero */}
       <section style={{ position: 'relative', overflow: 'hidden', background: 'rgba(255,250,240,0.02)', borderBottom: '1px solid rgba(245,239,224,0.07)', paddingTop: 80, paddingBottom: 80 }}>

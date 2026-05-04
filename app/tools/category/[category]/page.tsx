@@ -28,10 +28,14 @@ function getCategoryData(slug: string) {
   return Object.values(categoriesData).find((cat) => cat.slug === slug);
 }
 
-export async function generateStaticParams() {
-  return Object.values(categoriesData).map((cat) => ({
-    category: cat.slug,
-  }));
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { category } = await params;
+  const cat = getCategoryData(category);
+  if (!cat) return { title: "Not Found" };
+  return {
+    title: `${cat.headline} | AIght`,
+    description: cat.overview,
+  };
 }
 
 export default async function CategoryPage({ params }: Props) {

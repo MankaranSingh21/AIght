@@ -53,5 +53,13 @@ export function mapToolToCardProps(t: Partial<Tool>): ToolCardProps {
     difficulty,
     pricing,
     bestFor,
+    utility_score: t.utility_score ?? 0,
+    privacy_score: t.privacy_score ?? 0,
+    speed_score: t.speed_score ?? 0,
+    cost_score: t.cost_score ?? 0,
+    transparency_score: t.transparency_score ?? 0,
+    risk_level: t.risk_level ?? "Low",
+    is_open_source: t.is_open_source ?? false,
+    updated_at: t.updated_at ?? t.created_at ?? undefined,
   };
 }

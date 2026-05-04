@@ -21,12 +21,20 @@ export type ToolCardProps = {
   tags: string[];
   url?: string | null;
   created_at?: string;
+  updated_at?: string;
   is_sponsored?: boolean | null;
   accent?: string | null;
   status?: "stable" | "beta" | "rising" | "deprecated";
   spanCols?: number;
   difficulty?: "Beginner" | "Intermediate" | "Advanced";
   pricing?: "Free" | "Freemium" | "Paid";
+  risk_level?: "Low" | "Medium" | "High";
+  is_open_source?: boolean;
+  utility_score?: number;
+  privacy_score?: number;
+  speed_score?: number;
+  cost_score?: number;
+  transparency_score?: number;
   bestFor?: string;
 };
 
@@ -61,6 +69,13 @@ function isNew(created_at?: string): boolean {
   return new Date(created_at) > sevenDaysAgo;
 }
 
+function isStale(updated_at?: string): boolean {
+  if (!updated_at) return false;
+  const sixtyDaysAgo = new Date();
+  sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60);
+  return new Date(updated_at) < sixtyDaysAgo;
+}
+
 function slugRotation(slug: string): number {
   let h = 0;
   for (let i = 0; i < slug.length; i++) h = (h * 31 + slug.charCodeAt(i)) | 0;
@@ -69,18 +84,27 @@ function slugRotation(slug: string): number {
 }
 
 function MetadataPill({ 
-  label 
+  label,
+  type
 }: { 
-  label: string; 
+  label: string;
+  type?: "difficulty" | "pricing" | "risk" | "os" | "bestFor"
 }) {
   const getVariantStyles = () => {
     switch (label) {
-      case "Beginner": return "text-accent bg-accent-glow border-accent/20";
-      case "Intermediate": return "text-warm bg-warm/10 border-warm/20";
-      case "Advanced": return "text-lavender bg-lavender/10 border-lavender/20";
-      case "Free": return "text-accent bg-accent-glow border-accent/20";
-      case "Freemium": return "text-accent bg-accent-glow border-accent/20";
-      case "Paid": return "text-secondary bg-primary/5 border-primary/10";
+      case "Beginner": 
+      case "Free":
+      case "Low":
+      case "Open Source":
+        return "text-accent bg-accent-glow border-accent/20";
+      case "Intermediate":
+      case "Freemium":
+      case "Medium":
+        return "text-warm bg-warm/10 border-warm/20";
+      case "Advanced":
+      case "Paid":
+      case "High":
+        return "text-lavender bg-lavender/10 border-lavender/20";
       default: return "text-muted bg-primary/[0.03] border-primary/10";
     }
   };
@@ -98,9 +122,11 @@ function MetadataPill({
 function StatusBadge({
   status,
   showNew,
+  isStale,
 }: {
   status: string;
   showNew: boolean;
+  isStale: boolean;
 }) {
   const baseClass = "absolute top-2.5 right-2.5 z-[2] font-mono text-[10px] tracking-wider uppercase px-2 py-0.5 rounded-sm border transition-all duration-200";
   
@@ -132,6 +158,13 @@ function StatusBadge({
       </span>
     );
   }
+  if (isStale) {
+    return (
+      <span className={cn(baseClass, "text-muted bg-primary/5 border-primary/10 opacity-60")}>
+        Legacy
+      </span>
+    );
+  }
   return null;
 }
 
@@ -143,6 +176,7 @@ function CardFooter({
   name,
   accentColor,
   onBookmark,
+  updatedAt,
 }: {
   hovered: boolean;
   bookmarked: boolean;
@@ -151,11 +185,14 @@ function CardFooter({
   name: string;
   accentColor: string;
   onBookmark: (e: React.MouseEvent) => void;
+  updatedAt?: string;
 }) {
   const posthog = usePostHog();
+  const dateStr = updatedAt ? new Date(updatedAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : null;
+
   return (
     <div className="relative border-t border-subtle min-h-[44px] overflow-hidden">
-      {/* Resting: Live dot + bookmark */}
+      {/* Resting: Updated date + bookmark */}
       <div
         className={cn(
           "absolute inset-0 flex items-center justify-between px-5 transition-all duration-200",
@@ -164,8 +201,8 @@ function CardFooter({
       >
         <div className="flex items-center gap-2">
           <span className="w-1.5 h-1.5 rounded-full bg-accent shrink-0 shadow-[0_0_6px_var(--accent-primary)]" />
-          <span className="font-mono text-xs tracking-widest uppercase text-muted">
-            Live
+          <span className="font-mono text-[10px] tracking-widest uppercase text-muted">
+            {dateStr ? `Updated ${dateStr}` : 'Live'}
           </span>
         </div>
         <button
@@ -240,20 +277,34 @@ export default function ToolCard({
   tags,
   url,
   created_at,
+  updated_at,
   is_sponsored,
   accent,
   status = "stable",
   spanCols,
   difficulty = "Beginner",
   pricing = "Free",
+  risk_level = "Low",
+  is_open_source = false,
+  utility_score = 0,
+  privacy_score = 0,
+  speed_score = 0,
+  cost_score = 0,
+  transparency_score = 0,
   bestFor,
 }: ToolCardProps) {
   const showNew = isNew(created_at) && status === "stable";
+  const stale = isStale(updated_at);
   const [bookmarked, setBookmarked] = useState(false);
   const [pressed, setPressed] = useState(false);
   const [hovered, setHovered] = useState(false);
   const posthog = usePostHog();
   const router = useRouter();
+
+  // Calculate overall AIght Score (0-100)
+  const aightScore = Math.round(
+    (utility_score + privacy_score + speed_score + cost_score + transparency_score) / 5
+  );
 
   useEffect(() => {
     setBookmarked(getBookmarks().includes(slug));
@@ -307,7 +358,7 @@ export default function ToolCard({
         className="block h-full cursor-pointer"
       >
         <div
-          className="tool-card h-full"
+          className="tool-card h-full flex flex-col"
           onMouseDown={() => setPressed(true)}
           onMouseUp={() => setPressed(false)}
           style={{
@@ -325,7 +376,7 @@ export default function ToolCard({
           )}
 
           {!is_sponsored && (
-            <StatusBadge status={status} showNew={showNew} />
+            <StatusBadge status={status} showNew={showNew} isStale={stale} />
           )}
 
           <MagicCard
@@ -335,12 +386,22 @@ export default function ToolCard({
             className="flex-col flex-1"
           >
             <div className="flex flex-col flex-1 p-5 gap-2">
-              <span 
-                className="font-mono text-[9px] tracking-[0.14em] uppercase opacity-75 leading-none mb-1"
-                style={{ color: accentColor }}
-              >
-                {category}
-              </span>
+              <div className="flex items-start justify-between gap-4 mb-1">
+                <span 
+                  className="font-mono text-[9px] tracking-[0.14em] uppercase opacity-75 leading-none"
+                  style={{ color: accentColor }}
+                >
+                  {category}
+                </span>
+                {aightScore > 0 && (
+                  <div className="flex flex-col items-end">
+                    <span className="font-mono text-[10px] text-muted leading-none mb-1">AIght Score</span>
+                    <span className="font-display text-xl font-black text-primary leading-none" style={{ color: aightScore > 80 ? 'var(--accent-primary)' : 'inherit' }}>
+                      {aightScore}
+                    </span>
+                  </div>
+                )}
+              </div>
 
               <h3 className="font-sans text-xl font-bold text-primary leading-tight m-0 tracking-tight">
                 {name}
@@ -350,12 +411,19 @@ export default function ToolCard({
               <div className="flex flex-wrap gap-1.5 mt-0.5 mb-1">
                 <MetadataPill label={difficulty} />
                 <MetadataPill label={pricing} />
-                {bestFor && <MetadataPill label={bestFor} />}
+                <MetadataPill label={risk_level} type="risk" />
+                {is_open_source && <MetadataPill label="Open Source" type="os" />}
               </div>
 
               <p className="font-sans text-sm leading-relaxed text-secondary m-0 flex-1 line-clamp-2 overflow-hidden">
                 {tagline}
               </p>
+
+              {stale && (
+                <p className="font-mono text-[9px] text-warm/60 italic m-0">
+                  AI moves fast — check for updates
+                </p>
+              )}
 
               {tags.length > 0 && (
                 <div className="flex flex-wrap gap-1 mt-1">
@@ -381,6 +449,7 @@ export default function ToolCard({
               name={name}
               accentColor={accentColor}
               onBookmark={handleBookmark}
+              updatedAt={updated_at}
             />
           </MagicCard>
 

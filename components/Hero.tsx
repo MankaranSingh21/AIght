@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
+import fields from "@/content/paths/fields.json";
 import type { HeroTool } from './HeroWidgets';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -15,15 +16,15 @@ const HeroWidgets = dynamic(() => import('./HeroWidgets'), { ssr: false });
 
 interface MousePos { x: number; y: number; }
 
-const STATS = [
-  { num: '52+',  label: 'Curated tools'   },
-  { num: '20',   label: 'Fields covered'  },
-  { num: '0',    label: 'Affiliate links' },
-];
-
 export default function Hero({ heroTools }: { heroTools?: HeroTool[] }) {
   const [mouse, setMouse] = useState<MousePos>({ x: 0.5, y: 0.5 });
   const [revealed, setRevealed] = useState(false);
+
+  const STATS = [
+    { num: '60+',  label: 'Curated tools'   },
+    { num: fields.length.toString(), label: 'Fields covered'  },
+    { num: '0',    label: 'Affiliate links' },
+  ];
 
   useEffect(() => {
     const t = setTimeout(() => setRevealed(true), 100);

@@ -5,16 +5,16 @@ import NewsletterForm from "./NewsletterForm";
 
 const NAV_LINKS = [
   { href: "/",        label: "Home"           },
-  { href: "/learn",   label: "Learn"          },
   { href: "/tools",   label: "Tools"          },
-  { href: "/signal",  label: "Signal"         },
-  { href: "/about",   label: "About"          },
-  { href: "/use-cases",        label: "Use Cases"     },
-  { href: "/workflows",        label: "Workflows"     },
-  { href: "/learn/paths/quiz", label: "Quiz"          },
-  { href: "/support",          label: "Support"       },
+  { href: "/learn",   label: "Learn"          },
+  { href: "/learn/paths", label: "Fields"     },
+  { href: "/signal",  label: "Signal Archive" },
+  { href: "/about",   label: "About AIght"    },
+  { href: "/submit",  label: "Submit a Tool"  },
+  { href: "/support", label: "Contact / Support"},
   { href: "/privacy", label: "Privacy Policy" },
-  { href: "/terms",   label: "Terms"          },
+  { href: "https://github.com/MankaranSingh21/AIght", label: "GitHub" },
+  { href: "https://ko-fi.com/aightai", label: "Support the Project (Ko-fi)" },
 ];
 
 const STATS = [

@@ -296,6 +296,29 @@ const S6: Section = {
 /* ─── Domain-specific sections (Section 4) ──────────────────────────────────── */
 
 const DOMAIN: Record<string, Section> = {
+  engineering: {
+    id: 4, title: 'Your Engineering Context',
+    subtitle: 'Questions tailored to software and systems engineering.',
+    questions: [
+      { id: 'domain_boilerplate_pct', text: 'What percentage of your time goes to writing boilerplate, routine UI, or standard CRUD operations?',
+        type: 'slider', minLabel: '0%  — mostly complex logic', maxLabel: '100% — mostly boilerplate' },
+      { id: 'domain_architecture_pct', text: 'How much of your role involves system architecture, security reviews, and high-level design?',
+        type: 'slider', minLabel: '0%  — mostly implementation', maxLabel: '100% — mostly architecture' },
+      { id: 'domain_stack_complexity', text: 'How would you describe the complexity of the systems you maintain?',
+        type: 'single', options: [
+          { value: 'low',    label: 'Standard applications', sub: 'Well-understood patterns, standard stacks' },
+          { value: 'medium', label: 'Scaling systems',       sub: 'Distributed components, some legacy' },
+          { value: 'high',   label: 'Critical / complex',    sub: 'Highly distributed, specialized performance/security' },
+        ] },
+      { id: 'domain_mcp_awareness', text: 'Are you using or exploring the Model Context Protocol (MCP) or similar agentic tools?',
+        type: 'single', options: [
+          { value: 'actively',  label: 'Yes, actively using them' },
+          { value: 'exploring', label: 'Exploring / prototyping' },
+          { value: 'aware',     label: 'Aware but not yet using' },
+          { value: 'none',      label: 'No / not yet' },
+        ] },
+    ],
+  },
   healthcare: {
     id: 4, title: 'Your Clinical Context',
     subtitle: 'Questions specific to healthcare and patient-facing roles.',
@@ -534,10 +557,11 @@ function getFieldGroup(slug: string): string {
     'biology': 'science', 'physics-engineering': 'science',
     'chemistry-materials-science': 'science',   'environmental-science-climate': 'science',
     'agriculture-food-science': 'science',
-    'journalism-media': 'media', 'marketing-advertising': 'media',
+    'journalism-media': 'media', 'marketing-advertising': 'media', 'sales-business-development': 'media',
     'psychology-mental-health': 'social', 'social-work-public-policy': 'social',
     'history-humanities': 'social',
     'architecture-urban-design': 'default',
+    'software-engineering': 'engineering',
   };
   return m[slug] ?? 'default';
 }
@@ -590,6 +614,14 @@ function computeScore(answers: Answers, field: FieldEntry): ScoreResult {
   const group = getFieldGroup(field.slug);
   let domainMod = 0;
   switch (group) {
+    case 'engineering': {
+      const bPct = (answers.domain_boilerplate_pct ?? 40) as number;
+      const aPct = (answers.domain_architecture_pct ?? 30) as number;
+      domainMod = Math.round((bPct - 40) * 0.2) - Math.round((aPct - 30) * 0.15);
+      if (answers.domain_mcp_awareness === 'actively') domainMod -= 8;
+      if (answers.domain_mcp_awareness === 'exploring') domainMod -= 4;
+      break;
+    }
     case 'healthcare': {
       const patPct = (answers.domain_patient_pct ?? 50) as number;
       const proto  = answers.domain_protocol as string;
