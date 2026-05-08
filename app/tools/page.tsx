@@ -8,6 +8,8 @@ import { mapToolToCardProps } from "@/lib/tool-mapping";
 import ToolCard, { type ToolCardProps } from "@/components/ToolCard";
 import type { Tool } from "@/utils/supabase/types";
 
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
   title: "AI Tools Archive | AIght",
   description: "Browse the full archive of AI tools curated for builders, founders, and creators.",

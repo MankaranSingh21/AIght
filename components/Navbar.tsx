@@ -3,12 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { clsx, type ClassValue } from 'clsx';
-import { twMerge } from 'tailwind-merge';
-
-function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
+import { cn } from '@/lib/utils';
 
 const NAV_LINKS = [
   { href: '/',           label: 'Home'      },
@@ -98,13 +93,13 @@ export default function Navbar() {
 
           {/* Logo */}
           <Link href="/" className="no-underline shrink-0 flex items-center">
-            <span className="font-display text-xl font-bold text-primary tracking-tight leading-none">
+            <span className="font-mono text-xl font-medium text-primary leading-none">
               AI
             </span>
-            <span className="font-display text-xl font-bold text-accent tracking-tight leading-none">
+            <span className="font-mono text-xl font-medium text-accent leading-none">
               ght
             </span>
-            <span className="logo-cursor font-mono text-lg font-medium text-accent ml-0.5">_</span>
+            <span className="logo-cursor font-mono text-xl font-medium text-accent ml-0.5">_</span>
           </Link>
 
           {/* Nav links — hidden on very small screens */}

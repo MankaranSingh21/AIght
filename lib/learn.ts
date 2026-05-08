@@ -9,6 +9,7 @@ export type ConceptMeta = {
   tagline: string;
   readTime: string;
   slug: string;
+  publishedDate: string;
 };
 
 export function getAllConcepts(): ConceptMeta[] {
@@ -20,13 +21,16 @@ export function getAllConcepts(): ConceptMeta[] {
     .sort();
 
   return files.map((filename) => {
-    const raw = fs.readFileSync(path.join(CONTENT_DIR, filename), "utf-8");
+    const filePath = path.join(CONTENT_DIR, filename);
+    const raw = fs.readFileSync(filePath, "utf-8");
     const { data } = matter(raw);
+    const stat = fs.statSync(filePath);
     return {
       title: data.title as string,
       tagline: data.tagline as string,
       readTime: data.readTime as string,
       slug: data.slug as string,
+      publishedDate: (data.date as string | undefined) ?? stat.birthtime.toISOString(),
     };
   });
 }

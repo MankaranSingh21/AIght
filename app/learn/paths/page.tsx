@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import fields from "@/content/paths/fields.json";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "AI in your field",
@@ -57,6 +58,7 @@ function EdgeOrb({
 
 export default function PathsPage() {
   return (
+    <>
     <main style={{ minHeight: "100vh", position: "relative", zIndex: 1 }}>
 
       {/* ── Full-bleed header ─────────────────────────────────────────────── */}
@@ -194,5 +196,7 @@ export default function PathsPage() {
       </section>
 
     </main>
+    <Footer />
+    </>
   );
 }

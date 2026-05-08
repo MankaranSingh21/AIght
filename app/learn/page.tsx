@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import ConceptCarouselClient from "@/components/learn/ConceptCarouselClient";
 import { getAllConcepts } from "@/lib/learn";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "Learn",
@@ -34,6 +35,7 @@ function EdgeOrb({
 export default function LearnPage() {
   const allConcepts = getAllConcepts();
   return (
+    <>
     <main style={{ minHeight: "100vh", position: "relative", zIndex: 1 }}>
 
       {/* ── Full-bleed header ────────────────────────────────────────────── */}
@@ -282,5 +284,7 @@ export default function LearnPage() {
       </section>
 
     </main>
+    <Footer />
+    </>
   );
 }

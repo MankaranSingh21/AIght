@@ -5,6 +5,7 @@ import Link from "next/link";
 import { createClient } from "@/utils/supabase/client";
 import { mapToolToCardProps } from "@/lib/tool-mapping";
 import ToolCard, { type ToolCardProps } from "@/components/ToolCard";
+import Footer from "@/components/Footer";
 
 const STORAGE_KEY = "aight_bookmarks";
 
@@ -85,8 +86,9 @@ export default function BookmarksPage() {
   const isEmpty = tools !== null && tools.length === 0;
 
   return (
+    <>
     <main style={{ minHeight: "100vh", background: "var(--bg-base)" }}>
-      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "48px 48px 96px" }}>
+      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "clamp(24px, 4vw, 48px) clamp(20px, 5vw, 48px) 96px" }}>
 
         {/* Header */}
         <div style={{ marginBottom: 48 }}>
@@ -236,5 +238,7 @@ export default function BookmarksPage() {
 
       </div>
     </main>
+    <Footer />
+    </>
   );
 }

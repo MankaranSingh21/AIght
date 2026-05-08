@@ -4,6 +4,8 @@ import { createClient } from "@/utils/supabase/server";
 import ToolDetail, { type ToolDetailData, type UseCase, type Alternative } from "@/components/ToolDetail";
 import type { Tool, AlternativeEntry } from "@/utils/supabase/types";
 
+export const revalidate = 3600;
+
 // ── Use-case copy keyed by category ───────────────────────────────────────
 // Editorial content — lives here until we add a use_cases table.
 

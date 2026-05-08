@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/server";
 import Hero from "@/components/Hero";
@@ -15,6 +16,8 @@ import { getSignalPosts } from "@/lib/signal";
 import fields from "@/content/paths/fields.json";
 
 import { mapToolToCardProps } from "@/lib/tool-mapping";
+
+const ParticleCanvas = dynamic(() => import("@/components/ParticleCanvas"), { ssr: false });
 
 // ── Decorative edge orb ────────────────────────────────────────────────────────
 // Full-bleed: sits outside the centred content column so the section
@@ -270,8 +273,18 @@ export default async function Home() {
     cat:  t.category ?? "AI Tool",
   }));
 
+  // 3 featured concept cards
+  const allConcepts = getAllConcepts();
+  const featuredConcepts = allConcepts.slice(0, 3);
+
+  // 4 featured field paths
+  const featuredFields = (FEATURED_SLUGS
+    .map((s) => fields.find((f) => f.slug === s))
+    .filter(Boolean)) as typeof fields;
+
   return (
     <>
+      <ParticleCanvas />
       <main style={{ minHeight: "100vh", position: "relative", zIndex: 1 }}>
 
         {/* 1. Hero */}
@@ -280,50 +293,81 @@ export default async function Home() {
         {/* Ticker strip */}
         <Ticker />
 
-        {/* 2. Trending Tools Grid (6–8 cards) */}
+        {/* 2. From the archive — Signal posts */}
+        <ScrollReveal>
+          <Suspense fallback={<SkeletonSignalSection />}>
+            <SignalSection />
+          </Suspense>
+        </ScrollReveal>
+
+        {/* 3. Understand the tools you use — Concept cards */}
+        {featuredConcepts.length > 0 && (
+          <ScrollReveal>
+            <section
+              className="section-full"
+              style={{ borderTop: "1px solid rgba(245,239,224,0.06)", background: "rgba(26,22,18,0.2)" }}
+            >
+              <EdgeOrb top={-80} right={-160} size={500} />
+              <div className="section-inner">
+                <div style={{ marginBottom: 40 }}>
+                  <p style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(245,239,224,0.30)", margin: "0 0 8px" }}>
+                    concepts
+                  </p>
+                  <h2 className="font-sans text-3xl font-semibold text-primary" style={{ letterSpacing: "-0.02em" }}>
+                    Understand the tools you use
+                  </h2>
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "var(--space-6)" }} className="reveal-grid">
+                  {featuredConcepts.map((c) => (
+                    <ConceptCard key={c.slug} title={c.title} tagline={c.tagline} readTime={c.readTime} slug={c.slug} />
+                  ))}
+                </div>
+                <div style={{ marginTop: 40 }}>
+                  <Link href="/learn" className="btn-ghost">See all concepts →</Link>
+                </div>
+              </div>
+            </section>
+          </ScrollReveal>
+        )}
+
+        {/* 4. Fields Overview */}
+        {featuredFields.length > 0 && (
+          <ScrollReveal>
+            <section
+              className="section-full"
+              style={{ borderTop: "1px solid rgba(245,239,224,0.06)" }}
+            >
+              <EdgeOrb bottom={-60} left={-180} size={520} />
+              <div className="section-inner">
+                <div style={{ marginBottom: 40 }}>
+                  <p style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(245,239,224,0.30)", margin: "0 0 8px" }}>
+                    field guides
+                  </p>
+                  <h2 className="font-sans text-3xl font-semibold text-primary" style={{ letterSpacing: "-0.02em" }}>
+                    AI in your field
+                  </h2>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 reveal-grid">
+                  {featuredFields.map((f) => (
+                    <PathCard key={f.slug} field={f.field} slug={f.slug} tagline={f.tagline} difficulty={f.difficulty} />
+                  ))}
+                </div>
+
+                <div style={{ marginTop: 40 }}>
+                  <Link href="/learn/paths" className="btn-ghost">See all fields →</Link>
+                </div>
+              </div>
+            </section>
+          </ScrollReveal>
+        )}
+
+        {/* 5. Tools making waves */}
         <ScrollReveal>
           <Suspense fallback={<SkeletonToolsSection />}>
             <ToolsSection />
           </Suspense>
         </ScrollReveal>
-
-        {/* 3. Fields Overview */}
-        {(() => {
-          const featured = FEATURED_SLUGS
-            .map((s) => fields.find((f) => f.slug === s))
-            .filter(Boolean) as typeof fields;
-          if (featured.length === 0) return null;
-          return (
-            <ScrollReveal>
-              <section
-                className="section-full"
-                style={{ borderTop: "1px solid rgba(245,239,224,0.06)", background: "rgba(26,22,18,0.2)" }}
-              >
-                <EdgeOrb bottom={-60} left={-180} size={520} />
-                <div className="section-inner">
-                  <div style={{ marginBottom: 40 }}>
-                    <p style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(245,239,224,0.30)", margin: "0 0 8px" }}>
-                      field guides
-                    </p>
-                    <h2 className="font-sans text-3xl font-semibold text-primary" style={{ letterSpacing: "-0.02em" }}>
-                      AI in your field
-                    </h2>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 reveal-grid">
-                    {featured.map((f) => (
-                      <PathCard key={f.slug} field={f.field} slug={f.slug} tagline={f.tagline} difficulty={f.difficulty} />
-                    ))}
-                  </div>
-
-                  <div style={{ marginTop: 40 }}>
-                    <Link href="/learn/paths" className="btn-ghost">See all fields →</Link>
-                  </div>
-                </div>
-              </section>
-            </ScrollReveal>
-          );
-        })()}
 
         {/* 4. Newsletter & Browse CTA */}
         <section
@@ -347,7 +391,7 @@ export default async function Home() {
               position: "relative",
               zIndex: 1,
               textAlign: "center",
-              padding: "96px 48px",
+              padding: "clamp(48px, 8vw, 96px) clamp(20px, 5vw, 48px)",
               maxWidth: 560,
               margin: "0 auto",
             }}

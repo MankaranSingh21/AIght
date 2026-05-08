@@ -4,15 +4,16 @@ import Link from "next/link";
 import NewsletterForm from "./NewsletterForm";
 
 const NAV_LINKS = [
-  { href: "/",        label: "Home"           },
-  { href: "/tools",   label: "Tools"          },
-  { href: "/learn",   label: "Learn"          },
-  { href: "/learn/paths", label: "Fields"     },
-  { href: "/signal",  label: "Signal Archive" },
-  { href: "/about",   label: "About AIght"    },
-  { href: "/submit",  label: "Submit a Tool"  },
-  { href: "/support", label: "Contact / Support"},
-  { href: "/privacy", label: "Privacy Policy" },
+  { href: "/",              label: "Home"                    },
+  { href: "/tools",         label: "Tools"                   },
+  { href: "/learn",         label: "Learn"                   },
+  { href: "/learn/paths",   label: "Fields"                  },
+  { href: "/workflows",     label: "Workflows"               },
+  { href: "/use-cases",     label: "Use Cases"               },
+  { href: "/signal",        label: "Signal Archive"          },
+  { href: "/about",         label: "About AIght"             },
+  { href: "/support",       label: "Contact / Support"       },
+  { href: "/privacy",       label: "Privacy Policy"          },
   { href: "https://github.com/MankaranSingh21/AIght", label: "GitHub" },
   { href: "https://ko-fi.com/aightai", label: "Support the Project (Ko-fi)" },
 ];
@@ -31,7 +32,7 @@ export default function Footer() {
       backdropFilter: 'blur(20px)',
       WebkitBackdropFilter: 'blur(20px)',
     }}>
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '56px 48px 40px' }}>
+      <div style={{ maxWidth: 1280, margin: '0 auto', padding: 'clamp(32px, 5vw, 56px) clamp(20px, 5vw, 48px) 40px' }}>
 
         {/* Stats strip */}
         <div style={{
@@ -65,16 +66,15 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <p style={{
-              fontFamily: 'var(--font-display)',
+              fontFamily: 'var(--font-mono)',
               fontSize: 20,
-              fontWeight: 700,
-              letterSpacing: '-0.02em',
+              fontWeight: 500,
               marginBottom: 10,
               margin: '0 0 10px',
             }}>
               <span style={{ color: '#F5EFE0' }}>AI</span>
               <span style={{ color: '#AAFF4D' }}>ght</span>
-              <span className="logo-cursor" style={{ fontFamily: 'var(--font-mono)', color: '#AAFF4D' }}>_</span>
+              <span className="logo-cursor" style={{ color: '#AAFF4D' }}>_</span>
             </p>
             <p style={{
               fontFamily: 'var(--font-editorial)',

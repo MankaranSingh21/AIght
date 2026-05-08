@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "About",
@@ -9,6 +10,7 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
+    <>
     <main
       style={{
         minHeight: "calc(100vh - 64px)",
@@ -147,5 +149,7 @@ export default function AboutPage() {
         </div>
       </article>
     </main>
+    <Footer />
+    </>
   );
 }

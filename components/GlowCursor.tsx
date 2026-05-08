@@ -40,7 +40,7 @@ export default function GlowCursor() {
     };
     loop();
 
-    // Grow ring over interactive elements
+    // Grow ring over interactive elements — event delegation, no MutationObserver
     const onEnter = () => {
       if (!ringRef.current) return;
       ringRef.current.style.width  = '44px';
@@ -54,21 +54,20 @@ export default function GlowCursor() {
       ringRef.current.style.borderColor = ringIdle;
     };
 
-    const attach = () => {
-      document.querySelectorAll('a, button, [data-hover]').forEach(el => {
-        el.addEventListener('mouseenter', onEnter);
-        el.addEventListener('mouseleave', onLeave);
-      });
+    const onDocOver = (e: MouseEvent) => {
+      if ((e.target as Element).closest('a, button, [data-hover]')) onEnter();
     };
-    attach();
-    // Re-attach on DOM mutations (dynamically rendered components)
-    const mo = new MutationObserver(attach);
-    mo.observe(document.body, { childList: true, subtree: true });
+    const onDocOut = (e: MouseEvent) => {
+      if ((e.target as Element).closest('a, button, [data-hover]')) onLeave();
+    };
+    document.addEventListener('mouseover', onDocOver);
+    document.addEventListener('mouseout', onDocOut);
 
     return () => {
       window.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseover', onDocOver);
+      document.removeEventListener('mouseout', onDocOut);
       cancelAnimationFrame(rafRef.current);
-      mo.disconnect();
       document.body.classList.remove('js-cursor-active');
     };
   }, []);

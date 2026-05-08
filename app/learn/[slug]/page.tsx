@@ -209,6 +209,9 @@ export default async function LearnConceptPage({ params }: Props) {
   const source = getConceptSource(slug);
   if (!source) notFound();
 
+  const allConcepts = getAllConcepts();
+  const conceptMeta = allConcepts.find((c) => c.slug === slug);
+
   const { content, frontmatter } = await compileMDX<{
     title: string;
     tagline: string;
@@ -250,7 +253,7 @@ export default async function LearnConceptPage({ params }: Props) {
         "url": `${SITE_URL}/favicon.ico`,
       },
     },
-    "datePublished": new Date().toISOString(), // In a real app, this should come from frontmatter or git
+    "datePublished": conceptMeta?.publishedDate ?? new Date().toISOString(),
     "mainEntityOfPage": {
       "@type": "WebPage",
       "@id": `${SITE_URL}/learn/${slug}`,

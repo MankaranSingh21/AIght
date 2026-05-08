@@ -541,6 +541,7 @@
   @media (max-width: 768px) {
     .section-inner,
     .section-inner-editorial { padding: var(--space-16) var(--space-6); }
+    .learn-bridge-grid { grid-template-columns: 1fr !important; }
   }
 
   /* ── Ticker ────────────────────────────────────────────────── */
