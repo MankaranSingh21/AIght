@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/server";
 import Hero from "@/components/Hero";
@@ -16,8 +15,7 @@ import { getSignalPosts } from "@/lib/signal";
 import fields from "@/content/paths/fields.json";
 
 import { mapToolToCardProps } from "@/lib/tool-mapping";
-
-const ParticleCanvas = dynamic(() => import("@/components/ParticleCanvas"), { ssr: false });
+import HomepageParticles from "@/components/HomepageParticles";
 
 // ── Decorative edge orb ────────────────────────────────────────────────────────
 // Full-bleed: sits outside the centred content column so the section
@@ -284,7 +282,7 @@ export default async function Home() {
 
   return (
     <>
-      <ParticleCanvas />
+      <HomepageParticles />
       <main style={{ minHeight: "100vh", position: "relative", zIndex: 1 }}>
 
         {/* 1. Hero */}
