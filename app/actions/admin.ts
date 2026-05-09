@@ -7,7 +7,14 @@ import { createServiceClient } from "@/utils/supabase/service";
 export async function updateToolContent(
   toolId: string,
   videoUrl: string,
-  learningGuide: string
+  learningGuide: string,
+  scores?: {
+    utility_score: number;
+    privacy_score: number;
+    speed_score: number;
+    cost_score: number;
+    transparency_score: number;
+  }
 ) {
   // ── Auth check (user-scoped client) ────────────────────────────────────────
   const supabase = await createClient();
@@ -32,6 +39,7 @@ export async function updateToolContent(
     .update({
       video_url: videoUrl.trim() || null,
       learning_guide: learningGuide.trim() || null,
+      ...(scores ?? {}),
     })
     .eq("id", toolId);
 

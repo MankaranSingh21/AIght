@@ -29,7 +29,7 @@ export default async function AdminPage() {
 
   const { data } = await supabase
     .from("tools")
-    .select("id, name, slug, category, emoji, video_url, learning_guide")
+    .select("id, name, slug, category, emoji, video_url, learning_guide, utility_score, privacy_score, speed_score, cost_score, transparency_score")
     .order("created_at", { ascending: true });
 
   const tools = data ?? [];

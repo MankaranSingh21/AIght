@@ -1461,7 +1461,7 @@ function ReportScreen({ result, field, answers, onRetake }: {
             display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 12,
           }}>
             {field.tools.map(tool => (
-              <Link key={tool.name} href="/tools" style={{
+              <Link key={tool.name} href={`/tool/${tool.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}`} style={{
                 textDecoration: 'none', padding: '16px 20px', borderRadius: 10,
                 border: '1px solid var(--border-subtle)', background: 'var(--bg-surface)',
                 display: 'block', transition: 'border-color 150ms ease',
@@ -1575,6 +1575,8 @@ function ReportScreen({ result, field, answers, onRetake }: {
           <QuizToolRecs
             responsibilities={Array.isArray(answers.responsibilities) ? answers.responsibilities as string[] : []}
             riskCategory={category}
+            aiToolsUsed={Array.isArray(answers.ai_tools_used) ? answers.ai_tools_used as string[] : []}
+            fieldName={field.field}
           />
         </div>
 

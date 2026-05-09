@@ -11,14 +11,32 @@ type AdminTool = {
   emoji: string;
   video_url: string | null;
   learning_guide: string | null;
+  utility_score: number | null;
+  privacy_score: number | null;
+  speed_score: number | null;
+  cost_score: number | null;
+  transparency_score: number | null;
 };
 
 type EditState = {
   videoUrl: string;
   learningGuide: string;
+  utilityScore: number;
+  privacyScore: number;
+  speedScore: number;
+  costScore: number;
+  transparencyScore: number;
   error: string | null;
   saved: boolean;
 };
+
+const SCORE_AXES = [
+  { key: "utilityScore" as const, label: "Utility", color: "#AAFF4D" },
+  { key: "privacyScore" as const, label: "Privacy", color: "#00FFD1" },
+  { key: "speedScore" as const, label: "Speed", color: "#FFD100" },
+  { key: "costScore" as const, label: "Cost", color: "#B088FF" },
+  { key: "transparencyScore" as const, label: "Transparency", color: "#F4AB1F" },
+];
 
 export default function AdminToolList({ tools }: { tools: AdminTool[] }) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -29,6 +47,11 @@ export default function AdminToolList({ tools }: { tools: AdminTool[] }) {
         {
           videoUrl: t.video_url ?? "",
           learningGuide: t.learning_guide ?? "",
+          utilityScore: t.utility_score ?? 0,
+          privacyScore: t.privacy_score ?? 0,
+          speedScore: t.speed_score ?? 0,
+          costScore: t.cost_score ?? 0,
+          transparencyScore: t.transparency_score ?? 0,
           error: null,
           saved: false,
         },
@@ -53,7 +76,14 @@ export default function AdminToolList({ tools }: { tools: AdminTool[] }) {
       const result = await updateToolContent(
         tool.id,
         state.videoUrl,
-        state.learningGuide
+        state.learningGuide,
+        {
+          utility_score: state.utilityScore,
+          privacy_score: state.privacyScore,
+          speed_score: state.speedScore,
+          cost_score: state.costScore,
+          transparency_score: state.transparencyScore,
+        }
       );
       if (result.error) {
         patch(tool.id, { error: result.error });
@@ -69,6 +99,7 @@ export default function AdminToolList({ tools }: { tools: AdminTool[] }) {
       {tools.map((tool) => {
         const state = editStates[tool.id];
         const isOpen = expandedId === tool.id;
+        const hasScores = state.utilityScore > 0 || state.privacyScore > 0 || state.speedScore > 0 || state.costScore > 0 || state.transparencyScore > 0;
 
         return (
           <div
@@ -101,6 +132,12 @@ export default function AdminToolList({ tools }: { tools: AdminTool[] }) {
                     state.learningGuide ? "bg-warm" : "bg-raised"
                   }`}
                 />
+                <span
+                  aria-label={hasScores ? "Has scores" : "No scores"}
+                  className={`w-2 h-2 rounded-full ${
+                    hasScores ? "bg-[#00FFD1]" : "bg-raised"
+                  }`}
+                />
                 <button
                   onClick={() => toggle(tool.id)}
                   className={`
@@ -118,7 +155,7 @@ export default function AdminToolList({ tools }: { tools: AdminTool[] }) {
 
             {/* Inline form */}
             {isOpen && (
-              <div className="border-t border-subtle px-5 py-5 space-y-4 bg-raised">
+              <div className="border-t border-subtle px-5 py-5 space-y-5 bg-raised">
                 <div className="space-y-1.5">
                   <label className="font-sans text-xs font-medium uppercase tracking-widest text-muted">
                     Video URL
@@ -156,6 +193,49 @@ export default function AdminToolList({ tools }: { tools: AdminTool[] }) {
                     placeholder="Write a friendly, practical guide for getting started with this tool..."
                     className="w-full font-sans text-sm bg-page border border-[var(--border-default)] rounded-md px-4 py-2.5 text-primary placeholder:text-muted focus:outline-none focus:border-emphasis transition-colors resize-y"
                   />
+                </div>
+
+                {/* Score sliders */}
+                <div className="space-y-3">
+                  <p className="font-sans text-xs font-medium uppercase tracking-widest text-muted">
+                    Scoring (0–10)
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {SCORE_AXES.map(({ key, label, color }) => (
+                      <div key={key} className="space-y-1.5">
+                        <div className="flex justify-between items-center">
+                          <label
+                            htmlFor={`${tool.id}-${key}`}
+                            className="font-mono text-xs text-muted"
+                          >
+                            {label}
+                          </label>
+                          <span
+                            className="font-mono text-xs font-bold"
+                            style={{ color }}
+                          >
+                            {state[key].toFixed(1)}
+                          </span>
+                        </div>
+                        <input
+                          id={`${tool.id}-${key}`}
+                          type="range"
+                          min={0}
+                          max={10}
+                          step={0.5}
+                          value={state[key]}
+                          onChange={(e) =>
+                            patch(tool.id, {
+                              [key]: parseFloat(e.target.value),
+                              saved: false,
+                            })
+                          }
+                          className="w-full h-1.5 rounded-full appearance-none bg-panel cursor-pointer"
+                          style={{ accentColor: color }}
+                        />
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
                 <div className="flex items-center gap-4">

@@ -21,7 +21,7 @@ export default function Hero({ heroTools }: { heroTools?: HeroTool[] }) {
   const [revealed, setRevealed] = useState(false);
 
   const STATS = [
-    { num: '60+',  label: 'Curated tools'   },
+    { num: '40+',  label: 'Curated tools'   },
     { num: fields.length.toString(), label: 'Fields covered'  },
     { num: '0',    label: 'Affiliate links' },
   ];

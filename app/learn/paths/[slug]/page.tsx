@@ -7,6 +7,10 @@ import AugmentationDiagram from "@/components/learn/AugmentationDiagram";
 
 type Difficulty = "Easy" | "Medium" | "Hard";
 
+function toolNameToSlug(name: string): string {
+  return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
 function conceptToSlug(text: string): string {
   const t = text.toLowerCase();
   if (t.includes("retrieval") || t.includes("rag")) return "rag";
@@ -239,7 +243,7 @@ export default async function PathPage({
               </h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {field.tools.map((tool, i) => (
-                  <Link key={i} href="/tools" className="group" style={{ padding: '12px 16px', borderRadius: 10, border: '1px solid rgba(245,239,224,0.07)', background: 'rgba(255,250,240,0.03)', display: 'block', textDecoration: 'none', transition: 'border-color 200ms ease, transform 200ms ease' }}>
+                  <Link key={i} href={`/tool/${toolNameToSlug(tool.name)}`} className="group" style={{ padding: '12px 16px', borderRadius: 10, border: '1px solid rgba(245,239,224,0.07)', background: 'rgba(255,250,240,0.03)', display: 'block', textDecoration: 'none', transition: 'border-color 200ms ease, transform 200ms ease' }}>
                     <p style={{ fontFamily: 'var(--font-ui)', fontSize: 14, fontWeight: 600, color: '#F5EFE0', letterSpacing: '-0.01em', marginBottom: 4, transition: 'color 150ms ease' }} className="group-hover:text-accent">
                       {tool.name}
                     </p>
