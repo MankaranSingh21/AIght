@@ -14,6 +14,7 @@ import Pullquote from "@/components/learn/Pullquote";
 import CodeBlock from "@/components/learn/CodeBlock";
 import ReadingProgressBar from "@/components/learn/ReadingProgressBar";
 import ConceptHeader3DClient from "@/components/learn/ConceptHeader3DClient";
+import ReadTracker from "@/components/learn/ReadTracker";
 import ArticleReveal from "@/components/learn/ArticleReveal";
 import MarginNote from "@/components/learn/MarginNote";
 import SectionBreak from "@/components/learn/SectionBreak";
@@ -21,6 +22,17 @@ import Callout from "@/components/learn/Callout";
 import StepDiagram, { Step } from "@/components/learn/StepDiagram";
 import CompareTable, { CompareRow } from "@/components/learn/CompareTable";
 import StatPill from "@/components/learn/StatPill";
+import PromptBuilder from "@/components/learn/PromptBuilder";
+import HallucinationSpotter from "@/components/learn/HallucinationSpotter";
+import ContextWindowFill from "@/components/learn/ContextWindowFill";
+import MultiAgentOrchestrator from "@/components/learn/MultiAgentOrchestrator";
+import ModalityRouter from "@/components/learn/ModalityRouter";
+import TrainingLossViz from "@/components/learn/TrainingLossViz";
+import KnowledgeCheck from "@/components/learn/KnowledgeCheck";
+import EvalsPlayground from "@/components/learn/EvalsPlayground";
+import ReasoningTrace from "@/components/learn/ReasoningTrace";
+import GroundingMeter from "@/components/learn/GroundingMeter";
+import ComputerUseSimulator from "@/components/learn/ComputerUseSimulator";
 import type { JSX } from "react";
 
 type Props = {
@@ -64,6 +76,17 @@ const mdxComponents = {
   CompareTable,
   CompareRow,
   StatPill,
+  PromptBuilder,
+  HallucinationSpotter,
+  ContextWindowFill,
+  MultiAgentOrchestrator,
+  ModalityRouter,
+  TrainingLossViz,
+  KnowledgeCheck,
+  EvalsPlayground,
+  ReasoningTrace,
+  GroundingMeter,
+  ComputerUseSimulator,
   pre: (props: JSX.IntrinsicElements["pre"]) => <CodeBlock {...props} />,
   h2: (props: JSX.IntrinsicElements["h2"]) => (
     <h2
@@ -267,6 +290,7 @@ export default async function LearnConceptPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <ReadingProgressBar />
+      <ReadTracker slug={slug} />
 
       {/* Full-width 3D constellation header */}
       <ConceptHeader3DClient slug={slug} />

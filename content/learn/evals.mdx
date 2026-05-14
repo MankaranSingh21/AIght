@@ -1,0 +1,89 @@
+---
+title: "Evals"
+tagline: "How do you know if it's actually good?"
+readTime: "7 min read"
+slug: "evals"
+publishedDate: "2026-05-14"
+---
+
+You prompt a model. It gives you an answer. How do you know if the answer is good?
+
+This is the problem of evaluation — and it turns out to be one of the hardest unsolved problems in AI.
+
+## The measurement problem
+
+When a model gives you a response, there's no ground truth button you can press. There's no simple score that tells you whether a piece of writing is helpful, whether a code snippet handles edge cases, or whether a medical summary is appropriate for a non-expert reader.
+
+We need evals — systematic methods for measuring AI quality — because without them, "improving" an AI is just guessing.
+
+<Callout>
+An eval is a test: a dataset of inputs and a way to score the outputs. Building good evals is harder than it sounds.
+</Callout>
+
+## Benchmarks: the standardised tests of AI
+
+The AI field has produced dozens of standard benchmarks — MMLU for knowledge, HumanEval for code, TruthfulQA for factuality, MATH for mathematical reasoning.
+
+These are useful for **comparing models** under controlled conditions. They're also deeply limited.
+
+A benchmark measures one narrow slice of capability. A model that scores 90% on MMLU might still confidently make up a citation, give dangerous medical advice, or fail to understand what you actually wanted.
+
+**Teaching to the test** is real. As models are trained and fine-tuned to perform on benchmarks, the benchmark scores become less representative of real-world quality. The gap between benchmark performance and genuine capability is one of the field's recurring embarrassments.
+
+## Human evaluation
+
+If benchmarks are limited, the other option is to ask humans.
+
+Human eval works roughly like this: show people pairs of model outputs and ask them which they prefer. Aggregate thousands of comparisons. Use the signal to measure quality or train better models (this is how RLHF works).
+
+Human evals are expensive, slow, and inconsistent. Different annotators often disagree substantially — especially on questions of tone, safety, or nuance. What one person calls "helpful and clear" another calls "oversimplified."
+
+This is the rater disagreement problem: humans don't agree on what "good" means, so aggregating their preferences produces a signal that reflects annotator demographics, instructions, and fatigue as much as actual quality.
+
+## LLM-as-judge
+
+A newer approach: use one LLM to evaluate another.
+
+You send a model response to a powerful "judge" model (often GPT-4 or Claude) with a rubric, and the judge returns a score or preference. This is dramatically cheaper than human eval and can scale to millions of examples.
+
+The problem: LLM judges have their own biases. They prefer longer responses. They prefer responses that sound confident. They show **positional bias** — preferring the first response in a comparison, regardless of quality. They may be manipulated by flattery in the response ("As a highly capable AI, I will now explain...").
+
+You're measuring the judge's biases as much as the underlying quality.
+
+<Pullquote>
+If your eval method has a flaw, the model you train to maximise it inherits that flaw — invisibly.
+</Pullquote>
+
+## Goodhart's Law, again
+
+This is where Goodhart's Law bites:
+
+> When a measure becomes a target, it ceases to be a good measure.
+
+Every eval metric can be gamed. Benchmark scores can be inflated by training on similar data. Human preference scores can be inflated by making responses longer and more confident-sounding. LLM judge scores can be inflated by inserting flattery or formatting that the judge rewards.
+
+A model trained to maximise eval scores will find the shortest path to high scores — and that path often bypasses actual quality.
+
+## What does good evaluation look like?
+
+The best evals are:
+
+**Diverse** — multiple metrics across multiple dimensions. Correctness, clarity, safety, helpfulness, and groundedness should all be measured independently.
+
+**Auditable** — you can inspect each example and understand why it was scored how it was.
+
+**Adversarial** — include examples specifically designed to break the model. If it never fails, the eval isn't finding the edge cases.
+
+**Calibrated** — the scores should track with what actually matters in the deployment context. A medical QA model's eval should weight safety differently than a creative writing model's.
+
+**Multi-annotator** — disagreements between raters are signal, not noise. They reveal where the task is genuinely ambiguous.
+
+<SectionBreak />
+
+## Try it yourself
+
+The widget below shows five different AI responses to the same medical question. Rate each one on four criteria, then see how your scores compare to expert consensus — and why evaluation is genuinely hard.
+
+<EvalsPlayground />
+
+<KnowledgeCheck slug="evals" />

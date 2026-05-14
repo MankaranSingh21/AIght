@@ -1,5 +1,38 @@
 'use client';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+
+const SAMPLE_SENTENCES = [
+  "The cat sat on the mat because it was tired",
+  "The doctor gave the patient a new prescription",
+  "She read the book that her friend had recommended",
+];
+
+function tokenise(sentence: string): string[] {
+  return sentence.trim().split(/\s+/).filter(Boolean).slice(0, 12);
+}
+
+function computeAttention(tokens: string[]): Record<number, Record<number, number>> {
+  const result: Record<number, Record<number, number>> = {};
+  const stopWords = new Set(["the", "a", "an", "of", "in", "on", "at", "to", "for", "and", "or", "but", "it", "its", "was", "is", "are", "had", "has", "her", "his", "that", "this", "which"]);
+
+  for (let i = 0; i < tokens.length; i++) {
+    const weights: Record<number, number> = {};
+    for (let j = 0; j < tokens.length; j++) {
+      if (i === j) continue;
+      const dist = Math.abs(i - j);
+      const nearby = 1 / (1 + dist * 0.5);
+      const isStop = stopWords.has(tokens[j].toLowerCase());
+      const sameRoot = tokens[i].toLowerCase().slice(0, 4) === tokens[j].toLowerCase().slice(0, 4) && dist > 1;
+      const w = nearby * (isStop ? 0.4 : 0.8) + (sameRoot ? 0.35 : 0);
+      if (w > 0.25) weights[j] = Math.min(0.95, w);
+    }
+    const topN = Object.entries(weights)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 3);
+    if (topN.length) result[i] = Object.fromEntries(topN.map(([k, v]) => [k, +v.toFixed(2)]));
+  }
+  return result;
+}
 
 interface WordToken {
   text: string;
@@ -59,13 +92,32 @@ function curvePath(x1: number, x2: number): string {
 export default function AttentionViz() {
   const [selected, setSelected] = useState<number | null>(null);
   const [animKey, setAnimKey] = useState(0);
+  const [inputText, setInputText] = useState("");
+  const [activeText, setActiveText] = useState("");
+  const [useCustom, setUseCustom] = useState(false);
+
+  const customTokens = useMemo(() => tokenise(activeText), [activeText]);
+  const customWeights = useMemo(() => computeAttention(customTokens), [customTokens]);
+
+  const SVG_W = 460;
+  const customWords: WordToken[] = useMemo(() => {
+    if (!customTokens.length) return WORDS;
+    const spacing = SVG_W / (customTokens.length + 1);
+    return customTokens.map((text, i) => ({ text, cx: spacing * (i + 1) }));
+  }, [customTokens]);
+
+  const activeWords = useCustom ? customWords : WORDS;
+  const activeWeights = useCustom ? customWeights : WEIGHTS;
+  const activeLabels: Record<number, string> = useCustom
+    ? Object.fromEntries(customTokens.map((w, i) => [i, `Reading "${w}" — attending to nearby and grammatically related tokens.`]))
+    : LABELS;
 
   function handleClick(i: number) {
     setSelected(i);
     setAnimKey(k => k + 1);
   }
 
-  const connections = selected !== null ? WEIGHTS[selected] ?? {} : {};
+  const connections = selected !== null ? activeWeights[selected] ?? {} : {};
 
   return (
     <div style={{
@@ -86,6 +138,61 @@ export default function AttentionViz() {
         ◉ INTERACTIVE — click any word
       </p>
 
+      {/* Custom sentence input */}
+      <div style={{ marginBottom: 16 }}>
+        <div style={{ display: 'flex', gap: 6, marginBottom: 8, flexWrap: 'wrap' }}>
+          {SAMPLE_SENTENCES.map((s) => (
+            <button key={s} onClick={() => {
+              setInputText(s); setActiveText(s); setUseCustom(true); setSelected(null);
+            }} style={{
+              fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.04em',
+              padding: '4px 10px', borderRadius: 'var(--radius-sm)',
+              border: `1px solid ${activeText === s ? 'var(--accent-primary)' : 'var(--border-subtle)'}`,
+              background: activeText === s ? 'rgba(170,255,77,0.1)' : 'transparent',
+              color: activeText === s ? 'var(--accent-primary)' : 'var(--text-muted)',
+              cursor: 'pointer',
+            }}>
+              {s.slice(0, 28)}…
+            </button>
+          ))}
+          <button onClick={() => { setUseCustom(false); setActiveText(''); setInputText(''); setSelected(null); }} style={{
+            fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.04em',
+            padding: '4px 10px', borderRadius: 'var(--radius-sm)',
+            border: `1px solid ${!useCustom ? 'var(--accent-primary)' : 'var(--border-subtle)'}`,
+            background: !useCustom ? 'rgba(170,255,77,0.1)' : 'transparent',
+            color: !useCustom ? 'var(--accent-primary)' : 'var(--text-muted)', cursor: 'pointer',
+          }}>
+            Original
+          </button>
+        </div>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <input
+            value={inputText}
+            onChange={(e) => setInputText(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter') { setActiveText(inputText); setUseCustom(true); setSelected(null); }}}
+            placeholder="Type your own sentence (max 12 words)…"
+            style={{
+              flex: 1, background: 'var(--bg-elevated)', border: '1px solid var(--border-default)',
+              borderRadius: 'var(--radius-md)', padding: '8px 12px',
+              fontFamily: 'var(--font-editorial)', fontSize: 13, color: 'var(--text-primary)',
+              outline: 'none',
+            }}
+          />
+          <button onClick={() => { setActiveText(inputText); setUseCustom(true); setSelected(null); }} style={{
+            fontFamily: 'var(--font-ui)', fontSize: 12, fontWeight: 500,
+            padding: '8px 14px', borderRadius: 'var(--radius-md)',
+            background: 'var(--accent-primary)', color: 'var(--text-inverse)', border: 'none', cursor: 'pointer',
+          }}>
+            Visualise
+          </button>
+        </div>
+        {useCustom && (
+          <p style={{ fontFamily: 'var(--font-ui)', fontSize: 11, color: 'var(--text-muted)', marginTop: 4 }}>
+            Simulated — real transformers use learned weights, not proximity heuristics.
+          </p>
+        )}
+      </div>
+
       <svg
         viewBox="0 0 460 148"
         style={{ width: '100%', height: 'auto', display: 'block' }}
@@ -102,8 +209,8 @@ export default function AttentionViz() {
         {Object.entries(connections).map(([targetStr, weight]) => {
           const target = Number(targetStr);
           if (selected === null || target === selected) return null;
-          const x1 = WORDS[selected].cx;
-          const x2 = WORDS[target].cx;
+          const x1 = activeWords[selected]?.cx ?? 0;
+          const x2 = activeWords[target]?.cx ?? 0;
           const sw = 1 + (weight as number) * 2.4;
           return (
             <path
@@ -120,7 +227,7 @@ export default function AttentionViz() {
         })}
 
         {/* Word tokens */}
-        {WORDS.map(({ text, cx }, i) => {
+        {activeWords.map(({ text, cx }, i) => {
           const isSelected = i === selected;
           const isTarget = selected !== null && connections[i] !== undefined && i !== selected;
           const isDimmed = selected !== null && !isSelected && !isTarget;
@@ -199,7 +306,7 @@ export default function AttentionViz() {
             lineHeight: 1.7,
             margin: 0,
           }}>
-            {LABELS[selected]}
+            {activeLabels[selected]}
           </p>
         )}
       </div>

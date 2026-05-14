@@ -1,0 +1,81 @@
+---
+title: "Grounding"
+tagline: "Keeping AI tethered to reality"
+readTime: "6 min read"
+slug: "grounding"
+publishedDate: "2026-05-14"
+---
+
+A language model is, at its core, a pattern-completion machine. It has learned what text looks like — including what plausible-sounding facts look like. That's useful, but it's also dangerous. A model can generate a confident-sounding wrong answer just as fluently as a correct one.
+
+Grounding is the practice of tethering a model's outputs to something verifiable.
+
+## What grounding means
+
+An AI response is **grounded** when it can be traced back to a verifiable source: a retrieved document, a live API call, a tool output, a database row. An ungrounded response floats free of evidence — it may be correct, or it may be a hallucination that looks identical to the real thing.
+
+The word comes from the idea that you're connecting the output to the ground — to something solid beneath the speculation.
+
+<Callout>
+Grounding doesn't eliminate errors. But it makes errors auditable. You can trace the mistake back to its source, rather than wondering where the model invented it.
+</Callout>
+
+## Three levels of grounding
+
+**Level 1 — No grounding (raw LLM output)**
+
+The model answers from training memory. No sources are cited, no retrieval happens. The response may be correct (if the model was well-trained on the topic) or wrong (if the training data was sparse, outdated, or contradictory).
+
+This is the default state of a chat interface with no integrations. It's fast, cheap, and often fine for general knowledge. It's unreliable for specific facts, recent events, or anything where exact accuracy matters.
+
+**Level 2 — Retrieval-grounded (RAG)**
+
+The model first retrieves relevant documents from a knowledge base and incorporates them into its context before responding. The answer is shaped by the retrieved text rather than pure training memory.
+
+This dramatically reduces hallucination on topics covered by the knowledge base. It introduces new failure modes: the model may misread the retrieved document, or the retrieved document may itself be wrong.
+
+**Level 3 — Tool-grounded (live verification)**
+
+The model calls external tools — databases, APIs, calculators, code execution environments — and incorporates their outputs into the response. The tool calls are logged and auditable.
+
+This is the strongest form of grounding. The model is acting as an interface between the user and authoritative data sources, not as the authority itself.
+
+## Citations as grounding
+
+One underrated form of grounding is requiring the model to cite its sources inline, in a format that can be verified.
+
+A response that says "According to the 2024 FDA guidance document [retrieved: fdagov/2024-guidelines.pdf, §3.2]" is grounded. A response that says "According to recent FDA guidance" is not.
+
+The formatting matters. Inline citations with document locations force the model to connect claims to sources. When a claim can't be connected to a source, that's a signal — either the source doesn't exist, or the model is fabricating it.
+
+<Pullquote>
+An unverified citation is worse than no citation. It creates false confidence.
+</Pullquote>
+
+## Symbolic verification
+
+Some tasks can be grounded through computation rather than retrieval.
+
+If you ask a model to compute whether 37 × 48 = 1,776, you don't need to retrieve a document — you can run the calculation. Code execution, calculator tools, and formal verification systems can check certain types of claims with certainty.
+
+This is particularly powerful for maths, code correctness, and logical consistency — domains where retrieval is insufficient but computation is exact.
+
+## Where grounding fails
+
+Grounding is a mitigation, not a solution.
+
+Retrieval-grounding fails when: the retrieved document is wrong, the model misinterprets the retrieved content, the query fails to retrieve the relevant chunk, or the knowledge base is incomplete.
+
+Tool-grounding fails when: the API returns stale data, the tool itself has errors, or the model interprets the tool output incorrectly.
+
+And there's a subtler failure: **ground truth contamination**. A model can cite a source accurately while drawing conclusions the source doesn't actually support. The citation looks real; the inference is hallucinated.
+
+<SectionBreak />
+
+## Trust your eyes
+
+The widget below shows the same question answered at three levels of grounding. Rate how much you'd trust each response before revealing the analysis.
+
+<GroundingMeter />
+
+<KnowledgeCheck slug="grounding" />
