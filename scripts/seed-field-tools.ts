@@ -235,10 +235,7 @@ async function main() {
   let ok = 0;
   let fail = 0;
 
-  for (const rawTool of FIELD_TOOLS) {
-    // Strip columns that don't exist in current schema (migration 009 pending)
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { is_open_source, risk_level, utility_score, privacy_score, speed_score, cost_score, transparency_score, ...tool } = rawTool as Record<string, unknown>;
+  for (const tool of FIELD_TOOLS) {
     const { error } = await supabase
       .from("tools")
       .upsert(
@@ -246,6 +243,7 @@ async function main() {
           ...tool,
           alternatives: [],
           weaknesses: [],
+          updated_at: new Date().toISOString(),
         },
         { onConflict: "slug" }
       );
