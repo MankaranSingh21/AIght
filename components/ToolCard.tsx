@@ -76,12 +76,6 @@ function isStale(updated_at?: string): boolean {
   return new Date(updated_at) < sixtyDaysAgo;
 }
 
-function slugRotation(slug: string): number {
-  let h = 0;
-  for (let i = 0; i < slug.length; i++) h = (h * 31 + slug.charCodeAt(i)) | 0;
-  const bucket = ((h % 5) + 5) % 5;
-  return [-1.5, -0.75, 0, 0.75, 1.5][bucket];
-}
 
 function MetadataPill({ 
   label,
@@ -301,10 +295,10 @@ export default function ToolCard({
   const posthog = usePostHog();
   const router = useRouter();
 
-  // Calculate overall AIght Score (0-100)
-  const aightScore = Math.round(
-    (utility_score + privacy_score + speed_score + cost_score + transparency_score) / 5
-  );
+  const scores = [utility_score, privacy_score, speed_score, cost_score, transparency_score];
+  const aightScore = scores.every((s) => s === 0)
+    ? null
+    : Math.round(scores.reduce((a, b) => a + b, 0) / 5);
 
   useEffect(() => {
     setBookmarked(getBookmarks().includes(slug));
@@ -324,13 +318,12 @@ export default function ToolCard({
 
   const accentColor =
     accent && /^#[0-9a-fA-F]{3,8}$/.test(accent) ? accent : "#AAFF4D";
-  const rotation = slugRotation(slug);
 
   const cardTransform = pressed
-    ? `rotate(${rotation}deg) translateY(4px)`
+    ? "translateY(4px)"
     : hovered
-    ? `rotate(${rotation}deg) translateY(-2px)`
-    : `rotate(${rotation}deg)`;
+    ? "translateY(-2px)"
+    : "none";
 
   const cardShadow = hovered
     ? `inset 0 1px 0 rgba(255,250,240,0.10), 0 2px 0 rgba(0,0,0,0.6), 0 0 0 1px ${accentColor}22, 0 12px 40px ${accentColor}14`
@@ -393,7 +386,7 @@ export default function ToolCard({
                 >
                   {category}
                 </span>
-                {aightScore > 0 && (
+                {aightScore !== null && (
                   <div className="flex flex-col items-end">
                     <span className="font-mono text-[10px] text-muted leading-none mb-1">AIght Score</span>
                     <span className="font-display text-xl font-black text-primary leading-none" style={{ color: aightScore > 80 ? 'var(--accent-primary)' : 'inherit' }}>
@@ -425,20 +418,25 @@ export default function ToolCard({
                 </p>
               )}
 
-              {tags.length > 0 && (
-                <div className="flex flex-wrap gap-1 mt-1">
-                  {tags.slice(0, 3).map((tag) => (
-                    <span key={tag} className="tag text-[10px]">
-                      #{tag}
-                    </span>
-                  ))}
-                  {tags.length > 3 && (
-                    <span className="tag text-[10px] opacity-60">
-                      +{tags.length - 3}
-                    </span>
-                  )}
-                </div>
-              )}
+              {(() => {
+                const CATEGORY_FALLBACK: Record<string, string> = {
+                  "AI CHAT": "conversation", "DEV TOOLS": "coding",
+                  "IMAGE GEN": "image", "VIDEO GEN": "video",
+                  "RESEARCH": "research", "PRODUCTIVITY": "productivity",
+                  "AUTOMATION": "automation", "AUDIO": "audio",
+                };
+                const displayTags = tags.length > 0 ? tags : [CATEGORY_FALLBACK[category] ?? "ai"].filter(Boolean);
+                return (
+                  <div className="flex flex-wrap gap-1 mt-1">
+                    {displayTags.slice(0, 3).map((tag) => (
+                      <span key={tag} className="tag text-[10px]">#{tag}</span>
+                    ))}
+                    {tags.length > 3 && (
+                      <span className="tag text-[10px] opacity-60">+{tags.length - 3}</span>
+                    )}
+                  </div>
+                );
+              })()}
             </div>
 
             <CardFooter

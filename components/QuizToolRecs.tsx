@@ -17,9 +17,22 @@ type Props = {
   riskCategory: "high" | "medium" | "low";
   aiToolsUsed?: string[];
   fieldName?: string;
+  fieldSlug?: string;
+  seniority?: string;
+  careerDirection?: string;
+  aiGoal?: string;
 };
 
-export default function QuizToolRecs({ responsibilities, riskCategory, aiToolsUsed = [], fieldName }: Props) {
+export default function QuizToolRecs({
+  responsibilities,
+  riskCategory,
+  aiToolsUsed = [],
+  fieldName,
+  fieldSlug,
+  seniority,
+  careerDirection,
+  aiGoal,
+}: Props) {
   const [tools, setTools] = useState<RecommendedTool[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -29,6 +42,11 @@ export default function QuizToolRecs({ responsibilities, riskCategory, aiToolsUs
       risk_category: riskCategory,
       ai_tools_used: aiToolsUsed.join(","),
     });
+    if (fieldSlug) params.set("field", fieldSlug);
+    if (seniority) params.set("seniority", seniority);
+    if (careerDirection) params.set("career_direction", careerDirection);
+    if (aiGoal) params.set("ai_goal", aiGoal);
+
     fetch(`/api/quiz-tools?${params}`)
       .then((r) => r.json())
       .then((data) => {
@@ -36,7 +54,7 @@ export default function QuizToolRecs({ responsibilities, riskCategory, aiToolsUs
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, [responsibilities, riskCategory, aiToolsUsed]);
+  }, [responsibilities, riskCategory, aiToolsUsed, fieldSlug, seniority, careerDirection, aiGoal]);
 
   if (loading) return null;
   if (tools.length === 0) return null;

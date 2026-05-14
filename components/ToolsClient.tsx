@@ -32,10 +32,6 @@ const RISK_FILTERS = ["all", "Low", "Medium", "High"];
 
 type SortOrder = "recent" | "az" | "score";
 
-const WIDE_INDICES = new Set([0, 3, 7, 11, 15, 19, 23, 27, 31]);
-function bentoSpan(i: number): number {
-  return WIDE_INDICES.has(i) ? 2 : 1;
-}
 
 type Props = {
   tools: ToolCardProps[];
@@ -255,8 +251,8 @@ export default function ToolsClient({ tools, initialCategory = "all" }: Props) {
           </div>
         ) : (
           <div className="tool-bento-grid">
-            {filteredAndSortedTools.map((tool, i) => (
-              <ToolCard key={tool.slug} {...tool} spanCols={bentoSpan(i)} />
+            {filteredAndSortedTools.map((tool) => (
+              <ToolCard key={tool.slug} {...tool} />
             ))}
           </div>
         )}

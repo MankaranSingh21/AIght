@@ -252,31 +252,16 @@
     cursor: pointer;
   }
 
-  /* ── Bento keyboard grid ───────────────────────────────────── */
+  /* ── Tool grid ─────────────────────────────────────────────── */
   .tool-bento-grid {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--space-6);
     position: relative;
-    /* PCB trace lines behind all keys */
-    background-image:
-      linear-gradient(rgba(245,239,224,0.025) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(245,239,224,0.025) 1px, transparent 1px);
-    background-size: 32px 32px;
   }
-  @media (max-width: 900px) {
+  @media (max-width: 680px) {
     .tool-bento-grid {
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    }
-    .tool-bento-grid > * {
-      grid-column: span 1 !important;
-      transform: none !important;
-    }
-  }
-  @media (max-width: 600px) {
-    .tool-bento-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 8px;
+      grid-template-columns: 1fr;
     }
   }
 
@@ -463,6 +448,14 @@
   .reveal-section.is-revealed .reveal-list > *:nth-child(5) { opacity:1; transform:translateY(0); transition-delay:300ms; }
   .reveal-section.is-revealed .reveal-grid > *:nth-child(6),
   .reveal-section.is-revealed .reveal-list > *:nth-child(6) { opacity:1; transform:translateY(0); transition-delay:360ms; }
+
+  /* ── Scale-reveal (Apple-style) ────────────────────────────── */
+  .reveal-section-scale {
+    opacity: 0;
+    transform: scale(0.97) translateY(16px);
+    transition: opacity 600ms var(--ease-spring), transform 600ms var(--ease-spring);
+  }
+  .reveal-section-scale.is-revealed { opacity: 1; transform: scale(1) translateY(0); }
 
   /* ── Tags / chips ──────────────────────────────────────────── */
   .tag {

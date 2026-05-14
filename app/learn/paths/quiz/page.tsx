@@ -141,6 +141,35 @@ const WORRIES_OPTS: Opt[] = [
 
 /* ─── Sections ──────────────────────────────────────────────────────────────── */
 
+const S0: Section = {
+  id: 0, title: 'About You',
+  subtitle: 'Three quick questions to personalise your results.',
+  questions: [
+    { id: 'ai_goal', text: 'What\'s your primary goal with AI right now?',
+      subtext: 'This shapes which tools and paths we highlight for you.',
+      type: 'single', options: [
+        { value: 'stay_relevant',  label: 'Stay relevant in my field',    sub: 'Keep up with how AI is changing my industry' },
+        { value: 'advance',        label: 'Advance my career',             sub: 'Use AI to get ahead, not just keep pace' },
+        { value: 'build',          label: 'Build something new',           sub: 'Starting a project, product, or practice with AI' },
+        { value: 'save_time',      label: 'Save time on daily work',       sub: 'Get more done without changing direction' },
+        { value: 'learn',          label: 'Just learning for now',         sub: 'Exploring what\'s out there before committing' },
+      ] },
+    { id: 'work_style', text: 'How do you prefer to work?',
+      type: 'single', options: [
+        { value: 'solo',          label: 'Solo and focused',              sub: 'I do my best work independently' },
+        { value: 'collaborative', label: 'Collaborative and social',      sub: 'Working with others is central to how I operate' },
+        { value: 'mix',           label: 'A mix of both',                 sub: 'Context-dependent — sometimes solo, sometimes team' },
+      ] },
+    { id: 'time_horizon', text: 'How far ahead are you planning?',
+      type: 'single', options: [
+        { value: '6_months', label: 'Next 6 months',    sub: 'Near-term priorities only' },
+        { value: '1_year',   label: 'This year',         sub: 'A clear annual goal in mind' },
+        { value: '3_years',  label: '2–3 years',         sub: 'Mid-term career planning' },
+        { value: 'long',     label: 'Long game (5+)',    sub: 'Thinking about where I want to be in 5+ years' },
+      ] },
+  ],
+};
+
 const S1: Section = {
   id: 1, title: 'Your Field & Role',
   subtitle: 'Understanding where you work and what you do.',
@@ -1187,6 +1216,14 @@ function ReportScreen({ result, field, answers, onRetake }: {
   const { score, category, breakdown } = result;
   const col          = CAT_COLOR[category];
   const aiFreq       = (answers.ai_frequency as string) ?? 'rarely';
+  const AI_GOAL_LABEL: Record<string, string> = {
+    stay_relevant: 'stay relevant in your field',
+    advance:       'advance your career',
+    build:         'build something new',
+    save_time:     'save time on daily work',
+    learn:         'learn what\'s out there',
+  };
+  const goalLabel = AI_GOAL_LABEL[(answers.ai_goal as string) ?? ''] ?? null;
   const plan90       = get90DayPlan(category, aiFreq, field.field);
   const vision1yr    = get1YearVision(category, field.field);
   const riskPct      = score;
@@ -1270,6 +1307,14 @@ function ReportScreen({ result, field, answers, onRetake }: {
               </span>
               <ScoringInfoButton />
             </div>
+            {goalLabel && (
+              <p style={{
+                fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.08em',
+                color: 'var(--accent-secondary)', margin: '0 0 12px',
+              }}>
+                Goal: {goalLabel}
+              </p>
+            )}
             <p style={{
               fontFamily: 'var(--font-editorial)', fontSize: 17, lineHeight: 1.8,
               color: 'var(--text-primary)', margin: '0 0 20px', maxWidth: '54ch',
@@ -1577,6 +1622,10 @@ function ReportScreen({ result, field, answers, onRetake }: {
             riskCategory={category}
             aiToolsUsed={Array.isArray(answers.ai_tools_used) ? answers.ai_tools_used as string[] : []}
             fieldName={field.field}
+            fieldSlug={field.slug}
+            seniority={answers.seniority as string | undefined}
+            careerDirection={answers.five_year_goal as string | undefined}
+            aiGoal={answers.ai_goal as string | undefined}
           />
         </div>
 
@@ -1775,7 +1824,7 @@ function QuizPageInner({ preFieldSlug }: { preFieldSlug: string | null }) {
   const validPreField   = preFieldSlug && FIELDS.some(f => f.slug === preFieldSlug) ? preFieldSlug : null;
 
   const [screen, setScreen]           = useState<Screen>(validPreField ? 'quiz' : 'intro');
-  const [sectionIdx, setSectionIdx]   = useState(validPreField ? 1 : 0);
+  const [sectionIdx, setSectionIdx]   = useState(validPreField ? 2 : 0); // S0 is idx 0, S1 is idx 1; if pre-field set, skip to S2
   const [questionIdx, setQuestionIdx] = useState(0);
   const [answers, setAnswers]         = useState<Answers>(validPreField ? { field: validPreField } : {});
   const [visible, setVisible]         = useState(true);
@@ -1788,7 +1837,7 @@ function QuizPageInner({ preFieldSlug }: { preFieldSlug: string | null }) {
   const sections: Section[] = useMemo(() => {
     const group = getFieldGroup(fieldSlug ?? '');
     const s4    = DOMAIN[group] ?? DOMAIN.default;
-    return [S1, S2, S3, s4, S5, S6];
+    return [S0, S1, S2, S3, s4, S5, S6];
   }, [fieldSlug]);
 
   const currentSection  = sections[sectionIdx];
@@ -1867,7 +1916,7 @@ function QuizPageInner({ preFieldSlug }: { preFieldSlug: string | null }) {
   }
 
   // Show "← Change field" when field was injected via URL and user is still in early sections
-  const showChangeField = validPreField !== null && sectionIdx >= 1 && sectionIdx <= 2;
+  const showChangeField = validPreField !== null && sectionIdx >= 2 && sectionIdx <= 3;
 
   return (
     <div style={{ minHeight: '100vh' }}>
@@ -1978,12 +2027,12 @@ function QuizPageInner({ preFieldSlug }: { preFieldSlug: string | null }) {
             padding: '32px 36px', borderRadius: 14,
             border: '1px solid var(--border-subtle)', background: 'var(--bg-surface)',
           }}>
-            <QuestionBlock
+            {currentQuestion && <QuestionBlock
               q={currentQuestion}
               answers={answers}
               setAnswer={setAnswer}
               onNext={advance}
-            />
+            />}
           </div>
         </div>
 

@@ -259,18 +259,6 @@ async function ToolsSection() {
 // ── Page ───────────────────────────────────────────────────────────────────────
 
 export default async function Home() {
-  // Fetch 3 newest tools for hero widget
-  const supabase = await createClient();
-  const { data: heroData } = await supabase
-    .from("tools")
-    .select("name, category")
-    .order("created_at", { ascending: false })
-    .limit(3);
-  const heroTools = (heroData ?? []).map((t) => ({
-    name: t.name ?? "",
-    cat:  t.category ?? "AI Tool",
-  }));
-
   // 3 featured concept cards
   const allConcepts = getAllConcepts();
   const featuredConcepts = allConcepts.slice(0, 3);
@@ -286,13 +274,13 @@ export default async function Home() {
       <main style={{ minHeight: "100vh", position: "relative", zIndex: 1 }}>
 
         {/* 1. Hero */}
-        <Hero heroTools={heroTools} />
+        <Hero />
 
         {/* Ticker strip */}
         <Ticker />
 
         {/* 2. From the archive — Signal posts */}
-        <ScrollReveal>
+        <ScrollReveal scale>
           <Suspense fallback={<SkeletonSignalSection />}>
             <SignalSection />
           </Suspense>
@@ -300,7 +288,7 @@ export default async function Home() {
 
         {/* 3. Understand the tools you use — Concept cards */}
         {featuredConcepts.length > 0 && (
-          <ScrollReveal>
+          <ScrollReveal scale>
             <section
               className="section-full"
               style={{ borderTop: "1px solid rgba(245,239,224,0.06)", background: "rgba(26,22,18,0.2)" }}
@@ -330,7 +318,7 @@ export default async function Home() {
 
         {/* 4. Fields Overview */}
         {featuredFields.length > 0 && (
-          <ScrollReveal>
+          <ScrollReveal scale>
             <section
               className="section-full"
               style={{ borderTop: "1px solid rgba(245,239,224,0.06)" }}
@@ -361,7 +349,7 @@ export default async function Home() {
         )}
 
         {/* 5. Tools making waves */}
-        <ScrollReveal>
+        <ScrollReveal scale>
           <Suspense fallback={<SkeletonToolsSection />}>
             <ToolsSection />
           </Suspense>
