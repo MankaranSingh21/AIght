@@ -88,8 +88,8 @@ function RadarChart({ scores }: { scores: number[] }) {
     return { x, y };
   });
 
-  // Score polygon
-  const scorePoints = scores.map((s, i) => radarPoint(angles[i], (s / 10) * maxR, cx, cy));
+  // Score polygon — scores are 0–100, normalize to 0–1
+  const scorePoints = scores.map((s, i) => radarPoint(angles[i], (s / 100) * maxR, cx, cy));
   const polygon = scorePoints.map((p) => p.join(",")).join(" ");
 
   // Label positions (slightly outside)
