@@ -1,6 +1,5 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { createClient } from "@/utils/supabase/server";
 import Hero from "@/components/Hero";
 import Footer from "@/components/Footer";
 import Ticker from "@/components/Ticker";
@@ -16,9 +15,9 @@ import MagneticLink from "@/components/MagneticLink";
 import AuroraBackground from "@/components/AuroraBackground";
 import { getAllConcepts } from "@/lib/learn";
 import { getSignalPosts } from "@/lib/signal";
+import { getHomeData } from "@/lib/home-data";
 import fields from "@/content/paths/fields.json";
 
-import { mapToolToCardProps } from "@/lib/tool-mapping";
 import HomepageParticles from "@/components/HomepageParticles";
 
 // ── Skeleton states (no shimmer — just a breath pulse) ─────────────────────────
@@ -222,19 +221,32 @@ async function SignalSection() {
 }
 
 async function ToolsSection() {
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("tools")
-    .select("*")
-    .order("created_at", { ascending: false })
-    .limit(6);
+  const { recentCards: tools, error } = await getHomeData();
 
-  if (error) {
-    console.error("[ToolsSection] Supabase error:", error.code, error.message);
+  if (tools.length === 0) {
+    return (
+      <section className="section-full">
+        <div className="section-inner-wide">
+          <div className="marginalia-wrap" style={{ marginBottom: 40 }}>
+            <div>
+              <p style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(245,239,224,0.30)", margin: "0 0 8px" }}>
+                {error ? "the archive is briefly offline" : "warming up the archive"}
+              </p>
+              <h2 className="font-sans text-3xl md:text-4xl font-semibold text-primary" style={{ letterSpacing: "-0.02em", lineHeight: 1.1 }}>
+                Tools making waves
+              </h2>
+            </div>
+          </div>
+          <p className="font-serif italic text-secondary" style={{ fontSize: 17, lineHeight: 1.7, maxWidth: "52ch", marginBottom: 24 }}>
+            {error
+              ? "Our archive is taking a breath. The full directory is still alive and well."
+              : "No tools to feature here just yet. The full directory is open for browsing."}
+          </p>
+          <Link href="/tools" className="btn-ghost">Browse the directory →</Link>
+        </div>
+      </section>
+    );
   }
-
-  const tools = (data ?? []).map((t) => mapToolToCardProps(t));
-  if (tools.length === 0) return null;
 
   // Pick "hero" tool — highest utility score, fallback to first
   const sorted = [...tools].sort(
@@ -297,6 +309,10 @@ export default async function Home() {
   // Use up to 8 field guides for the horizontal scroll strip
   const stripFields = fields.slice(0, 8);
 
+  // Real data for the hero widgets — same fetch is shared with ToolsSection via React cache.
+  const homeData = await getHomeData();
+  const fieldNamesForCycler = fields.slice(0, 8).map((f) => f.field);
+
   return (
     <>
       <AuroraBackground />
@@ -304,7 +320,13 @@ export default async function Home() {
       <main style={{ minHeight: "100vh", position: "relative", zIndex: 1 }}>
 
         {/* Hero */}
-        <Hero />
+        <Hero
+          tools={homeData.heroTools}
+          riskStats={homeData.riskStats}
+          topScored={homeData.topScored}
+          fieldNames={fieldNamesForCycler}
+          totalTools={homeData.totalTools}
+        />
 
         {/* Ticker strip */}
         <Ticker />

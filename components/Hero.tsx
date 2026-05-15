@@ -3,8 +3,16 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import fields from "@/content/paths/fields.json";
-import HeroWidgets from './HeroWidgets';
+import HeroWidgets, { type HeroTool, type HeroRiskStats, type HeroTopScored } from './HeroWidgets';
 import MagneticLink from './MagneticLink';
+
+interface HeroProps {
+  tools?: HeroTool[];
+  riskStats?: HeroRiskStats;
+  topScored?: HeroTopScored | null;
+  fieldNames?: string[];
+  totalTools?: number;
+}
 
 const SPRING_EASE = [0.16, 1, 0.3, 1] as [number, number, number, number];
 
@@ -26,7 +34,7 @@ const FADE_UP = (i: number) => ({
   },
 });
 
-export default function Hero() {
+export default function Hero({ tools, riskStats, topScored, fieldNames, totalTools }: HeroProps = {}) {
   const sectionRef = useRef<HTMLElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -55,8 +63,9 @@ export default function Hero() {
     return () => window.removeEventListener('mousemove', onMove);
   }, []);
 
+  const toolCountLabel = totalTools && totalTools > 0 ? `${totalTools}+` : '60+';
   const STATS = [
-    { num: '60+',  label: 'Curated tools'  },
+    { num: toolCountLabel,  label: 'Curated tools'  },
     { num: fields.length.toString(), label: 'Fields covered' },
     { num: '0',    label: 'Affiliate links' },
   ];
@@ -186,7 +195,14 @@ export default function Hero() {
 
           {/* RIGHT — floating glass widgets (desktop only) */}
           <div className="hidden lg:block" style={{ minHeight: 520, position: 'relative' }}>
-            <HeroWidgets mouse={mouse} />
+            <HeroWidgets
+              mouse={mouse}
+              tools={tools}
+              riskStats={riskStats}
+              topScored={topScored ?? undefined}
+              fields={fieldNames}
+              totalTools={totalTools}
+            />
           </div>
         </div>
       </div>

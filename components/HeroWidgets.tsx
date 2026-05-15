@@ -5,13 +5,17 @@ import { useState, useEffect } from 'react';
 interface MousePos { x: number; y: number; }
 
 export interface HeroTool { name: string; cat: string; }
+export interface HeroRiskStats { low: number; medium: number; high: number; }
+export interface HeroTopScored { name: string; category: string; score: number; }
 
 const FALLBACK_TOOLS: HeroTool[] = [
   { name: 'Notion AI',      cat: 'Productivity' },
   { name: 'ElevenLabs',     cat: 'Audio AI'     },
   { name: 'GitHub Copilot', cat: 'Code'         },
 ];
-const FIELDS = ['Healthcare', 'Law & Legal', 'Engineering', 'Design', 'Education', 'Finance'];
+const FALLBACK_FIELDS = ['Healthcare', 'Law & Legal', 'Engineering', 'Design', 'Education', 'Finance'];
+const FALLBACK_RISK: HeroRiskStats = { low: 62, medium: 24, high: 14 };
+const FALLBACK_TOP: HeroTopScored = { name: 'Notion AI', category: 'Productivity', score: 94 };
 
 // ── Glass card shell ──────────────────────────────────────────────────────────
 function Glass({
@@ -81,16 +85,17 @@ function ToolRow({ t }: { t: HeroTool }) {
 }
 
 // ── Cycling field label ───────────────────────────────────────────────────────
-function FieldCycler() {
+function FieldCycler({ fields }: { fields: string[] }) {
+  const list = fields.length > 0 ? fields : FALLBACK_FIELDS;
   const [i, setI] = useState(0);
   const [key, setKey] = useState(0);
   useEffect(() => {
     const t = setInterval(() => {
-      setI(p => (p + 1) % FIELDS.length);
+      setI(p => (p + 1) % list.length);
       setKey(p => p + 1);
     }, 2200);
     return () => clearInterval(t);
-  }, []);
+  }, [list.length]);
   return (
     <span
       key={key}
@@ -103,14 +108,32 @@ function FieldCycler() {
         animation: 'hero-line 0.3s cubic-bezier(0.16,1,0.3,1) both',
       }}
     >
-      {FIELDS[i]}
+      {list[i]}
     </span>
   );
 }
 
 // ── Main HeroWidgets component ────────────────────────────────────────────────
-export default function HeroWidgets({ mouse, tools }: { mouse: MousePos; tools?: HeroTool[] }) {
+export default function HeroWidgets({
+  mouse,
+  tools,
+  riskStats,
+  topScored,
+  fields,
+  totalTools,
+}: {
+  mouse: MousePos;
+  tools?: HeroTool[];
+  riskStats?: HeroRiskStats;
+  topScored?: HeroTopScored;
+  fields?: string[];
+  totalTools?: number;
+}) {
   const displayTools = tools && tools.length > 0 ? tools : FALLBACK_TOOLS;
+  const displayRisk = riskStats && (riskStats.low + riskStats.medium + riskStats.high > 0) ? riskStats : FALLBACK_RISK;
+  const displayTop = topScored && topScored.score > 0 ? topScored : FALLBACK_TOP;
+  const displayFields = fields && fields.length > 0 ? fields : FALLBACK_FIELDS;
+  const displayCount = totalTools && totalTools > 0 ? totalTools : 60;
   const [shown, setShown] = useState<number[]>([]);
 
   useEffect(() => {
@@ -172,7 +195,7 @@ export default function HeroWidgets({ mouse, tools }: { mouse: MousePos; tools?:
           </div>
           {displayTools.map(t => <ToolRow key={t.name} t={t} />)}
           <div style={{ marginTop: 12, paddingTop: 10, borderTop: '1px solid rgba(245,239,224,0.08)', display: 'flex', justifyContent: 'space-between' }}>
-            <span style={{ fontFamily: 'var(--font-editorial)', fontSize: 11, color: 'rgba(245,239,224,0.4)', fontStyle: 'italic' }}>40+ tools indexed</span>
+            <span style={{ fontFamily: 'var(--font-editorial)', fontSize: 11, color: 'rgba(245,239,224,0.4)', fontStyle: 'italic' }}>{displayCount}+ tools indexed</span>
             <span style={{ fontFamily: 'var(--font-ui)', fontSize: 11, fontWeight: 600, color: '#AAFF4D', cursor: 'pointer' }}>All tools →</span>
           </div>
         </Glass>
@@ -189,9 +212,9 @@ export default function HeroWidgets({ mouse, tools }: { mouse: MousePos; tools?:
         <Glass style={{ padding: 15 }}>
           <div style={{ fontFamily: 'var(--font-ui)', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(245,239,224,0.4)', marginBottom: 10 }}>Risk overview</div>
           {[
-            { l: 'Low',    c: '#AAFF4D', pct: 62 },
-            { l: 'Medium', c: '#F4AB1F', pct: 24 },
-            { l: 'High',   c: '#FF7070', pct: 14 },
+            { l: 'Low',    c: '#AAFF4D', pct: displayRisk.low },
+            { l: 'Medium', c: '#F4AB1F', pct: displayRisk.medium },
+            { l: 'High',   c: '#FF7070', pct: displayRisk.high },
           ].map(({ l, c, pct }) => (
             <div key={l} style={{ marginBottom: 7 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 3 }}>
@@ -235,13 +258,13 @@ export default function HeroWidgets({ mouse, tools }: { mouse: MousePos; tools?:
         <Glass style={{ padding: '11px 15px', borderColor: 'rgba(170,255,77,0.18)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <div style={{ textAlign: 'center' }}>
-              <div style={{ fontFamily: 'var(--font-display)', fontSize: 26, fontWeight: 900, color: '#AAFF4D', lineHeight: 1, letterSpacing: '-0.02em' }}>94</div>
+              <div style={{ fontFamily: 'var(--font-display)', fontSize: 26, fontWeight: 900, color: '#AAFF4D', lineHeight: 1, letterSpacing: '-0.02em' }}>{displayTop.score}</div>
               <div style={{ fontFamily: 'var(--font-ui)', fontSize: 9, color: 'rgba(245,239,224,0.4)', textTransform: 'uppercase', letterSpacing: '0.08em', marginTop: 2 }}>AIght score</div>
             </div>
             <div style={{ width: 1, height: 28, background: 'rgba(245,239,224,0.08)' }} />
             <div>
-              <div style={{ fontFamily: 'var(--font-ui)', fontSize: 12, fontWeight: 700, color: '#F5EFE0' }}>Notion AI</div>
-              <div style={{ fontFamily: 'var(--font-ui)', fontSize: 10, color: 'rgba(245,239,224,0.4)', marginTop: 1 }}>Productivity</div>
+              <div style={{ fontFamily: 'var(--font-ui)', fontSize: 12, fontWeight: 700, color: '#F5EFE0' }}>{displayTop.name}</div>
+              <div style={{ fontFamily: 'var(--font-ui)', fontSize: 10, color: 'rgba(245,239,224,0.4)', marginTop: 1 }}>{displayTop.category}</div>
             </div>
           </div>
         </Glass>
@@ -258,7 +281,7 @@ export default function HeroWidgets({ mouse, tools }: { mouse: MousePos; tools?:
         <Glass style={{ padding: '9px 14px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <span style={{ fontFamily: 'var(--font-ui)', fontSize: 11, color: 'rgba(245,239,224,0.4)' }}>Filtered for</span>
-            <FieldCycler />
+            <FieldCycler fields={displayFields} />
           </div>
         </Glass>
       </div>

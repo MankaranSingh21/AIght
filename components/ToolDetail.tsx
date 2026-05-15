@@ -356,11 +356,19 @@ export default function ToolDetail({ tool }: { tool: ToolDetailData }) {
           ) : (
             <div className="lg:col-span-2 flex flex-col gap-4 bg-surface/20 p-8 rounded-2xl border border-primary/5 justify-center items-start">
               <p style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(245,239,224,0.25)", margin: 0 }}>
-                Scoring
+                Scoring · in review
               </p>
-              <p style={{ fontFamily: "var(--font-editorial)", fontStyle: "italic", fontSize: 14, color: "rgba(245,239,224,0.40)", margin: 0, lineHeight: 1.7 }}>
-                Detailed scoring for this tool is being reviewed and will be published soon.
+              <p style={{ fontFamily: "var(--font-editorial)", fontStyle: "italic", fontSize: 15, color: "rgba(245,239,224,0.55)", margin: 0, lineHeight: 1.7, maxWidth: "52ch" }}>
+                Every score is hand-assigned across five axes — utility, privacy, speed, cost,
+                transparency. This one isn&apos;t published yet because we&apos;re still using it long
+                enough to have an honest opinion. Slow scoring is the point.
               </p>
+              <Link
+                href="/tools"
+                className="font-mono text-[11px] uppercase tracking-[0.12em] text-accent hover:text-primary transition-colors no-underline"
+              >
+                Browse scored tools →
+              </Link>
             </div>
           )}
 

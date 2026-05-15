@@ -167,12 +167,13 @@ export default function Navbar() {
               </svg>
               <input
                 ref={searchInputRef}
-                type="text"
+                type="search"
                 value={searchVal}
                 onChange={e => setSearchVal(e.target.value)}
                 onFocus={() => setFocused(true)}
                 onBlur={() => setFocused(false)}
                 placeholder="Search..."
+                aria-label="Search AIght tools"
                 className="font-sans text-xs color-primary bg-transparent border-none outline-none flex-1 min-w-0"
               />
             </form>
@@ -207,10 +208,11 @@ export default function Navbar() {
             <p className="font-mono text-[10px] uppercase tracking-widest text-muted mb-4">Search AIght</p>
             <form onSubmit={handleSearchSubmit} className="relative">
               <input
-                type="text"
+                type="search"
                 value={searchVal}
                 onChange={e => setSearchVal(e.target.value)}
                 placeholder="Find a tool, concept, or field..."
+                aria-label="Search AIght tools, concepts, or fields"
                 className="w-full bg-primary/5 border border-primary/10 rounded-xl px-4 py-4 font-sans text-lg text-primary outline-none focus:border-accent/30 transition-all"
               />
               <button type="submit" className="absolute right-4 top-1/2 -translate-y-1/2 text-accent">
