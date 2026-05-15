@@ -544,6 +544,207 @@
     animation: ticker 32s linear infinite;
   }
   .ticker-track:hover { animation-play-state: paused; }
+
+  /* ── Section inner — wide variant ──────────────────────────── */
+  /* Used by sections that need to push beyond the standard content column
+     and toward the viewport edges (Concepts, Tools, Field guides). */
+  .section-inner-wide {
+    position: relative;
+    z-index: 1;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: var(--space-20) clamp(24px, 5vw, 80px);
+  }
+  @media (max-width: 768px) {
+    .section-inner-wide { padding: var(--space-16) var(--space-6); }
+  }
+
+  /* ── Bento grid — Concepts (asymmetric 3-cell) ─────────────── */
+  .bento-concepts {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-auto-rows: minmax(180px, auto);
+    gap: var(--space-6);
+  }
+  .bento-concepts > .bento-cell-feature { grid-column: span 4; grid-row: span 2; }
+  .bento-concepts > .bento-cell-tall    { grid-column: span 2; grid-row: span 2; }
+  .bento-concepts > .bento-cell-wide    { grid-column: span 6; grid-row: span 1; }
+  @media (max-width: 900px) {
+    .bento-concepts { grid-template-columns: 1fr; }
+    .bento-concepts > .bento-cell-feature,
+    .bento-concepts > .bento-cell-tall,
+    .bento-concepts > .bento-cell-wide { grid-column: 1; grid-row: auto; }
+  }
+
+  /* ── Bento grid — Tools (asymmetric 6-cell mosaic) ─────────── */
+  /* Layout: hero(4×2) + 2 stacked cards(2×1, 2×1) on the right + 3 cards
+     (2×1, 2×1, 2×1) along the bottom = 6 cells total. */
+  .bento-tools {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-auto-rows: minmax(180px, auto);
+    gap: var(--space-6);
+  }
+  .bento-tools > .bento-cell-hero { grid-column: span 4; grid-row: span 2; }
+  .bento-tools > .bento-cell      { grid-column: span 2; grid-row: span 1; }
+  @media (max-width: 900px) {
+    .bento-tools { grid-template-columns: 1fr; }
+    .bento-tools > * { grid-column: 1; grid-row: auto; }
+  }
+
+  /* ── Horizontal scroll strip ───────────────────────────────── */
+  .h-scroll-strip {
+    display: flex;
+    gap: var(--space-6);
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding: 8px clamp(24px, 5vw, 80px) 24px;
+    margin: 0 calc(50% - 50vw);
+    scrollbar-width: none;
+  }
+  .h-scroll-strip::-webkit-scrollbar { display: none; }
+  .h-scroll-strip > * {
+    scroll-snap-align: start;
+    flex: 0 0 clamp(260px, 28vw, 360px);
+  }
+  .h-scroll-strip[data-grabbing="true"] { cursor: grabbing; }
+  .h-scroll-strip { cursor: grab; }
+
+  /* ── Marginalia — gutter content (grid-based, in-flow) ─────── */
+  /* On screens ≥ 1100px the wrap becomes a 2-col grid with the heading
+     filling the left column and the marginalia floating in the right.
+     Below the breakpoint everything collapses to a single column. */
+  .marginalia-wrap {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-6);
+    align-items: start;
+  }
+  .marginalia {
+    font-family: var(--font-editorial);
+    font-style: italic;
+    font-size: 13px;
+    line-height: 1.55;
+    color: rgba(245, 239, 224, 0.55);
+    max-width: 28ch;
+  }
+  .marginalia .marginalia-eyebrow {
+    display: block;
+    font-family: var(--font-mono);
+    font-style: normal;
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(245, 239, 224, 0.32);
+    margin-bottom: 8px;
+  }
+  @media (min-width: 1100px) {
+    .marginalia-wrap {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 240px);
+      gap: var(--space-12);
+      align-items: center;
+    }
+    .marginalia-wrap > .marginalia {
+      justify-self: end;
+      text-align: right;
+      max-width: 26ch;
+    }
+  }
+
+  /* ── Section divider — section number marginalia + gradient rule ──── */
+  .section-divider {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+    padding: 0 clamp(24px, 5vw, 80px);
+    margin-top: var(--space-12);
+  }
+  .section-divider .section-number {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(245, 239, 224, 0.32);
+    flex-shrink: 0;
+  }
+  .section-divider .section-rule {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(
+      to right,
+      rgba(170, 255, 77, 0.45) 0%,
+      rgba(170, 255, 77, 0.15) 28%,
+      rgba(245, 239, 224, 0.06) 80%,
+      transparent 100%
+    );
+  }
+
+  /* ── Hero edge-bleed ghost glyph ───────────────────────────── */
+  .hero-ghost-glyph {
+    position: absolute;
+    right: -2vw;
+    top: 18%;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 900;
+    font-size: clamp(20rem, 32vw, 44rem);
+    line-height: 0.85;
+    color: rgba(170, 255, 77, 0.045);
+    pointer-events: none;
+    user-select: none;
+    z-index: 0;
+    letter-spacing: -0.06em;
+  }
+
+  /* ── Underline-grow keyword animation ──────────────────────── */
+  .underline-grow {
+    position: relative;
+    display: inline-block;
+  }
+  .underline-grow::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0.12em;
+    width: 100%;
+    height: 0.08em;
+    background: var(--accent-primary);
+    transform: scaleX(0);
+    transform-origin: left center;
+    animation: underline-grow 0.8s var(--ease-spring) 1.4s forwards;
+  }
+
+  /* ── Tag chip hover — inset ripple ─────────────────────────── */
+  .tag {
+    transition:
+      background-color 180ms var(--ease-spring),
+      border-color 180ms var(--ease-spring),
+      color 180ms var(--ease-spring),
+      box-shadow 180ms var(--ease-spring);
+  }
+  .tag:hover {
+    box-shadow: inset 0 0 0 1px var(--accent-primary-glow);
+  }
+
+  /* ── Newsletter form input — focus glow ring ───────────────── */
+  .newsletter-input {
+    transition: border-color 220ms var(--ease-spring), box-shadow 220ms var(--ease-spring);
+  }
+  .newsletter-input:focus,
+  .newsletter-input:focus-within {
+    border-color: rgba(170, 255, 77, 0.45) !important;
+    box-shadow:
+      0 0 0 3px rgba(170, 255, 77, 0.10),
+      0 0 24px rgba(170, 255, 77, 0.18);
+  }
+
+  /* ── Footer breath rule ────────────────────────────────────── */
+  .footer-rule {
+    animation: breath 6s ease-in-out infinite;
+  }
 }
 
 @layer utilities {
@@ -632,6 +833,43 @@
 @keyframes map-pulse {
   0%   { transform: scale(1);   opacity: 0.8; }
   100% { transform: scale(3.2); opacity: 0;   }
+}
+
+/* ── Aurora gradient mesh — drift, never align ─────────────────── */
+@keyframes aurora-drift-a {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50%      { transform: translate3d(12vw, 8vh, 0) scale(1.08); }
+}
+@keyframes aurora-drift-b {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50%      { transform: translate3d(-9vw, -12vh, 0) scale(1.12); }
+}
+@keyframes aurora-drift-c {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50%      { transform: translate3d(6vw, -7vh, 0) scale(0.92); }
+}
+
+/* ── Newsletter glow — slow breath ─────────────────────────────── */
+@keyframes glow-breath {
+  0%, 100% { transform: translate(-50%, -50%) scale(1);    opacity: 0.85; }
+  50%      { transform: translate(-50%, -50%) scale(1.08); opacity: 1; }
+}
+
+/* ── Hero keyword — underline grows from left ──────────────────── */
+@keyframes underline-grow {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* ── Reduced motion — freeze long, looping decorative motion ───── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }
 
 /* ── Learn article dropcap ─────────────────────────────────────── */

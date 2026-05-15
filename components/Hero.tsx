@@ -1,9 +1,10 @@
 'use client';
 
-import { useRef } from 'react';
-import Link from 'next/link';
+import { useEffect, useRef, useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import fields from "@/content/paths/fields.json";
+import HeroWidgets from './HeroWidgets';
+import MagneticLink from './MagneticLink';
 
 const SPRING_EASE = [0.16, 1, 0.3, 1] as [number, number, number, number];
 
@@ -36,6 +37,23 @@ export default function Hero() {
   // Headline drifts up + fades as user scrolls away — Apple-style exit
   const headlineY  = useTransform(scrollYProgress, [0, 0.6], ['0px', '-60px']);
   const headlineOp = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+  const ghostY     = useTransform(scrollYProgress, [0, 1], ['0px', '-120px']);
+
+  // Mouse position normalized 0..1 for HeroWidgets parallax
+  const [mouse, setMouse] = useState({ x: 0.5, y: 0.5 });
+  useEffect(() => {
+    if (!sectionRef.current) return;
+    const onMove = (e: MouseEvent) => {
+      if (!sectionRef.current) return;
+      const r = sectionRef.current.getBoundingClientRect();
+      setMouse({
+        x: Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)),
+        y: Math.max(0, Math.min(1, (e.clientY - r.top)  / r.height)),
+      });
+    };
+    window.addEventListener('mousemove', onMove);
+    return () => window.removeEventListener('mousemove', onMove);
+  }, []);
 
   const STATS = [
     { num: '60+',  label: 'Curated tools'  },
@@ -46,102 +64,147 @@ export default function Hero() {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden pt-28 md:pt-40 pb-24 px-6"
+      className="relative overflow-hidden pt-24 md:pt-32 pb-20"
+      style={{ paddingLeft: 'clamp(20px, 6vw, 96px)', paddingRight: 'clamp(20px, 6vw, 96px)' }}
     >
-      <div className="max-w-content mx-auto flex flex-col items-center text-center">
+      {/* Edge-bleed ghost glyph — drifts on scroll */}
+      <motion.span
+        aria-hidden
+        className="hero-ghost-glyph hidden lg:block"
+        style={{ y: ghostY }}
+      >
+        &amp;
+      </motion.span>
 
-        {/* Eyebrow pill */}
-        <motion.div
-          custom={0}
-          variants={LINE_VARIANTS}
-          initial="hidden"
-          animate="visible"
-          className="mb-8"
-        >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent-glow border border-accent/20">
-            <span className="w-1.5 h-1.5 rounded-full bg-accent shadow-[0_0_6px_var(--accent-primary)] animate-[pulse-dot_2s_infinite] shrink-0" />
-            <span className="font-mono text-[11px] font-semibold tracking-widest uppercase text-accent">
-              Ruthlessly curated. No affiliate links.
-            </span>
+      <div
+        className="relative mx-auto grid items-center"
+        style={{
+          maxWidth: 1600,
+          gridTemplateColumns: 'minmax(0, 1fr)',
+          gap: 'clamp(32px, 5vw, 96px)',
+        }}
+      >
+        {/* Two-column grid on large screens; single column below */}
+        <div className="grid items-center" style={{
+          display: 'grid',
+          gridTemplateColumns: 'minmax(0, 1.05fr) minmax(0, 1fr)',
+          gap: 'clamp(32px, 4vw, 80px)',
+        }}>
+          {/* LEFT — copy */}
+          <div className="hero-copy flex flex-col items-start text-left" style={{ zIndex: 2 }}>
+            {/* Eyebrow pill */}
+            <motion.div
+              custom={0}
+              variants={LINE_VARIANTS}
+              initial="hidden"
+              animate="visible"
+              className="mb-8"
+            >
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent-glow border border-accent/20">
+                <span className="w-1.5 h-1.5 rounded-full bg-accent shadow-[0_0_6px_var(--accent-primary)] animate-[pulse-dot_2s_infinite] shrink-0" />
+                <span className="font-mono text-[11px] font-semibold tracking-widest uppercase text-accent">
+                  Ruthlessly curated. No affiliate links.
+                </span>
+              </div>
+            </motion.div>
+
+            {/* Headline — scroll-exit parallax */}
+            <motion.div style={{ y: headlineY, opacity: headlineOp }}>
+              <h1 className="m-0 mb-8 leading-[1.02]">
+                <motion.span
+                  custom={1}
+                  variants={LINE_VARIANTS}
+                  initial="hidden"
+                  animate="visible"
+                  className="block font-display text-[44px] sm:text-[60px] md:text-[68px] lg:text-[80px] xl:text-[92px] font-black text-primary tracking-[-0.03em]"
+                >
+                  The <span className="underline-grow">signal</span>
+                </motion.span>
+                <motion.span
+                  custom={2}
+                  variants={LINE_VARIANTS}
+                  initial="hidden"
+                  animate="visible"
+                  className="block font-display text-[44px] sm:text-[60px] md:text-[68px] lg:text-[80px] xl:text-[92px] font-black italic text-accent tracking-[-0.03em]"
+                >
+                  beneath
+                </motion.span>
+                <motion.span
+                  custom={3}
+                  variants={LINE_VARIANTS}
+                  initial="hidden"
+                  animate="visible"
+                  className="block font-display text-[44px] sm:text-[60px] md:text-[68px] lg:text-[80px] xl:text-[92px] font-light text-primary/25 tracking-[-0.03em]"
+                >
+                  the noise.
+                </motion.span>
+              </h1>
+            </motion.div>
+
+            {/* Body */}
+            <motion.p
+              variants={FADE_UP(0)}
+              initial="hidden"
+              animate="visible"
+              className="font-serif text-lg leading-relaxed text-secondary max-w-[52ch] mb-10"
+            >
+              A literary, anti-hype archive of AI tools worth your attention.
+              We do the deep dives so you don&apos;t have to. No sponsored rankings,
+              no hustle energy—just honest signal.
+            </motion.p>
+
+            {/* CTAs */}
+            <motion.div
+              variants={FADE_UP(1)}
+              initial="hidden"
+              animate="visible"
+              className="flex flex-wrap gap-3 mb-12"
+            >
+              <MagneticLink href="/tools" className="btn-primary">
+                Explore tools →
+              </MagneticLink>
+              <MagneticLink href="/learn/paths/quiz" className="btn-ghost">
+                See what&apos;s relevant
+              </MagneticLink>
+            </motion.div>
+
+            {/* Stats strip */}
+            <motion.div
+              variants={FADE_UP(2)}
+              initial="hidden"
+              animate="visible"
+              className="flex gap-10 pt-6 border-t border-primary/10 w-full max-w-md"
+            >
+              {STATS.map(({ num, label }) => (
+                <div key={label}>
+                  <div className="font-display text-3xl font-bold text-primary mb-1">{num}</div>
+                  <div className="font-mono text-[10px] font-medium tracking-[0.12em] uppercase text-muted">{label}</div>
+                </div>
+              ))}
+            </motion.div>
           </div>
-        </motion.div>
 
-        {/* Headline — scroll-exit parallax */}
-        <motion.div style={{ y: headlineY, opacity: headlineOp }}>
-          <h1 className="m-0 mb-8 leading-[1.05]">
-            <motion.span
-              custom={1}
-              variants={LINE_VARIANTS}
-              initial="hidden"
-              animate="visible"
-              className="block font-display text-[52px] md:text-[72px] lg:text-[88px] font-black text-primary tracking-[-0.03em]"
-            >
-              The signal
-            </motion.span>
-            <motion.span
-              custom={2}
-              variants={LINE_VARIANTS}
-              initial="hidden"
-              animate="visible"
-              className="block font-display text-[52px] md:text-[72px] lg:text-[88px] font-black italic text-accent tracking-[-0.03em]"
-            >
-              beneath
-            </motion.span>
-            <motion.span
-              custom={3}
-              variants={LINE_VARIANTS}
-              initial="hidden"
-              animate="visible"
-              className="block font-display text-[52px] md:text-[72px] lg:text-[88px] font-light text-primary/25 tracking-[-0.03em]"
-            >
-              the noise.
-            </motion.span>
-          </h1>
-        </motion.div>
-
-        {/* Body */}
-        <motion.p
-          variants={FADE_UP(0)}
-          initial="hidden"
-          animate="visible"
-          className="font-serif text-lg leading-relaxed text-secondary max-w-[52ch] mb-10"
-        >
-          A literary, anti-hype archive of AI tools worth your attention.
-          We do the deep dives so you don&apos;t have to. No sponsored rankings,
-          no hustle energy—just honest signal.
-        </motion.p>
-
-        {/* CTAs */}
-        <motion.div
-          variants={FADE_UP(1)}
-          initial="hidden"
-          animate="visible"
-          className="flex flex-wrap justify-center gap-3 mb-16"
-        >
-          <Link href="/tools" className="btn-primary">
-            Explore tools →
-          </Link>
-          <Link href="/learn/paths/quiz" className="btn-ghost">
-            See what&apos;s relevant
-          </Link>
-        </motion.div>
-
-        {/* Stats strip */}
-        <motion.div
-          variants={FADE_UP(2)}
-          initial="hidden"
-          animate="visible"
-          className="flex gap-12 pt-8 border-t border-primary/10"
-        >
-          {STATS.map(({ num, label }) => (
-            <div key={label} className="text-center">
-              <div className="font-display text-3xl font-bold text-primary mb-1">{num}</div>
-              <div className="font-mono text-[10px] font-medium tracking-[0.12em] uppercase text-muted">{label}</div>
-            </div>
-          ))}
-        </motion.div>
-
+          {/* RIGHT — floating glass widgets (desktop only) */}
+          <div className="hidden lg:block" style={{ minHeight: 520, position: 'relative' }}>
+            <HeroWidgets mouse={mouse} />
+          </div>
+        </div>
       </div>
+
+      <style jsx>{`
+        @media (max-width: 1024px) {
+          .hero-copy { align-items: flex-start; }
+          section :global(.hero-copy ~ div) { display: none; }
+        }
+        section > div > div {
+          grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+        }
+        @media (max-width: 1024px) {
+          section > div > div {
+            grid-template-columns: minmax(0, 1fr) !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }

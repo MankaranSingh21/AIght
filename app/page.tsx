@@ -4,12 +4,16 @@ import { createClient } from "@/utils/supabase/server";
 import Hero from "@/components/Hero";
 import Footer from "@/components/Footer";
 import Ticker from "@/components/Ticker";
-import SelectionProcess from "@/components/SelectionProcess";
 import ToolCard from "@/components/ToolCard";
-import type { ToolCardProps } from "@/components/ToolCard";
 import NewsletterForm from "@/components/NewsletterForm";
 import ScrollReveal from "@/components/ScrollReveal";
-import type { Tool } from "@/utils/supabase/types";
+import ScrollParallax from "@/components/ScrollParallax";
+import InteractiveCard from "@/components/InteractiveCard";
+import HorizontalScroll from "@/components/HorizontalScroll";
+import SectionDivider from "@/components/SectionDivider";
+import Marginalia from "@/components/Marginalia";
+import MagneticLink from "@/components/MagneticLink";
+import AuroraBackground from "@/components/AuroraBackground";
 import { getAllConcepts } from "@/lib/learn";
 import { getSignalPosts } from "@/lib/signal";
 import fields from "@/content/paths/fields.json";
@@ -17,42 +21,11 @@ import fields from "@/content/paths/fields.json";
 import { mapToolToCardProps } from "@/lib/tool-mapping";
 import HomepageParticles from "@/components/HomepageParticles";
 
-// ── Decorative edge orb ────────────────────────────────────────────────────────
-// Full-bleed: sits outside the centred content column so the section
-// doesn't feel like a narrow text box on a black canvas.
-
-function EdgeOrb({
-  top, bottom, left, right, size = 560, color = "rgba(170,255,77,0.045)",
-}: {
-  top?: number | string; bottom?: number | string;
-  left?: number | string; right?: number | string;
-  size?: number; color?: string;
-}) {
-  return (
-    <div
-      aria-hidden
-      style={{
-        position: "absolute",
-        top, bottom, left, right,
-        width: size, height: size,
-        borderRadius: "50%",
-        background: `radial-gradient(circle, ${color} 0%, transparent 70%)`,
-        filter: "blur(80px)",
-        pointerEvents: "none",
-      }}
-    />
-  );
-}
-
 // ── Skeleton states (no shimmer — just a breath pulse) ─────────────────────────
 
 function SkeletonSignalSection() {
   return (
-    <section
-      className="section-full"
-      style={{ borderTop: "1px solid rgba(245,239,224,0.06)", background: "rgba(22,18,16,0.55)" }}
-    >
-      <EdgeOrb top={-120} right={-160} size={500} />
+    <section className="section-full">
       <div className="section-inner-editorial">
         <div style={{ marginBottom: 32 }}>
           <span className="skel" style={{ width: 48, height: 9, marginBottom: 10 }} />
@@ -72,77 +45,57 @@ function SkeletonSignalSection() {
 
 function SkeletonToolsSection() {
   return (
-    <section
-      className="section-full"
-      style={{ borderTop: "1px solid rgba(245,239,224,0.06)" }}
-    >
-      <EdgeOrb top={-80} left={-200} />
-      <EdgeOrb bottom={-120} right={-100} color="rgba(0,255,209,0.03)" />
-      <div className="section-inner">
+    <section className="section-full">
+      <div className="section-inner-wide">
         <div style={{ marginBottom: 40 }}>
           <span className="skel" style={{ width: 100, height: 9, marginBottom: 10 }} />
           <span className="skel" style={{ width: 240, height: 28 }} />
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(272px, 1fr))", gap: 32 }}>
-          {Array.from({ length: 6 }).map((_, i) => (
-            <span key={i} className="skel" style={{ height: 176, borderRadius: 12 }} />
-          ))}
+        <div className="bento-tools">
+          <span className="skel bento-cell-hero" />
+          <span className="skel bento-cell" />
+          <span className="skel bento-cell" />
+          <span className="skel bento-cell" />
+          <span className="skel bento-cell" />
+          <span className="skel bento-cell" />
         </div>
       </div>
     </section>
   );
 }
 
-// ── Signal post card ───────────────────────────────────────────────────────────
+// ── Sub-card primitives (server-renderable bodies wrapped in InteractiveCard) ──
 
-function SignalCard({ date, title, excerpt, href }: {
-  date: string; title: string; excerpt: string; href: string;
-}) {
+function ConceptBody({
+  title, tagline, readTime, slug, large,
+}: { title: string; tagline: string; readTime: string; slug: string; large?: boolean }) {
   return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="group block py-6 border-b border-subtle last:border-b-0"
+    <Link
+      href={`/learn/${slug}`}
+      className="group flex flex-col gap-3 p-6 concept-card rounded-xl h-full"
+      style={{ width: "100%" }}
     >
-      <p className="font-mono text-sm text-muted mb-2">{date}</p>
-      <h3 className="font-sans text-xl font-medium text-primary group-hover:text-accent group-hover:translate-x-1 transition-[color,transform] duration-150 mb-2">
-        {title}
-      </h3>
-      <p className="font-serif text-base text-secondary leading-relaxed line-clamp-2">
-        {excerpt}
-      </p>
-    </a>
-  );
-}
-
-// ── Concept card ───────────────────────────────────────────────────────────────
-
-function ConceptCard({ title, tagline, readTime, slug }: {
-  title: string; tagline: string; readTime: string; slug: string;
-}) {
-  return (
-    <Link href={`/learn/${slug}`} className="group flex flex-col gap-3 p-6 concept-card rounded-lg">
       <p className="font-mono text-xs uppercase tracking-[0.15em] text-muted">Concept</p>
       <h3
-        className="font-sans text-2xl font-semibold text-primary group-hover:text-accent transition-colors duration-150 leading-tight"
-        style={{ letterSpacing: "-0.02em" }}
+        className="font-sans font-semibold text-primary group-hover:text-accent transition-colors duration-150 leading-tight"
+        style={{
+          fontSize: large ? "clamp(28px, 3vw, 40px)" : "clamp(20px, 1.6vw, 26px)",
+          letterSpacing: "-0.02em",
+        }}
       >
         {title}
       </h3>
-      <p className="font-serif italic text-base text-secondary leading-relaxed flex-1">{tagline}</p>
+      <p className="font-serif italic text-secondary leading-relaxed flex-1" style={{ fontSize: large ? 17 : 15 }}>
+        {tagline}
+      </p>
       <p className="font-mono text-sm text-muted">{readTime}</p>
     </Link>
   );
 }
 
-// ── Field path card ────────────────────────────────────────────────────────────
-
-const FEATURED_SLUGS = ["biology", "medicine-healthcare", "creative-writing-literature", "education-teaching"];
-
-function PathCard({ field, slug, tagline, difficulty }: {
-  field: string; slug: string; tagline: string; difficulty: string;
-}) {
+function PathBody({
+  field, slug, tagline, difficulty,
+}: { field: string; slug: string; tagline: string; difficulty: string }) {
   const badgeStyle =
     difficulty === "Easy" ? undefined
     : difficulty === "Medium"
@@ -152,7 +105,8 @@ function PathCard({ field, slug, tagline, difficulty }: {
   return (
     <Link
       href={`/learn/paths/${slug}`}
-      className="group flex flex-col gap-3 p-6 bg-panel border border-subtle rounded-lg hover:border-emphasis hover:-translate-y-0.5 transition-all duration-200"
+      className="group flex flex-col gap-3 p-6 rounded-xl h-full"
+      style={{ background: "var(--bg-surface)", border: "1px solid var(--border-subtle)", width: "100%" }}
     >
       <div className="flex items-start justify-between gap-4">
         <h3
@@ -171,6 +125,28 @@ function PathCard({ field, slug, tagline, difficulty }: {
   );
 }
 
+function SignalBody({
+  date, title, excerpt, href,
+}: { date: string; title: string; excerpt: string; href: string }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="group block p-6 rounded-xl h-full"
+      style={{ background: "rgba(22,18,16,0.65)", border: "1px solid var(--border-subtle)", width: "100%" }}
+    >
+      <p className="font-mono text-sm text-muted mb-2">{date}</p>
+      <h3 className="font-sans text-xl font-medium text-primary group-hover:text-accent group-hover:translate-x-1 transition-[color,transform] duration-150 mb-2">
+        {title}
+      </h3>
+      <p className="font-serif text-base text-secondary leading-relaxed line-clamp-3">
+        {excerpt}
+      </p>
+    </a>
+  );
+}
+
 // ── Async server sections ──────────────────────────────────────────────────────
 
 async function SignalSection() {
@@ -178,30 +154,69 @@ async function SignalSection() {
   if (posts.length === 0) return null;
 
   return (
-    <section
-      className="section-full"
-      style={{ borderTop: "1px solid rgba(245,239,224,0.06)", background: "rgba(22,18,16,0.55)" }}
-    >
-      <EdgeOrb top={-100} right={-180} size={500} />
-      <EdgeOrb bottom={-80} left={-100} size={400} color="rgba(0,255,209,0.025)" />
-      <div className="section-inner-editorial">
-        <div style={{ marginBottom: 32 }}>
-          <p style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(245,239,224,0.30)", margin: "0 0 8px" }}>
-            latest
-          </p>
-          <h2 className="font-sans text-3xl font-semibold text-primary" style={{ letterSpacing: "-0.02em" }}>
-            From the archive
-          </h2>
-        </div>
+    <section className="section-full">
+      <div className="section-inner-wide">
+        <div
+          className="grid items-start"
+          style={{
+            display: "grid",
+            gridTemplateColumns: "minmax(0, 1fr)",
+            gap: "var(--space-10)",
+          }}
+        >
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "minmax(220px, 0.5fr) minmax(0, 1.5fr)",
+              gap: "var(--space-12)",
+              alignItems: "start",
+            }}
+            className="signal-grid"
+          >
+            <ScrollParallax range={[20, -20]}>
+              <div style={{ position: "sticky", top: 100 }}>
+                <p style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(245,239,224,0.30)", margin: "0 0 12px" }}>
+                  latest
+                </p>
+                <h2 className="font-sans text-3xl md:text-4xl font-semibold text-primary" style={{ letterSpacing: "-0.02em", lineHeight: 1.1 }}>
+                  From the archive
+                </h2>
+                <p className="font-serif italic text-secondary mt-4" style={{ fontSize: 15, lineHeight: 1.65, maxWidth: "28ch" }}>
+                  Recently from the desk — notes, observations, the occasional
+                  rabbit hole.
+                </p>
+                <div style={{ marginTop: 24 }}>
+                  <Link href="/signal" className="btn-ghost">Read all signal →</Link>
+                </div>
+              </div>
+            </ScrollParallax>
 
-        <div className="reveal-list">
-          {posts.map((post, i) => <SignalCard key={i} {...post} />)}
-        </div>
-
-        <div style={{ paddingTop: 32 }}>
-          <Link href="/signal" className="btn-ghost">Read all signal →</Link>
+            <div
+              className="reveal-list"
+              style={{ display: "grid", gridTemplateColumns: "1fr", gap: "var(--space-5)" }}
+            >
+              {posts.map((post, i) => (
+                <InteractiveCard
+                  key={i}
+                  gradientColor="#00FFD1"
+                  gradientSize={300}
+                  gradientOpacity={0.10}
+                  maxTilt={4}
+                >
+                  <SignalBody {...post} />
+                </InteractiveCard>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
+
+      <style>{`
+        @media (max-width: 900px) {
+          .signal-grid { grid-template-columns: 1fr !important; gap: var(--space-6) !important; }
+          .signal-grid > div:first-child > div { position: static !important; }
+        }
+      `}</style>
     </section>
   );
 }
@@ -221,31 +236,42 @@ async function ToolsSection() {
   const tools = (data ?? []).map((t) => mapToolToCardProps(t));
   if (tools.length === 0) return null;
 
+  // Pick "hero" tool — highest utility score, fallback to first
+  const sorted = [...tools].sort(
+    (a, b) => (b.utility_score ?? 0) - (a.utility_score ?? 0),
+  );
+  const hero = sorted[0];
+  const rest = tools.filter((t) => t.slug !== hero.slug).slice(0, 5);
+
   return (
-    <section
-      className="section-full"
-      style={{ borderTop: "1px solid rgba(245,239,224,0.06)" }}
-    >
-      <EdgeOrb top={-80} left={-220} />
-      <EdgeOrb bottom={-100} right={-120} color="rgba(0,255,209,0.03)" />
-      <div className="section-inner">
-        <div style={{ marginBottom: 40 }}>
-          <p style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(245,239,224,0.30)", margin: "0 0 8px" }}>
-            recently added
-          </p>
-          <h2 className="font-sans text-3xl font-semibold text-primary" style={{ letterSpacing: "-0.02em" }}>
-            Tools making waves
-          </h2>
+    <section className="section-full">
+      <div className="section-inner-wide">
+        <div className="marginalia-wrap" style={{ marginBottom: 40 }}>
+          <ScrollParallax range={[10, -10]}>
+            <div>
+              <p style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(245,239,224,0.30)", margin: "0 0 8px" }}>
+                recently added
+              </p>
+              <h2 className="font-sans text-3xl md:text-4xl font-semibold text-primary" style={{ letterSpacing: "-0.02em", lineHeight: 1.1 }}>
+                Tools making waves
+              </h2>
+            </div>
+          </ScrollParallax>
+          <Marginalia side="right" eyebrow="In the archive">
+            60+ tools, 0 affiliate links.
+            Curated weekly, judged ruthlessly.
+          </Marginalia>
         </div>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-            gap: "var(--space-6)",
-          }}
-        >
-          {tools.map((tool) => <ToolCard key={tool.slug} {...tool} />)}
+        <div className="bento-tools">
+          <div className="bento-cell-hero">
+            <ToolCard {...hero} />
+          </div>
+          {rest.map((tool) => (
+            <div key={tool.slug} className="bento-cell">
+              <ToolCard {...tool} />
+            </div>
+          ))}
         </div>
 
         <div style={{ marginTop: 40 }}>
@@ -258,157 +284,259 @@ async function ToolsSection() {
 
 // ── Page ───────────────────────────────────────────────────────────────────────
 
+const FEATURED_SLUGS = ["biology", "medicine-healthcare", "creative-writing-literature", "education-teaching"];
+
 export default async function Home() {
-  // 3 featured concept cards
   const allConcepts = getAllConcepts();
   const featuredConcepts = allConcepts.slice(0, 3);
 
-  // 4 featured field paths
   const featuredFields = (FEATURED_SLUGS
     .map((s) => fields.find((f) => f.slug === s))
     .filter(Boolean)) as typeof fields;
 
+  // Use up to 8 field guides for the horizontal scroll strip
+  const stripFields = fields.slice(0, 8);
+
   return (
     <>
+      <AuroraBackground />
       <HomepageParticles />
       <main style={{ minHeight: "100vh", position: "relative", zIndex: 1 }}>
 
-        {/* 1. Hero */}
+        {/* Hero */}
         <Hero />
 
         {/* Ticker strip */}
         <Ticker />
 
-        {/* 2. From the archive — Signal posts */}
+        {/* §01 — From the archive */}
+        <SectionDivider number="01" label="From the archive" />
         <ScrollReveal scale>
           <Suspense fallback={<SkeletonSignalSection />}>
             <SignalSection />
           </Suspense>
         </ScrollReveal>
 
-        {/* 3. Understand the tools you use — Concept cards */}
+        {/* §02 — Concepts (bento) */}
         {featuredConcepts.length > 0 && (
-          <ScrollReveal scale>
-            <section
-              className="section-full"
-              style={{ borderTop: "1px solid rgba(245,239,224,0.06)", background: "rgba(26,22,18,0.2)" }}
-            >
-              <EdgeOrb top={-80} right={-160} size={500} />
-              <div className="section-inner">
-                <div style={{ marginBottom: 40 }}>
-                  <p style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(245,239,224,0.30)", margin: "0 0 8px" }}>
-                    concepts
-                  </p>
-                  <h2 className="font-sans text-3xl font-semibold text-primary" style={{ letterSpacing: "-0.02em" }}>
-                    Understand the tools you use
-                  </h2>
+          <>
+            <SectionDivider number="02" label="Understand the tools" />
+            <ScrollReveal scale>
+              <section className="section-full">
+                <div className="section-inner-wide">
+                  <div className="marginalia-wrap" style={{ marginBottom: 40 }}>
+                    <ScrollParallax range={[10, -10]}>
+                      <div>
+                        <p style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(245,239,224,0.30)", margin: "0 0 8px" }}>
+                          concepts
+                        </p>
+                        <h2 className="font-sans text-3xl md:text-4xl font-semibold text-primary" style={{ letterSpacing: "-0.02em", lineHeight: 1.1 }}>
+                          Understand the tools you use
+                        </h2>
+                      </div>
+                    </ScrollParallax>
+                    <Marginalia side="left" eyebrow="Reading time">
+                      Short essays. Pause-worthy diagrams.
+                      The mental models behind the buttons.
+                    </Marginalia>
+                  </div>
+
+                  <div className="bento-concepts reveal-grid">
+                    {featuredConcepts[0] && (
+                      <div className="bento-cell-feature">
+                        <InteractiveCard
+                          gradientColor="#AAFF4D"
+                          gradientSize={420}
+                          gradientOpacity={0.14}
+                          maxTilt={6}
+                        >
+                          <ConceptBody {...featuredConcepts[0]} large />
+                        </InteractiveCard>
+                      </div>
+                    )}
+                    {featuredConcepts[1] && (
+                      <div className="bento-cell-tall">
+                        <InteractiveCard
+                          gradientColor="#00FFD1"
+                          gradientSize={280}
+                          gradientOpacity={0.12}
+                          maxTilt={5}
+                        >
+                          <ConceptBody {...featuredConcepts[1]} />
+                        </InteractiveCard>
+                      </div>
+                    )}
+                    {featuredConcepts[2] && (
+                      <div className="bento-cell-wide">
+                        <InteractiveCard
+                          gradientColor="#F4AB1F"
+                          gradientSize={400}
+                          gradientOpacity={0.10}
+                          maxTilt={4}
+                        >
+                          <ConceptBody {...featuredConcepts[2]} />
+                        </InteractiveCard>
+                      </div>
+                    )}
+                  </div>
+
+                  <div style={{ marginTop: 40 }}>
+                    <Link href="/learn" className="btn-ghost">See all concepts →</Link>
+                  </div>
                 </div>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "var(--space-6)" }} className="reveal-grid">
-                  {featuredConcepts.map((c) => (
-                    <ConceptCard key={c.slug} title={c.title} tagline={c.tagline} readTime={c.readTime} slug={c.slug} />
-                  ))}
-                </div>
-                <div style={{ marginTop: 40 }}>
-                  <Link href="/learn" className="btn-ghost">See all concepts →</Link>
-                </div>
-              </div>
-            </section>
-          </ScrollReveal>
+              </section>
+            </ScrollReveal>
+          </>
         )}
 
-        {/* 4. Fields Overview */}
+        {/* §03 — Field guides (horizontal scroll) */}
         {featuredFields.length > 0 && (
-          <ScrollReveal scale>
-            <section
-              className="section-full"
-              style={{ borderTop: "1px solid rgba(245,239,224,0.06)" }}
-            >
-              <EdgeOrb bottom={-60} left={-180} size={520} />
-              <div className="section-inner">
-                <div style={{ marginBottom: 40 }}>
-                  <p style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(245,239,224,0.30)", margin: "0 0 8px" }}>
-                    field guides
-                  </p>
-                  <h2 className="font-sans text-3xl font-semibold text-primary" style={{ letterSpacing: "-0.02em" }}>
-                    AI in your field
-                  </h2>
+          <>
+            <SectionDivider number="03" label="AI in your field" />
+            <ScrollReveal scale>
+              <section className="section-full">
+                <div className="section-inner-wide">
+                  <div className="marginalia-wrap" style={{ marginBottom: 40 }}>
+                    <ScrollParallax range={[10, -10]}>
+                      <div>
+                        <p style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(245,239,224,0.30)", margin: "0 0 8px" }}>
+                          field guides
+                        </p>
+                        <h2 className="font-sans text-3xl md:text-4xl font-semibold text-primary" style={{ letterSpacing: "-0.02em", lineHeight: 1.1 }}>
+                          AI in your field
+                        </h2>
+                      </div>
+                    </ScrollParallax>
+                    <Marginalia side="right" eyebrow="22 disciplines">
+                      From physicists to poets — the same models,
+                      different questions. Drag to browse.
+                    </Marginalia>
+                  </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 reveal-grid">
-                  {featuredFields.map((f) => (
-                    <PathCard key={f.slug} field={f.field} slug={f.slug} tagline={f.tagline} difficulty={f.difficulty} />
+                <HorizontalScroll>
+                  {stripFields.map((f) => (
+                    <InteractiveCard
+                      key={f.slug}
+                      gradientColor="#AAFF4D"
+                      gradientSize={260}
+                      gradientOpacity={0.10}
+                      maxTilt={4}
+                    >
+                      <PathBody field={f.field} slug={f.slug} tagline={f.tagline} difficulty={f.difficulty} />
+                    </InteractiveCard>
                   ))}
-                </div>
+                </HorizontalScroll>
 
-                <div style={{ marginTop: 40 }}>
+                <div className="section-inner-wide" style={{ paddingTop: 16, paddingBottom: 16 }}>
                   <Link href="/learn/paths" className="btn-ghost">See all fields →</Link>
                 </div>
-              </div>
-            </section>
-          </ScrollReveal>
+              </section>
+            </ScrollReveal>
+          </>
         )}
 
-        {/* 5. Tools making waves */}
+        {/* §04 — Tools (bento) */}
+        <SectionDivider number="04" label="Tools making waves" />
         <ScrollReveal scale>
           <Suspense fallback={<SkeletonToolsSection />}>
             <ToolsSection />
           </Suspense>
         </ScrollReveal>
 
-        {/* 4. Newsletter & Browse CTA */}
+        {/* §05 — Newsletter (full-bleed band) */}
+        <SectionDivider number="05" label="Stay in the signal" />
         <section
           className="section-full"
-          style={{ borderTop: "1px solid rgba(245,239,224,0.06)" }}
+          style={{
+            background: "rgba(22,18,16,0.55)",
+            borderTop: "1px solid rgba(245,239,224,0.06)",
+            borderBottom: "1px solid rgba(245,239,224,0.06)",
+            position: "relative",
+            overflow: "hidden",
+          }}
         >
+          {/* Giant AIght_ watermark */}
           <div
             aria-hidden
             style={{
               position: "absolute",
-              width: 700, height: 700, borderRadius: "50%",
-              background: "radial-gradient(circle, rgba(170,255,77,0.06) 0%, transparent 65%)",
+              inset: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              pointerEvents: "none",
+              fontFamily: "var(--font-mono)",
+              fontSize: "clamp(120px, 22vw, 360px)",
+              fontWeight: 500,
+              color: "rgba(245,239,224,0.025)",
+              letterSpacing: "-0.04em",
+              whiteSpace: "nowrap",
+              lineHeight: 1,
+            }}
+          >
+            AIght_
+          </div>
+
+          {/* Breathing radial glow */}
+          <div
+            aria-hidden
+            style={{
+              position: "absolute",
+              width: 700,
+              height: 700,
+              borderRadius: "50%",
+              background: "radial-gradient(circle, rgba(170,255,77,0.07) 0%, transparent 65%)",
               filter: "blur(100px)",
-              top: "50%", left: "50%",
+              top: "50%",
+              left: "50%",
               transform: "translate(-50%, -50%)",
               pointerEvents: "none",
+              animation: "glow-breath 8s ease-in-out infinite",
             }}
           />
+
           <div
             style={{
               position: "relative",
               zIndex: 1,
               textAlign: "center",
-              padding: "clamp(48px, 8vw, 96px) clamp(20px, 5vw, 48px)",
-              maxWidth: 560,
+              padding: "clamp(56px, 9vw, 120px) clamp(20px, 5vw, 48px)",
+              maxWidth: 600,
               margin: "0 auto",
             }}
           >
             <h2 style={{
               fontFamily: "var(--font-display)",
-              fontSize: "clamp(32px,4vw,52px)",
+              fontSize: "clamp(36px, 5vw, 64px)",
               fontWeight: 900,
               color: "#F5EFE0",
               letterSpacing: "-0.03em",
-              lineHeight: 1.1,
-              margin: "0 0 20px",
+              lineHeight: 1.05,
+              margin: "0 0 24px",
             }}>
               Stop doomscrolling.{" "}
               <em style={{ color: "#AAFF4D", fontStyle: "italic" }}>Start knowing.</em>
             </h2>
             <p style={{
               fontFamily: "var(--font-editorial)",
-              fontSize: 16,
-              lineHeight: 1.8,
-              color: "rgba(245,239,224,0.50)",
+              fontSize: 17,
+              lineHeight: 1.75,
+              color: "rgba(245,239,224,0.55)",
               margin: "0 0 36px",
             }}>
               Join 5,000+ builders getting weekly signal. No hype, no affiliate links.
             </p>
-            <div style={{ maxWidth: 400, margin: "0 auto" }}>
+            <div style={{ maxWidth: 420, margin: "0 auto" }}>
               <NewsletterForm />
             </div>
-            <div style={{ marginTop: 48, display: "flex", justifyContent: "center", gap: 24 }}>
-              <Link href="/tools" className="font-sans text-sm text-secondary hover:text-accent transition-colors no-underline">Browse Tools →</Link>
-              <Link href="/signal" className="font-sans text-sm text-secondary hover:text-accent transition-colors no-underline">Read Signal →</Link>
+            <div style={{ marginTop: 48, display: "flex", justifyContent: "center", gap: 32, flexWrap: "wrap" }}>
+              <MagneticLink href="/tools" className="font-sans text-sm text-secondary hover:text-accent transition-colors no-underline">
+                Browse Tools →
+              </MagneticLink>
+              <MagneticLink href="/signal" className="font-sans text-sm text-secondary hover:text-accent transition-colors no-underline">
+                Read Signal →
+              </MagneticLink>
             </div>
           </div>
         </section>

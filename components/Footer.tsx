@@ -26,12 +26,15 @@ const STATS = [
 
 export default function Footer() {
   return (
-    <footer style={{
-      borderTop: '1px solid rgba(245,239,224,0.06)',
-      background: 'rgba(255,250,240,0.02)',
-      backdropFilter: 'blur(20px)',
-      WebkitBackdropFilter: 'blur(20px)',
-    }}>
+    <footer
+      className="footer-rule"
+      style={{
+        borderTop: '1px solid rgba(245,239,224,0.10)',
+        background: 'rgba(255,250,240,0.02)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+      }}
+    >
       <div style={{ maxWidth: 1280, margin: '0 auto', padding: 'clamp(32px, 5vw, 56px) clamp(20px, 5vw, 48px) 40px' }}>
 
         {/* Stats strip */}

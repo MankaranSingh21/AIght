@@ -47,6 +47,7 @@ export default function NewsletterForm() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="your@email.com"
+          className="newsletter-input"
           style={{
             flex: 1,
             minWidth: 0,
@@ -59,10 +60,7 @@ export default function NewsletterForm() {
             borderRadius: 8,
             padding: '0 14px',
             outline: 'none',
-            transition: 'border-color 150ms ease',
           }}
-          onFocus={e => (e.currentTarget.style.borderColor = 'rgba(170,255,77,0.30)')}
-          onBlur={e => (e.currentTarget.style.borderColor = 'rgba(245,239,224,0.09)')}
         />
         <button
           type="submit"

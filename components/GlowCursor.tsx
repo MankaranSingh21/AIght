@@ -41,18 +41,18 @@ export default function GlowCursor() {
     loop();
 
     // Grow ring over interactive elements — event delegation, no MutationObserver
-    const onEnter = () => {
+    let magnetic = false;     // additional bump when near a [data-magnetic]
+    const setRingSize = (base: number, hovered: boolean) => {
       if (!ringRef.current) return;
-      ringRef.current.style.width  = '44px';
-      ringRef.current.style.height = '44px';
-      ringRef.current.style.borderColor = ringHover;
+      const size = base + (magnetic ? 8 : 0);
+      ringRef.current.style.width  = `${size}px`;
+      ringRef.current.style.height = `${size}px`;
+      ringRef.current.style.borderColor = hovered ? ringHover : ringIdle;
     };
-    const onLeave = () => {
-      if (!ringRef.current) return;
-      ringRef.current.style.width  = '36px';
-      ringRef.current.style.height = '36px';
-      ringRef.current.style.borderColor = ringIdle;
-    };
+    let hoveredEl = false;
+
+    const onEnter = () => { hoveredEl = true;  setRingSize(44, true);  };
+    const onLeave = () => { hoveredEl = false; setRingSize(36, false); };
 
     const onDocOver = (e: MouseEvent) => {
       if ((e.target as Element).closest('a, button, [data-hover]')) onEnter();
@@ -63,8 +63,28 @@ export default function GlowCursor() {
     document.addEventListener('mouseover', onDocOver);
     document.addEventListener('mouseout', onDocOut);
 
+    // Magnetic proximity — check the cursor against every [data-magnetic]
+    // element on each mousemove. Cheap: usually 1–6 such elements on a page.
+    const onProximity = (e: MouseEvent) => {
+      const nodes = document.querySelectorAll<HTMLElement>('[data-magnetic="true"]');
+      let near = false;
+      for (let i = 0; i < nodes.length; i++) {
+        const r = nodes[i].getBoundingClientRect();
+        const cx = r.left + r.width / 2;
+        const cy = r.top  + r.height / 2;
+        const d = Math.hypot(e.clientX - cx, e.clientY - cy);
+        if (d < 110 + Math.max(r.width, r.height) / 2) { near = true; break; }
+      }
+      if (near !== magnetic) {
+        magnetic = near;
+        setRingSize(hoveredEl ? 44 : 36, hoveredEl);
+      }
+    };
+    window.addEventListener('mousemove', onProximity);
+
     return () => {
       window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mousemove', onProximity);
       document.removeEventListener('mouseover', onDocOver);
       document.removeEventListener('mouseout', onDocOut);
       cancelAnimationFrame(rafRef.current);
