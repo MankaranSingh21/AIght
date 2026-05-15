@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import ConceptCarouselClient from "@/components/learn/ConceptCarouselClient";
 import { getAllConcepts } from "@/lib/learn";
+import { buildCollectionLd } from "@/utils/jsonld";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
@@ -34,8 +35,21 @@ function EdgeOrb({
 
 export default function LearnPage() {
   const allConcepts = getAllConcepts();
+
+  const jsonLd = buildCollectionLd({
+    path: "/learn",
+    name: "Learn — Concepts behind the tools",
+    description: "Honest explanations of the concepts behind the AI tools you use.",
+    items: allConcepts.map((c) => ({ name: c.title, url: `/learn/${c.slug}` })),
+    itemType: "Article",
+  });
+
   return (
     <>
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+    />
     <main style={{ minHeight: "100vh", position: "relative", zIndex: 1 }}>
 
       {/* ── Full-bleed header ────────────────────────────────────────────── */}

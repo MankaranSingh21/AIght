@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import fields from "@/content/paths/fields.json";
+import { buildCollectionLd } from "@/utils/jsonld";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
@@ -57,8 +58,21 @@ function EdgeOrb({
 }
 
 export default function PathsPage() {
+  const jsonLd = buildCollectionLd({
+    path: "/learn/paths",
+    name: "AI in your field — Field Guides",
+    description:
+      "How the tools you're hearing about are reshaping every discipline — and what to do about it.",
+    items: fields.map((f) => ({ name: f.field, url: `/learn/paths/${f.slug}` })),
+    itemType: "Article",
+  });
+
   return (
     <>
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+    />
     <main style={{ minHeight: "100vh", position: "relative", zIndex: 1 }}>
 
       {/* ── Full-bleed header ─────────────────────────────────────────────── */}

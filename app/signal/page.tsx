@@ -1,18 +1,40 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getSignalPosts, EDITOR_POSTS } from "@/lib/signal";
+import { buildCollectionLd } from "@/utils/jsonld";
 
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Signal",
   description: "Editorial on AI tools, models, and what they actually mean.",
+  alternates: {
+    types: {
+      "application/rss+xml": "/signal/rss.xml",
+    },
+  },
 };
 
 export default async function SignalPage() {
   const posts = await getSignalPosts();
 
+  const jsonLd = buildCollectionLd({
+    path: "/signal",
+    name: "Signal — Editorial on AI tools",
+    description: "Honest writing about AI tools and what they mean. No hype, no sponsored takes.",
+    items: [
+      ...EDITOR_POSTS.map((p) => ({ name: p.title, url: p.href })),
+      ...posts.map((p) => ({ name: p.title, url: p.href })),
+    ],
+    itemType: "BlogPosting",
+  });
+
   return (
+    <>
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+    />
     <main style={{ minHeight: '100vh', background: 'var(--bg-base)' }}>
       <div style={{ maxWidth: 'var(--max-width-editorial)', margin: '0 auto', padding: '64px 48px 96px' }}>
 
@@ -28,6 +50,36 @@ export default async function SignalPage() {
             Honest writing about AI tools and what they mean. No hype, no
             sponsored takes. Just signal.
           </p>
+          <div style={{ marginTop: 20, display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+            <a
+              href="/signal/rss.xml"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 8,
+                fontFamily: 'var(--font-mono)',
+                fontSize: 10,
+                letterSpacing: '0.14em',
+                textTransform: 'uppercase',
+                color: 'var(--accent-warm, #F4AB1F)',
+                padding: '6px 12px',
+                borderRadius: 999,
+                border: '1px solid rgba(244,171,31,0.32)',
+                background: 'rgba(244,171,31,0.06)',
+                textDecoration: 'none',
+              }}
+            >
+              <svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor" aria-hidden>
+                <circle cx="3" cy="13" r="1.6" />
+                <path d="M2 8.5a5.5 5.5 0 0 1 5.5 5.5H6a4 4 0 0 0-4-4V8.5z" />
+                <path d="M2 4.5A9.5 9.5 0 0 1 11.5 14H10A8 8 0 0 0 2 6V4.5z" />
+              </svg>
+              Subscribe via RSS
+            </a>
+            <span style={{ fontFamily: 'var(--font-editorial)', fontStyle: 'italic', fontSize: 13, color: 'rgba(245,239,224,0.40)' }}>
+              For people who&apos;d rather subscribe than scroll.
+            </span>
+          </div>
         </div>
 
         {/* From the editor — always-visible editorial posts */}
@@ -107,5 +159,6 @@ export default async function SignalPage() {
 
       </div>
     </main>
+    </>
   );
 }

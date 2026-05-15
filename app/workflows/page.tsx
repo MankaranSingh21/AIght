@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getAllWorkflows } from "@/lib/workflows";
+import { buildCollectionLd } from "@/utils/jsonld";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
@@ -11,8 +12,21 @@ export const metadata: Metadata = {
 export default function WorkflowsPage() {
   const workflows = getAllWorkflows();
 
+  const jsonLd = buildCollectionLd({
+    path: "/workflows",
+    name: "AI Workflows — Tool combinations that work",
+    description:
+      "Step-by-step guides showing how AI tools combine into real pipelines. Six real workflows, authored and tested.",
+    items: workflows.map((w) => ({ name: w.title, url: `/workflows/${w.slug}` })),
+    itemType: "HowTo",
+  });
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <main style={{ minHeight: "100vh", position: "relative" }}>
 
         {/* Header */}

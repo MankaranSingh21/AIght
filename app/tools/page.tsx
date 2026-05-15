@@ -4,6 +4,7 @@ import { createClient } from "@/utils/supabase/server";
 import ToolsClient from "@/components/ToolsClient";
 import Footer from "@/components/Footer";
 import { mapToolToCardProps } from "@/lib/tool-mapping";
+import { buildCollectionLd } from "@/utils/jsonld";
 
 import ToolCard, { type ToolCardProps } from "@/components/ToolCard";
 import type { Tool } from "@/utils/supabase/types";
@@ -51,8 +52,20 @@ export default async function ToolsArchivePage() {
 
   const tools: ToolCardProps[] = (data ?? []).map((t: Partial<Tool>) => mapToolToCardProps(t));
 
+  const jsonLd = buildCollectionLd({
+    path: "/tools",
+    name: "AI Tools Archive",
+    description: "Browse the full archive of AI tools curated for builders, founders, and creators.",
+    items: tools.map((t) => ({ name: t.name, url: `/tool/${t.slug}` })),
+    itemType: "SoftwareApplication",
+  });
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <main style={{ minHeight: "100vh", position: "relative", zIndex: 1 }}>
 
         {/* ── Full-bleed header ──────────────────────────────────────────── */}

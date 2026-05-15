@@ -1,9 +1,13 @@
 /**
  * Loads a Google Font as an ArrayBuffer suitable for passing to ImageResponse's
- * `fonts` option. Requests TTF format by spoofing an old Android UA — TTF is
- * what Satori (the engine behind next/og) actually supports.
+ * `fonts` option. Satori (the engine behind next/og) only supports TTF/OTF —
+ * woff2 fails with "Unsupported OpenType signature wOF2", EOT fails too.
  *
- * Returns null on any network failure so callers can fall back gracefully.
+ * Trick: the legacy `fonts.googleapis.com/css` endpoint (not `css2`) plus a
+ * Firefox-3-era UA gets Google to return a plain `.ttf` URL with
+ * `format('truetype')`. Modern UAs always get woff2; the IE UA gets EOT.
+ *
+ * Returns null on any failure so callers fall back to system fonts.
  */
 export async function loadGoogleFont(
   family: string,
@@ -11,18 +15,25 @@ export async function loadGoogleFont(
 ): Promise<ArrayBuffer | null> {
   try {
     const css = await fetch(
-      `https://fonts.googleapis.com/css2?family=${encodeURIComponent(family)}:wght@${weight}`,
+      `https://fonts.googleapis.com/css?family=${encodeURIComponent(family)}:${weight}`,
       {
         headers: {
-          // Old Android UA → Google returns TTF (Satori-compatible)
+          // Firefox 3 supports @font-face but predates woff/woff2 → Google
+          // returns a plain TTF kit URL with format('truetype').
           "User-Agent":
-            "Mozilla/5.0 (Android 4.4; Mobile; rv:41.0) Gecko/41.0 Firefox/41.0",
+            "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7",
         },
       }
     ).then((r) => r.text());
 
-    const url = css.match(/url\(([^)]+)\)/)?.[1];
+    // Prefer an explicit TTF URL. If none, accept the first url().
+    const ttfMatch = css.match(/url\(([^)]+\.ttf)\)/);
+    const anyMatch = css.match(/url\(([^)]+)\)/);
+    const url = ttfMatch?.[1] ?? anyMatch?.[1];
     if (!url) return null;
+
+    // Defensive: skip non-TTF formats Satori can't parse.
+    if (/\.(woff2?|eot)(\?|$)/i.test(url)) return null;
 
     return fetch(url).then((r) => r.arrayBuffer());
   } catch {

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getAllUseCases } from "@/lib/use-cases";
+import { buildCollectionLd } from "@/utils/jsonld";
 import Footer from "@/components/Footer";
 import UseCaseList from "@/components/UseCaseList";
 
@@ -26,8 +27,21 @@ function EdgeOrb({ top, bottom, left, right, size = 500, color = "rgba(170,255,7
 export default function UseCasesPage() {
   const useCases = getAllUseCases();
 
+  const jsonLd = buildCollectionLd({
+    path: "/use-cases",
+    name: "AI Tools by Use Case",
+    description:
+      "Browse AI tools by what you're actually trying to do. Twelve real jobs, curated tool recommendations for each.",
+    items: useCases.map((uc) => ({ name: uc.label, url: `/use-cases/${uc.slug}` })),
+    itemType: "HowTo",
+  });
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <main style={{ minHeight: "100vh", position: "relative", zIndex: 1 }}>
 
         {/* Header */}
