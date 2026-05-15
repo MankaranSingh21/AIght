@@ -1,17 +1,25 @@
 ---
 title: "Retrieval-Augmented Generation"
-tagline: "How AI learned to look things up before answering"
+tagline: "How AI learned to look things up before opening its mouth"
 readTime: "8 min read"
 slug: "rag"
+related: ["embeddings", "context-windows", "hallucination"]
+lastUpdated: "2026-05-09"
+sources: 3
+difficulty: "intermediate"
 ---
 
 Here's the thing about language models: they're trained once, then frozen. The model you're talking to right now learned from data collected up to some cutoff date. After that, it doesn't update. Its knowledge is a photograph, not a window.
 
-RAG — Retrieval-Augmented Generation — is the fix for that. The idea is almost embarrassingly simple: before the model answers your question, it goes and looks something up first.
+<Glossary term="rag">RAG</Glossary> — Retrieval-Augmented Generation — is the fix. The idea is almost embarrassingly simple: before the model answers your question, it goes and looks something up first.
 
-Imagine a brilliant friend who read voraciously for years and then went off the grid. They know a lot. They reason beautifully. But they don't know what happened last week, and they've never seen your company's internal documents. Now give that friend a library card — and a research assistant who can sprint to the shelves and return with the relevant pages before you ask your question.
+<MarginNote side="right">If you've ever asked ChatGPT about something that happened last week and watched it confidently make things up, you've met the problem RAG solves.</MarginNote>
+
+Imagine a brilliant friend who read voraciously for years and then went off the grid. They know a lot. They reason beautifully. But they don't know what happened last week, and they've never seen your company's internal docs. Now hand that friend a library card — and a research assistant who can sprint to the shelves and bring back the right pages before you ask your question.
 
 That's RAG.
+
+The original paper<Cite source="Lewis et al., Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks (2020)" href="https://arxiv.org/abs/2005.11401" /> was a research proposal. Five years later it's the default architecture for "talk to your docs" — every customer-support bot, legal-research tool, and codebase assistant you've used probably has some flavor of it running underneath.
 
 ---
 
@@ -19,11 +27,11 @@ That's RAG.
 
 The simplest version has three steps.
 
-**Embed your documents.** You take whatever documents you want the model to know about — your company wiki, a research paper, your email archive, a thousand product reviews — and convert each chunk of text into a vector: a long list of numbers that represents its meaning. Similar texts produce similar vectors. This is called an embedding, and it's where semantic understanding lives.
+**Embed your documents.** You take whatever documents you want the model to know about — your wiki, a research paper, your email archive, a thousand product reviews — and convert each chunk of text into an <Glossary term="embedding">embedding</Glossary>: a long list of numbers representing its meaning. Similar texts produce similar vectors. This is where semantic understanding lives.
 
-**Retrieve the relevant chunks.** When a user asks a question, you embed that question too, then find the document chunks whose vectors are closest to it. This is a similarity search — fast, approximate, and surprisingly good.
+**Retrieve the relevant chunks.** When a user asks a question, you embed that question too, then find the document chunks whose vectors are closest to it. Fast, approximate, surprisingly good.
 
-**Augment the prompt.** You paste the retrieved chunks into the prompt, before the question, so the model has the relevant context in front of it when it answers. The model never "knows" the document. It reads it, right then, the same way you'd read a passage before answering a question about it.
+**Augment the prompt.** You paste the retrieved chunks into the <Glossary term="prompt">prompt</Glossary>, before the question, so the model has the relevant context in front of it when it answers. The model never "knows" the document. It reads it, right then, the way you'd read a passage before answering a question about it.
 
 ```python
 # A minimal RAG loop
@@ -41,19 +49,21 @@ def answer_with_rag(question: str) -> str:
     return llm.complete(prompt)
 ```
 
-> RAG doesn't make the model smarter. It makes the model better-informed. That distinction matters more than it sounds.
+<PullquoteMargin>RAG doesn't make the model smarter. It makes the model better-informed. That distinction matters more than it sounds.</PullquoteMargin>
 
 ---
 
 <RagSimulation />
 
-## What this actually changes
+## What this changes
 
-Without RAG, asking a language model about something specific — your internal codebase, a paper you just published, anything that happened recently — is like asking someone who has never seen your document to write about it. They'll produce something plausible. And wrong.
+Without RAG, asking a language model about something specific — your codebase, a paper you just published, anything that happened recently — is like asking someone who has never seen your document to write about it. They'll produce something plausible. And wrong.
 
-With RAG, the model is working from sources. It can still make mistakes, but now it has something real to be wrong about. That's a meaningful improvement, and it changes how you should think about failure modes.
+With RAG, the model is working from sources. It can still make mistakes, but now it has something real to be wrong *about*. That's a meaningful improvement, and it changes how you should think about failure modes.
 
-It also changes the economics. Fine-tuning a model on your proprietary data is expensive, slow, and requires retraining every time anything changes. RAG is leaner: update the vector store whenever your documents change, and the retrieval adapts immediately. No retraining cycle.
+<MarginNote side="right">When a RAG system fails, the question to ask first is almost always: did the right chunks come back? If yes, it's a model problem. If no, it's a retrieval problem. The two failure modes look identical from the outside.</MarginNote>
+
+It also changes the economics. <Glossary term="fine-tuning">Fine-tuning</Glossary> a model on your proprietary data is expensive, slow, and requires retraining every time anything changes. RAG is leaner: update the vector store whenever your documents change, and the retrieval adapts immediately. No retraining cycle.
 
 ---
 
@@ -61,14 +71,18 @@ It also changes the economics. Fine-tuning a model on your proprietary data is e
 
 RAG sounds simple in the hello-world version. The hard parts are quieter.
 
-**Chunking strategy matters more than people expect.** If you split documents too finely, you lose context. Too coarsely, you dilute the signal. Getting good results often means experimenting with chunk size, overlap, and structure-aware splitting — respecting headers, code blocks, tables — rather than blindly slicing at 512 tokens.
+<MarginNote side="right">"Chunking strategy" sounds like a niche concern. It is in fact the difference between RAG that works and RAG that hallucinates with a confident citation.</MarginNote>
 
-**Retrieval quality is the ceiling.** The model can only work with what it retrieves. If the wrong chunks come back — because the question was ambiguous, the embedding model didn't capture the domain well, or the document was poorly formatted — the answer will be wrong even if the right information exists somewhere in your corpus.
+**Chunking strategy matters more than you'd expect.** Split documents too finely and you lose context. Too coarsely and you dilute the signal. Good results often mean experimenting with chunk size, overlap, and structure-aware splitting — respecting headers, code blocks, tables — instead of blindly slicing every 512 tokens.
 
-**Reranking helps.** The initial similarity search is fast but approximate. Many production RAG pipelines add a second step: a reranker that reads the question and the candidate chunks together and produces a more careful relevance score. The first retrieval catches broadly; the reranker curates.
+**Retrieval quality is the ceiling.** The model can only work with what it retrieves. If the wrong chunks come back — because the question was ambiguous, the embedding model didn't capture your domain, or the document was poorly formatted — the answer will be wrong even when the right information exists somewhere in your corpus.
+
+**Reranking helps a lot.** The initial similarity search is fast but approximate. Production RAG pipelines often add a second step: a <Glossary term="grounding">reranker</Glossary> that reads the question and candidate chunks together and produces a more careful relevance score. First retrieval casts a wide net; the reranker curates.<Footnote>Cross-encoder rerankers are slower per pair than vector similarity but dramatically more accurate. The standard pattern is: retrieve top 50 with vectors, rerank to top 5 with a cross-encoder, send those to the model.</Footnote>
+
+**Hybrid search beats pure vector search.** A vector store finds semantically similar things — but sometimes you just need a keyword match (a product SKU, an error code, a name). Combining vector and keyword search (often via reciprocal rank fusion) catches both.
 
 ---
 
-Most AI tools that feel unusually sharp about a specific domain — your company's knowledge, a particular research area, your own uploaded files — are running some version of this. The underlying model might be identical to what everyone else uses. What's different is what it was handed right before it answered.
+Most AI tools that feel unusually sharp about a specific domain — your company's knowledge, a particular research area, your own uploaded files — are running some version of this. The underlying model might be identical to what everyone else is using. What's different is what it was handed right before it answered.
 
 That's RAG. Not magic. Just a well-timed library run.

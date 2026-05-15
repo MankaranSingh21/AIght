@@ -10,6 +10,10 @@ export type ConceptMeta = {
   readTime: string;
   slug: string;
   publishedDate: string;
+  related?: string[];
+  lastUpdated?: string;
+  sources?: number;
+  difficulty?: "beginner" | "intermediate" | "advanced";
 };
 
 export function getAllConcepts(): ConceptMeta[] {
@@ -31,6 +35,10 @@ export function getAllConcepts(): ConceptMeta[] {
       readTime: data.readTime as string,
       slug: data.slug as string,
       publishedDate: (data.date as string | undefined) ?? stat.birthtime.toISOString(),
+      related: data.related as string[] | undefined,
+      lastUpdated: data.lastUpdated as string | undefined,
+      sources: data.sources as number | undefined,
+      difficulty: data.difficulty as ConceptMeta["difficulty"],
     };
   });
 }

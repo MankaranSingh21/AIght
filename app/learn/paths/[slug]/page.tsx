@@ -7,6 +7,37 @@ import AugmentationDiagram from "@/components/learn/AugmentationDiagram";
 
 type Difficulty = "Easy" | "Medium" | "Hard";
 
+type Marginalia = { anchor: string; side: "left" | "right"; text: string };
+type Citation = { label?: string; source: string; href?: string };
+
+function MarginaliaForAnchor({ items, anchor }: { items?: Marginalia[]; anchor: string }) {
+  const list = (items ?? []).filter((m) => m.anchor === anchor);
+  if (list.length === 0) return null;
+  return (
+    <>
+      {list.map((m, i) => (
+        <aside
+          key={`${anchor}-${i}`}
+          className="field-marginalia"
+          data-side={m.side}
+          style={{
+            fontFamily: "var(--font-editorial)",
+            fontStyle: "italic",
+            fontSize: 13,
+            lineHeight: 1.55,
+            color: "rgba(245,239,224,0.55)",
+            borderLeft: "1px solid var(--accent-primary)",
+            paddingLeft: 12,
+            margin: "12px 0",
+          }}
+        >
+          {m.text}
+        </aside>
+      ))}
+    </>
+  );
+}
+
 function toolNameToSlug(name: string): string {
   return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 }
@@ -161,6 +192,7 @@ export default async function PathPage({
                   </div>
                 ))}
               </div>
+              <MarginaliaForAnchor items={(field as { marginalia?: Marginalia[] }).marginalia} anchor="transformations" />
             </section>
 
             {/* Augmentation diagram */}
@@ -196,6 +228,8 @@ export default async function PathPage({
               </div>
             </section>
 
+            <MarginaliaForAnchor items={(field as { marginalia?: Marginalia[] }).marginalia} anchor="roles" />
+
             {/* What to actually do */}
             <section style={{ marginBottom: 56 }}>
               <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 24, fontWeight: 700, color: '#F5EFE0', letterSpacing: '-0.02em', marginBottom: 28, margin: '0 0 28px' }}>
@@ -206,7 +240,37 @@ export default async function PathPage({
                   {field.action_paragraph}
                 </p>
               </blockquote>
+              <MarginaliaForAnchor items={(field as { marginalia?: Marginalia[] }).marginalia} anchor="action" />
             </section>
+
+            {/* Sources */}
+            {(() => {
+              const cites = (field as { citations?: Citation[] }).citations ?? [];
+              if (cites.length === 0) return null;
+              return (
+                <section style={{ marginTop: 56, paddingTop: 40, borderTop: '1px solid rgba(245,239,224,0.07)' }}>
+                  <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(245,239,224,0.30)', marginBottom: 16 }}>
+                    Sources
+                  </p>
+                  <ol style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: 12 }}>
+                    {cites.map((c, i) => (
+                      <li key={i} style={{ display: 'grid', gridTemplateColumns: '32px 1fr', gap: 8, fontFamily: 'var(--font-editorial)', fontSize: 13, lineHeight: 1.65, color: 'rgba(245,239,224,0.65)' }}>
+                        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--accent-secondary)' }}>[{i + 1}]</span>
+                        <span>
+                          {c.href ? (
+                            <a href={c.href} target="_blank" rel="noopener noreferrer" style={{ color: 'rgba(245,239,224,0.85)', textDecoration: 'underline', textDecorationColor: 'rgba(0,255,209,0.35)', textUnderlineOffset: 3 }}>
+                              {c.source}
+                            </a>
+                          ) : (
+                            c.source
+                          )}
+                        </span>
+                      </li>
+                    ))}
+                  </ol>
+                </section>
+              );
+            })()}
 
             {/* Difficulty reasoning */}
             <section style={{ display: 'flex', alignItems: 'flex-start', gap: 14, padding: '16px 20px', borderRadius: 10, border: '1px solid rgba(245,239,224,0.07)', background: 'rgba(255,250,240,0.03)' }}>

@@ -3,13 +3,19 @@ title: "Fine-Tuning"
 tagline: "Teaching a model new habits, not new knowledge"
 readTime: "8 min read"
 slug: "fine-tuning"
+related: ["rag", "prompt-engineering", "training"]
+lastUpdated: "2026-05-09"
+sources: 2
+difficulty: "intermediate"
 ---
 
-There's a version of this explanation that will make you want to fine-tune everything. And a version that will leave you thinking most people never need to. Both of those versions are true. The useful question is which one applies to you — and being honest about that requires understanding what fine-tuning actually does.
+There's a version of this explanation that will make you want to fine-tune everything. And a version that will leave you thinking most people never need to. Both are true. The useful question is which one applies to you — and being honest about that requires understanding what fine-tuning actually does.
 
-Base models like GPT-4 or Claude are trained on enormous amounts of text, which gives them broad, general capabilities. Fine-tuning takes one of those models and continues training it on a smaller, specific dataset — your customer support transcripts, your legal documents, your company's writing style guide — to shift its behavior toward your particular context.
+Base models like GPT-4 or Claude are trained on enormous amounts of text, which gives them broad, general capabilities. <Glossary term="fine-tuning">Fine-tuning</Glossary> takes one of those models and continues training it on a smaller, specific dataset — your customer support transcripts, your legal documents, your company's writing style guide — to shift its behavior toward your particular context.
 
-What changes isn't the model's intelligence. And, importantly, it isn't primarily the model's knowledge either. What fine-tuning changes is **behavior**: tone, format, consistency, the particular way the model responds.
+<MarginNote side="right">If you find yourself writing the same 800-word system prompt for every call, fine-tuning is probably worth considering. If you don't, it probably isn't.</MarginNote>
+
+What changes isn't the model's intelligence. And — importantly — it isn't primarily the model's knowledge either. What fine-tuning changes is **behavior**: tone, format, consistency, the particular way the model responds.
 
 ---
 
@@ -17,9 +23,9 @@ What changes isn't the model's intelligence. And, importantly, it isn't primaril
 
 Think of a base model as someone with a strong general education and no particular professional context. They can write in many styles, explain many topics, follow many kinds of instructions. Now put them through six months at a specific company with a specific house style, handling a specific set of customer interactions.
 
-Their capabilities don't grow. Their habits change. They start to respond the way your context expects without being told to each time.
+Their capabilities don't grow. Their habits change. They start to respond the way your context expects without being told each time.
 
-That's the outcome fine-tuning produces: reliable style and format, without having to specify it in every prompt.
+That's the outcome: reliable style and format, without having to specify it in every prompt.
 
 ```python
 from openai import OpenAI
@@ -39,27 +45,43 @@ job = client.fine_tuning.jobs.create(
 print(job.id)
 ```
 
-> Most people who believe they need to fine-tune just need a better system prompt. Fine-tuning is for when you've genuinely exhausted prompting — when you need consistency at scale, across thousands of calls, that a prompt can't reliably deliver.
+<PullquoteMargin>Most people who think they need to fine-tune just need a better system prompt.</PullquoteMargin>
+
+Fine-tuning is for when you've genuinely exhausted prompting — when you need consistency at scale, across thousands of calls, that a prompt can't reliably deliver.
 
 ---
 
 <FineTuningComparison />
 
+## LoRA and the cheaper path
+
+The original way to fine-tune a model was *full fine-tuning*: update every parameter. For a 70-billion-parameter model, that means moving 70 billion numbers — expensive, slow, and you need a copy of the whole model per task.
+
+<MarginNote side="right"><Glossary term="lora">LoRA</Glossary> is the reason fine-tuning is accessible at all to anyone not running a research lab. Before LoRA, this was an industrial-scale operation.</MarginNote>
+
+<Glossary term="lora">LoRA</Glossary> (Low-Rank Adaptation)<Cite source="Hu et al., LoRA: Low-Rank Adaptation of Large Language Models (2021)" href="https://arxiv.org/abs/2106.09685" /> changed that. Instead of training all the parameters, LoRA freezes the base model and trains a small number of additional parameters layered on top — often less than 1% of the original size. The result is almost as good as full fine-tuning, costs a fraction, and you can swap LoRA "adapters" in and out for different tasks without touching the base model.
+
+This is what most modern fine-tuning APIs actually do under the hood. When OpenAI or Anthropic offer fine-tuning, you're almost always getting some flavor of parameter-efficient fine-tuning, not a full retrain.
+
+---
+
 ## When fine-tuning makes sense
 
-**You have a consistent format or structure requirement.** If every response needs to be valid JSON with a specific schema, or formatted in a particular way that's hard to enforce through prompting alone, fine-tuning can make that format reliable without repeatedly specifying it.
+**You have a consistent format or structure requirement.** If every response needs to be valid JSON with a specific schema, or formatted in a particular way that's hard to enforce through prompting alone, fine-tuning can make that format reliable.
 
-**You need a very specific tone.** If your brand has a distinctive voice — particular vocabulary, specific warmth, a writing style that's hard to describe but easy to demonstrate — fine-tuning on examples of that voice can transfer it more reliably than prompt instructions.
+**You need a very specific tone.** If your brand has a distinctive voice — particular vocabulary, specific warmth, a writing style that's hard to describe but easy to demonstrate — fine-tuning on examples transfers it more reliably than prompt instructions.
 
-**You're making thousands of calls.** A fine-tuned model can often achieve good results with shorter prompts than a base model, because some of the context is baked in. At high volume, that's real cost savings.
+**You're making thousands of calls.** A fine-tuned model can often achieve good results with shorter prompts than a base model, because some of the context is baked in. At high volume, that's real cost savings.<Footnote>Concrete math: if your system prompt is 500 tokens and you run 10M requests, you're paying for 5 billion tokens of repeated instruction. Fine-tuning to remove that prompt can pay for itself in weeks.</Footnote>
 
 ---
 
 ## When it doesn't
 
-**You want the model to learn facts.** Fine-tuning is poor at reliably encoding new factual knowledge. The model may appear to learn facts during training but will hallucinate around them in ways that are hard to predict. For factual grounding, use RAG — give the model the information at inference time, don't try to bake it in.
+**You want the model to learn facts.** Fine-tuning is poor at reliably encoding new factual knowledge. The model may appear to learn facts during training but will hallucinate around them in unpredictable ways. For factual grounding, use <Glossary term="rag">RAG</Glossary> — give the model the information at inference time, don't try to bake it in.
 
-**You want behavior that a system prompt can already achieve.** This is the majority of cases. If careful prompting and a good system prompt get you 90% of the way there, fine-tuning is expensive and slow for marginal gains. The data collection and training process takes significant time; the system prompt can be iterated in minutes.
+<MarginNote side="right">The "fine-tune vs RAG" decision tree is mostly: are you trying to change *how* the model responds, or *what* it knows? FT for the first. RAG for the second.</MarginNote>
+
+**Your prompt already gets you there.** This is the majority of cases. If careful prompting gets you 90% of the way, fine-tuning is expensive and slow for marginal gains. The data collection and training process takes significant time; the prompt can be iterated in minutes.
 
 **Your use case is still changing.** Fine-tuned models are snapshots. Every time your requirements shift, you need new training data and a new fine-tuning run. A prompt is cheaper to update.
 
@@ -69,7 +91,7 @@ print(job.id)
 
 Fine-tuning doesn't make a smaller model as capable as a larger one. If the base model can't perform a reasoning task, fine-tuning won't unlock that capability — it wasn't there to be taught.
 
-It also doesn't give you complete control. The fine-tuned model's underlying tendencies come from pretraining, which is orders of magnitude larger than your dataset. You're nudging behavior within the space the base model defines, not rewriting it from scratch.
+It also doesn't give you complete control. The fine-tuned model's underlying tendencies come from <Glossary term="pretraining">pretraining</Glossary>, which is orders of magnitude larger than your dataset. You're nudging behavior within the space the base model defines, not rewriting it from scratch.
 
 ---
 

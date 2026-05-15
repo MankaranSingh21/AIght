@@ -300,44 +300,70 @@
   }
 
   /* ── Margin notes ──────────────────────────────────────────── */
-  .margin-note {
-    /* Mobile default: inline amber callout */
+  /* Default (mobile): inline amber callout. */
+  .margin-note,
+  .margin-pullquote {
     display: block;
-    margin: 12px 0;
-    padding: 10px 14px;
+    margin: 16px 0;
+    padding: 12px 14px;
     background: rgba(244,171,31,0.07);
-    border-left: 2px solid var(--accent-warm) !important;
-    border-right: none !important;
+    border-left: 2px solid var(--accent-warm);
     border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    font-family: var(--font-editorial);
+    font-style: italic;
+    font-size: 13px;
+    line-height: 1.6;
+    color: rgba(245,239,224,0.65);
+  }
+  .margin-pullquote {
+    background: transparent;
+    border-left: 3px solid var(--accent-warm);
+    font-size: 17px;
+    color: var(--accent-warm);
+    line-height: 1.45;
   }
 
+  /* Desktop: float into the right edge of the editorial-main column.
+     Body text wraps around. This sits beside the column rather than spilling
+     into the right gutter — which has its own sticky widgets. */
   @media (min-width: 1100px) {
-    .article-reveal-wrapper {
-      /* Give margin notes space to breathe outside the column */
-      overflow: visible;
-    }
-    .margin-note {
-      /* Float into the margin */
-      position: absolute;
-      width: 160px;
+    .editorial-main .margin-note,
+    .editorial-main .margin-pullquote {
+      width: 200px;
       background: transparent;
-      padding: 0;
+      padding: 6px 0 6px 12px;
       border-radius: 0;
-      margin: 0;
+      font-size: 12px;
+      line-height: 1.55;
+      color: rgba(245,239,224,0.62);
     }
-    .margin-note[data-side="right"] {
-      left: calc(100% + 32px);
-      border-left: 1px solid var(--accent-primary) !important;
-      padding-left: 10px;
-      border-right: none !important;
+    .editorial-main .margin-note[data-side="right"],
+    .editorial-main .margin-pullquote[data-side="right"] {
+      float: right;
+      clear: right;
+      margin: 6px 0 18px 22px;
+      border-left: 1px solid var(--accent-primary);
+      shape-outside: inset(0);
     }
-    .margin-note[data-side="left"] {
-      right: calc(100% + 32px);
-      left: auto;
-      border-right: 1px solid var(--accent-primary) !important;
-      border-left: none !important;
-      padding-right: 10px;
+    .editorial-main .margin-note[data-side="left"] {
+      float: left;
+      clear: left;
+      margin: 6px 22px 18px 0;
+      padding: 6px 12px 6px 0;
+      border-left: none;
+      border-right: 1px solid var(--accent-primary);
       text-align: right;
+      shape-outside: inset(0);
+    }
+    .editorial-main .margin-pullquote {
+      font-size: 16px;
+      color: var(--accent-warm);
+      line-height: 1.45;
+      padding-left: 16px;
+      width: 220px;
+    }
+    .editorial-main .margin-pullquote[data-side="right"] {
+      border-left: 2px solid var(--accent-warm);
     }
   }
 
@@ -744,6 +770,65 @@
   /* ── Footer breath rule ────────────────────────────────────── */
   .footer-rule {
     animation: breath 6s ease-in-out infinite;
+  }
+
+  /* ── Editorial 3-col layout (article pages) ────────────────── */
+  /* Single column on mobile. At ≥1100 px it becomes
+     [220 left] [content] [220 right] with the centre clamped so the
+     reading column stays ≤ 68ch. Margin-notes float into the gutters. */
+  .editorial-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-6);
+    max-width: var(--max-width-editorial);
+    margin: 0 auto;
+    padding: 24px 24px 96px;
+    position: relative;
+  }
+  .editorial-layout > .editorial-gutter-left,
+  .editorial-layout > .editorial-gutter-right {
+    display: none;
+  }
+  .editorial-layout > .editorial-main {
+    min-width: 0;
+    max-width: 68ch;
+    margin: 0 auto;
+  }
+  @media (min-width: 1100px) {
+    .editorial-layout {
+      grid-template-columns: 220px minmax(0, 1fr) 220px;
+      gap: var(--space-10);
+      max-width: 1240px;
+      padding: 24px 32px 96px;
+    }
+    .editorial-layout > .editorial-gutter-left,
+    .editorial-layout > .editorial-gutter-right {
+      display: block;
+    }
+    .editorial-layout > .editorial-main {
+      grid-column: 2;
+      max-width: 68ch;
+      margin: 0;
+    }
+  }
+
+  /* Inline mobile TOC (collapses on desktop) */
+  .editorial-toc-mobile {
+    margin: 8px 0 32px;
+    padding: 12px 14px;
+    background: rgba(255,250,240,0.02);
+    border: 1px solid rgba(245,239,224,0.08);
+    border-radius: 8px;
+  }
+  @media (min-width: 1100px) {
+    .editorial-toc-mobile { display: none; }
+  }
+
+  /* Hover bump on related-concept link cards */
+  .related-concept-link:hover {
+    border-color: var(--border-emphasis) !important;
+    background: rgba(170,255,77,0.04) !important;
+    color: var(--text-primary) !important;
   }
 }
 

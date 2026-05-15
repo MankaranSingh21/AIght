@@ -1,27 +1,33 @@
 ---
 title: "AI Agents"
-tagline: "When AI stops answering and starts doing"
+tagline: "When AI stops answering and starts doing — and then, very often, hits a wall"
 readTime: "9 min read"
 slug: "agents"
+related: ["mcp", "multiagent", "prompt-engineering"]
+lastUpdated: "2026-05-10"
+sources: 4
+difficulty: "intermediate"
 ---
 
-The word "agent" has been stretched so thin it's nearly useless. Every product calls itself agentic now. Assistants, pipelines, chatbots with a tool or two — all agents, according to their marketing. So let's be specific about what the word actually means when it's used carefully.
+The word "agent" has been stretched so thin it's nearly useless. Every product calls itself agentic now. Assistants, pipelines, chatbots with a search button — all agents, according to their marketing. Let's actually be specific about what the word means when it's used carefully.
 
 A chatbot responds. You ask, it answers. The interaction is complete.
 
-An agent acts. It takes your goal, figures out what steps are needed, executes them, observes what happens, adjusts based on what it learns, and keeps going until the goal is reached — or until it decides it can't. That last part matters too.
+An <Glossary term="agent">agent</Glossary> acts. It takes your goal, figures out the steps, runs them, looks at what came back, adjusts, and keeps going until the goal is reached — or until it decides it can't.
+
+That last part matters too.
+
+<MarginNote side="right">If "agent" makes it into the title of a product page in 2026, you have basically zero information about what's inside.</MarginNote>
 
 The key distinction isn't capability. It's the loop.
-
-<MarginNote side="right">This is why "AI agent" as a marketing term is nearly meaningless — every chatbot with a search button now claims the title.</MarginNote>
 
 <SectionBreak />
 
 ## The loop is the thing
 
-An agent's defining characteristic is that it operates in a feedback loop with the world. It doesn't just generate output — it observes state, decides on an action, takes that action, observes the new state, and repeats. The simplest version of this pattern is sometimes called ReAct, shorthand for Reason and Act.
+An agent's defining trait is that it runs in a feedback loop with the world. It doesn't just generate output — it observes state, picks an action, takes it, observes the new state, and repeats. The simplest version of this pattern is sometimes called <Glossary term="agent">ReAct</Glossary><Cite source="Yao et al., ReAct: Synergizing Reasoning and Acting in Language Models (2023)" href="https://arxiv.org/abs/2210.03629" />, shorthand for *Reason and Act*.
 
-**Observe** what the current state is. What tools are available? What has already happened? What does the environment look like?
+**Observe** what the current state is. What tools are available? What's already happened? What does the environment look like?
 
 **Reason** about what to do next. Not necessarily deep reasoning — sometimes it's just: "I need to search the web before I can answer this."
 
@@ -48,7 +54,9 @@ def run_agent(goal: str) -> str:
         messages.append(response)
 ```
 
-> Most agents fail not because the AI is wrong, but because the feedback loop is brittle — bad tool outputs, ambiguous errors, no way to recover from a dead end. The model is often fine. The scaffolding isn't.
+<PullquoteMargin>Most agents fail not because the AI is wrong — but because the feedback loop is brittle.</PullquoteMargin>
+
+The model is often fine. The scaffolding around it is what cracks.
 
 ---
 
@@ -56,30 +64,36 @@ def run_agent(goal: str) -> str:
 
 ## What separates agents from assistants
 
-You can give a chatbot tools and it will use them. That's not quite the same as an agent.
+You can give a chatbot tools and it'll use them. That's not quite the same as an agent.
 
-What makes something agentically different is **multi-step autonomy** — the ability to pursue a goal across multiple actions without a human in the loop at each step. An assistant with tool use will search the web if you ask it to search. An agent will search, read the results, realize the first results weren't useful, search again with a refined query, extract the relevant sections, cross-reference them, and only then write its response.
+What makes something agentic is **multi-step autonomy** — pursuing a goal across multiple actions without a human stepping in at each one. An assistant with <Glossary term="tool-use">tool use</Glossary> will search the web if you ask it to search. An agent will search, read the results, notice they're useless, search again with a refined query, extract the relevant sections, cross-reference them, *then* write its response.
 
 The agent decides what to do at each step. You set the goal once.
 
-This is why **planning** matters so much in agent design. A good agent doesn't just execute the first thing it thinks of — it considers the goal, breaks it into subproblems, and sequences actions in a sensible order. Whether that planning is explicit (the agent writes out a plan first) or implicit (the model just reasons through steps naturally) varies by approach.
+<MarginNote side="right">"Autonomy" sounds glamorous. In practice it mostly means "no human to blame when the agent does something stupid."</MarginNote>
+
+This is why **planning** matters so much in agent design. A good agent doesn't just execute the first thing it thinks of — it considers the goal, breaks it into subproblems, and sequences actions in a sensible order. Whether the planning is explicit (the agent writes out a plan first) or implicit (the model just reasons through steps naturally) varies a lot by approach.
 
 ---
 
 ## The hard parts nobody talks about first
 
-<MarginNote side="right">Most agent failures are boring infrastructure problems — timeouts, bad JSON parsing, rate limits — not AI reasoning failures.</MarginNote>
+Building an agent is easy. Building one that works reliably is much harder, and almost none of the difficulty lives where you'd expect.
 
-Building an agent is easy. Building one that works reliably is much harder.
+<MarginNote side="right">Your agent isn't failing because the AI is dumb. It's failing because the web search timed out and the JSON parser hit a quote it didn't like.</MarginNote>
 
-**Tool reliability is the ceiling.** An agent is only as good as its tools. If a web search returns garbage, or a file reader silently fails, the model is reasoning on bad premises. Agents amplify whatever quality your tools have — for better or worse.
+**Tool reliability is the ceiling.** An agent is only as good as its tools. If a web search returns garbage, or a file reader silently fails, the model is reasoning on bad premises. Agents amplify whatever quality your tools have — for better or worse.<Footnote>A favorite war story: an agent that "worked" in dev but failed in prod turned out to be calling a flaky internal API. The fix was a 3-line retry. The misdiagnosis took two days.</Footnote>
 
-**Context accumulates.** Each tool call adds more to the conversation. Long agent runs can hit token limits, or the model can start losing track of the original goal under the weight of intermediate results. Good agent design thinks about what gets trimmed or summarized.
+**Context accumulates.** Each tool call adds more to the conversation. Long agent runs hit token limits, or the model loses track of the original goal under the weight of intermediate results. Good agent design thinks about what to trim, summarize, or move out of <Glossary term="context-window">context</Glossary>.
 
-**Error handling requires explicit design.** When a human gets a confusing result, they reconsider. An agent will keep going unless you've built in the logic to recognize that something went wrong and try a different approach. Most production agents invest heavily in retry logic, error pattern detection, and graceful exits.
+**Error handling needs explicit design.** When a human gets a confusing result, they reconsider. An agent will keep going unless you've built in logic to recognize that something went wrong and try a different approach. Production agents invest heavily in retry logic, error pattern detection, and graceful exits.
+
+<MarginNote side="right">If your agent runs longer than you'd be comfortable supervising in person, you probably want some "are you sure this is going well?" checkpoints in the loop.</MarginNote>
+
+Major providers now ship official tool-use APIs<Cite source="Anthropic, Tool use (function calling) with Claude" href="https://docs.anthropic.com/en/docs/build-with-claude/tool-use" /><Cite source="OpenAI, Function calling guide" href="https://platform.openai.com/docs/guides/function-calling" /> that handle a lot of the plumbing for you — schema parsing, message routing, error envelopes. Use them. Hand-rolling this stuff is a rite of passage you'll regret.
 
 <SectionBreak />
 
-The most useful mental model: an agent is a model operating in a while loop, with tools as its hands and observations as its eyes. What makes an agent good isn't magic in the model — it's the quality of the loop, the tools, and the scaffolding that keeps the whole thing from going sideways.
+The most useful mental model: an agent is a model running inside a `while` loop, with tools as its hands and observations as its eyes. What makes an agent *good* isn't magic in the model — it's the quality of the loop, the tools, and the scaffolding that keeps the whole thing from going sideways.
 
 The loop is ordinary. Done well, what it can do is not.

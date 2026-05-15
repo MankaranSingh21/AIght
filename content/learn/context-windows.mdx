@@ -1,27 +1,35 @@
 ---
 title: "Context Windows"
-tagline: "What the model can see right now — and why the edges of that window matter"
+tagline: "What the model can see right now — and why the edges matter"
 readTime: "6 min read"
 slug: "context-windows"
+related: ["rag", "transformers", "prompt-engineering"]
+lastUpdated: "2026-05-09"
+sources: 2
+difficulty: "beginner"
 ---
 
-Every conversation you have with a language model is, from the model's perspective, a single document it reads from scratch. It doesn't have memory between sessions. It doesn't keep a running thread. Each time you send a message, the model reads everything — every prior message, every system instruction, every uploaded file — as one long piece of text, then continues it.
+Every conversation you have with a language model is, from the model's perspective, a single document it reads from scratch. It has no memory between sessions. No running thread. Each time you send a message, the model reads everything — every prior message, every system instruction, every uploaded file — as one long piece of text, then continues it.
 
-The context window is the maximum length of that text. Measure it in tokens. One token is roughly three-quarters of a word in English.
+The <Glossary term="context-window">context window</Glossary> is the maximum length of that text. Measured in <Glossary term="token">tokens</Glossary>. One token is roughly three-quarters of a word in English.
 
-GPT-2, in 2019, had a context window of 1,024 tokens — about 750 words. GPT-4o, in 2024, has a 128,000-token context window. Gemini 1.5 Pro can take 1,000,000 tokens. The numbers are hard to make visceral until you start hitting the edges.
+GPT-2, in 2019, had a context window of 1,024 tokens — about 750 words. GPT-4o, in 2024, handles 128,000. Gemini 1.5 Pro stretches to a million. The numbers are hard to make visceral until you start hitting the edges.
+
+<MarginNote side="right">A million tokens sounds infinite. It's roughly 750,000 words — a long novel. Still finite. Still has edges.</MarginNote>
 
 ---
 
 ## Why there's a limit at all
 
-The constraint comes from the Transformer architecture at the heart of most modern models. When a model processes a sequence of tokens, the attention mechanism computes a relationship score between every pair of tokens in that sequence. For a sequence of length n, that's n² calculations.
+The constraint comes from the <Glossary term="transformer">transformer</Glossary> architecture at the heart of most modern models. When a model processes a sequence, the <Glossary term="attention">attention</Glossary> mechanism computes a relationship score between every pair of tokens. For a sequence of length *n*, that's *n²* calculations.
 
-Double the context length. The computation required quadruples.
+Double the context length. The computation quadruples.
 
 This is expensive at inference time (each response costs compute) and during training (the model is trained on sequences, and longer sequences cost more). There's a hard practical limit determined by available memory and acceptable latency.
 
-Extending context windows is an active area of research. Sparse attention patterns, linear approximations, and architectural changes like rotary position embeddings (RoPE) have all pushed the limits further than seemed feasible a few years ago. But for any given model, there is a ceiling — and that ceiling shapes how the model can be used.
+<MarginNote side="right">A lot of the "infinite context" announcements you see online are real — and also rely on tricks like sliding windows, sparse attention, or KV-cache compression that change what "attention to everything" actually means.</MarginNote>
+
+Extending context windows is an active research area. Sparse attention, linear approximations, FlashAttention, rotary position embeddings (RoPE), and KV-cache tricks have all pushed the limits further than seemed feasible a few years ago. But for any given model, there is a ceiling — and that ceiling shapes how it can be used.
 
 ---
 
@@ -29,13 +37,13 @@ Extending context windows is an active area of research. Sparse attention patter
 
 Long context isn't just long input. There are failure modes that matter in practice.
 
-**Lost in the middle.** Research has shown that models perform best at retrieving information placed near the beginning or end of a very long context, and notably worse on information buried in the middle. If you have a 100-page document and the critical fact is on page 50, some models will fail to weight it appropriately. This effect varies by model and is improving, but it hasn't disappeared.
+**<Glossary term="lost-in-the-middle">Lost in the middle</Glossary>.** Models perform best at retrieving information placed near the beginning or end of a long context, and notably worse on information buried in the middle.<Cite source="Liu et al., Lost in the Middle: How Language Models Use Long Contexts (2023)" href="https://arxiv.org/abs/2307.03172" /> Put the critical fact on page 50 of a 100-page document and some models will fail to weight it appropriately. This effect varies by model and is improving — but it hasn't disappeared.
 
-**Dilution.** A full-context prompt that includes a lot of irrelevant material tends to produce weaker responses than a focused prompt with only the relevant material. The model attends to everything equally — it doesn't know which parts you consider important unless you tell it.
+<PullquoteMargin>The context window isn't a bucket you fill. What you put in it — and where — changes what the model pays attention to.</PullquoteMargin>
 
-**Cost.** Most API pricing is token-based. Very long contexts cost more per request. An application that passes a user's entire document library on every message will be expensive at scale.
+**Dilution.** A full-context prompt with a lot of irrelevant material tends to produce weaker responses than a focused prompt with only the relevant material. The model attends to everything more or less equally — it doesn't know which parts you consider important unless you tell it.
 
-<Pullquote>The context window isn't a bucket you fill. What you put in it, and where you put it, changes what the model pays attention to.</Pullquote>
+**Cost.** Most API pricing is token-based. Very long contexts cost more per request. An application that passes a user's entire document library on every message will be expensive at scale.<Footnote>Some providers offer "cached" pricing where repeated context (like a long system prompt) is charged at a lower rate after the first call. If you're sending the same setup on every request, look into this — it can cut costs by 5-10× for long prompts.</Footnote>
 
 ---
 
@@ -43,11 +51,13 @@ Long context isn't just long input. There are failure modes that matter in pract
 
 This is why certain AI design patterns exist.
 
-**RAG (Retrieval-Augmented Generation)** solves the "can't fit everything in context" problem by searching a knowledge base and inserting only the relevant chunks. Instead of giving the model a 500-page manual, you search for the relevant pages and insert only those.
+**<Glossary term="rag">RAG</Glossary>** solves "can't fit everything in context" by searching a knowledge base and inserting only the relevant chunks. Instead of giving the model a 500-page manual, you search for the right pages and insert only those.
 
-**Summarization chains** handle very long documents by processing them in segments — summarizing each section, then summarizing the summaries. You lose some fidelity but stay within context.
+**Summarisation chains** handle very long documents by processing them in segments — summarise each section, then summarise the summaries. You lose some fidelity but stay within context.
 
-**Sliding window approaches** maintain a rolling view of a long conversation, summarizing older turns when they'd push the context beyond the limit. Most long-running chat applications do something like this.
+**Sliding window approaches** maintain a rolling view of a long conversation, summarising older turns when they'd push the context past the limit. Most long-running chat apps do something like this.
+
+<MarginNote side="right">If the model "forgets" something you said an hour ago, it's not being rude. The thing you said has either been truncated, summarised into something fuzzier, or the model is choosing to weight more recent context more heavily.</MarginNote>
 
 **Careful context management** is why thoughtful system prompts stay short. Every token in the system prompt is a token not available for user content.
 
@@ -55,16 +65,16 @@ This is why certain AI design patterns exist.
 
 ## How to think about it in practice
 
-For everyday use, context windows are rarely a constraint. Pasting a few documents, an email thread, or a code file into a modern model is well within limits.
+For everyday use, context windows are rarely the constraint. Pasting a few documents, an email thread, or a code file into a modern model is well within limits.
 
 Where it matters:
 
 - **Long codebases.** Even at 128K tokens, a reasonably large repository may not fit. This is why AI coding tools use indexing and retrieval rather than raw context.
-- **Long conversations.** Browser-based chat interfaces typically truncate or summarize older turns automatically. If a model seems to "forget" something you said an hour ago, this is why.
-- **Multi-document analysis.** Fitting fifty papers in one context is possible with Gemini 1.5's million-token window. The quality of analysis across all fifty documents — whether the model is genuinely synthesizing or surface-skimming — is a separate question.
+- **Long conversations.** Browser-based chat interfaces typically truncate or summarise older turns automatically. If a model seems to "forget" something you said an hour ago, this is why.
+- **Multi-document analysis.** Fitting fifty papers in one context is possible now. The quality of analysis *across* all fifty — whether the model is genuinely synthesising or surface-skimming — is a separate question.
 
 ---
 
 The context window is one of the most honest numbers in AI. It tells you what the model is actually working with right now. Everything outside that window doesn't exist to the model.
 
-Understanding this resolves a lot of confusion about why models "forget" things, give inconsistent answers across sessions, or seem to miss something obvious you told them earlier. They weren't told. Or they were told, but the telling has since scrolled off the edge.
+Understanding this resolves a lot of confusion about why models "forget" things, give inconsistent answers across sessions, or seem to miss something you obviously told them earlier. They weren't told. Or they were — but the telling has since scrolled off the edge.

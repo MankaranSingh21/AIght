@@ -1,0 +1,142 @@
+{
+  "attention": {
+    "definition": "The mechanism that lets a model decide which other tokens in the input matter most when producing each output token. The reason a transformer can 'see' the whole sentence at once instead of reading it left to right.",
+    "related": ["transformers"]
+  },
+  "self-attention": {
+    "definition": "Attention applied within a single sequence — each token attends to every other token in the same input. The core operation inside a transformer layer.",
+    "related": ["transformers", "attention"]
+  },
+  "embedding": {
+    "definition": "A vector of numbers — typically a few hundred to a few thousand of them — that represents a token, a sentence, or anything else, in a way where semantic similarity becomes geometric closeness.",
+    "related": ["embeddings"]
+  },
+  "vector": {
+    "definition": "An ordered list of numbers. In machine learning, the unit of meaning — text, images, audio all get turned into vectors before the model sees them.",
+    "related": ["embeddings"]
+  },
+  "token": {
+    "definition": "The chunk of text a model actually reads. Usually a word fragment — 'embedding' is one token, 'unsupervisedly' might be three. The model's vocabulary is a fixed list of these.",
+    "related": []
+  },
+  "context-window": {
+    "definition": "How many tokens a model can hold in its working memory at once. Past it, the model has to drop or summarize earlier content.",
+    "related": ["context-windows"]
+  },
+  "rag": {
+    "definition": "Retrieval-Augmented Generation. Instead of relying on the model's pretraining, you look up relevant snippets first and feed them into the prompt. Lets the model answer about things it never saw in training.",
+    "related": ["rag", "embeddings"]
+  },
+  "fine-tuning": {
+    "definition": "Continued training on a smaller, more specific dataset to teach an existing model a new style, format, or domain. Cheaper than training from scratch; more expensive than prompting.",
+    "related": ["fine-tuning"]
+  },
+  "lora": {
+    "definition": "Low-Rank Adaptation. A fine-tuning trick that only trains a small set of extra parameters layered over the frozen base model — much cheaper than full fine-tuning, often almost as good.",
+    "related": ["fine-tuning"]
+  },
+  "rlhf": {
+    "definition": "Reinforcement Learning from Human Feedback. The training step that turns a raw, helpful-but-unfiltered language model into something polite and aligned with what humans actually want.",
+    "related": ["alignment", "training"]
+  },
+  "alignment": {
+    "definition": "The problem of making a model want what its operators (and ideally, society) want — and not just superficially. Easy at toy scale, very hard at frontier scale.",
+    "related": ["alignment"]
+  },
+  "hallucination": {
+    "definition": "When a model confidently states something that isn't true. Not a bug in the usual sense — it's the same generation process that produces accurate output, just landing in the wrong place.",
+    "related": ["hallucination"]
+  },
+  "prompt": {
+    "definition": "Everything you hand the model before asking it to generate. Instructions, examples, context, the question itself — all part of the prompt.",
+    "related": ["prompt-engineering"]
+  },
+  "system-prompt": {
+    "definition": "The set of instructions a developer pins to every conversation with a model — usually invisible to the end user. It's how 'ChatGPT for X' products are built on the same base model.",
+    "related": ["prompt-engineering"]
+  },
+  "few-shot": {
+    "definition": "Showing the model a few input/output examples before your real query. The single most reliable way to get a consistent format or style without fine-tuning.",
+    "related": ["prompt-engineering"]
+  },
+  "chain-of-thought": {
+    "definition": "Asking the model to write out its reasoning before answering. Sounds like cargo-culting; isn't — those intermediate tokens are real computation that often produces a better answer.",
+    "related": ["prompt-engineering"]
+  },
+  "agent": {
+    "definition": "A model running in a feedback loop: observe state, decide on an action, take the action, observe what happened, repeat. Different from a chatbot, which just answers and stops.",
+    "related": ["agents"]
+  },
+  "tool-use": {
+    "definition": "A model's ability to call a function — search the web, run code, query a database — and get the result back in its context. The hands of an agent.",
+    "related": ["agents", "mcp"]
+  },
+  "mcp": {
+    "definition": "Model Context Protocol. An open standard for plugging external tools and data sources into an AI app without writing custom glue for each one.",
+    "related": ["mcp"]
+  },
+  "diffusion": {
+    "definition": "A generation method that learns to undo random noise step by step. The image model takes pure static and gradually denoises it into something coherent. The reason Midjourney and Stable Diffusion exist.",
+    "related": ["diffusion"]
+  },
+  "transformer": {
+    "definition": "The neural network architecture introduced in 2017 that runs almost every modern AI model. Its key trick is self-attention — every token sees every other token at the same time.",
+    "related": ["transformers"]
+  },
+  "pretraining": {
+    "definition": "The first, expensive training phase where a model learns from a huge undifferentiated pile of text/images/whatever. Produces a 'base' model that knows a lot but isn't yet polite or useful.",
+    "related": ["training"]
+  },
+  "post-training": {
+    "definition": "Everything after pretraining — fine-tuning, RLHF, instruction tuning. The phase that turns a knowing-machine into an answering-machine.",
+    "related": ["training"]
+  },
+  "multimodal": {
+    "definition": "A model that can read or generate more than one type of input — text plus images, plus audio, plus video. Lets you paste a photo into a chat and ask about it.",
+    "related": ["multimodal"]
+  },
+  "multiagent": {
+    "definition": "More than one agent collaborating or competing on a task. Promising in theory; in practice, often two agents loudly fail in a way one agent would have failed quietly.",
+    "related": ["multiagent"]
+  },
+  "grounding": {
+    "definition": "Tying a model's claims to a verifiable source — retrieved documents, code outputs, tool results — so its answers can be checked and aren't just plausible-sounding.",
+    "related": ["hallucination", "rag"]
+  },
+  "context-stuffing": {
+    "definition": "The practice of dumping every potentially relevant document into a model's prompt and hoping it picks the right one. Sometimes it does. Often it doesn't.",
+    "related": ["context-windows"]
+  },
+  "lost-in-the-middle": {
+    "definition": "The empirically observed tendency for models to under-use information placed in the middle of a long context. Things at the start and end get more attention.",
+    "related": ["context-windows"]
+  },
+  "instruction-tuning": {
+    "definition": "Post-training a base model on examples of (instruction → response) pairs so it learns to follow instructions instead of just continuing text.",
+    "related": ["training"]
+  },
+  "guidance": {
+    "definition": "In diffusion models, a knob that controls how strictly the output sticks to the prompt. Higher guidance = more faithful but less creative; lower = more creative but more off-topic.",
+    "related": ["diffusion"]
+  },
+  "logit": {
+    "definition": "A model's raw score for each possible next token before it gets turned into a probability. Useful if you want to sample, constrain, or analyze the model's preferences.",
+    "related": []
+  },
+  "temperature": {
+    "definition": "The randomness dial. 0 = same answer every time; higher values let the model sample less-likely tokens, producing more varied output.",
+    "related": []
+  },
+  "encoder": {
+    "definition": "The half of a model that turns input into vectors. Used by itself in models like BERT for understanding/classifying text.",
+    "related": ["transformers"]
+  },
+  "decoder": {
+    "definition": "The half of a model that generates text one token at a time from an internal representation. GPT-style models are decoder-only.",
+    "related": ["transformers"]
+  },
+  "scaling-laws": {
+    "definition": "Empirical findings that model quality grows predictably with more parameters, more data, and more compute. The reason the field has been racing to make things bigger.",
+    "related": ["training"]
+  }
+}

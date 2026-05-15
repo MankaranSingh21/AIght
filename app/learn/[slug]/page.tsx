@@ -11,6 +11,7 @@ import AgentsSimulation from "@/components/learn/AgentsSimulation";
 import AttentionViz from "@/components/learn/AttentionViz";
 import FineTuningComparison from "@/components/learn/FineTuningComparison";
 import Pullquote from "@/components/learn/Pullquote";
+import PullquoteMargin from "@/components/learn/PullquoteMargin";
 import CodeBlock from "@/components/learn/CodeBlock";
 import ReadingProgressBar from "@/components/learn/ReadingProgressBar";
 import ConceptHeader3DClient from "@/components/learn/ConceptHeader3DClient";
@@ -21,6 +22,14 @@ import Callout from "@/components/learn/Callout";
 import StepDiagram, { Step } from "@/components/learn/StepDiagram";
 import CompareTable, { CompareRow } from "@/components/learn/CompareTable";
 import StatPill from "@/components/learn/StatPill";
+import EditorialLayout from "@/components/learn/EditorialLayout";
+import StickyTOC from "@/components/learn/StickyTOC";
+import ArticleMeta from "@/components/learn/ArticleMeta";
+import RelatedConcepts from "@/components/learn/RelatedConcepts";
+import Footnote from "@/components/learn/Footnote";
+import Footnotes from "@/components/learn/Footnotes";
+import Cite from "@/components/learn/Cite";
+import Glossary from "@/components/learn/Glossary";
 import type { JSX } from "react";
 
 type Props = {
@@ -56,6 +65,7 @@ const mdxComponents = {
   AttentionViz,
   FineTuningComparison,
   Pullquote,
+  PullquoteMargin,
   MarginNote,
   SectionBreak,
   Callout,
@@ -64,6 +74,9 @@ const mdxComponents = {
   CompareTable,
   CompareRow,
   StatPill,
+  Footnote,
+  Cite,
+  Glossary,
   pre: (props: JSX.IntrinsicElements["pre"]) => <CodeBlock {...props} />,
   h2: (props: JSX.IntrinsicElements["h2"]) => (
     <h2
@@ -104,7 +117,6 @@ const mdxComponents = {
         lineHeight: 1.85,
         letterSpacing: "0.01em",
         marginBottom: 22,
-        maxWidth: "68ch",
       }}
       {...props}
     />
@@ -175,7 +187,6 @@ const mdxComponents = {
         listStylePosition: "outside",
         marginLeft: 20,
         marginBottom: 22,
-        maxWidth: "68ch",
         display: "flex",
         flexDirection: "column",
         gap: 8,
@@ -194,7 +205,6 @@ const mdxComponents = {
         listStylePosition: "outside",
         marginLeft: 20,
         marginBottom: 22,
-        maxWidth: "68ch",
         display: "flex",
         flexDirection: "column",
         gap: 8,
@@ -202,6 +212,17 @@ const mdxComponents = {
       {...props}
     />
   ),
+};
+
+type ConceptFrontmatter = {
+  title: string;
+  tagline: string;
+  readTime: string;
+  slug: string;
+  related?: string[];
+  lastUpdated?: string;
+  sources?: number;
+  difficulty?: "beginner" | "intermediate" | "advanced";
 };
 
 export default async function LearnConceptPage({ params }: Props) {
@@ -212,12 +233,7 @@ export default async function LearnConceptPage({ params }: Props) {
   const allConcepts = getAllConcepts();
   const conceptMeta = allConcepts.find((c) => c.slug === slug);
 
-  const { content, frontmatter } = await compileMDX<{
-    title: string;
-    tagline: string;
-    readTime: string;
-    slug: string;
-  }>({
+  const { content, frontmatter } = await compileMDX<ConceptFrontmatter>({
     source,
     components: mdxComponents,
     options: { parseFrontmatter: true },
@@ -233,31 +249,28 @@ export default async function LearnConceptPage({ params }: Props) {
     .limit(4);
   const relatedTools = relatedToolsData ?? [];
 
+  // Build the related-concepts list from front-matter slugs
+  const relatedConcepts =
+    (frontmatter.related ?? [])
+      .map((s) => allConcepts.find((c) => c.slug === s))
+      .filter((c): c is NonNullable<typeof c> => Boolean(c))
+      .map((c) => ({ slug: c.slug, title: c.title }));
+
   const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.aightai.in";
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": frontmatter.title,
-    "description": frontmatter.tagline,
-    "image": `${SITE_URL}/learn/${slug}/opengraph-image`,
-    "author": {
+    headline: frontmatter.title,
+    description: frontmatter.tagline,
+    image: `${SITE_URL}/learn/${slug}/opengraph-image`,
+    author: { "@type": "Organization", name: "AIght", url: SITE_URL },
+    publisher: {
       "@type": "Organization",
-      "name": "AIght",
-      "url": SITE_URL,
+      name: "AIght",
+      logo: { "@type": "ImageObject", url: `${SITE_URL}/favicon.ico` },
     },
-    "publisher": {
-      "@type": "Organization",
-      "name": "AIght",
-      "logo": {
-        "@type": "ImageObject",
-        "url": `${SITE_URL}/favicon.ico`,
-      },
-    },
-    "datePublished": conceptMeta?.publishedDate ?? new Date().toISOString(),
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": `${SITE_URL}/learn/${slug}`,
-    },
+    datePublished: conceptMeta?.publishedDate ?? new Date().toISOString(),
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${SITE_URL}/learn/${slug}` },
   };
 
   return (
@@ -271,12 +284,19 @@ export default async function LearnConceptPage({ params }: Props) {
       {/* Full-width 3D constellation header */}
       <ConceptHeader3DClient slug={slug} />
 
-      <div
-        style={{
-          maxWidth: "var(--max-width-editorial)",
-          margin: "0 auto",
-          padding: "24px 48px 96px",
-        }}
+      <EditorialLayout
+        left={<StickyTOC />}
+        right={
+          <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+            <ArticleMeta
+              readTime={frontmatter.readTime}
+              lastUpdated={frontmatter.lastUpdated}
+              sources={frontmatter.sources}
+              difficulty={frontmatter.difficulty}
+            />
+            {relatedConcepts.length > 0 && <RelatedConcepts items={relatedConcepts} />}
+          </div>
+        }
       >
         {/* Back */}
         <Link
@@ -289,7 +309,7 @@ export default async function LearnConceptPage({ params }: Props) {
             display: "inline-flex",
             alignItems: "center",
             gap: 6,
-            marginBottom: 48,
+            marginBottom: 32,
           }}
           className="hover:text-primary"
         >
@@ -297,7 +317,7 @@ export default async function LearnConceptPage({ params }: Props) {
         </Link>
 
         {/* Article header */}
-        <header style={{ marginBottom: 48 }}>
+        <header style={{ marginBottom: 40 }}>
           <p
             style={{
               fontFamily: "var(--font-mono)",
@@ -327,23 +347,14 @@ export default async function LearnConceptPage({ params }: Props) {
             style={{
               fontFamily: "var(--font-editorial)",
               fontStyle: "italic",
-              fontSize: 17,
-              color: "rgba(245,239,224,0.55)",
-              lineHeight: 1.8,
-              marginBottom: 20,
+              fontSize: 18,
+              color: "rgba(245,239,224,0.65)",
+              lineHeight: 1.7,
+              marginBottom: 0,
               maxWidth: "54ch",
             }}
           >
             {frontmatter.tagline}
-          </p>
-          <p
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: 11,
-              color: "rgba(245,239,224,0.30)",
-            }}
-          >
-            {frontmatter.readTime}
           </p>
         </header>
 
@@ -359,6 +370,9 @@ export default async function LearnConceptPage({ params }: Props) {
         <article className="learn-article">
           <ArticleReveal>{content}</ArticleReveal>
         </article>
+
+        {/* Footnotes + References */}
+        <Footnotes />
 
         {/* Related tools */}
         {relatedTools.length > 0 && (
@@ -381,13 +395,7 @@ export default async function LearnConceptPage({ params }: Props) {
             >
               Tools that use this
             </p>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 1,
-              }}
-            >
+            <div style={{ display: "flex", flexDirection: "column", gap: 1 }}>
               {relatedTools.map((tool) => (
                 <Link
                   key={tool.slug}
@@ -507,7 +515,7 @@ export default async function LearnConceptPage({ params }: Props) {
             Browse tools →
           </Link>
         </div>
-      </div>
+      </EditorialLayout>
     </main>
   );
 }

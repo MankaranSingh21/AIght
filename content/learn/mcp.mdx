@@ -1,15 +1,21 @@
 ---
 title: "Model Context Protocol"
-tagline: "The open standard that lets AI models talk to your tools"
+tagline: "The open standard that lets AI models talk to your tools without a custom integration per model"
 readTime: "7 min read"
 slug: "mcp"
+related: ["agents", "multiagent", "prompt-engineering"]
+lastUpdated: "2026-05-11"
+sources: 2
+difficulty: "intermediate"
 ---
 
-Every AI integration used to be handmade. You'd write custom code to connect your assistant to a database, your filesystem, a calendar API, a search engine. Every team building AI products was solving the same plumbing problem in a slightly different way, with slightly incompatible pipes, and none of it transferred.
+Every AI integration used to be handmade. You'd write custom code to connect your assistant to a database, a filesystem, a calendar API, a search engine. Every team building AI products was solving the same plumbing problem in a slightly different way, with slightly incompatible pipes, and none of it transferred.
 
-Anthropic released the Model Context Protocol in late 2024 to solve this. MCP is a standard for how AI models and external tools talk to each other — not a product, not a service, just a specification that anyone can implement. The idea is that if everyone uses the same interface, you build the plumbing once.
+Anthropic released the <Glossary term="mcp">Model Context Protocol</Glossary> in late 2024 to solve this.<Cite source="Anthropic, Model Context Protocol — Specification" href="https://modelcontextprotocol.io/specification" /> MCP is a standard for how AI models and external tools talk to each other — not a product, not a service, just a spec anyone can implement. The idea is that if everyone uses the same interface, you build the plumbing once.
 
-Think of USB. Before USB, every peripheral had its own connector, its own driver, its own installation ritual. USB said: one port, one standard. Plug in anything from any manufacturer and it works. MCP is trying to be USB for AI. Tools expose themselves as MCP servers. AI assistants connect as MCP clients. The model doesn't need to understand how the tool is built — just what it can do and how to ask.
+<MarginNote side="right">Think USB. Before USB, every peripheral had its own connector, its own driver, its own installation ritual. USB said: one port, one standard. MCP is trying to be USB for AI.</MarginNote>
+
+Tools expose themselves as MCP servers. AI assistants connect as MCP clients. The model doesn't need to understand how the tool is built — just what it can do and how to ask.
 
 ---
 
@@ -45,7 +51,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 });
 ```
 
-> The interesting thing about MCP isn't the protocol itself — it's what happens when you separate the AI from the integration layer. One AI client, any tool. Any AI client, one tool. That combination didn't exist before.
+<PullquoteMargin>One AI client, any tool. Any AI client, one tool. That combination didn't exist before.</PullquoteMargin>
 
 ---
 
@@ -53,9 +59,13 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
 ## What this unlocks
 
-Cursor is the clearest example of MCP in practice. When you ask it to read a file, edit code, or run a terminal command, it's using MCP to call standardized tools — filesystem access, code execution, search. Another AI client could connect to the same MCP servers and do the same work. The tools are no longer locked to a specific assistant.
+Cursor is the clearest example of MCP in practice. When you ask it to read a file, edit code, or run a terminal command, it's using MCP to call standardised tools — filesystem access, code execution, search. Another AI client could connect to the same MCP servers and do the same work. The tools are no longer locked to a specific assistant.
 
-This matters because the fragmentation in AI tooling was mostly friction, not necessity. A database tool written for Claude shouldn't need to be rewritten for GPT or Gemini. A file explorer shouldn't be rebuilt for every AI product that wants file access. MCP means build it once, connect it to anything that speaks the protocol.
+<MarginNote side="right">The fragmentation in AI tooling was mostly friction, not necessity. A database tool written for Claude shouldn't need to be rewritten for GPT or Gemini. With MCP, it isn't.</MarginNote>
+
+This matters because every AI product was previously rebuilding the same wheel — file access, web search, database connectors. With MCP, you build it once, connect anywhere that speaks the protocol. The same MCP server runs Claude Desktop, Cursor, Zed, and anything else that wires it up.
+
+By mid-2026, the public MCP registry lists hundreds of servers — for GitHub, Slack, Linear, your own filesystem, custom company tools.<Footnote>Compare to the OpenAPI specification, which solved a similar interop problem for REST APIs in 2010. The pattern is the same: a shared schema means tooling and clients can be developed independently. The difference is that MCP is purpose-built for the agent loop — tool discovery, structured outputs, streaming.</Footnote>
 
 ---
 
@@ -64,6 +74,8 @@ This matters because the fragmentation in AI tooling was mostly friction, not ne
 MCP is still young, and the ecosystem is building out quickly. A few things worth understanding before you dive in.
 
 **The quality of the server description matters a lot.** The AI decides whether to use a tool — and how — based on its name and description. A well-described tool gets used correctly. A vague one gets ignored or misused in ways that are hard to debug.
+
+<MarginNote side="right">If you're writing an MCP server: the tool description is the prompt. Treat it that way. A 50-word description that explains *when to use this* will beat a 5-word description that just names the function.</MarginNote>
 
 **Local vs remote changes the trust model.** Local MCP servers (running on your machine) have access to whatever your process has access to — files, the network, system calls. That's powerful and also worth thinking carefully about before adding untrusted servers. The ecosystem needs good security conventions, and they're still forming.
 
