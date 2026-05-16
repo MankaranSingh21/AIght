@@ -5,6 +5,8 @@ import ToolDetail, { type ToolDetailData, type UseCase, type Alternative } from 
 import type { Tool, AlternativeEntry } from "@/utils/supabase/types";
 import { getAllConcepts } from "@/lib/learn";
 import toolHumanNotes from "@/content/tool-human-notes.json";
+import aightsTakes from "@/content/aights-take.json";
+import toolReplaces from "@/content/tool-replaces.json";
 
 export const revalidate = 3600;
 
@@ -184,6 +186,8 @@ export default async function ToolPage({ params }: Props) {
     related_concepts: conceptSlugs,
     related_concept_links: conceptLinks,
     humanNote: (toolHumanNotes as Record<string, { headline: string; body: string; essay: string }>)[tool.slug] ?? null,
+    aightsTake: (aightsTakes as Record<string, string>)[tool.slug] ?? null,
+    replaces: (toolReplaces as Record<string, string[]>)[tool.slug] ?? null,
     weaknesses: tool.weaknesses ?? [],
     status: tool.status ?? "stable",
     deprecated_reason: tool.deprecated_reason ?? null,

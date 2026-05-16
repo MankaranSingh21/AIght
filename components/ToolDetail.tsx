@@ -6,6 +6,8 @@ import { usePostHog } from "posthog-js/react";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import ToolHumanNote, { type ToolHumanNoteData } from "@/components/ToolHumanNote";
+import ToolReplaces from "@/components/ToolReplaces";
+import AightsTake from "@/components/AightsTake";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -44,6 +46,8 @@ export type ToolDetailData = {
   related_concepts?: string[];
   related_concept_links?: { slug: string; title: string; tagline?: string }[];
   humanNote?: ToolHumanNoteData | null;
+  aightsTake?: string | null;
+  replaces?: string[] | null;
   weaknesses?: string[];
   status?: "stable" | "beta" | "rising" | "deprecated";
   deprecated_reason?: string | null;
@@ -351,6 +355,9 @@ export default function ToolDetail({ tool }: { tool: ToolDetailData }) {
                 </Link>
               )}
             </div>
+
+            {/* AIght's Take — Caveat-font author verdict. Renders only when seeded. */}
+            <AightsTake take={tool.aightsTake} />
           </div>
         </div>
 
@@ -408,17 +415,32 @@ export default function ToolDetail({ tool }: { tool: ToolDetailData }) {
               <span className="font-sans font-bold text-primary">{tool.is_open_source ? "Open Source" : "Proprietary"}</span>
             </div>
             {tool.url && (
-              <a
-                href={tool.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-primary w-full text-center py-4 mt-4"
-                onClick={() => posthog?.capture("tool_visit_detail", { slug: tool.slug })}
-                onMouseEnter={() => setHovered(true)}
-                onMouseLeave={() => setHovered(false)}
-              >
-                Visit {tool.name} →
-              </a>
+              <>
+                <a
+                  href={tool.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-primary w-full text-center py-4 mt-4"
+                  onClick={() => posthog?.capture("tool_visit_detail", { slug: tool.slug })}
+                  onMouseEnter={() => setHovered(true)}
+                  onMouseLeave={() => setHovered(false)}
+                >
+                  Visit {tool.name} →
+                </a>
+                <p
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: 10,
+                    letterSpacing: "0.10em",
+                    color: "var(--text-muted)",
+                    margin: "10px 0 0",
+                    textAlign: "center",
+                    lineHeight: 1.5,
+                  }}
+                >
+                  We don&rsquo;t earn anything when you click this.
+                </p>
+              </>
             )}
           </div>
         </div>
@@ -585,6 +607,9 @@ export default function ToolDetail({ tool }: { tool: ToolDetailData }) {
             </div>
           </section>
         )}
+
+        {/* "You can probably stop using…" — concrete savings list */}
+        <ToolReplaces toolName={tool.name} replaces={tool.replaces} />
 
         {/* What this tool can't do — links into the /human section */}
         <ToolHumanNote toolName={tool.name} note={tool.humanNote ?? null} />

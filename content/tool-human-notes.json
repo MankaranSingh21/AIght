@@ -98,5 +98,105 @@
     "headline": "It can summarise the corpus. You decide what's worth taking from it.",
     "body": "NotebookLM is a strong synthesizer of long documents. The harder move — picking the one idea inside a hundred pages that's actually load-bearing for your work — is still yours.",
     "essay": "taste"
+  },
+  "replit-agent": {
+    "headline": "It can stand up the project. You decide whether the project is worth standing up.",
+    "body": "Replit Agent will spin up a working app from a sentence. Whether the app is solving a real problem, or just impressing a demo audience — that's the question no agent answers for you.",
+    "essay": "context"
+  },
+  "bolt-new": {
+    "headline": "It can ship a prototype before lunch. You decide whether to ship it at all.",
+    "body": "Bolt.new collapses the time-to-first-screen for any web idea. The risk: shipping the first thing you saw work, because the cost of trying again feels too high once it exists.",
+    "essay": "taste"
+  },
+  "lovable": {
+    "headline": "It builds the SaaS shell. You build the reason anyone would use it.",
+    "body": "Lovable produces convincing app scaffolds. What it cannot conjure is the founder's reason — the specific human you're trying to help, and the small original move that makes the product worth opening.",
+    "essay": "originality"
+  },
+  "windsurf": {
+    "headline": "It pairs with you fluently. You decide what's worth pairing on.",
+    "body": "Windsurf is one of the smoothest in-editor agents. The selection layer — what to refactor, what to leave alone, which complaint from a teammate is actually load-bearing — is still yours.",
+    "essay": "context"
+  },
+  "aider": {
+    "headline": "It edits the repo. You hold the long thread of what the repo is becoming.",
+    "body": "Aider is a wonderful terminal-native coder. What it can't hold across sessions is the through-line of architectural intent — what this codebase is for, six months from now, when nobody remembers the original conversation.",
+    "essay": "context"
+  },
+  "gnome-deepmind": {
+    "headline": "It proposes new materials. You decide which ones are worth synthesising.",
+    "body": "GNoME generates millions of stable crystal candidates. The taste that matters now is the materials scientist's — which proposal opens a door, which one is a clever dead end, which one is worth the lab time.",
+    "essay": "taste"
+  },
+  "atomwise": {
+    "headline": "It finds the hit. You decide whether the hit is worth pursuing.",
+    "body": "Atomwise screens compounds at scale most pharma teams can't match by hand. The translational call — does this hit address a real unmet need, will the patients be findable — remains a human-led judgement.",
+    "essay": "care"
+  },
+  "alphasense": {
+    "headline": "It surfaces the signal. You decide what the signal means for your portfolio.",
+    "body": "AlphaSense pulls the relevant excerpt from a thousand earnings calls. The interpretive layer — what this implies for your conviction, your sizing, your timing — is still where edge lives.",
+    "essay": "context"
+  },
+  "deepseek": {
+    "headline": "It's fast and cheap. You decide whether fast and cheap is what the question needs.",
+    "body": "DeepSeek has remarkable performance at a fraction of frontier cost. The question of whether to use it — whether speed is what matters here, or whether the problem deserves a more careful model — is still yours.",
+    "essay": "taste"
+  },
+  "consensus": {
+    "headline": "It finds the studies. You decide which studies you actually trust.",
+    "body": "Consensus is excellent at surfacing scientific literature relevant to a question. The harder skill — sample size, methodology, conflicts, replication — is the part you still have to read for yourself.",
+    "essay": "context"
+  },
+  "gamma": {
+    "headline": "It can ship the deck. You decide what's worth saying in front of people.",
+    "body": "Gamma turns notes into polished slides in minutes. The narrative spine — what's the one thing the audience needs to leave the room believing — is still the work that doesn't auto-generate.",
+    "essay": "taste"
+  },
+  "tome": {
+    "headline": "It can structure the pitch. You decide whether the pitch is true.",
+    "body": "Tome is great at scaffolding a presentation. Whether the company behind the pitch actually does what the slides promise — that's a story you still have to tell yourself first, honestly.",
+    "essay": "context"
+  },
+  "descript": {
+    "headline": "It edits the recording. You decide what shouldn't have been said.",
+    "body": "Descript makes audio editing fast enough to be dangerous. The editorial call — what stays, what gets cut for clarity, what gets cut for kindness — is still a human responsibility.",
+    "essay": "care"
+  },
+  "otter-ai": {
+    "headline": "It captures every word. You decide which words mattered.",
+    "body": "Otter is a faithful transcriber of meetings. The summary that's actually useful — what was decided, what got dodged, who's accountable for what — is still the work after the meeting, not in it.",
+    "essay": "context"
+  },
+  "fathom": {
+    "headline": "It logs the call. You decide what the customer is really saying.",
+    "body": "Fathom captures every sales conversation with timestamps and tags. The deeper read — what the buyer's hesitation means, whether the budget signal is real — still requires you in the room.",
+    "essay": "care"
+  },
+  "n8n": {
+    "headline": "It automates the workflow. You decide whether the workflow is worth keeping.",
+    "body": "n8n is a powerful self-hosted automation builder. The harder question — is this workflow solving a real problem, or am I automating a habit that should've been deleted — is yours alone.",
+    "essay": "context"
+  },
+  "zapier": {
+    "headline": "It glues the tools together. You decide which tools deserve to be glued.",
+    "body": "Zapier turns 'I need this to talk to that' into a five-minute fix. The discipline is choosing not to wire up every possible connection — most automations end up creating more noise than they remove.",
+    "essay": "taste"
+  },
+  "runway": {
+    "headline": "It can make the cut faster. It can't tell you what the cut is for.",
+    "body": "Runway is changing video production at the timeline level. The directorial question — what story you're telling, who you're telling it for, why this beat lands — is still where editing actually happens.",
+    "essay": "taste"
+  },
+  "leonardo-ai": {
+    "headline": "It generates the asset. You decide whether the asset is right for the brand.",
+    "body": "Leonardo is a strong generative imagery tool. The brand call — does this match the visual language we're building, would a real designer have made this choice — still requires a person with skin in the brand.",
+    "essay": "taste"
+  },
+  "sudowrite": {
+    "headline": "It can finish the sentence. You decide whether the sentence should exist.",
+    "body": "Sudowrite is a real friend to drafting. The judgment about which sentences earn their place, and which ones are just keeping the word count moving, is still the writer's lonely call.",
+    "essay": "originality"
   }
 }

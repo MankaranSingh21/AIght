@@ -58,10 +58,11 @@
 
     /* ── Fonts ────────────────────────────────────────────────── */
     /* These vars are injected by next/font in layout.tsx */
-    --font-display:   'Fraunces', Georgia, serif;
-    --font-ui:        'Plus Jakarta Sans', system-ui, sans-serif;
-    --font-editorial: 'Lora', Georgia, serif;
-    --font-mono:      'JetBrains Mono', 'Fira Code', monospace;
+    --font-display:     'Fraunces', Georgia, serif;
+    --font-ui:          'Plus Jakarta Sans', system-ui, sans-serif;
+    --font-editorial:   'Lora', Georgia, serif;
+    --font-mono:        'JetBrains Mono', 'Fira Code', monospace;
+    --font-handwritten: 'Caveat', 'Bradley Hand', cursive;
 
     /* ── Type Scale ───────────────────────────────────────────── */
     --text-xs:   0.75rem;

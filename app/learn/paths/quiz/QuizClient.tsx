@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import QuizToolRecs from '@/components/QuizToolRecs';
 import WheelhouseBlock from '@/components/quiz/WheelhouseBlock';
+import HowYouWorkBlock from '@/components/quiz/HowYouWorkBlock';
 import dynamic from 'next/dynamic';
 const DownloadReportButton = dynamic(() => import('@/components/quiz/DownloadReportButton'), { ssr: false });
 import { usePostHog } from 'posthog-js/react';
@@ -1529,6 +1530,11 @@ function ReportScreen({ result, field, answers, onRetake, humanEssays = [] }: {
             </div>
           </div>
         </div>
+
+        {/* How you work — three-axis cognitive reveal (no MBTI labels) */}
+        {result.cognitiveProfile && (
+          <HowYouWorkBlock profile={result.cognitiveProfile} />
+        )}
 
         {/* What only you can do — human-strengths block keyed off cognitive profile */}
         {result.recommendedHumanEssaySlugs && result.recommendedHumanEssaySlugs.length > 0 && (

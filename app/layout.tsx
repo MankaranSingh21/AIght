@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Fraunces, Lora, JetBrains_Mono } from "next/font/google";
+import { Plus_Jakarta_Sans, Fraunces, Lora, JetBrains_Mono, Caveat } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import GlobalEffects from "@/components/GlobalEffects";
 import PostHogProvider from "./providers/PostHogProvider";
@@ -30,6 +30,15 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
   display: "swap",
+});
+
+// Caveat — used sparingly for AIght's Take (the author's one-line verdict per
+// tool). Hand-written feel signals editorial opinion vs. algorithmic output.
+const caveat = Caveat({
+  subsets: ["latin"],
+  variable: "--font-handwritten",
+  display: "swap",
+  weight: ["500", "600"],
 });
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.aightai.in";
@@ -94,7 +103,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${plusJakartaSans.variable} ${fraunces.variable} ${lora.variable} ${jetbrainsMono.variable} antialiased`}
+        className={`${plusJakartaSans.variable} ${fraunces.variable} ${lora.variable} ${jetbrainsMono.variable} ${caveat.variable} antialiased`}
       >
         <PostHogProvider>
           {/* Global ambient effects — particle canvas + custom cursor */}

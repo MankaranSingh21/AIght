@@ -36,6 +36,7 @@ export type ToolCardProps = {
   cost_score?: number;
   transparency_score?: number;
   bestFor?: string;
+  aightsTake?: string | null;
 };
 
 const STORAGE_KEY = "aight_bookmarks";
@@ -286,6 +287,7 @@ export default function ToolCard({
   cost_score = 0,
   transparency_score = 0,
   bestFor,
+  aightsTake,
 }: ToolCardProps) {
   const showNew = isNew(created_at) && status === "stable";
   const stale = isStale(updated_at);
@@ -408,9 +410,25 @@ export default function ToolCard({
                 {is_open_source && <MetadataPill label="Open Source" type="os" />}
               </div>
 
-              <p className="font-sans text-sm leading-relaxed text-secondary m-0 flex-1 line-clamp-2 overflow-hidden">
-                {tagline}
-              </p>
+              {aightsTake ? (
+                <p
+                  className="m-0 flex-1 line-clamp-2 overflow-hidden"
+                  style={{
+                    fontFamily: "var(--font-handwritten), 'Bradley Hand', cursive",
+                    fontSize: 18,
+                    lineHeight: 1.25,
+                    color: "var(--text-secondary)",
+                    fontStyle: "italic",
+                    letterSpacing: "0.005em",
+                  }}
+                >
+                  &ldquo;{aightsTake}&rdquo;
+                </p>
+              ) : (
+                <p className="font-sans text-sm leading-relaxed text-secondary m-0 flex-1 line-clamp-2 overflow-hidden">
+                  {tagline}
+                </p>
+              )}
 
               {stale && (
                 <p className="font-mono text-[9px] text-warm/60 italic m-0">

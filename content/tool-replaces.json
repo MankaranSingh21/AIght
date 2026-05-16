@@ -1,0 +1,72 @@
+{
+  "chatgpt": [
+    "Google for definition lookups",
+    "Stack Overflow for snippet questions",
+    "the morning rabbit hole of skimming 12 tabs"
+  ],
+  "claude": [
+    "the slow first read of a 60-page contract",
+    "a paid editor for a non-final draft"
+  ],
+  "cursor": [
+    "VS Code with five copilots stitched in by hand",
+    "the context-switch between editor and chat"
+  ],
+  "github-copilot": [
+    "Stack Overflow for syntax recall",
+    "the cold-start of every new file"
+  ],
+  "perplexity": [
+    "Google Scholar for a first-pass lit review",
+    "the open-six-tabs-and-skim habit",
+    "most newsletters that summarize the news for you"
+  ],
+  "midjourney": [
+    "stock photo subscriptions for moodboards",
+    "the first 30 hours of a brand-exploration phase"
+  ],
+  "adobe-firefly": [
+    "stock photo licensing for commercial work",
+    "the 'we need a hero image by Tuesday' panic"
+  ],
+  "elevenlabs": [
+    "hiring a voice actor for placeholder audio",
+    "your own awkward Loom narration"
+  ],
+  "notion-ai": [
+    "the empty-page paralysis at the start of every doc",
+    "the meeting where someone summarises the doc"
+  ],
+  "gemini": [
+    "a second-opinion read of a Claude or ChatGPT answer",
+    "long-document Q&A where context windows used to matter"
+  ],
+  "harvey-ai": [
+    "junior associate hours on first-pass drafting",
+    "the four-hour citation check before a memo goes out"
+  ],
+  "khanmigo": [
+    "a tutor for the parts a parent forgot in 1998",
+    "the 'I don't understand this homework' kitchen conversation"
+  ],
+  "alphafold": [
+    "weeks of crystallography for an initial structural guess",
+    "the literature deep-dive for 'has anyone modeled this?'"
+  ],
+  "perplexity-pro": [
+    "the paid news subscription bundle",
+    "your manual market-watch routine"
+  ],
+  "notebooklm": [
+    "the highlighter-and-margin-notes pass on a long PDF",
+    "the 'I'll listen to this on a walk' aspiration that never happens"
+  ],
+  "runway-ml": [
+    "a junior video editor for B-roll generation",
+    "the stock footage subscription"
+  ],
+  "n8n": [
+    "Zapier for anything you'd rather self-host",
+    "small Python cron jobs you keep forgetting to maintain"
+  ]
+}

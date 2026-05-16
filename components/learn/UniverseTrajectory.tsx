@@ -101,28 +101,60 @@ export default function UniverseTrajectory({ graph }: UniverseTrajectoryProps) {
         }}
       />
 
-      {/* Glowing edges from field to each target */}
-      {allTargets.map((t, i) => (
-        <path
-          key={t.id}
-          d={lineFromTo(fieldNode, t)}
-          fill="none"
-          stroke="var(--accent-primary)"
-          strokeWidth={1.8}
-          strokeOpacity={0.85}
-          strokeLinecap="round"
-          style={{
-            filter: "drop-shadow(0 0 6px rgba(170,255,77,0.55))",
-            ...(reduceMotion ? {} : {
-              strokeDasharray: 1000,
-              strokeDashoffset: 1000,
-              animation: `universe-trajectory-draw 700ms cubic-bezier(0.16,1,0.3,1) forwards ${i * 80}ms`,
-            }),
-          }}
-        />
-      ))}
+      {/* Glowing edges from field to each target — sequenced draw, 160ms apart */}
+      {allTargets.map((t, i) => {
+        const delay = i * 160;
+        return (
+          <g key={t.id}>
+            <path
+              d={lineFromTo(fieldNode, t)}
+              fill="none"
+              stroke="var(--accent-primary)"
+              strokeWidth={1.8}
+              strokeOpacity={0.85}
+              strokeLinecap="round"
+              style={{
+                filter: "drop-shadow(0 0 6px rgba(170,255,77,0.55))",
+                ...(reduceMotion ? {} : {
+                  strokeDasharray: 1000,
+                  strokeDashoffset: 1000,
+                  animation: `universe-trajectory-draw 700ms cubic-bezier(0.16,1,0.3,1) forwards ${delay}ms`,
+                }),
+              }}
+            />
+            {/* Trail dot — one-shot lime spark that lands at the target node */}
+            {!reduceMotion && (
+              <circle
+                r={3.5}
+                fill="var(--accent-primary)"
+                style={{
+                  filter: "drop-shadow(0 0 8px rgba(170,255,77,0.75))",
+                  opacity: 0,
+                  // SMIL animation along the path
+                }}
+              >
+                <animateMotion
+                  dur="700ms"
+                  begin={`${delay}ms`}
+                  fill="freeze"
+                  path={lineFromTo(fieldNode, t)}
+                  rotate="auto"
+                />
+                <animate
+                  attributeName="opacity"
+                  values="0;1;1;0"
+                  keyTimes="0;0.1;0.9;1"
+                  dur="700ms"
+                  begin={`${delay}ms`}
+                  fill="freeze"
+                />
+              </circle>
+            )}
+          </g>
+        );
+      })}
 
-      {/* Pulse rings at target nodes */}
+      {/* Pulse rings at target nodes — fire after their path lands */}
       {allTargets.map((t, i) => (
         <circle
           key={`pulse:${t.id}`}
@@ -136,7 +168,8 @@ export default function UniverseTrajectory({ graph }: UniverseTrajectoryProps) {
           style={{
             ...(reduceMotion ? {} : {
               animation: `universe-trajectory-pulse 2.8s ease-in-out infinite`,
-              animationDelay: `${i * 120}ms`,
+              // Start the pulse after the path draws in
+              animationDelay: `${i * 160 + 700}ms`,
             }),
           }}
         />

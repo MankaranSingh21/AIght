@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import Link from "next/link";
 import type { UniverseGraph, UniverseNode, UniverseEdge } from "@/lib/universe-graph";
 import UniverseTrajectory from "./UniverseTrajectory";
@@ -39,6 +39,8 @@ export default function UniverseMap({ graph }: UniverseMapProps) {
   const [hoverId, setHoverId] = useState<string | null>(null);
   const [filter, setFilter] = useState<FilterMode>("all");
   const [userField, setUserField] = useState<{ slug: string; name: string } | null>(null);
+  const svgRef = useRef<SVGSVGElement | null>(null);
+  const scrolledOnce = useRef(false);
 
   // Read stored quiz result so we can enable the "My field" filter pill.
   useEffect(() => {
@@ -54,6 +56,25 @@ export default function UniverseMap({ graph }: UniverseMapProps) {
       window.removeEventListener("storage", refresh);
     };
   }, []);
+
+  // Auto-scroll the page so the user's field node is roughly centered in the
+  // viewport on first load. Only fire once per session.
+  useEffect(() => {
+    if (scrolledOnce.current || !userField || !svgRef.current) return;
+    const node = graph.nodes.find((n) => n.id === `field:${userField.slug}`);
+    if (!node) return;
+    // Position-by-fraction: node.y / viewBox.height tells us how far down
+    // the SVG the node sits. Scroll the page to land at the same fraction
+    // of the rendered SVG, with a 30% top offset so the node is comfortably
+    // above center (room for the trajectory paths below it).
+    const svgEl = svgRef.current;
+    const rect = svgEl.getBoundingClientRect();
+    const fraction = node.y / graph.viewBox.height;
+    const targetTop = window.scrollY + rect.top + rect.height * fraction - window.innerHeight * 0.30;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({ top: Math.max(0, targetTop), behavior: reduce ? "auto" : "smooth" });
+    scrolledOnce.current = true;
+  }, [userField, graph.nodes, graph.viewBox.height]);
 
   // Adjacency for quick neighbor lookup on hover, AND for the field filter.
   const adjacency = useMemo(() => {
@@ -182,6 +203,7 @@ export default function UniverseMap({ graph }: UniverseMapProps) {
       </div>
 
       <svg
+        ref={svgRef}
         viewBox={`0 0 ${graph.viewBox.width} ${graph.viewBox.height}`}
         role="img"
         aria-label="The AIght universe — fields, concepts, and tools laid out as a connected map"
