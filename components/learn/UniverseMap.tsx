@@ -1,9 +1,12 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import type { UniverseGraph, UniverseNode, UniverseEdge } from "@/lib/universe-graph";
 import UniverseTrajectory from "./UniverseTrajectory";
+import { loadQuizResult, QUIZ_CHANGED_EVENT } from "@/lib/quiz-storage";
+
+type FilterMode = "all" | "field" | "concepts" | "tools";
 
 interface UniverseMapProps {
   graph: UniverseGraph;
@@ -34,8 +37,25 @@ function edgePath(from: UniverseNode, to: UniverseNode): string {
 
 export default function UniverseMap({ graph }: UniverseMapProps) {
   const [hoverId, setHoverId] = useState<string | null>(null);
+  const [filter, setFilter] = useState<FilterMode>("all");
+  const [userField, setUserField] = useState<{ slug: string; name: string } | null>(null);
 
-  // Adjacency for quick neighbor lookup on hover.
+  // Read stored quiz result so we can enable the "My field" filter pill.
+  useEffect(() => {
+    const refresh = () => {
+      const r = loadQuizResult();
+      setUserField(r ? { slug: r.fieldSlug, name: r.fieldName } : null);
+    };
+    refresh();
+    window.addEventListener(QUIZ_CHANGED_EVENT, refresh);
+    window.addEventListener("storage", refresh);
+    return () => {
+      window.removeEventListener(QUIZ_CHANGED_EVENT, refresh);
+      window.removeEventListener("storage", refresh);
+    };
+  }, []);
+
+  // Adjacency for quick neighbor lookup on hover, AND for the field filter.
   const adjacency = useMemo(() => {
     const m = new Map<string, Set<string>>();
     for (const e of graph.edges) {
@@ -47,6 +67,33 @@ export default function UniverseMap({ graph }: UniverseMapProps) {
     return m;
   }, [graph.edges]);
 
+  // Compute which node ids pass the active filter.
+  const visibleIds = useMemo<Set<string> | null>(() => {
+    if (filter === "all") return null;
+    if (filter === "concepts") {
+      return new Set(graph.nodes.filter((n) => n.kind === "concept").map((n) => n.id));
+    }
+    if (filter === "tools") {
+      return new Set(graph.nodes.filter((n) => n.kind === "tool").map((n) => n.id));
+    }
+    if (filter === "field" && userField) {
+      const fieldId = `field:${userField.slug}`;
+      const ids = new Set<string>([fieldId]);
+      const direct = adjacency.get(fieldId);
+      direct?.forEach((id) => ids.add(id));
+      // Second-degree: concept↔concept neighbors of any included concept
+      Array.from(direct ?? []).forEach((id) => {
+        if (id.startsWith("concept:")) {
+          adjacency.get(id)?.forEach((nbr) => {
+            if (nbr.startsWith("concept:")) ids.add(nbr);
+          });
+        }
+      });
+      return ids;
+    }
+    return null;
+  }, [filter, userField, graph.nodes, adjacency]);
+
   const focusedNeighbors = hoverId ? adjacency.get(hoverId) : null;
 
   function edgeIsFocused(e: UniverseEdge): boolean {
@@ -54,11 +101,28 @@ export default function UniverseMap({ graph }: UniverseMapProps) {
     return e.from === hoverId || e.to === hoverId;
   }
 
+  function edgeIsVisible(e: UniverseEdge): boolean {
+    if (!visibleIds) return true;
+    return visibleIds.has(e.from) && visibleIds.has(e.to);
+  }
+
   function nodeIsFocused(n: UniverseNode): boolean {
-    if (!hoverId) return true; // no focus → all are normal
+    if (!hoverId) return true;
     if (n.id === hoverId) return true;
     return focusedNeighbors?.has(n.id) ?? false;
   }
+
+  function nodeIsVisible(n: UniverseNode): boolean {
+    if (!visibleIds) return true;
+    return visibleIds.has(n.id);
+  }
+
+  const FILTER_OPTIONS: { value: FilterMode; label: string; disabled?: boolean }[] = [
+    { value: "all",      label: "All" },
+    { value: "field",    label: userField ? `My field · ${userField.name}` : "My field (take the quiz)", disabled: !userField },
+    { value: "concepts", label: "Concepts only" },
+    { value: "tools",    label: "Tools only" },
+  ];
 
   return (
     <div
@@ -69,6 +133,54 @@ export default function UniverseMap({ graph }: UniverseMapProps) {
         margin: "0 auto",
       }}
     >
+      {/* Filter chips */}
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 8,
+          marginBottom: 18,
+          padding: "0 4px",
+        }}
+      >
+        {FILTER_OPTIONS.map((opt) => {
+          const active = filter === opt.value;
+          return (
+            <button
+              key={opt.value}
+              onClick={() => !opt.disabled && setFilter(opt.value)}
+              disabled={opt.disabled}
+              aria-pressed={active}
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: 11,
+                letterSpacing: "0.06em",
+                padding: "6px 12px",
+                borderRadius: 999,
+                background: active
+                  ? "var(--accent-primary)"
+                  : opt.disabled
+                  ? "transparent"
+                  : "rgba(255,250,240,0.04)",
+                color: active
+                  ? "var(--text-inverse, #0C0A08)"
+                  : opt.disabled
+                  ? "var(--text-muted)"
+                  : "var(--text-secondary)",
+                border: active
+                  ? "1px solid var(--accent-primary)"
+                  : "1px solid rgba(245,239,224,0.10)",
+                cursor: opt.disabled ? "not-allowed" : "pointer",
+                opacity: opt.disabled ? 0.55 : 1,
+                transition: "all 150ms ease",
+              }}
+            >
+              {opt.label}
+            </button>
+          );
+        })}
+      </div>
+
       <svg
         viewBox={`0 0 ${graph.viewBox.width} ${graph.viewBox.height}`}
         role="img"
@@ -114,8 +226,9 @@ export default function UniverseMap({ graph }: UniverseMapProps) {
             const from = graph.nodes.find((n) => n.id === e.from);
             const to   = graph.nodes.find((n) => n.id === e.to);
             if (!from || !to) return null;
+            const visible = edgeIsVisible(e);
             const focused = edgeIsFocused(e);
-            const dim = hoverId && !focused;
+            const dim = (hoverId && !focused) || !visible;
             return (
               <path
                 key={i}
@@ -127,8 +240,8 @@ export default function UniverseMap({ graph }: UniverseMapProps) {
                                                     "rgba(244,171,31,0.22)"
                 }
                 strokeWidth={focused ? 1.6 : 0.8}
-                strokeOpacity={focused ? 1 : dim ? 0.07 : (e.strength * 0.55)}
-                style={{ transition: "stroke-opacity 200ms ease, stroke-width 200ms ease" }}
+                strokeOpacity={!visible ? 0.05 : focused ? 1 : dim ? 0.07 : (e.strength * 0.55)}
+                style={{ transition: "stroke-opacity 240ms ease, stroke-width 200ms ease" }}
               />
             );
           })}
@@ -142,23 +255,25 @@ export default function UniverseMap({ graph }: UniverseMapProps) {
           {graph.nodes.map((node) => {
             const tint = KIND_COLOR[node.kind];
             const isHover = node.id === hoverId;
+            const visible = nodeIsVisible(node);
             const focused = nodeIsFocused(node);
-            const opacity = focused ? 1 : 0.25;
+            const opacity = !visible ? 0.10 : focused ? 1 : 0.25;
             const glowR = node.kind === "field" ? 38 : node.kind === "concept" ? 28 : 18;
 
             return (
               <g
                 key={node.id}
                 style={{
-                  cursor: "pointer",
+                  cursor: visible ? "pointer" : "default",
                   opacity,
-                  transition: "opacity 200ms ease",
+                  pointerEvents: visible ? "auto" : "none",
+                  transition: "opacity 240ms ease",
                 }}
                 onMouseEnter={() => setHoverId(node.id)}
                 onMouseLeave={() => setHoverId(null)}
                 onFocus={() => setHoverId(node.id)}
                 onBlur={() => setHoverId(null)}
-                tabIndex={0}
+                tabIndex={visible ? 0 : -1}
               >
                 {/* Ambient glow */}
                 <circle

@@ -42,7 +42,7 @@ export default function ToolHumanNote({ toolName, note }: ToolHumanNoteProps) {
             marginBottom: 10,
           }}
         >
-          What {toolName} can&rsquo;t do
+          {`What ${toolName} can’t do`}
         </p>
         <h3
           style={{

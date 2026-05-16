@@ -5,14 +5,24 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
-const NAV_LINKS = [
-  { href: '/',           label: 'Home'      },
-  { href: '/tools',      label: 'Tools'     },
-  { href: '/learn',      label: 'Learn'     },
+// Desktop nav drops Home — the logo serves that role. Mobile menu shows
+// the full set including Home for users who don't know the logo is clickable.
+const DESKTOP_NAV = [
+  { href: '/tools',       label: 'Tools'    },
+  { href: '/learn',       label: 'Learn'    },
   { href: '/learn/paths', label: 'Fields'   },
-  { href: '/signal',     label: 'Signal'    },
-  { href: '/about',      label: 'About'     },
+  { href: '/learn/map',   label: 'Universe' },
+  { href: '/signal',      label: 'Signal'   },
+  { href: '/human',       label: 'Human'    },
+  { href: '/about',       label: 'About'    },
 ];
+
+const MOBILE_NAV = [
+  { href: '/',            label: 'Home'     },
+  ...DESKTOP_NAV,
+];
+
+const QUIZ_HREF = '/learn/paths/quiz';
 
 const STORAGE_KEY = 'aight_bookmarks';
 
@@ -102,20 +112,23 @@ export default function Navbar() {
             <span className="logo-cursor font-mono text-xl font-medium text-accent ml-0.5">_</span>
           </Link>
 
-          {/* Nav links — hidden on very small screens */}
-          <div className="hidden sm:flex items-center gap-1">
-            {NAV_LINKS.map(({ href, label }) => {
-              const active = href === '/' 
-                ? pathname === '/' 
-                : pathname === href || pathname.startsWith(href + '/');
+          {/* Nav links — hidden on very small screens. Tight gap to fit 7 items + CTA. */}
+          <div className="hidden sm:flex items-center gap-0.5">
+            {DESKTOP_NAV.map(({ href, label }) => {
+              // Longest-prefix match prevents /learn highlighting when on /learn/map or /learn/paths.
+              const matchingHrefs = DESKTOP_NAV
+                .map((n) => n.href)
+                .filter((h) => pathname === h || pathname.startsWith(h + '/'));
+              const longest = matchingHrefs.sort((a, b) => b.length - a.length)[0];
+              const active = href === longest;
               return (
                 <Link
                   key={href}
                   href={href}
                   className={cn(
-                    "font-sans text-[13px] font-medium no-underline px-3.5 py-1.5 rounded-lg transition-all duration-150 whitespace-nowrap",
-                    active 
-                      ? "text-accent bg-accent/10" 
+                    "font-sans text-[13px] font-medium no-underline px-2.5 lg:px-3 py-1.5 rounded-lg transition-all duration-150 whitespace-nowrap",
+                    active
+                      ? "text-accent bg-accent/10"
                       : "text-secondary hover:text-primary"
                   )}
                 >
@@ -125,7 +138,23 @@ export default function Navbar() {
             })}
           </div>
 
-          <div className="flex items-center gap-3 ml-auto sm:ml-0">
+          <div className="flex items-center gap-2.5 ml-auto sm:ml-0">
+            {/* Take-the-quiz CTA — primary action, visible md+ to avoid crowding. */}
+            <Link
+              href={QUIZ_HREF}
+              className={cn(
+                "hidden md:inline-flex items-center gap-1.5 font-sans text-[12px] font-semibold no-underline px-3 py-1.5 rounded-full whitespace-nowrap transition-all duration-150",
+                pathname.startsWith(QUIZ_HREF)
+                  ? "bg-accent text-page"
+                  : "bg-accent/12 text-accent border border-accent/30 hover:bg-accent/20"
+              )}
+            >
+              <svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor" aria-hidden>
+                <path d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zm0 3.5a1 1 0 0 1 1 1v2.586l1.707 1.707a1 1 0 0 1-1.414 1.414L7.293 9.5A1 1 0 0 1 7 8.793V6a1 1 0 0 1 1-1z" />
+              </svg>
+              Take the quiz
+            </Link>
+
             {/* Bookmark icon link */}
             <Link
               href="/bookmarks"
@@ -183,12 +212,14 @@ export default function Navbar() {
 
       {/* Mobile Menu Overlay */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-[49] bg-page/95 backdrop-blur-xl sm:hidden flex flex-col pt-24 px-8 gap-8 animate-in fade-in slide-in-from-top-4 duration-300">
-          <div className="flex flex-col gap-4">
-            {NAV_LINKS.map(({ href, label }) => {
-              const active = href === '/' 
-                ? pathname === '/' 
-                : pathname === href || pathname.startsWith(href + '/');
+        <div className="fixed inset-0 z-[49] bg-page/95 backdrop-blur-xl sm:hidden flex flex-col pt-24 px-8 gap-6 animate-in fade-in slide-in-from-top-4 duration-300 overflow-y-auto">
+          <div className="flex flex-col gap-3.5">
+            {MOBILE_NAV.map(({ href, label }) => {
+              const matchingHrefs = MOBILE_NAV
+                .map((n) => n.href)
+                .filter((h) => h === '/' ? pathname === '/' : pathname === h || pathname.startsWith(h + '/'));
+              const longest = matchingHrefs.sort((a, b) => b.length - a.length)[0];
+              const active = href === longest;
               return (
                 <Link
                   key={href}
@@ -203,6 +234,17 @@ export default function Navbar() {
               );
             })}
           </div>
+
+          {/* Prominent Quiz CTA */}
+          <Link
+            href={QUIZ_HREF}
+            className="inline-flex items-center justify-center gap-2 mt-2 px-5 py-4 rounded-2xl bg-accent text-page font-sans text-base font-semibold no-underline"
+          >
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden>
+              <path d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zm0 3.5a1 1 0 0 1 1 1v2.586l1.707 1.707a1 1 0 0 1-1.414 1.414L7.293 9.5A1 1 0 0 1 7 8.793V6a1 1 0 0 1 1-1z" />
+            </svg>
+            Take the quiz
+          </Link>
 
           <div className="mt-auto pb-12">
             <p className="font-mono text-[10px] uppercase tracking-widest text-muted mb-4">Search AIght</p>

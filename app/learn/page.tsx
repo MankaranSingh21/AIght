@@ -117,50 +117,84 @@ export default function LearnPage() {
           margin: "0 auto",
           padding: "0 clamp(24px, 5vw, 48px)",
           display: "grid",
-          gridTemplateColumns: "1fr 1fr",
+          gridTemplateColumns: "1.4fr 1fr",
           gap: 32,
         }}
           className="learn-bridge-grid"
         >
-          {/* Concept map */}
+          {/* The Universe — primary feature */}
           <Link
             href="/learn/map"
             style={{ textDecoration: "none", display: "block" }}
             className="group"
           >
             <div style={{
-              padding: "28px 32px",
-              borderRadius: 12,
-              border: "1px solid rgba(245,239,224,0.07)",
-              background: "rgba(255,250,240,0.03)",
+              padding: "36px 40px",
+              borderRadius: 16,
+              border: "1px solid rgba(170,255,77,0.20)",
+              background: "linear-gradient(135deg, rgba(170,255,77,0.06) 0%, rgba(0,255,209,0.03) 60%, transparent 100%)",
               backdropFilter: "blur(12px)",
-              transition: "border-color 200ms ease",
+              transition: "border-color 200ms ease, box-shadow 200ms ease",
               height: "100%",
+              position: "relative",
+              overflow: "hidden",
             }}
-              className="group-hover:border-accent"
+              className="group-hover:border-accent group-hover:shadow-[0_0_40px_rgba(170,255,77,0.10)]"
             >
+              {/* Constellation hint — tiny SVG corner detail */}
+              <svg
+                aria-hidden
+                width="160"
+                height="120"
+                viewBox="0 0 160 120"
+                style={{
+                  position: "absolute",
+                  top: 16,
+                  right: 16,
+                  opacity: 0.45,
+                  pointerEvents: "none",
+                }}
+              >
+                <line x1="20" y1="30" x2="68" y2="58" stroke="rgba(170,255,77,0.45)" strokeWidth="0.8" />
+                <line x1="68" y1="58" x2="118" y2="34" stroke="rgba(0,255,209,0.40)" strokeWidth="0.8" />
+                <line x1="68" y1="58" x2="92" y2="98" stroke="rgba(244,171,31,0.30)" strokeWidth="0.8" />
+                <line x1="118" y1="34" x2="140" y2="80" stroke="rgba(0,255,209,0.30)" strokeWidth="0.8" />
+                <circle cx="20"  cy="30" r="3.5" fill="rgba(170,255,77,0.70)" />
+                <circle cx="68"  cy="58" r="3"   fill="rgba(0,255,209,0.65)" />
+                <circle cx="118" cy="34" r="2.5" fill="rgba(0,255,209,0.55)" />
+                <circle cx="92"  cy="98" r="2.5" fill="rgba(244,171,31,0.55)" />
+                <circle cx="140" cy="80" r="2"   fill="rgba(244,171,31,0.40)" />
+              </svg>
+
               <p style={{
-                fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.14em",
-                textTransform: "uppercase", color: "rgba(245,239,224,0.30)", marginBottom: 14,
+                fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.14em",
+                textTransform: "uppercase", color: "var(--accent-primary)", marginBottom: 14,
               }}>
-                The landscape
+                The universe · {allConcepts.length}+ concepts, 22 fields, 60+ tools
               </p>
               <h3 style={{
-                fontFamily: "var(--font-display)", fontSize: 22, fontWeight: 700,
-                color: "#F5EFE0", letterSpacing: "-0.02em", lineHeight: 1.2,
-                margin: "0 0 10px", transition: "color 150ms ease",
+                fontFamily: "var(--font-display)", fontSize: 28, fontWeight: 700,
+                color: "#F5EFE0", letterSpacing: "-0.02em", lineHeight: 1.15,
+                margin: "0 0 12px", transition: "color 150ms ease",
+                maxWidth: "20ch",
               }}
                 className="group-hover:text-accent"
               >
-                How these concepts connect →
+                See every field, concept, and tool — and where you fit.
               </h3>
               <p style={{
                 fontFamily: "var(--font-editorial)", fontStyle: "italic",
-                fontSize: 14, color: "rgba(245,239,224,0.45)", lineHeight: 1.7, margin: 0,
+                fontSize: 15, color: "rgba(245,239,224,0.55)", lineHeight: 1.7, margin: "0 0 18px",
+                maxWidth: "44ch",
               }}>
-                RAG feeds agents. Embeddings power retrieval. Transformers make it all possible.
-                See the map.
+                A spatial map of the whole archive. Take the quiz to overlay your own trajectory through it.
               </p>
+              <span style={{
+                fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--accent-primary)",
+                letterSpacing: "0.06em",
+              }}>
+                Explore the universe →
+              </span>
             </div>
           </Link>
 

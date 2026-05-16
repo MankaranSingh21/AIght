@@ -14,6 +14,7 @@ import Marginalia from "@/components/Marginalia";
 import MagneticLink from "@/components/MagneticLink";
 import AuroraBackground from "@/components/AuroraBackground";
 import { getAllConcepts } from "@/lib/learn";
+import { getAllHumanEssays } from "@/lib/human";
 import { getSignalPosts } from "@/lib/signal";
 import { getHomeData } from "@/lib/home-data";
 import fields from "@/content/paths/fields.json";
@@ -301,6 +302,7 @@ const FEATURED_SLUGS = ["biology", "medicine-healthcare", "creative-writing-lite
 export default async function Home() {
   const allConcepts = getAllConcepts();
   const featuredConcepts = allConcepts.slice(0, 3);
+  const humanEssays = getAllHumanEssays();
 
   const featuredFields = (FEATURED_SLUGS
     .map((s) => fields.find((f) => f.slug === s))
@@ -466,8 +468,106 @@ export default async function Home() {
           </Suspense>
         </ScrollReveal>
 
-        {/* §05 — Newsletter (full-bleed band) */}
-        <SectionDivider number="05" label="Stay in the signal" />
+        {/* §05 — What AI cannot do — drives traffic to /human */}
+        {humanEssays.length > 0 && (
+          <>
+            <SectionDivider number="05" label="What AI cannot do" />
+            <ScrollReveal scale>
+              <section className="section-full">
+                <div className="section-inner-wide">
+                  <div className="marginalia-wrap" style={{ marginBottom: 40 }}>
+                    <ScrollParallax range={[10, -10]}>
+                      <div>
+                        <p style={{
+                          fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.14em",
+                          textTransform: "uppercase", color: "var(--accent-warm)", margin: "0 0 8px",
+                        }}>
+                          The work that doesn&rsquo;t compress
+                        </p>
+                        <h2 className="font-sans text-3xl md:text-4xl font-semibold text-primary" style={{ letterSpacing: "-0.02em", lineHeight: 1.1 }}>
+                          What only the human can do.
+                        </h2>
+                      </div>
+                    </ScrollParallax>
+                    <Marginalia side="right" eyebrow="Short essays">
+                      Taste, care, originality, context.
+                      The strengths AI quietly needs us to keep.
+                    </Marginalia>
+                  </div>
+
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+                      gap: 16,
+                    }}
+                  >
+                    {humanEssays.slice(0, 4).map((essay, i) => (
+                      <InteractiveCard
+                        key={essay.slug}
+                        gradientColor="#F4AB1F"
+                        gradientSize={260}
+                        gradientOpacity={0.10}
+                        maxTilt={4}
+                      >
+                        <Link
+                          href={`/human/${essay.slug}`}
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: 10,
+                            padding: 24,
+                            borderRadius: 14,
+                            background: "rgba(244,171,31,0.04)",
+                            border: "1px solid rgba(244,171,31,0.18)",
+                            textDecoration: "none",
+                            height: "100%",
+                            width: "100%",
+                          }}
+                          className="group"
+                        >
+                          <span style={{
+                            fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.14em",
+                            textTransform: "uppercase", color: "var(--accent-warm)",
+                          }}>
+                            0{i + 1} · Essay
+                          </span>
+                          <span style={{
+                            fontFamily: "var(--font-display)", fontSize: 24, fontWeight: 700,
+                            color: "var(--text-primary)", letterSpacing: "-0.02em", lineHeight: 1.15,
+                          }}
+                            className="group-hover:text-warm transition-colors"
+                          >
+                            {essay.title}
+                          </span>
+                          <span style={{
+                            fontFamily: "var(--font-editorial)", fontStyle: "italic", fontSize: 14,
+                            color: "var(--text-secondary)", lineHeight: 1.6, flex: 1,
+                          }}>
+                            {essay.tagline}
+                          </span>
+                          <span style={{
+                            fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--accent-warm)",
+                            marginTop: 4,
+                          }}>
+                            {essay.readTime} →
+                          </span>
+                        </Link>
+                      </InteractiveCard>
+                    ))}
+                  </div>
+
+                  <div style={{ marginTop: 40 }}>
+                    <Link href="/human" className="btn-ghost">Read all essays →</Link>
+                  </div>
+                </div>
+              </section>
+            </ScrollReveal>
+          </>
+        )}
+
+        {/* §06 — Newsletter (full-bleed band) */}
+        <SectionDivider number="06" label="Stay in the signal" />
         <section
           className="section-full"
           style={{

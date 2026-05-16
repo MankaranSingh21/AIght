@@ -38,5 +38,65 @@
     "headline": "It produces the voice. It can't produce the meaning behind it.",
     "body": "ElevenLabs can clone a voice to uncanny accuracy. What that voice is saying, and whether saying it serves the person on the other end, is a human responsibility the model cannot inherit.",
     "essay": "care"
+  },
+  "cursor": {
+    "headline": "It writes the patch. You decide whether the patch belongs in the system at all.",
+    "body": "Cursor is a remarkable pair-programmer. The harder craft — designing what the system is actually trying to do, refusing the wrong feature, holding the architecture in your head — is still yours.",
+    "essay": "context"
+  },
+  "gemini": {
+    "headline": "It will answer most questions confidently. You decide which confident answers to trust.",
+    "body": "Gemini is fluent across modalities. Fluency at this scale tempts deference, but the work of double-checking, sense-checking, and choosing which output to act on remains the human signal in the loop.",
+    "essay": "context"
+  },
+  "adobe-firefly": {
+    "headline": "It can generate the asset. It can't make the brand decision behind it.",
+    "body": "Firefly produces commercially-safe imagery quickly. What it cannot do is decide what the brand should look like, what tone is right for this campaign, what the audience will actually feel — those calls live in the room you're in.",
+    "essay": "taste"
+  },
+  "runway-ml": {
+    "headline": "It can generate the clip. You make the cut that means something.",
+    "body": "Runway is extraordinary at producing footage. Editing — the human decision of what to leave in, what to leave on the floor, what beat carries the story — is still where the work lives.",
+    "essay": "taste"
+  },
+  "suno": {
+    "headline": "It can compose. It can't tell you why the song needs to exist.",
+    "body": "Suno will write a credible song from a prompt. The reason for the song, the artist behind it, the listener it's reaching for — those are the questions music asks, and they're still yours to answer.",
+    "essay": "originality"
+  },
+  "harvey-ai": {
+    "headline": "It can draft the memo. You take the position the firm will stand behind.",
+    "body": "Harvey is exceptional at legal drafting. The judgement about which interpretation is right for this client, this jurisdiction, this risk appetite — that's still the work that requires a person whose name is on the file.",
+    "essay": "context"
+  },
+  "khanmigo": {
+    "headline": "It can tutor. It can't see when a student has given up.",
+    "body": "Khanmigo will patiently walk a learner through any topic. What it can't do is notice the quiet kid who stopped trying two weeks ago, and ask them what's going on at home. That's still a teacher's job.",
+    "essay": "care"
+  },
+  "openevidence": {
+    "headline": "It surfaces the evidence. You decide what to do for this patient.",
+    "body": "OpenEvidence is a fast way to land on the relevant clinical literature. The harder skill — translating the literature into a decision for the specific person sitting in front of you — is still medicine.",
+    "essay": "care"
+  },
+  "gong": {
+    "headline": "It can transcribe the call. It can't tell you what the customer actually meant.",
+    "body": "Gong is excellent at capturing sales conversations. What it cannot capture is the hesitation in the buyer's voice when they say yes, or the political situation on their team that means yes today is no next month.",
+    "essay": "context"
+  },
+  "apollo-io": {
+    "headline": "It can find the prospect. You decide whether they should be reached at all.",
+    "body": "Apollo is a powerful list-building engine. The integrity layer — whether this outreach is welcome, useful, or just noise added to someone's day — is a call no targeting algorithm can make for you.",
+    "essay": "care"
+  },
+  "jasper": {
+    "headline": "It can fill the calendar. You make the work worth reading.",
+    "body": "Jasper will produce on-brand marketing copy at scale. What it cannot do is take the small creative risk that turns a campaign from filler into something a reader actually remembers.",
+    "essay": "originality"
+  },
+  "notebooklm": {
+    "headline": "It can summarise the corpus. You decide what's worth taking from it.",
+    "body": "NotebookLM is a strong synthesizer of long documents. The harder move — picking the one idea inside a hundred pages that's actually load-bearing for your work — is still yours.",
+    "essay": "taste"
   }
 }
