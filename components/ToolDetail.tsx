@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePostHog } from "posthog-js/react";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import ToolHumanNote, { type ToolHumanNoteData } from "@/components/ToolHumanNote";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -42,6 +43,7 @@ export type ToolDetailData = {
   learning_guide?: string | null;
   related_concepts?: string[];
   related_concept_links?: { slug: string; title: string; tagline?: string }[];
+  humanNote?: ToolHumanNoteData | null;
   weaknesses?: string[];
   status?: "stable" | "beta" | "rising" | "deprecated";
   deprecated_reason?: string | null;
@@ -583,6 +585,9 @@ export default function ToolDetail({ tool }: { tool: ToolDetailData }) {
             </div>
           </section>
         )}
+
+        {/* What this tool can't do — links into the /human section */}
+        <ToolHumanNote toolName={tool.name} note={tool.humanNote ?? null} />
 
       </div>
     </main>

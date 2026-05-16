@@ -4,6 +4,7 @@ import { createClient } from "@/utils/supabase/server";
 import ToolDetail, { type ToolDetailData, type UseCase, type Alternative } from "@/components/ToolDetail";
 import type { Tool, AlternativeEntry } from "@/utils/supabase/types";
 import { getAllConcepts } from "@/lib/learn";
+import toolHumanNotes from "@/content/tool-human-notes.json";
 
 export const revalidate = 3600;
 
@@ -182,6 +183,7 @@ export default async function ToolPage({ params }: Props) {
     learning_guide: tool.learning_guide,
     related_concepts: conceptSlugs,
     related_concept_links: conceptLinks,
+    humanNote: (toolHumanNotes as Record<string, { headline: string; body: string; essay: string }>)[tool.slug] ?? null,
     weaknesses: tool.weaknesses ?? [],
     status: tool.status ?? "stable",
     deprecated_reason: tool.deprecated_reason ?? null,

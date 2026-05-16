@@ -1,0 +1,42 @@
+{
+  "chatgpt": {
+    "headline": "It can draft. You decide whether the draft is right.",
+    "body": "ChatGPT will produce a plausible paragraph on almost anything. What it cannot do is tell when the plausible paragraph is wrong for this room, this moment, this person. That part still belongs to you.",
+    "essay": "taste"
+  },
+  "github-copilot": {
+    "headline": "It writes the code. You make the call that the code shouldn't exist yet.",
+    "body": "Copilot is excellent at filling in the obvious next line. The decision about whether the line, the function, or the entire system is the right thing to be building — that's still a judgement call no autocomplete can make.",
+    "essay": "context"
+  },
+  "midjourney": {
+    "headline": "It can generate ten thousand variations. It can't tell you which one matters.",
+    "body": "Midjourney will give you a dazzling image in seconds. Whether the image carries what you needed it to carry — that requires the eye you spent years building.",
+    "essay": "taste"
+  },
+  "claude": {
+    "headline": "It will sound thoughtful. You decide whether it's actually correct.",
+    "body": "Claude is calibrated to sound reasonable, which is dangerous when the reasoning is wrong. The work of catching a confident error before it ships is still a human function.",
+    "essay": "context"
+  },
+  "perplexity": {
+    "headline": "It summarises the search. It can't tell you what to ask.",
+    "body": "Perplexity is fast at synthesizing sources. The harder skill — knowing what question is actually worth asking, what counts as evidence, when to push past the easy answer — remains yours.",
+    "essay": "originality"
+  },
+  "notion-ai": {
+    "headline": "It can structure the doc. You decide what's worth being in the doc.",
+    "body": "Notion AI is a competent first-pass organizer. What it can't do is read the room and know which things are politically OK to write down, and which ones aren't.",
+    "essay": "context"
+  },
+  "alphafold": {
+    "headline": "It predicts the structure. You decide what to ask next.",
+    "body": "AlphaFold reshaped what's tractable in structural biology. The taste required to know which prediction is actually meaningful — which protein matters, why, for whom — is still a scientist's job.",
+    "essay": "taste"
+  },
+  "elevenlabs": {
+    "headline": "It produces the voice. It can't produce the meaning behind it.",
+    "body": "ElevenLabs can clone a voice to uncanny accuracy. What that voice is saying, and whether saying it serves the person on the other end, is a human responsibility the model cannot inherit.",
+    "essay": "care"
+  }
+}

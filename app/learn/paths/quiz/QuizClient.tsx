@@ -4,10 +4,25 @@ import { useState, useEffect, useMemo, useRef, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import QuizToolRecs from '@/components/QuizToolRecs';
+import WheelhouseBlock from '@/components/quiz/WheelhouseBlock';
 import dynamic from 'next/dynamic';
 const DownloadReportButton = dynamic(() => import('@/components/quiz/DownloadReportButton'), { ssr: false });
 import { usePostHog } from 'posthog-js/react';
 import fieldsData from '@/content/paths/fields.json';
+import {
+  COG_QUESTIONS,
+  computeCognitiveProfile,
+  cognitiveScoreModifier,
+  pickHumanEssayRecs,
+} from '@/lib/cognitive-profile';
+import {
+  loadQuizResult,
+  saveQuizResult,
+  clearQuizResult,
+  type CognitiveProfile,
+  type StoredQuizResult,
+} from '@/lib/quiz-storage';
+import type { HumanEssayMeta } from '@/lib/human';
 
 /* ─── Types ─────────────────────────────────────────────────────────────────── */
 
@@ -35,6 +50,8 @@ interface FieldEntry {
 interface ScoreResult {
   score: number; category: RiskCategory;
   breakdown: Record<string, number>;
+  cognitiveProfile?: CognitiveProfile;
+  recommendedHumanEssaySlugs?: string[];
 }
 
 /* ─── Static option sets ────────────────────────────────────────────────────── */
@@ -168,6 +185,24 @@ const S0: Section = {
         { value: 'long',     label: 'Long game (5+)',    sub: 'Thinking about where I want to be in 5+ years' },
       ] },
   ],
+};
+
+// Cognitive-pattern section. Sits between S0 and S1. Questions are sourced
+// from lib/cognitive-profile.ts so the question text lives next to the
+// scoring logic that consumes it. No MBTI/Enneagram labels are surfaced —
+// the answers feed a private profile used in scoring + recommendations.
+const S_COG: Section = {
+  id: 99, title: 'How you think and work',
+  subtitle: 'Eight short questions. No labels, no types — just listening to how you operate.',
+  questions: COG_QUESTIONS.map((q): Question => ({
+    id: q.id,
+    text: q.text,
+    subtext: q.subtext,
+    type: q.type as QType,
+    options: q.options,
+    minLabel: q.minLabel,
+    maxLabel: q.maxLabel,
+  })),
 };
 
 const S1: Section = {
@@ -1207,8 +1242,9 @@ function ShareButton({ score, fieldName }: { score: number; fieldName: string })
 
 /* ─── Report Screen ─────────────────────────────────────────────────────────── */
 
-function ReportScreen({ result, field, answers, onRetake }: {
+function ReportScreen({ result, field, answers, onRetake, humanEssays = [] }: {
   result: ScoreResult; field: FieldEntry; answers: Answers; onRetake: () => void;
+  humanEssays?: HumanEssayMeta[];
 }) {
   const [visible, setVisible] = useState(false);
   useEffect(() => { const t = setTimeout(() => setVisible(true), 50); return () => clearTimeout(t); }, []);
@@ -1494,6 +1530,15 @@ function ReportScreen({ result, field, answers, onRetake }: {
           </div>
         </div>
 
+        {/* What only you can do — human-strengths block keyed off cognitive profile */}
+        {result.recommendedHumanEssaySlugs && result.recommendedHumanEssaySlugs.length > 0 && (
+          <WheelhouseBlock
+            essays={result.recommendedHumanEssaySlugs
+              .map((slug) => humanEssays.find((e) => e.slug === slug))
+              .filter((e): e is HumanEssayMeta => Boolean(e))}
+          />
+        )}
+
         {/* Tools */}
         <div style={{ marginBottom: 32, ...sectionStyle, transitionDelay: '300ms' }}>
           <h3 style={{
@@ -1626,6 +1671,9 @@ function ReportScreen({ result, field, answers, onRetake }: {
             seniority={answers.seniority as string | undefined}
             careerDirection={answers.five_year_goal as string | undefined}
             aiGoal={answers.ai_goal as string | undefined}
+            cogDiv={result.cognitiveProfile?.divergent_vs_convergent}
+            cogIntu={result.cognitiveProfile?.intuitive_vs_analytical}
+            cogOrig={result.cognitiveProfile?.originator_vs_synthesist}
           />
         </div>
 
@@ -1731,13 +1779,50 @@ function CalculatingScreen() {
 
 /* ─── Intro Screen ──────────────────────────────────────────────────────────── */
 
-function IntroScreen({ onStart }: { onStart: () => void }) {
+function IntroScreen({ onStart, hasStoredResult, onClearStored }: {
+  onStart: () => void;
+  hasStoredResult?: boolean;
+  onClearStored?: () => void;
+}) {
   return (
     <div style={{
       minHeight: 'calc(100vh - 64px)', display: 'flex', alignItems: 'center',
       justifyContent: 'center', padding: '80px clamp(24px, 6vw, 64px)',
     }}>
       <div style={{ maxWidth: 600 }}>
+        {/* Resume prompt — only renders if a stored result was detected on mount */}
+        {hasStoredResult && (
+          <div style={{
+            marginBottom: 32, padding: '12px 16px', borderRadius: 10,
+            background: 'rgba(170,255,77,0.06)', border: '1px solid rgba(170,255,77,0.20)',
+            display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap',
+          }}>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.08em', color: 'var(--accent-primary)' }}>
+              You took this quiz before.
+            </span>
+            <Link
+              href="/learn/map"
+              style={{
+                fontFamily: 'var(--font-ui)', fontSize: 13, fontWeight: 600,
+                color: 'var(--text-primary)', textDecoration: 'none',
+                borderBottom: '1px solid rgba(170,255,77,0.40)', paddingBottom: 1,
+              }}
+            >
+              See your trajectory →
+            </Link>
+            <button
+              onClick={onClearStored}
+              style={{
+                fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.08em',
+                background: 'transparent', border: 'none', color: 'var(--text-muted)',
+                cursor: 'pointer', padding: 0, marginLeft: 'auto',
+              }}
+              className="hover:text-primary"
+            >
+              clear
+            </button>
+          </div>
+        )}
         <p style={{
           fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.14em',
           textTransform: 'uppercase', color: 'var(--accent-primary)', marginBottom: 24,
@@ -1820,24 +1905,38 @@ function IntroScreen({ onStart }: { onStart: () => void }) {
 
 /* ─── Main Page ─────────────────────────────────────────────────────────────── */
 
-function QuizPageInner({ preFieldSlug }: { preFieldSlug: string | null }) {
+interface QuizPageInnerProps {
+  preFieldSlug: string | null;
+  humanEssays: HumanEssayMeta[];
+}
+
+function QuizPageInner({ preFieldSlug, humanEssays }: QuizPageInnerProps) {
   const validPreField   = preFieldSlug && FIELDS.some(f => f.slug === preFieldSlug) ? preFieldSlug : null;
 
+  // Section order: [S0, S_COG, S1, S2, S3, s4, S5, S6] (8 sections).
+  // Pre-field path skips S0, S_COG, S1 → starts at S2 (index 3).
   const [screen, setScreen]           = useState<Screen>(validPreField ? 'quiz' : 'intro');
-  const [sectionIdx, setSectionIdx]   = useState(validPreField ? 2 : 0); // S0 is idx 0, S1 is idx 1; if pre-field set, skip to S2
+  const [sectionIdx, setSectionIdx]   = useState(validPreField ? 3 : 0);
   const [questionIdx, setQuestionIdx] = useState(0);
   const [answers, setAnswers]         = useState<Answers>(validPreField ? { field: validPreField } : {});
   const [visible, setVisible]         = useState(true);
   const [result, setResult]           = useState<ScoreResult | null>(null);
+  const [hasStoredResult, setHasStoredResult] = useState(false);
   const quizContainerRef              = useRef<HTMLDivElement>(null);
   const posthog                        = usePostHog();
+
+  // On mount, detect a prior stored result so the intro screen can offer
+  // "Resume your last result" (only when on the intro screen).
+  useEffect(() => {
+    setHasStoredResult(loadQuizResult() !== null);
+  }, []);
 
   const fieldSlug = answers.field as string | undefined;
 
   const sections: Section[] = useMemo(() => {
     const group = getFieldGroup(fieldSlug ?? '');
     const s4    = DOMAIN[group] ?? DOMAIN.default;
-    return [S0, S1, S2, S3, s4, S5, S6];
+    return [S0, S_COG, S1, S2, S3, s4, S5, S6];
   }, [fieldSlug]);
 
   const currentSection  = sections[sectionIdx];
@@ -1876,13 +1975,57 @@ function QuizPageInner({ preFieldSlug }: { preFieldSlug: string | null }) {
       } else {
         setScreen('calculating');
         const field = findField(fieldSlug);
-        const r = computeScore(answers, field);
+
+        // Cognitive profile feeds score + recommendations.
+        const cognitiveProfile = computeCognitiveProfile(answers);
+        const cognitiveMod = cognitiveScoreModifier(cognitiveProfile);
+
+        // Compute the base score, then apply the cognitive modifier (capped ±6).
+        const baseResult = computeScore(answers, field);
+        const adjusted = Math.max(5, Math.min(85, baseResult.score + cognitiveMod));
+        const category: RiskCategory = adjusted >= 56 ? 'high' : adjusted >= 31 ? 'medium' : 'low';
+
+        const recommendedHumanEssaySlugs = pickHumanEssayRecs(cognitiveProfile, {
+          human_pct: typeof answers.human_pct === 'number' ? answers.human_pct : undefined,
+          decision_stakes: answers.decision_stakes as string | undefined,
+        });
+
+        const r: ScoreResult = {
+          ...baseResult,
+          score: adjusted,
+          category,
+          breakdown: { ...baseResult.breakdown, cognitive: cognitiveMod },
+          cognitiveProfile,
+          recommendedHumanEssaySlugs,
+        };
         setResult(r);
+
+        // Persist to localStorage so /learn/map's UniverseTrajectory and a
+        // future "Resume" path can read it. No DB, no account.
+        const stored: StoredQuizResult = {
+          version: 1,
+          takenAt: new Date().toISOString(),
+          fieldSlug: field.slug,
+          fieldName: field.field,
+          roleTitle: typeof answers.role_title === 'string' ? answers.role_title : undefined,
+          score: r.score,
+          category: r.category,
+          cognitiveProfile,
+          recommendedConceptSlugs: [],   // populated by QuizToolRecs server route on render
+          recommendedToolSlugs: [],      // populated by QuizToolRecs server route on render
+          recommendedHumanEssaySlugs,
+        };
+        saveQuizResult(stored);
+        setHasStoredResult(true);
+
         posthog?.capture('quiz_completed', {
           field_slug: field.slug,
           field_name: field.field,
           risk_score: r.score,
           risk_category: r.category,
+          cog_divergent: cognitiveProfile.divergent_vs_convergent,
+          cog_intuitive: cognitiveProfile.intuitive_vs_analytical,
+          cog_originator: cognitiveProfile.originator_vs_synthesist,
         });
         setTimeout(() => setScreen('report'), 2800);
       }
@@ -1906,17 +2049,26 @@ function QuizPageInner({ preFieldSlug }: { preFieldSlug: string | null }) {
     setQuestionIdx(0);
     setResult(null);
     setScreen('intro');
+    clearQuizResult();
+    setHasStoredResult(false);
   }
 
-  if (screen === 'intro') return <IntroScreen onStart={() => setScreen('quiz')} />;
+  if (screen === 'intro') return (
+    <IntroScreen
+      onStart={() => setScreen('quiz')}
+      hasStoredResult={hasStoredResult}
+      onClearStored={() => { clearQuizResult(); setHasStoredResult(false); }}
+    />
+  );
   if (screen === 'calculating') return <CalculatingScreen />;
   if (screen === 'report' && result) {
     const field = findField(fieldSlug);
-    return <ReportScreen result={result} field={field} answers={answers} onRetake={retake} />;
+    return <ReportScreen result={result} field={field} answers={answers} onRetake={retake} humanEssays={humanEssays} />;
   }
 
-  // Show "← Change field" when field was injected via URL and user is still in early sections
-  const showChangeField = validPreField !== null && sectionIdx >= 2 && sectionIdx <= 3;
+  // Show "← Change field" when field was injected via URL and user is still in early sections.
+  // (Section indices shifted by +1 after inserting S_COG: S2 is now idx 3, S3 is now idx 4.)
+  const showChangeField = validPreField !== null && sectionIdx >= 3 && sectionIdx <= 4;
 
   return (
     <div style={{ minHeight: '100vh' }}>
@@ -2062,15 +2214,15 @@ function QuizPageInner({ preFieldSlug }: { preFieldSlug: string | null }) {
   );
 }
 
-function QuizPageWrapper() {
+function QuizPageWrapper({ humanEssays }: { humanEssays: HumanEssayMeta[] }) {
   const searchParams = useSearchParams();
-  return <QuizPageInner preFieldSlug={searchParams.get('field')} />;
+  return <QuizPageInner preFieldSlug={searchParams.get('field')} humanEssays={humanEssays} />;
 }
 
-export default function QuizClient() {
+export default function QuizClient({ humanEssays = [] }: { humanEssays?: HumanEssayMeta[] } = {}) {
   return (
     <Suspense fallback={null}>
-      <QuizPageWrapper />
+      <QuizPageWrapper humanEssays={humanEssays} />
     </Suspense>
   );
 }

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import QuizClient from "./QuizClient";
+import { getAllHumanEssays } from "@/lib/human";
 
 export const metadata: Metadata = {
   title: "AI Impact Quiz — find your stack",
@@ -13,5 +14,6 @@ export const metadata: Metadata = {
 };
 
 export default function QuizPage() {
-  return <QuizClient />;
+  const humanEssays = getAllHumanEssays();
+  return <QuizClient humanEssays={humanEssays} />;
 }

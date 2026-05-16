@@ -11,6 +11,7 @@ const NAV_LINKS = [
   { href: "/workflows",     label: "Workflows"               },
   { href: "/use-cases",     label: "Use Cases"               },
   { href: "/signal",        label: "Signal Archive"          },
+  { href: "/human",         label: "What AI Cannot Do"       },
   { href: "/about",         label: "About AIght"             },
   { href: "/about/score",   label: "The AIght Score"         },
   { href: "/changelog",     label: "Changelog"               },

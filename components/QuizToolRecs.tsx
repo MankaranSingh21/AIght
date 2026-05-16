@@ -21,6 +21,9 @@ type Props = {
   seniority?: string;
   careerDirection?: string;
   aiGoal?: string;
+  cogDiv?: number;     // -1..+1, optional
+  cogIntu?: number;
+  cogOrig?: number;
 };
 
 export default function QuizToolRecs({
@@ -32,6 +35,9 @@ export default function QuizToolRecs({
   seniority,
   careerDirection,
   aiGoal,
+  cogDiv,
+  cogIntu,
+  cogOrig,
 }: Props) {
   const [tools, setTools] = useState<RecommendedTool[]>([]);
   const [loading, setLoading] = useState(true);
@@ -46,6 +52,9 @@ export default function QuizToolRecs({
     if (seniority) params.set("seniority", seniority);
     if (careerDirection) params.set("career_direction", careerDirection);
     if (aiGoal) params.set("ai_goal", aiGoal);
+    if (typeof cogDiv  === "number") params.set("cog_div",  cogDiv.toFixed(3));
+    if (typeof cogIntu === "number") params.set("cog_intu", cogIntu.toFixed(3));
+    if (typeof cogOrig === "number") params.set("cog_orig", cogOrig.toFixed(3));
 
     fetch(`/api/quiz-tools?${params}`)
       .then((r) => r.json())
@@ -54,7 +63,7 @@ export default function QuizToolRecs({
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, [responsibilities, riskCategory, aiToolsUsed, fieldSlug, seniority, careerDirection, aiGoal]);
+  }, [responsibilities, riskCategory, aiToolsUsed, fieldSlug, seniority, careerDirection, aiGoal, cogDiv, cogIntu, cogOrig]);
 
   if (loading) return null;
   if (tools.length === 0) return null;

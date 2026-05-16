@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { createServiceClient } from "@/utils/supabase/service";
 import { getAllConcepts } from "@/lib/learn";
+import { getAllHumanEssays } from "@/lib/human";
 import { getAllUseCases } from "@/lib/use-cases";
 import { getAllWorkflows } from "@/lib/workflows";
 import fields from "@/content/paths/fields.json";
@@ -50,6 +51,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
+  const humanUrls = getAllHumanEssays().map((essay) => ({
+    url: `${SITE_URL}/human/${essay.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }));
+
   const categoryUrls = Object.values(categories).map((cat: any) => ({
     url: `${SITE_URL}/tools/category/${cat.slug}`,
     lastModified: new Date(),
@@ -70,6 +78,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/about`,          lastModified: new Date(), changeFrequency: "monthly", priority: 0.5 },
     { url: `${SITE_URL}/about/score`,    lastModified: new Date(), changeFrequency: "monthly", priority: 0.7 },
     { url: `${SITE_URL}/changelog`,      lastModified: new Date(), changeFrequency: "weekly",  priority: 0.5 },
+    { url: `${SITE_URL}/human`,          lastModified: new Date(), changeFrequency: "monthly", priority: 0.8 },
     { url: `${SITE_URL}/support`,        lastModified: new Date(), changeFrequency: "yearly",  priority: 0.3 },
     { url: `${SITE_URL}/privacy`,        lastModified: new Date(), changeFrequency: "yearly",  priority: 0.2 },
     { url: `${SITE_URL}/terms`,          lastModified: new Date(), changeFrequency: "yearly",  priority: 0.2 },
@@ -79,5 +88,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...useCaseUrls,
     ...workflowUrls,
     ...categoryUrls,
+    ...humanUrls,
   ];
 }

@@ -98,6 +98,12 @@ export async function GET(req: NextRequest) {
   const careerDirection        = searchParams.get("career_direction") ?? "";
   const aiGoal                 = searchParams.get("ai_goal") ?? "";
 
+  // Cognitive profile (each -1..+1). Optional — when absent, weighting falls
+  // back to the existing goal/direction/responsibility signals.
+  const cogDiv  = parseFloat(searchParams.get("cog_div")  ?? "0") || 0;
+  const cogIntu = parseFloat(searchParams.get("cog_intu") ?? "0") || 0;
+  const cogOrig = parseFloat(searchParams.get("cog_orig") ?? "0") || 0;
+
   const responsibilities = responsibilitiesParam.split(",").map((r) => r.trim()).filter(Boolean);
   const aiToolsUsed = aiToolsUsedParam.split(",").map((r) => r.trim()).filter(Boolean);
 
@@ -145,6 +151,21 @@ export async function GET(req: NextRequest) {
     categoryOrder.splice(1, 0, "RESEARCH");
     categoryToReason["RESEARCH"] = "Helps you stay ahead of AI changes in your field";
   }
+
+  // Cognitive-profile category boosts — promote categories that fit how the
+  // user said they think and work. Threshold ±0.3 to avoid bias when the
+  // profile is centered.
+  function promote(cat: string, reason: string) {
+    const i = categoryOrder.indexOf(cat);
+    if (i > 0) categoryOrder.splice(i, 1);
+    if (i !== 0) categoryOrder.unshift(cat);
+    if (!categoryToReason[cat]) categoryToReason[cat] = reason;
+  }
+  if (cogDiv > 0.3)  promote("RESEARCH",     "Matches your broad, exploratory thinking");
+  if (cogDiv < -0.3) promote("PRODUCTIVITY", "Matches your structured, methodical approach");
+  if (cogIntu > 0.3) promote("AI CHAT",      "Built for the way you sense your way through problems");
+  if (cogIntu < -0.3) promote("RESEARCH",    "Suits a careful, evidence-first decision style");
+  if (cogOrig > 0.3) promote("IMAGE GEN",    "For minds that start new things from scratch");
 
   const supabase = createServiceClient();
   const topCats = categoryOrder.slice(0, 5);
