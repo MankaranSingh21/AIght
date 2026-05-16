@@ -1,8 +1,5 @@
 import type { Tool } from "@/utils/supabase/types";
 import type { ToolCardProps } from "@/components/ToolCard";
-import aightsTakes from "@/content/aights-take.json";
-
-const TAKES = aightsTakes as Record<string, string>;
 
 export function mapToolToCardProps(t: Partial<Tool>): ToolCardProps {
   const category = t.category ?? "AI Tool";
@@ -64,6 +61,6 @@ export function mapToolToCardProps(t: Partial<Tool>): ToolCardProps {
     risk_level: t.risk_level ?? "Low",
     is_open_source: t.is_open_source ?? false,
     updated_at: t.updated_at ?? t.created_at ?? undefined,
-    aightsTake: t.slug ? (TAKES[t.slug] ?? null) : null,
+    aightsTake: t.aights_take ?? null,
   };
 }

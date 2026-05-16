@@ -569,6 +569,7 @@ export default async function Home() {
         {/* §06 — Newsletter (full-bleed band) */}
         <SectionDivider number="06" label="Stay in the signal" />
         <section
+          id="stay-in-signal"
           className="section-full"
           style={{
             background: "rgba(22,18,16,0.55)",

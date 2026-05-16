@@ -23,6 +23,8 @@ import {
   type CognitiveProfile,
   type StoredQuizResult,
 } from '@/lib/quiz-storage';
+import { pushQuizResult } from '@/lib/user-data-sync';
+import { createClient as createSupabaseClient } from '@/utils/supabase/client';
 import type { HumanEssayMeta } from '@/lib/human';
 
 /* ─── Types ─────────────────────────────────────────────────────────────────── */
@@ -2023,6 +2025,14 @@ function QuizPageInner({ preFieldSlug, humanEssays }: QuizPageInnerProps) {
         };
         saveQuizResult(stored);
         setHasStoredResult(true);
+        // Fire-and-forget DB mirror — no-op when guest.
+        void (async () => {
+          try {
+            const sb = createSupabaseClient();
+            const { data: { user } } = await sb.auth.getUser();
+            await pushQuizResult(stored, !!user);
+          } catch { /* ignore */ }
+        })();
 
         posthog?.capture('quiz_completed', {
           field_slug: field.slug,

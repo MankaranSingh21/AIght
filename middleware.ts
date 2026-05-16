@@ -3,7 +3,7 @@ import { updateSession } from "@/utils/supabase/middleware";
 
 // Routes that require an authenticated session.
 // Any pathname that starts with one of these prefixes is protected.
-const PROTECTED_PREFIXES = ["/admin"];
+const PROTECTED_PREFIXES = ["/admin", "/account"];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -16,10 +16,10 @@ export async function middleware(request: NextRequest) {
   );
 
   if (isProtected && !user) {
-    const loginUrl = new URL("/login", request.url);
+    const signinUrl = new URL("/signin", request.url);
     // Preserve the intended destination so we can redirect back after sign-in.
-    loginUrl.searchParams.set("next", pathname);
-    return NextResponse.redirect(loginUrl);
+    signinUrl.searchParams.set("next", pathname);
+    return NextResponse.redirect(signinUrl);
   }
 
   return response;

@@ -42,6 +42,12 @@ export type Tool = {
   risk_level: 'Low' | 'Medium' | 'High';
   is_open_source: boolean;
   updated_at: string;
+  // Phase G: editorial columns. Backfilled from JSON; canonical source going forward.
+  aights_take: string | null;
+  replaces: string[] | null;
+  fields: string[] | null;
+  screenshots: string[] | null;
+  human_note: { headline: string; body: string; essay: string } | null;
 };
 
 export type ToolSubmission = {

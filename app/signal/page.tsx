@@ -8,11 +8,6 @@ export const revalidate = 3600;
 export const metadata: Metadata = {
   title: "Signal",
   description: "Editorial on AI tools, models, and what they actually mean.",
-  alternates: {
-    types: {
-      "application/rss+xml": "/signal/rss.xml",
-    },
-  },
 };
 
 export default async function SignalPage() {
@@ -52,7 +47,7 @@ export default async function SignalPage() {
           </p>
           <div style={{ marginTop: 20, display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
             <a
-              href="/signal/rss.xml"
+              href="/#stay-in-signal"
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -61,20 +56,18 @@ export default async function SignalPage() {
                 fontSize: 10,
                 letterSpacing: '0.14em',
                 textTransform: 'uppercase',
-                color: 'var(--accent-warm, #F4AB1F)',
+                color: 'var(--accent-primary)',
                 padding: '6px 12px',
                 borderRadius: 999,
-                border: '1px solid rgba(244,171,31,0.32)',
-                background: 'rgba(244,171,31,0.06)',
+                border: '1px solid rgba(170,255,77,0.32)',
+                background: 'rgba(170,255,77,0.06)',
                 textDecoration: 'none',
               }}
             >
               <svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor" aria-hidden>
-                <circle cx="3" cy="13" r="1.6" />
-                <path d="M2 8.5a5.5 5.5 0 0 1 5.5 5.5H6a4 4 0 0 0-4-4V8.5z" />
-                <path d="M2 4.5A9.5 9.5 0 0 1 11.5 14H10A8 8 0 0 0 2 6V4.5z" />
+                <path d="M14 3H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1zM2 5l6 3.5L14 5v7H2V5z" />
               </svg>
-              Subscribe via RSS
+              Subscribe by email
             </a>
             <span style={{ fontFamily: 'var(--font-editorial)', fontStyle: 'italic', fontSize: 13, color: 'rgba(245,239,224,0.40)' }}>
               For people who&apos;d rather subscribe than scroll.
