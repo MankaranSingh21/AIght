@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { compileMDX } from "next-mdx-remote/rsc";
-import { getAllConcepts, getConceptSource } from "@/lib/learn";
+import { getAllConcepts, getConceptSource, DEFAULT_AUTHOR } from "@/lib/learn";
 import { createServiceClient } from "@/utils/supabase/service";
 import RagSimulation from "@/components/learn/RagSimulation";
 import McpSimulation from "@/components/learn/McpSimulation";
@@ -257,19 +257,26 @@ export default async function LearnConceptPage({ params }: Props) {
       .map((c) => ({ slug: c.slug, title: c.title }));
 
   const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.aightai.in";
+  const authorName = (frontmatter as { author?: string }).author ?? DEFAULT_AUTHOR.name;
+  const authorUrl = `${SITE_URL}${DEFAULT_AUTHOR.url}`;
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: frontmatter.title,
     description: frontmatter.tagline,
     image: `${SITE_URL}/learn/${slug}/opengraph-image`,
-    author: { "@type": "Organization", name: "AIght", url: SITE_URL },
+    author: {
+      "@type": "Person",
+      name: authorName,
+      url: authorUrl,
+    },
     publisher: {
       "@type": "Organization",
       name: "AIght",
       logo: { "@type": "ImageObject", url: `${SITE_URL}/favicon.ico` },
     },
     datePublished: conceptMeta?.publishedDate ?? new Date().toISOString(),
+    dateModified: conceptMeta?.lastUpdated ?? conceptMeta?.publishedDate ?? new Date().toISOString(),
     mainEntityOfPage: { "@type": "WebPage", "@id": `${SITE_URL}/learn/${slug}` },
   };
 
@@ -350,12 +357,44 @@ export default async function LearnConceptPage({ params }: Props) {
               fontSize: 18,
               color: "rgba(245,239,224,0.65)",
               lineHeight: 1.7,
-              marginBottom: 0,
+              marginBottom: 20,
               maxWidth: "54ch",
             }}
           >
             {frontmatter.tagline}
           </p>
+          {/* Byline */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+              fontFamily: "var(--font-mono)",
+              fontSize: 11,
+              letterSpacing: "0.08em",
+              color: "rgba(245,239,224,0.45)",
+            }}
+          >
+            <Link
+              href="/about"
+              style={{
+                color: "rgba(245,239,224,0.80)",
+                textDecoration: "none",
+                borderBottom: "1px solid rgba(170,255,77,0.30)",
+                paddingBottom: 1,
+              }}
+            >
+              {authorName}
+            </Link>
+            {conceptMeta?.lastUpdated && (
+              <>
+                <span aria-hidden style={{ opacity: 0.35 }}>·</span>
+                <time dateTime={conceptMeta.lastUpdated}>
+                  Updated {new Date(conceptMeta.lastUpdated).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                </time>
+              </>
+            )}
+          </div>
         </header>
 
         <hr

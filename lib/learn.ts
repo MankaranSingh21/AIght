@@ -14,6 +14,14 @@ export type ConceptMeta = {
   lastUpdated?: string;
   sources?: number;
   difficulty?: "beginner" | "intermediate" | "advanced";
+  author?: string;
+};
+
+// Solo project — every article is by Mankaran unless the MDX overrides it.
+export const DEFAULT_AUTHOR = {
+  name: "Mankaran Singh",
+  url: "/about",
+  bio: "Independent. Reads AI papers at midnight, writes about what actually matters.",
 };
 
 export function getAllConcepts(): ConceptMeta[] {
@@ -39,6 +47,7 @@ export function getAllConcepts(): ConceptMeta[] {
       lastUpdated: data.lastUpdated as string | undefined,
       sources: data.sources as number | undefined,
       difficulty: data.difficulty as ConceptMeta["difficulty"],
+      author: data.author as string | undefined,
     };
   });
 }

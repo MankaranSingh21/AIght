@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { createClient } from "@/utils/supabase/server";
 import ToolDetail, { type ToolDetailData, type UseCase, type Alternative } from "@/components/ToolDetail";
 import type { Tool, AlternativeEntry } from "@/utils/supabase/types";
+import { getAllConcepts } from "@/lib/learn";
 
 export const revalidate = 3600;
 
@@ -156,6 +157,18 @@ export default async function ToolPage({ params }: Props) {
       .map((a) => ({ slug: a.slug, name: nameMap.get(a.slug)!, reason: a.reason }));
   }
 
+  // Resolve concept slugs to titles so we can render a "Related concepts" block.
+  const conceptSlugs = tool.related_concepts ?? [];
+  const conceptLinks = conceptSlugs.length > 0
+    ? (() => {
+        const all = getAllConcepts();
+        return conceptSlugs
+          .map((s) => all.find((c) => c.slug === s))
+          .filter((c): c is NonNullable<typeof c> => Boolean(c))
+          .map((c) => ({ slug: c.slug, title: c.title, tagline: c.tagline }));
+      })()
+    : [];
+
   const toolDetail: ToolDetailData = {
     name: tool.name,
     slug: tool.slug,
@@ -167,7 +180,8 @@ export default async function ToolPage({ params }: Props) {
     useCases: getUseCases(tool.category),
     video_url: tool.video_url,
     learning_guide: tool.learning_guide,
-    related_concepts: tool.related_concepts ?? [],
+    related_concepts: conceptSlugs,
+    related_concept_links: conceptLinks,
     weaknesses: tool.weaknesses ?? [],
     status: tool.status ?? "stable",
     deprecated_reason: tool.deprecated_reason ?? null,

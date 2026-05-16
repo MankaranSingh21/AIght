@@ -41,6 +41,7 @@ export type ToolDetailData = {
   video_url?: string | null;
   learning_guide?: string | null;
   related_concepts?: string[];
+  related_concept_links?: { slug: string; title: string; tagline?: string }[];
   weaknesses?: string[];
   status?: "stable" | "beta" | "rising" | "deprecated";
   deprecated_reason?: string | null;
@@ -337,10 +338,15 @@ export default function ToolDetail({ tool }: { tool: ToolDetailData }) {
               </div>
 
               {hasScores && aightScore > 0 && (
-                <div className="flex flex-col items-center justify-center p-6 rounded-2xl bg-surface border border-emphasis shadow-[0_0_40px_rgba(170,255,77,0.05)]">
+                <Link
+                  href="/about/score"
+                  className="flex flex-col items-center justify-center p-6 rounded-2xl bg-surface border border-emphasis shadow-[0_0_40px_rgba(170,255,77,0.05)] no-underline hover:shadow-[0_0_56px_rgba(170,255,77,0.10)] transition-shadow"
+                  aria-label="How AIght scores work"
+                >
                   <span className="font-mono text-[10px] uppercase tracking-widest text-muted mb-1">AIght Score</span>
                   <span className="font-display text-5xl font-black text-accent">{aightScore}</span>
-                </div>
+                  <span className="font-mono text-[9px] uppercase tracking-widest text-muted mt-2 opacity-70">how it&apos;s scored →</span>
+                </Link>
               )}
             </div>
           </div>
@@ -363,12 +369,20 @@ export default function ToolDetail({ tool }: { tool: ToolDetailData }) {
                 transparency. This one isn&apos;t published yet because we&apos;re still using it long
                 enough to have an honest opinion. Slow scoring is the point.
               </p>
-              <Link
-                href="/tools"
-                className="font-mono text-[11px] uppercase tracking-[0.12em] text-accent hover:text-primary transition-colors no-underline"
-              >
-                Browse scored tools →
-              </Link>
+              <div className="flex flex-wrap gap-4 items-center">
+                <Link
+                  href="/about/score"
+                  className="font-mono text-[11px] uppercase tracking-[0.12em] text-accent hover:text-primary transition-colors no-underline"
+                >
+                  How scoring works →
+                </Link>
+                <Link
+                  href="/tools"
+                  className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted hover:text-primary transition-colors no-underline"
+                >
+                  Browse scored tools
+                </Link>
+              </div>
             </div>
           )}
 
@@ -541,6 +555,32 @@ export default function ToolDetail({ tool }: { tool: ToolDetailData }) {
                 ))}
               </div>
             )}
+          </section>
+        )}
+
+        {/* Related concepts — the reverse of the tool-mentions on /learn/[slug] */}
+        {tool.related_concept_links && tool.related_concept_links.length > 0 && (
+          <section className="flex flex-col gap-8 pt-20 border-t border-primary/5">
+            <div className="flex flex-col gap-2">
+              <span className="font-mono text-[10px] uppercase tracking-widest text-muted">Understand the tech behind it</span>
+              <h2 className="font-display text-3xl font-bold text-primary tracking-tight">Related concepts</h2>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {tool.related_concept_links.map((c) => (
+                <Link
+                  key={c.slug}
+                  href={`/learn/${c.slug}`}
+                  className="p-6 rounded-xl bg-surface/30 border border-primary/5 hover:border-accent/30 transition-all no-underline flex flex-col gap-2 group"
+                >
+                  <span className="font-mono text-[9px] uppercase tracking-widest text-muted">Concept</span>
+                  <span className="font-sans text-lg font-bold text-primary group-hover:text-accent transition-colors">{c.title}</span>
+                  {c.tagline && (
+                    <p className="font-editorial text-sm text-secondary m-0 italic leading-relaxed line-clamp-2">{c.tagline}</p>
+                  )}
+                </Link>
+              ))}
+            </div>
           </section>
         )}
 

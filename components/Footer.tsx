@@ -12,6 +12,8 @@ const NAV_LINKS = [
   { href: "/use-cases",     label: "Use Cases"               },
   { href: "/signal",        label: "Signal Archive"          },
   { href: "/about",         label: "About AIght"             },
+  { href: "/about/score",   label: "The AIght Score"         },
+  { href: "/changelog",     label: "Changelog"               },
   { href: "/support",       label: "Contact / Support"       },
   { href: "/privacy",       label: "Privacy Policy"          },
   { href: "https://github.com/MankaranSingh21/AIght", label: "GitHub" },
