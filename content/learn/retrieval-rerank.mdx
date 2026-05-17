@@ -1,0 +1,80 @@
+---
+title: "Retrieval & Reranking"
+tagline: "Why the document your RAG system retrieves first is rarely the document you want."
+readTime: "5 min read"
+slug: "retrieval-rerank"
+date: "2026-05-17"
+lastUpdated: "2026-05-17"
+related: ["rag", "embeddings", "vector-databases"]
+prerequisites: ["rag", "embeddings"]
+successors: ["agents"]
+exemplar_tools: ["perplexity", "claude", "chatgpt"]
+key_fields: ["software-engineering", "law-legal", "medicine-healthcare", "education-teaching"]
+misconceptions:
+  - "Vector search returns the most relevant document."
+  - "Reranking is optional polish."
+  - "Better embeddings make rerankers unnecessary."
+difficulty: "intermediate"
+sources: 4
+---
+
+<Misconception think="Vector search just returns the most relevant document.">
+Vector search returns the document with the closest embedding — which is
+not the same thing. Embeddings compress meaning into a few hundred
+numbers and lose nuance. A query about "the side effects of metformin in
+elderly patients" might rank a generic metformin overview above the
+exact paragraph you needed, because the overview has more lexical
+overlap with the embedding model's training prior. Reranking exists
+because retrieval is imprecise.
+</Misconception>
+
+A real RAG system has two retrieval stages, not one. First, *retrieve* a
+broad candidate set — say the top 50 documents by vector similarity.
+Then, *rerank* those candidates with a more expensive model that
+actually reads the query and the document together.
+
+The first stage is cheap and approximate. The second is expensive and
+precise. You can't afford to run the expensive model over a million
+documents, but you can afford to run it over 50.
+
+## Why two stages
+
+Embedding models encode the query and document *separately*, then
+compare vectors. They never see them side by side. That makes them fast
+but blind to subtle interactions — like whether a document actually
+answers a question vs. just mentions the same terms.
+
+Rerankers (cross-encoders) take the query and document *together* as
+input and produce a relevance score. They're 10–100× slower per pair,
+but dramatically more accurate.
+
+## The pattern
+
+- Embed the query. Retrieve top 50 documents from the vector store.
+- Feed each (query, document) pair into a reranker. Get 50 scores.
+- Keep the top 3–10 by reranker score. Send those to the LLM.
+
+The reranker can be a small dedicated model (Cohere Rerank, BGE
+Reranker) or a prompted LLM call with a scoring schema.
+
+## Where it earns its keep
+
+- **Legal/medical search.** When the user's question and the answer use
+  different vocabulary, embeddings drift but rerankers catch the match.
+- **Long documents.** Embedding a 50-page PDF as a single vector
+  smudges everything; reranking chunks recovers precision.
+- **Ambiguous queries.** "Returns policy" might mean tax returns or
+  product returns. Rerankers handle the disambiguation better.
+
+## Where it doesn't help
+
+If your retrieval is already poor — wrong chunks, stale index,
+mismatched embedding model — reranking the wrong 50 documents won't
+save you. Reranking polishes a good candidate set; it can't manufacture
+one.
+
+## What to read next
+
+**RAG** is the broader retrieval-augmented architecture. **Embeddings**
+is the underlying primitive that the first-stage retrieval depends on.
+**Vector databases** is where those embeddings live.

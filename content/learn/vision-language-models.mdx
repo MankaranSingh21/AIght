@@ -1,0 +1,72 @@
+---
+title: "Vision-Language Models"
+tagline: "How CLIP and its descendants taught text and images to live in the same coordinate system."
+readTime: "5 min read"
+slug: "vision-language-models"
+date: "2026-05-17"
+lastUpdated: "2026-05-17"
+related: ["multimodal", "embeddings", "diffusion"]
+prerequisites: ["embeddings", "multimodal"]
+successors: ["diffusion"]
+exemplar_tools: ["midjourney", "adobe-firefly", "leonardo-ai", "claude"]
+key_fields: ["graphic-design-visual-arts", "medicine-healthcare", "film-video-production", "pharmacy-drug-discovery", "environmental-science-climate"]
+misconceptions:
+  - "Vision-language models see images the way humans do."
+  - "Image embeddings are universal."
+  - "VLMs can do anything text models can plus images."
+difficulty: "intermediate"
+sources: 5
+---
+
+<Misconception think="VLMs see images the way humans do.">
+They process pixels into patches, embed each patch into a vector, and
+attend over the patches the same way they attend over text tokens. The
+"seeing" is a learned correspondence — pictures of cats end up near
+the word "cat" in the embedding space because the training data put
+them together. Edge cases the training data missed produce confidently
+wrong descriptions.
+</Misconception>
+
+In 2021, OpenAI's CLIP paper showed something powerful: train an image
+encoder and a text encoder jointly so that matching (image, caption)
+pairs land near each other in the same embedding space. Now you can
+search images with text queries, or vice versa, without per-class
+labels.
+
+Every modern image generator, every vision-aware chat model, and every
+image search engine uses some descendant of this idea.
+
+## The trick
+
+Two encoders. One eats images, one eats text. Both produce vectors of
+the same dimension. The training objective: vectors for matching
+(image, caption) pairs should be close; non-matching pairs should be
+far apart. Train on hundreds of millions of (image, caption) pairs
+scraped from the web.
+
+The result: a shared semantic space where you can compare images and
+text directly.
+
+## What this unlocks
+
+- **Zero-shot classification.** Want to know if an image contains a
+  cat? Embed the image, embed the word "cat," compute distance. No
+  training data needed.
+- **Image-conditioned generation.** Diffusion models use CLIP text
+  embeddings as steering signals.
+- **Vision in chat models.** GPT-4V, Claude with vision, Gemini —
+  they're transformers that take image-token sequences (produced by a
+  CLIP-style encoder) alongside text tokens.
+
+## What it doesn't fix
+
+- **Counting.** "How many people are in this image?" remains hard.
+- **Spatial reasoning.** "What's to the left of the cat?" — patchy.
+- **Text in images.** Reading text within images was added as a
+  separate capability (OCR-style).
+
+## What to read next
+
+**Multimodal** is the broader umbrella. **Embeddings** is the
+underlying primitive. **Diffusion** is the generative half of the
+vision-language ecosystem.

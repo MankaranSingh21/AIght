@@ -1,0 +1,62 @@
+---
+title: "Reasoning Models"
+tagline: "What changed when models started thinking before they answered."
+readTime: "6 min read"
+slug: "reasoning-models"
+date: "2026-05-17"
+lastUpdated: "2026-05-17"
+related: ["chain-of-thought", "rlhf", "scaling-laws"]
+prerequisites: ["chain-of-thought", "rlhf"]
+successors: ["agents"]
+exemplar_tools: ["chatgpt", "claude", "deepseek"]
+key_fields: ["physics-engineering", "finance-economics", "medicine-healthcare", "software-engineering"]
+misconceptions:
+  - "Reasoning models are 'actually intelligent' now."
+  - "More thinking time = better answer."
+  - "Reasoning models are good at every task."
+difficulty: "intermediate"
+sources: 6
+---
+
+<Misconception think="Reasoning models are actually thinking the way you do.">
+What they're doing is generating a long internal monologue before the
+final answer, trained with RL to produce monologues that lead to correct
+answers on verifiable tasks (math, code, logic). The monologue is real
+token-by-token generation — it's just that you don't see most of it. The
+"thinking" is more compute, not a different mechanism.
+</Misconception>
+
+In late 2024, OpenAI released `o1` — a model trained to generate long
+chains of internal reasoning before its visible answer. DeepSeek
+followed with R1, Anthropic with extended thinking modes. The category
+is "reasoning models" — and on math, code, and multi-step logic
+benchmarks, they leapfrog the older generation.
+
+## What's different
+
+Standard models generate the answer directly. Reasoning models generate
+a private chain-of-thought first (often thousands of tokens), then a
+short user-facing answer. The chain is invisible to the user but
+visible to the training reward — the model is RL'd against verifiable
+problems (the answer is right or wrong, no preference judging needed).
+
+## What it costs
+
+- **Latency.** A reasoning model can take 10–60s per query vs. under 2s for
+  a standard chat. Not a fit for interactive UIs.
+- **Tokens.** You pay for the hidden reasoning tokens. A "simple" query
+  can cost 10× more.
+- **Diminishing returns.** Beyond ~10k thinking tokens, accuracy
+  plateaus. Capping helps.
+
+## Where it shines
+
+Hard math, competitive programming, complex contract analysis,
+multi-step diagnosis, anything with a verifiable answer. Less useful
+for open-ended creative work or simple lookups.
+
+## What to read next
+
+**Chain-of-thought** is the prompt-time precursor. **RLHF** is the
+post-training that taught models to follow instructions; reasoning
+models extend that with RL on verifiable tasks.

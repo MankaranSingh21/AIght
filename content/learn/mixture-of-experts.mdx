@@ -1,0 +1,57 @@
+---
+title: "Mixture of Experts"
+tagline: "How modern models pretend to be huge while doing the work of something smaller."
+readTime: "5 min read"
+slug: "mixture-of-experts"
+date: "2026-05-17"
+lastUpdated: "2026-05-17"
+related: ["transformers", "scaling-laws", "training"]
+prerequisites: ["transformers", "scaling-laws"]
+successors: ["fine-tuning"]
+exemplar_tools: ["deepseek", "claude", "gemini"]
+key_fields: ["software-engineering", "physics-engineering"]
+misconceptions:
+  - "A 670B MoE model uses 670B parameters per token."
+  - "More experts always means better quality."
+  - "MoE replaces dense models."
+difficulty: "intermediate"
+sources: 4
+---
+
+<Misconception think="A 670B MoE model uses 670B parameters per token.">
+A typical MoE routes each token through only 2 of, say, 64 experts. So a
+670B-parameter MoE might activate ~40B per token. The headline number is
+the capacity; the per-token compute is much smaller. This is the trick —
+huge model, cheap-ish inference.
+</Misconception>
+
+A mixture-of-experts (MoE) model splits each feed-forward block into N
+"experts." A small router network picks which experts to send each token
+through. Only the chosen experts compute; the rest sit idle.
+
+You get the benefit of a vast parameter pool — different experts can
+specialise on different patterns — without paying full compute per
+token.
+
+## Why it works
+
+- **Capacity without cost.** Total parameters grow without proportional
+  compute increase. DeepSeek-V3 has 670B parameters but activates ~37B
+  per token.
+- **Implicit specialisation.** Experts naturally end up handling
+  different domains: code, math, multilingual, etc. — without anyone
+  designing this.
+
+## Where it bites
+
+- **Memory.** All experts must live in GPU memory; activating a few
+  doesn't save VRAM, only FLOPs.
+- **Routing instability.** Bad routing wastes capacity; training MoEs is
+  finicky.
+- **Inference batching.** Different tokens route to different experts,
+  hurting batch efficiency.
+
+## What to read next
+
+**Scaling laws** explain why bigger keeps working. **Quantization** and
+**distillation** are the alternative paths to capability-per-dollar.

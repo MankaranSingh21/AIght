@@ -1,0 +1,60 @@
+---
+title: "Model Collapse"
+tagline: "What happens when models train on text written by other models — recursively."
+readTime: "4 min read"
+slug: "model-collapse"
+date: "2026-05-17"
+lastUpdated: "2026-05-17"
+related: ["training", "synthetic-data", "scaling-laws"]
+prerequisites: ["training", "scaling-laws"]
+successors: ["synthetic-data"]
+exemplar_tools: ["chatgpt", "claude"]
+key_fields: ["environmental-science-climate", "history-humanities", "journalism-media"]
+misconceptions:
+  - "Synthetic data is always toxic to training."
+  - "We've already run out of training text."
+  - "Model collapse is theoretical."
+difficulty: "intermediate"
+sources: 4
+---
+
+<Misconception think="Synthetic data ruins training, full stop.">
+Carefully curated synthetic data — verified by humans or by another
+strong model — works fine and is used by every frontier lab. Model
+collapse describes what happens with *uncurated* generation-to-generation
+loops, where each generation amplifies the previous one's biases and
+narrows the distribution. The killer isn't synthetic data; it's
+unfiltered synthetic data.
+</Misconception>
+
+Model collapse is the failure mode where each generation of a model,
+trained on the output of the previous generation, gradually loses
+variety. Rare patterns disappear; the distribution narrows. After a few
+generations, the model can produce confident, fluent text that has lost
+contact with the original data's diversity.
+
+## Why it happens
+
+Models are probability distributions. Sampling from them tends to draw
+from the high-probability mass. Train on those samples, and the next
+model's distribution shifts toward the high-mass region. Repeat, and
+the tails — the rare correct cases, the weird-but-true facts — vanish.
+
+## Why it matters now
+
+The web is filling up with AI-generated text. The next generation of
+models will train on it whether labs want to or not. Distinguishing
+human-written text from model-generated text is the live problem.
+
+## What labs do
+
+- Heavy filtering of training data — model detectors, source whitelists.
+- Synthetic data only where it's verified (math, code, structured tasks).
+- Curated human-written corpora (books, news archives, expert
+  communities).
+- Watermarking attempts (still nascent).
+
+## What to read next
+
+**Synthetic data** is the broader topic. **Watermarking** is one attempt
+at making AI-generated text detectable.

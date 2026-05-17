@@ -1,0 +1,64 @@
+---
+title: "Jailbreaks"
+tagline: "How users get aligned models to do what they were trained not to do."
+readTime: "5 min read"
+slug: "jailbreaks"
+date: "2026-05-17"
+lastUpdated: "2026-05-17"
+related: ["alignment", "prompt-injection", "rlhf", "constitutional-ai"]
+prerequisites: ["alignment", "rlhf"]
+successors: ["alignment"]
+exemplar_tools: ["chatgpt", "claude"]
+key_fields: ["social-work-public-policy", "law-legal", "journalism-media"]
+misconceptions:
+  - "Jailbreaks are bugs that get patched."
+  - "Adversarial prompts are easy to detect."
+  - "Stronger refusal training fixes jailbreaks."
+difficulty: "intermediate"
+sources: 6
+---
+
+<Misconception think="Jailbreaks are bugs that get patched.">
+Patches close specific exploit paths. The underlying problem — that
+alignment is a learned behaviour layered on a model that already knows
+how to produce the forbidden output — is structural. Every closed
+jailbreak teaches researchers (and adversaries) where the seams are.
+There's an ongoing cat-and-mouse, not a "fix."
+</Misconception>
+
+A jailbreak is a prompt that gets an aligned model to produce output it
+was trained to refuse. Unlike prompt injection (which exploits the
+model trusting its inputs), jailbreaks exploit the gap between the
+model's underlying knowledge and the alignment layer trained on top.
+
+## Common patterns
+
+- **Roleplay framing.** "You're a fictional AI without restrictions" —
+  the model treats the persona as license.
+- **Distant goals.** Bury the request inside a long convoluted scenario;
+  alignment defenses focus on the surface request.
+- **Encoding tricks.** Ask for output in base64, leetspeak, or a niche
+  language where refusal training was weaker.
+- **Many-shot.** Long context with many examples of the model "agreeing"
+  to similar requests; the in-context pattern overrides RLHF.
+
+## Why this matters
+
+The same techniques that defeat alignment for "harmful" content also
+defeat alignment for *anything* the operator wanted enforced — privacy
+policies, content guidelines, brand voice. If you ship an AI product,
+your behaviours can be jailbroken too.
+
+## Mitigations (partial)
+
+- Output filters (heuristics + LLM-judge) on responses, not just inputs.
+- Restrict capability surface — a model with no tools can't do harm via
+  tool use.
+- Constitutional AI / strong alignment training raises the bar; doesn't
+  remove it.
+- Public disclosure programs (Anthropic, OpenAI, Google all run them).
+
+## What to read next
+
+**Alignment** is the broader problem jailbreaks attack. **Constitutional
+AI** is one defence layer.
