@@ -1,0 +1,91 @@
+---
+title: "In-Context Learning"
+tagline: "How models 'learn' from examples in the prompt — without changing a single weight."
+readTime: "6 min read"
+slug: "in-context-learning"
+date: "2026-05-17"
+lastUpdated: "2026-05-17"
+related: ["prompt-engineering", "chain-of-thought", "fine-tuning"]
+prerequisites: ["tokenization", "attention"]
+successors: ["chain-of-thought", "fine-tuning"]
+exemplar_tools: ["chatgpt", "claude", "gemini"]
+key_fields: ["education-teaching", "creative-writing-literature", "marketing-advertising"]
+misconceptions:
+  - "The model is 'learning' from your examples."
+  - "More examples in the prompt is always better."
+  - "Examples need to be correct to help."
+difficulty: "beginner"
+sources: 5
+---
+
+<Misconception think="The model is learning from your examples.">
+It isn't, in the technical sense — no weights change, no training
+happens. What happens is that the examples bias the model's existing
+distribution toward the kind of output they exemplify. The capability
+was already in the model; the examples just point at the part of it
+you want. People started calling this "in-context learning" because
+the model behaves *as if* it learned, even though it's pattern-matching
+within a single forward pass.
+</Misconception>
+
+This is one of the most surprising things about large language models:
+if you show the model 3–5 examples of the task you want, in the prompt,
+it usually figures out the pattern and applies it to your new input —
+without any retraining, without any setup.
+
+```
+Translate to French:
+- The cat is on the mat. → Le chat est sur le tapis.
+- I love this song. → J'adore cette chanson.
+- The meeting starts at 3. →
+```
+
+The model produces a reasonable French translation, not because it was
+trained on this specific instruction, but because it pattern-matched
+inside the prompt itself. This is in-context learning.
+
+## When it works well
+
+- **Format-locked tasks.** Outputting JSON in a specific shape,
+  classifying emails into three categories, rewriting in a particular
+  voice.
+- **Pattern-rich tasks.** Translation, code style, citation formatting.
+- **Few-shot reasoning.** Showing 2–3 chain-of-thought examples often
+  unlocks step-by-step reasoning the model wouldn't do otherwise.
+
+## When it doesn't
+
+- **Novel domains the model hasn't seen.** Examples can't teach what
+  isn't already in the weights.
+- **Very long, repetitive examples.** Past about 5–10 examples, you get
+  diminishing returns — and the model starts treating them as part of
+  the context distraction rather than the task.
+- **Wrong-confident examples.** If your examples contain errors the
+  model will *cheerfully reproduce them*. The model has no error
+  checking on your demonstration.
+
+## The strange part
+
+In-context learning works without gradient descent. Mechanistically,
+the attention layers do something like an implicit gradient step on
+the fly. We don't fully understand this yet — it's one of the active
+research areas in interpretability. The fact that a static set of
+weights can simulate "learning" from a handful of examples is still,
+honestly, weird.
+
+## Why this matters for your work
+
+Before fine-tuning a model for a custom format, *always* try in-context
+examples first. It costs nothing to set up, costs a few hundred extra
+tokens per prompt to run, and is often 90% as good as fine-tuning.
+
+For evaluation, watch out: a model that does well on a benchmark with
+5-shot examples may do badly with zero. The published "the model
+scores X" number is often the best of several prompt setups.
+
+## What to read next
+
+**Prompt engineering** is the practical craft built on in-context
+learning. **Chain-of-thought** is the specific in-context pattern that
+unlocks reasoning. **Fine-tuning** is what you do when in-context
+learning has hit its ceiling.

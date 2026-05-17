@@ -1,0 +1,101 @@
+---
+title: "DPO"
+tagline: "The cheaper, often-as-good RLHF alternative — and why most labs quietly moved to it."
+readTime: "6 min read"
+slug: "dpo"
+date: "2026-05-17"
+lastUpdated: "2026-05-17"
+related: ["rlhf", "fine-tuning", "alignment"]
+prerequisites: ["rlhf", "fine-tuning"]
+successors: ["alignment", "constitutional-ai"]
+exemplar_tools: ["chatgpt", "claude"]
+key_fields: ["software-engineering", "physics-engineering"]
+misconceptions:
+  - "DPO is just RLHF without the RL."
+  - "DPO replaced RLHF entirely."
+  - "DPO doesn't need preference data."
+difficulty: "intermediate"
+sources: 6
+---
+
+<Misconception think="DPO is just RLHF without the RL.">
+The cleaner framing is: DPO is RLHF where the reward model and the
+language model are the same model. RLHF trains an external reward
+model and then optimizes the language model against it. DPO derives a
+loss function that lets you train the language model directly on the
+preference data, with no separate reward model in between. The
+optimization target is mathematically related but the implementation is
+much simpler.
+</Misconception>
+
+In 2023 a Stanford paper (Rafailov et al.) showed something
+surprising: you don't need the full RLHF machinery — separate reward
+model, PPO, the works — to align a language model on preference data.
+You can derive a loss function that optimizes the language model
+directly on (preferred, rejected) pairs.
+
+They called it **Direct Preference Optimization**. The math is short.
+The training code is short. The results, for typical alignment work,
+are competitive with or better than RLHF — and ~10× cheaper to run.
+
+This is why basically every lab post-2023 either uses DPO or one of
+its many descendants (IPO, KTO, ORPO, SimPO, etc.).
+
+## What you need
+
+DPO trains on **preference pairs**. Each pair is:
+
+- A prompt
+- A "chosen" answer (the better one)
+- A "rejected" answer (the worse one)
+
+That's it. No separate reward model. No RL loop. No reward hacking
+(or at least, much less of it). You feed pairs through a loss that
+nudges the model toward the chosen answer and away from the rejected.
+
+A reference model — usually the SFT-trained model from RLHF stage 1
+— is kept frozen as an anchor, so the trained model doesn't drift
+too far from sensible language.
+
+## Why labs switched
+
+**Cost.** PPO requires keeping multiple copies of large models in
+memory and running RL rollouts that involve the language model
+generating samples mid-training. DPO is a standard supervised loss
+on pre-collected pairs. Memory and compute drop dramatically.
+
+**Stability.** PPO training is notoriously finicky — KL coefficient,
+clip range, value loss balance. DPO has fewer knobs and they're more
+forgiving.
+
+**Quality.** For most alignment tasks (instruction-following, safety
+behaviors, style), DPO matches or exceeds RLHF. The original paper
+showed this on Anthropic's HH-RLHF dataset; subsequent reproductions
+confirmed it.
+
+## Where DPO doesn't help
+
+For *reasoning* — the kind of multi-step problem solving that needs
+the model to learn from many trial-and-error attempts — RL-style
+training is making a comeback (RLAIF, RLVR, "thinking" models). DPO
+optimizes against fixed preferences; some problems need exploration
+the data didn't include.
+
+## Why this matters for your work
+
+You probably won't run DPO yourself unless you're fine-tuning models.
+Where this surfaces practically: if you're picking between fine-tuning
+services in 2026, DPO-based ones are cheaper and easier to iterate on.
+Specifying preference pairs is also conceptually clearer than scoring
+single answers — easier for your team to produce good training data.
+
+For evaluation: when a model card says "trained with DPO" or "trained
+with RLHF," the practical differences are small enough that you
+should evaluate on your own task, not on the training acronym.
+
+## What to read next
+
+**RLHF** is the older, fuller method. **Constitutional AI** is a
+related approach where the model judges itself instead of needing
+human preference data. **Fine-tuning** is the broader topic
+DPO/RLHF/etc. are specific techniques within.

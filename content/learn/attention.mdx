@@ -1,0 +1,86 @@
+---
+title: "Attention"
+tagline: "The single mechanism behind every model since 2017 — and the one that quietly burns most of the compute."
+readTime: "8 min read"
+slug: "attention"
+date: "2026-05-17"
+lastUpdated: "2026-05-17"
+related: ["transformers", "tokenization", "context-windows", "kv-cache"]
+prerequisites: ["tokenization", "embeddings"]
+successors: ["transformers", "kv-cache", "context-windows"]
+exemplar_tools: ["chatgpt", "claude", "cursor"]
+key_fields: ["software-engineering", "physics-engineering", "biology"]
+misconceptions:
+  - "Attention is the model 'paying attention' in a human sense."
+  - "Bigger context windows are free."
+  - "Attention only looks backward."
+difficulty: "intermediate"
+sources: 6
+---
+
+<Misconception think="The model is 'paying attention' the way you do.">
+Attention is a matrix multiplication. Each token, represented as a vector,
+gets compared against every other token in the sequence. The comparison
+yields a weight; the weighted sum of the other tokens becomes the new
+representation of this token. There's no awareness, no salience, no
+"deciding to focus." There's just a function: how much should each token
+influence each other token, given what we've learned.
+</Misconception>
+
+In 2017 a paper called *Attention Is All You Need* did something
+unfashionable: it threw out recurrence (the dominant architecture for
+sequences at the time) and replaced it with a single mechanism that lets
+every token in a sequence look at every other token in parallel. That
+mechanism is attention, and every model you've heard of — GPT, Claude,
+Gemini, Llama — is built around it.
+
+## How it works (the short version)
+
+For each token, the model computes three vectors: a **query** (Q), a
+**key** (K), and a **value** (V). The query asks "who am I, and what am
+I looking for?" The keys answer "this is what I have to offer." The
+values are the actual content.
+
+For every pair of tokens, you compute a similarity score between the
+query of one and the key of the other (a dot product, then a softmax to
+turn it into a probability distribution). You then take a weighted
+average of the values, with those probabilities as weights. The result
+becomes the new representation of the original token — now informed by
+which other tokens were relevant.
+
+Each token in the sequence does this with every other token, in
+parallel. That parallelism is what made attention beat recurrence: GPUs
+love parallel work, and recurrence forces you to wait for the previous
+step.
+
+## The cost
+
+The math is `O(n²)` in sequence length. Every token attends to every
+other token. Doubling the input length quadruples the attention compute.
+This is why long context windows are technically possible but
+operationally expensive — and why everyone is working on cheaper
+approximations (linear attention, sparse attention, sliding-window
+attention, the **KV cache** that lets you amortize compute across
+generation steps).
+
+## Why this matters for your work
+
+If you've ever wondered why long-document analysis is slower and more
+expensive than the model card suggests, this is the reason. The
+advertised price-per-token is roughly fair for short inputs and quietly
+disastrous for long ones. Multi-turn chats accumulate context, and the
+attention compute grows with it.
+
+When a model "forgets" something from earlier in a conversation, it's not
+the architecture failing — it's that attention weights for that earlier
+content got diluted by everything that came after. Recent models work
+around this with retrieval and caching tricks, but the underlying
+quadratic shape hasn't gone away.
+
+## What to read next
+
+**Transformers** are stacks of attention layers with some glue (feed-forward
+networks, layer normalisation, residual connections). **KV cache** is the
+trick that makes generation feasible despite the quadratic cost. **Context
+windows** are the practical limit on how much you can fit through attention
+at once.

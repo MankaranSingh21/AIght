@@ -1,0 +1,107 @@
+---
+title: "Function Calling"
+tagline: "The JSON-shaped API that turned chat models into clients of the real world."
+readTime: "6 min read"
+slug: "function-calling"
+date: "2026-05-17"
+lastUpdated: "2026-05-17"
+related: ["structured-output", "agents", "mcp"]
+prerequisites: ["structured-output"]
+successors: ["agents", "mcp"]
+exemplar_tools: ["chatgpt", "claude", "cursor"]
+key_fields: ["software-engineering", "sales-business-development", "finance-economics", "law-legal"]
+misconceptions:
+  - "The model actually calls the function."
+  - "Function calling requires a special model."
+  - "More tools always make the model smarter."
+difficulty: "intermediate"
+sources: 5
+---
+
+<Misconception think="The model actually calls the function.">
+It doesn't. The model outputs a JSON object naming the function and its
+arguments. *Your* code then runs the function and sends the result back
+to the model. Every model in 2026 that "calls tools" is really doing
+structured text generation; the wiring lives in your application. This
+matters because it means the model is never network-aware, never reads
+real-time data on its own, and never knows whether your function
+succeeded — until you tell it.
+</Misconception>
+
+Function calling (also called "tool use" by Anthropic and others) is
+the API shape that lets a model do things in the world. You give the
+model a list of functions it can call, with their signatures. The model
+either answers in plain text or emits a structured "call this function
+with these arguments" payload. You run the function. You feed the
+result back. The model continues from there.
+
+This is the foundation of every modern AI agent. Without it, models
+could only produce text. With it, they can read your calendar, search
+the web, query your database, and chain those into useful work.
+
+## How the wire format looks
+
+```json
+{
+  "tool_calls": [{
+    "name": "search_papers",
+    "arguments": {
+      "query": "alphafold structural variations",
+      "year_from": 2024
+    }
+  }]
+}
+```
+
+You execute `search_papers({...})`, get back results, and send them
+back in a follow-up message with `"role": "tool"`. The model receives
+the results and continues — either with another tool call or with a
+final answer to the user.
+
+## What makes it work or not
+
+**Clear function signatures.** The model uses the function name +
+parameter descriptions to decide whether to call it. `search_papers`
+with a `description: "Search arxiv for AI research papers"` is much
+more likely to be called correctly than `s` with no description.
+
+**Few tools, well-named.** Three tools you've designed clearly will
+beat fifteen tools with overlapping purposes. Models start
+hallucinating function names and arguments when the menu is too long.
+
+**Strict JSON schemas.** Some providers offer "strict mode" that
+enforces the schema at decoding time. When available, use it. The
+model is constitutionally unable to produce invalid JSON.
+
+**Letting the model say "I don't need a tool."** If every prompt feels
+to the model like it must call a tool, accuracy drops. Always let
+"answer directly" be a valid response.
+
+## Where it goes wrong
+
+- **Hallucinated arguments.** The model invents plausible-looking
+  values for fields it doesn't have. Always validate before executing.
+- **Tool-call loops.** Without guardrails, agents can call the same
+  tool 50 times in a row. Cap the budget.
+- **Stale results.** If your tool returns "no results," the model
+  often *retries with a slightly different query* — sometimes
+  productively, sometimes not.
+
+## Why this matters for your work
+
+If you've ever wondered how AI tools like Cursor or Claude Desktop
+"do things" — read files, run shell commands, edit your code — it's
+this. The model produces a tool call; the host application executes
+it. The model's actual reach into the world is exactly the surface
+area of the tools the host gives it.
+
+If you're building anything yourself, start with one tool, get the
+loop solid, then add more. Most production agents fail because their
+designers wired up 10 tools before tightening the prompt around one.
+
+## What to read next
+
+**Structured output** is the broader skill function calling depends on.
+**Agents** are what you get when you give a model tools and let it
+choose what to call. **MCP** (Model Context Protocol) is the open
+standard that lets the same tool surface work across hosts.

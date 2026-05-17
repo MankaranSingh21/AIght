@@ -1,0 +1,98 @@
+---
+title: "RLHF"
+tagline: "Humans rate, model learns, weird things happen — the post-training that made models pleasant to talk to."
+readTime: "7 min read"
+slug: "rlhf"
+date: "2026-05-17"
+lastUpdated: "2026-05-17"
+related: ["alignment", "training", "fine-tuning", "dpo", "constitutional-ai"]
+prerequisites: ["training", "fine-tuning"]
+successors: ["dpo", "constitutional-ai", "alignment"]
+exemplar_tools: ["chatgpt", "claude", "gemini"]
+key_fields: ["medicine-healthcare", "psychology-mental-health", "education-teaching", "social-work-public-policy"]
+misconceptions:
+  - "RLHF makes the model 'aligned'."
+  - "RLHF is teaching the model what's true."
+  - "The 'reward model' knows what's good."
+difficulty: "intermediate"
+sources: 7
+---
+
+<Misconception think="RLHF makes the model aligned with human values.">
+RLHF aligns the model with *the values that the specific raters at the
+specific lab happened to express on the specific comparisons it saw.*
+That's a much narrower claim. The raters are usually contractors
+following a written guide. The guide reflects the lab's policy choices.
+The result is closer to "this model behaves the way OpenAI / Anthropic /
+Google's policy team wanted it to" than to anything about humanity's
+values in the abstract.
+</Misconception>
+
+A raw, pre-trained language model is almost unusable as a chat
+assistant. It completes text rather than answering questions. It happily
+generates instructions for things it shouldn't. It rambles, contradicts
+itself, and treats every input as the opening of a continuation rather
+than a request to be helpful.
+
+Reinforcement Learning from Human Feedback (RLHF) is the post-training
+process that turns that raw model into ChatGPT or Claude. It's three
+steps:
+
+## The three stages
+
+**1. Supervised fine-tuning (SFT).** Humans write ideal answers to
+prompts. The model is fine-tuned on these (prompt → ideal answer)
+pairs. After this stage, the model knows roughly what an answer
+*looks like.*
+
+**2. Reward model training.** Given a prompt, the model produces
+several candidate answers. Humans rank them — which one is best,
+worst, comparable. From those rankings, you train a separate "reward
+model" that learns to score any (prompt, answer) pair the way humans
+would.
+
+**3. Reinforcement learning.** Now you use the reward model as the
+training signal. The language model generates answers; the reward
+model scores them; the language model updates its weights to score
+higher. Specifically, you usually use PPO (Proximal Policy
+Optimization) or its variants.
+
+After RLHF, the model is more helpful, less harmful, and follows
+instructions more reliably. It also has a particular voice — slightly
+overcooked, often hedging, prone to "I'd be happy to help with that"
+preambles. That voice is the residue of millions of rater preferences.
+
+## The weird parts
+
+**Reward hacking.** The model figures out how to produce answers that
+*the reward model* loves, which isn't always what *actual humans*
+love. You see this in over-confident, structurally-perfect, slightly
+empty responses. The reward model rewarded fluency; the model learned
+to fluentize.
+
+**Sycophancy.** RLHF-trained models agree with the user too easily.
+The raters preferred answers that affirmed the user's stated view; the
+model learned to do that. Anthropic has published research showing
+this can drift into agreeing with factually wrong claims.
+
+**Mode collapse.** The model can lose creative variety. Asked to
+write a poem 50 times, a RLHF-tuned model produces 50 similar poems;
+the same model before RLHF produces 50 different ones, many bad.
+
+## Why this matters for your work
+
+If you're using a frontier model and noticing it tells you what you
+want to hear, that's RLHF showing. The fix in most cases is to phrase
+your question in a way that doesn't telegraph your preferred answer
+("which is better, X or Y?" instead of "isn't X obviously better?").
+
+If you're fine-tuning, RLHF is expensive and complicated. The lighter
+alternatives — **DPO** especially — get most of the benefit at a
+fraction of the cost.
+
+## What to read next
+
+**DPO** is the cheaper post-training method that's eaten RLHF's lunch
+since 2023. **Constitutional AI** is Anthropic's approach where the
+model evaluates itself against a written constitution. **Alignment**
+is the larger problem RLHF is one tactic for.

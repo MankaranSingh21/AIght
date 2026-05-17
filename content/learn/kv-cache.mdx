@@ -1,0 +1,99 @@
+---
+title: "KV Cache"
+tagline: "Why long conversations are cheaper than they look — and the reason your API bill behaves the way it does."
+readTime: "5 min read"
+slug: "kv-cache"
+date: "2026-05-17"
+lastUpdated: "2026-05-17"
+related: ["attention", "context-windows", "transformers"]
+prerequisites: ["attention", "transformers"]
+successors: ["context-windows"]
+exemplar_tools: ["chatgpt", "claude", "cursor"]
+key_fields: ["software-engineering", "physics-engineering"]
+misconceptions:
+  - "Every token in a conversation costs the same to process."
+  - "The KV cache is a regular cache that gets reused across requests."
+  - "Bigger cache = more memory always wins."
+difficulty: "intermediate"
+sources: 4
+---
+
+<Misconception think="The KV cache gets reused across different conversations.">
+It usually doesn't, on most providers. The KV cache is per-request: it
+saves work *within* a single generation, by remembering the key and
+value vectors for tokens you've already processed. Across requests, it's
+reset by default. Some providers (Anthropic's prompt caching, OpenAI's
+prompt caching) now offer explicit cross-request reuse for *specific*
+parts of a prompt — same system prompt, same long document — but that's
+an opt-in feature, not the default.
+</Misconception>
+
+Generating a long answer with a transformer is — without optimization
+— absurdly wasteful. To produce token N+1, the model has to attend
+over all N previous tokens. To produce token N+2, it has to attend
+over all N+1. By token 1000, it's done a thousand attention
+computations, most of which are redundant work on tokens it already
+saw.
+
+The KV cache fixes this. When the model computes the attention key
+and value vectors for a token, it *stores* them. The next token's
+attention reads from the cache instead of recomputing. Generation
+goes from `O(n²)` per token to `O(n)`.
+
+## How it works (the short version)
+
+In an attention layer, each token gets three vectors: query (Q), key
+(K), value (V). Q is recomputed every step from the current token.
+K and V are computed once and never need to change for that token
+again — the math doesn't depend on later tokens.
+
+So the optimization is: cache K and V for every token you've seen.
+When generating a new token, recompute its Q, then attend over the
+cached K and V from history. You've replaced N recomputations with
+one new K/V plus a memory lookup.
+
+This makes generation feasible. Without it, generating a 5,000-token
+response would take 5,000² = 25 million attention ops *per layer*, on
+top of the actual generation. With it, you do 5,000 per layer.
+
+## The memory tradeoff
+
+The cache lives in GPU memory. Each cached token takes a couple of KB
+per layer per head. For a long context — 100k tokens, 80 layers, 64
+heads — the KV cache can easily reach tens of GB. This is one of the
+big constraints on serving long-context models economically.
+
+Providers have all sorts of tricks: quantizing the cache to 4-bit,
+sharing K/V across attention heads (Grouped Query Attention),
+discarding cache for old tokens when the budget is exceeded. Each has
+quality / speed tradeoffs.
+
+## Prompt caching across requests
+
+In 2024 Anthropic and others introduced **prompt caching**: if your
+prompt starts with the same long block (a 50k-token document, a
+detailed system prompt), the K and V vectors for that block can be
+saved across requests. Subsequent requests with the same prefix run
+at a fraction of the cost.
+
+This is the trick that makes "chat with a 200-page PDF" workflows
+financially viable. The first request pays for the whole document;
+subsequent ones pay only for the new tokens.
+
+## Why this matters for your work
+
+If you're building anything with long shared context — chat with
+your docs, agent loops, code search over a repo — *use prompt
+caching*. The cost difference can be 5–10×. Read the provider docs
+for your model.
+
+If your API bill is mysteriously high, look at how often you re-send
+the same long system prompt. Each re-send is a full reprocess unless
+you're caching.
+
+## What to read next
+
+**Attention** is the underlying mechanism KV cache optimizes.
+**Context windows** are the practical limit on how much you can fit
+through. **Transformers** are the architecture that bundles these
+together.

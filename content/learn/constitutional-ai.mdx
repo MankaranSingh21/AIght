@@ -1,0 +1,106 @@
+---
+title: "Constitutional AI"
+tagline: "When the model judges itself — Anthropic's bet on alignment without exhausting the rater pool."
+readTime: "6 min read"
+slug: "constitutional-ai"
+date: "2026-05-17"
+lastUpdated: "2026-05-17"
+related: ["rlhf", "alignment", "dpo"]
+prerequisites: ["rlhf"]
+successors: ["alignment"]
+exemplar_tools: ["claude"]
+key_fields: ["psychology-mental-health", "social-work-public-policy", "medicine-healthcare", "education-teaching"]
+misconceptions:
+  - "The model writes its own rules."
+  - "The constitution is law-like."
+  - "CAI removes humans from the loop."
+difficulty: "intermediate"
+sources: 6
+---
+
+<Misconception think="The model writes its own rules.">
+The constitution is written by humans — Anthropic's policy team —
+before training. Examples in their published version include things
+like "choose the response that is most supportive and encouraging,"
+"choose the response that is least likely to harm a vulnerable group,"
+and explicit references to the UN Declaration of Human Rights. The
+model uses *that text* as the standard to evaluate its own answers
+against. The "constitutional" framing is metaphorical, not literal.
+</Misconception>
+
+Constitutional AI is the alignment method Anthropic introduced in
+2022 and used to train Claude. The core idea: replace the human
+preference rater with a model that evaluates against a written
+constitution. The result is alignment at a scale that doesn't depend
+on hiring an ever-larger crowd.
+
+## How it works
+
+**Step 1: The constitution.** A written document with a few dozen
+principles. "Be helpful, harmless, and honest" is the spirit, but the
+actual text is more specific — paragraphs about avoiding stereotypes,
+recognising vulnerable users, refusing certain categories of request,
+preferring certain framings.
+
+**Step 2: Self-critique.** Take a prompt. Generate an initial answer.
+Then ask the model: "Critique this answer against principle X of the
+constitution." Get the critique. Then ask: "Rewrite the answer to
+fix the critique."
+
+**Step 3: Train on the revisions.** Use the (initial, revised) pairs
+as training data — the model learns to produce the revised answer
+directly. This is the supervised fine-tuning phase.
+
+**Step 4: RL from AI Feedback (RLAIF).** For the reinforcement phase,
+instead of asking humans to compare two answers, ask the constitutional
+model itself which of two answers it prefers based on the constitution.
+Train the policy against those preferences using the same machinery as
+RLHF.
+
+The output is a model aligned to the constitution, without the human
+rater bottleneck.
+
+## What this changes
+
+**Scalability.** Human raters are finite, slow, and inconsistent
+across cultures. AI raters scale with compute. This is the practical
+appeal.
+
+**Auditability.** The constitution is text. You can read what the
+model was trained to value. You can change it. You can publish it,
+critique it, fork it. This is a real improvement over RLHF, where
+rater guides are usually private.
+
+**Steering.** You can train variants of the same model against
+different constitutions for different deployment contexts. A medical
+constitution for clinical use; a creative one for fiction tools.
+
+## What it doesn't fix
+
+The constitution still has to be written *by someone*, with all the
+specificity and blind spots that implies. The "model judging itself"
+loop can also drift — if the model misreads a principle, it'll keep
+making the same misjudgment across many self-critiques.
+
+There's also no easy answer to the question of *whose constitution*.
+Anthropic's principles encode Anthropic's values, lightly cosmopolitan
+but still American-trained. Constitutions from other labs in other
+geographies would look different.
+
+## Why this matters for your work
+
+If you've ever noticed Claude is more reluctant about certain topics
+than other frontier models, you're observing the constitution at
+work. The model isn't being "careful" in a vague sense; it's been
+trained to apply a specific written standard.
+
+If you're building anything in clinical, legal, or care contexts:
+constitutional approaches let you specify *what the system should
+value* in concrete text — much easier to audit and amend than a
+black-box RLHF process.
+
+## What to read next
+
+**RLHF** is the older method CAI iterates on. **DPO** is the lower-cost
+preference-training approach. **Alignment** is the broader problem
+constitutional AI is one method for.

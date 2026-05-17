@@ -50,43 +50,17 @@ function getBookmarks(): string[] {
   }
 }
 
-// `toggleBookmark` now async — fire-and-forget DB write when signed in.
-// We don't await it from the click handler; localStorage update is synchronous
-// so the heart icon flips instantly.
-import { pushBookmark, removeBookmark } from "@/lib/user-data-sync";
-import { createClient as _createSupabaseClient } from "@/utils/supabase/client";
-
-async function isSignedIn(): Promise<boolean> {
-  try {
-    const sb = _createSupabaseClient();
-    const { data: { user } } = await sb.auth.getUser();
-    return !!user;
-  } catch {
-    return false;
-  }
-}
-
 function toggleBookmark(slug: string): boolean {
   const current = getBookmarks();
   const idx = current.indexOf(slug);
-  const willBookmark = idx === -1;
-  if (willBookmark) {
+  if (idx === -1) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify([...current, slug]));
   } else {
     current.splice(idx, 1);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(current));
   }
   window.dispatchEvent(new Event("aight_bookmarks_changed"));
-  // Fire-and-forget DB mirror. Doesn't block the UI.
-  void (async () => {
-    const signedIn = await isSignedIn();
-    if (willBookmark) {
-      await pushBookmark(slug, signedIn);
-    } else {
-      await removeBookmark(slug, signedIn);
-    }
-  })();
-  return willBookmark;
+  return idx === -1;
 }
 
 function isNew(created_at?: string): boolean {

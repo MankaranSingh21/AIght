@@ -1,0 +1,96 @@
+{
+  "_meta": "Phase J — Two-track learning roadmap per field. Slug arrays only; FieldRoadmap.tsx looks up the concept's tagline. 'intuitions' = no-math first reads; 'deeper' = technical mechanics. Pick concept slugs from content/learn/*.mdx.",
+
+  "biology": {
+    "intuitions": ["embeddings", "tokenization", "hallucination", "multimodal", "in-context-learning"],
+    "deeper":     ["transformers", "attention", "fine-tuning", "rag", "scaling-laws"]
+  },
+  "medicine-healthcare": {
+    "intuitions": ["hallucination", "alignment", "chain-of-thought", "context-windows", "structured-output"],
+    "deeper":     ["rag", "fine-tuning", "multimodal", "rlhf", "function-calling"]
+  },
+  "pharmacy-drug-discovery": {
+    "intuitions": ["embeddings", "multimodal", "hallucination", "structured-output", "in-context-learning"],
+    "deeper":     ["diffusion", "fine-tuning", "transformers", "rag", "function-calling"]
+  },
+  "psychology-mental-health": {
+    "intuitions": ["hallucination", "alignment", "context-windows", "prompt-engineering", "in-context-learning"],
+    "deeper":     ["rag", "fine-tuning", "rlhf", "agents", "constitutional-ai"]
+  },
+
+  "law-legal": {
+    "intuitions": ["context-windows", "hallucination", "prompt-engineering", "alignment", "structured-output"],
+    "deeper":     ["rag", "embeddings", "function-calling", "fine-tuning", "agents"]
+  },
+  "finance-economics": {
+    "intuitions": ["chain-of-thought", "in-context-learning", "hallucination", "structured-output", "context-windows"],
+    "deeper":     ["embeddings", "rag", "function-calling", "agents", "fine-tuning"]
+  },
+  "sales-business-development": {
+    "intuitions": ["prompt-engineering", "structured-output", "hallucination", "context-windows", "temperature-sampling"],
+    "deeper":     ["rag", "agents", "function-calling", "fine-tuning", "embeddings"]
+  },
+  "marketing-advertising": {
+    "intuitions": ["prompt-engineering", "temperature-sampling", "multimodal", "in-context-learning", "hallucination"],
+    "deeper":     ["fine-tuning", "embeddings", "agents", "function-calling", "structured-output"]
+  },
+
+  "software-engineering": {
+    "intuitions": ["prompt-engineering", "function-calling", "chain-of-thought", "structured-output", "context-windows", "in-context-learning"],
+    "deeper":     ["mcp", "rag", "agents", "kv-cache", "attention", "fine-tuning"]
+  },
+  "physics-engineering": {
+    "intuitions": ["chain-of-thought", "hallucination", "multimodal", "prompt-engineering", "structured-output"],
+    "deeper":     ["transformers", "training", "scaling-laws", "function-calling", "fine-tuning"]
+  },
+  "chemistry-materials-science": {
+    "intuitions": ["embeddings", "multimodal", "hallucination", "prompt-engineering", "in-context-learning"],
+    "deeper":     ["diffusion", "training", "fine-tuning", "function-calling", "agents"]
+  },
+  "environmental-science-climate": {
+    "intuitions": ["embeddings", "multimodal", "hallucination", "in-context-learning", "structured-output"],
+    "deeper":     ["transformers", "training", "fine-tuning", "rag", "function-calling"]
+  },
+  "agriculture-food-science": {
+    "intuitions": ["prompt-engineering", "hallucination", "multimodal", "rag", "in-context-learning"],
+    "deeper":     ["embeddings", "fine-tuning", "agents", "function-calling", "structured-output"]
+  },
+
+  "creative-writing-literature": {
+    "intuitions": ["prompt-engineering", "temperature-sampling", "context-windows", "hallucination", "chain-of-thought"],
+    "deeper":     ["fine-tuning", "rag", "embeddings", "structured-output", "in-context-learning"]
+  },
+  "graphic-design-visual-arts": {
+    "intuitions": ["prompt-engineering", "multimodal", "temperature-sampling", "hallucination", "in-context-learning"],
+    "deeper":     ["diffusion", "fine-tuning", "function-calling", "embeddings", "agents"]
+  },
+  "music-audio": {
+    "intuitions": ["multimodal", "prompt-engineering", "temperature-sampling", "hallucination", "context-windows"],
+    "deeper":     ["diffusion", "fine-tuning", "embeddings", "agents", "function-calling"]
+  },
+  "film-video-production": {
+    "intuitions": ["prompt-engineering", "multimodal", "hallucination", "temperature-sampling", "context-windows"],
+    "deeper":     ["diffusion", "fine-tuning", "function-calling", "agents", "embeddings"]
+  },
+  "architecture-urban-design": {
+    "intuitions": ["prompt-engineering", "multimodal", "hallucination", "in-context-learning", "structured-output"],
+    "deeper":     ["diffusion", "fine-tuning", "function-calling", "agents", "embeddings"]
+  },
+
+  "education-teaching": {
+    "intuitions": ["prompt-engineering", "hallucination", "chain-of-thought", "context-windows", "in-context-learning"],
+    "deeper":     ["rag", "alignment", "fine-tuning", "agents", "rlhf"]
+  },
+  "journalism-media": {
+    "intuitions": ["prompt-engineering", "hallucination", "multimodal", "context-windows", "alignment"],
+    "deeper":     ["rag", "fine-tuning", "structured-output", "agents", "embeddings"]
+  },
+  "history-humanities": {
+    "intuitions": ["embeddings", "prompt-engineering", "hallucination", "context-windows", "in-context-learning"],
+    "deeper":     ["rag", "fine-tuning", "transformers", "multimodal", "scaling-laws"]
+  },
+  "social-work-public-policy": {
+    "intuitions": ["hallucination", "alignment", "context-windows", "structured-output", "prompt-engineering"],
+    "deeper":     ["rag", "fine-tuning", "agents", "embeddings", "constitutional-ai"]
+  }
+}

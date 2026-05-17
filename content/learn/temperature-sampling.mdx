@@ -1,0 +1,87 @@
+---
+title: "Temperature & Sampling"
+tagline: "Why 'more creative' is not the same as 'more random' — and the knobs that actually matter."
+readTime: "5 min read"
+slug: "temperature-sampling"
+date: "2026-05-17"
+lastUpdated: "2026-05-17"
+related: ["prompt-engineering", "structured-output", "in-context-learning"]
+prerequisites: ["tokenization", "attention"]
+successors: ["structured-output"]
+exemplar_tools: ["chatgpt", "claude", "midjourney", "suno"]
+key_fields: ["creative-writing-literature", "marketing-advertising", "graphic-design-visual-arts", "music-audio"]
+misconceptions:
+  - "Temperature 1 is the 'default' creativity."
+  - "Higher temperature = more creative."
+  - "Temperature 0 means deterministic."
+difficulty: "beginner"
+sources: 4
+---
+
+<Misconception think="Higher temperature equals more creative.">
+Higher temperature equals *more random*, which is not the same thing.
+Truly creative outputs often have a clear voice, internal logic, and
+relevance to the prompt — high temperature can break all three. The
+useful range for most writing tasks is 0.5–0.9, not the maximum.
+Above 1.2, the model starts producing texts that look interesting for
+two sentences and incoherent by the fifth.
+</Misconception>
+
+At each step of generation, the model produces a probability
+distribution over the next token. Temperature controls how that
+distribution gets sampled. Low temperature → the model picks the most
+likely next token, every time. High temperature → the model is more
+willing to pick a less-likely token.
+
+## The knobs
+
+**Temperature.** A scalar that divides the logits before softmax. At
+`temperature=0`, the model picks the argmax — same input gives same
+output. At `temperature=1`, you sample from the unmodified distribution.
+At `temperature=2`, the distribution gets flatter; even low-probability
+tokens have a real shot.
+
+**Top-p (nucleus sampling).** Instead of considering all 50,000 tokens
+weighted by probability, only consider the smallest set whose total
+probability adds up to `p`. `top_p=0.9` typically means "from the most
+likely 10–50 tokens" depending on how confident the model is. Caps the
+worst-case randomness without flattening the whole distribution.
+
+**Top-k.** Only consider the top `k` most likely tokens. `top_k=40` is
+common. Simpler than top-p, less calibrated.
+
+These are usually combined: pick the top-p subset, then sample from
+that with temperature.
+
+## What temperature 0 actually means
+
+`temperature=0` makes generation **greedy**, not deterministic. Same
+prompt usually gives same output, but the same prompt with slightly
+different context (or KV cache state, or hardware) can give different
+results. Most providers will tell you the result is "near-deterministic"
+in their docs, which is provider-speak for "almost always but don't
+build infrastructure on it."
+
+## Why this matters for your work
+
+For *factual* tasks — answering a question, classifying, extracting —
+**lower temperature is almost always better**. The most likely token is
+usually the right one. Random sampling hurts you here.
+
+For *creative* tasks, the sweet spot depends on the form:
+
+- **Tightly structured prose** (legal, technical writing): 0.3–0.5.
+- **Marketing copy, headlines**: 0.7–0.9.
+- **Open-ended brainstorming, fiction first drafts**: 0.9–1.1.
+- **"Surprise me" exploration**: 1.2+. Treat the output as raw clay.
+
+For *generation tasks where you'll pick from many outputs* (image
+generation, song generation), higher temperature with multiple samples
+is usually better than one well-tuned generation.
+
+## What to read next
+
+**Structured output** is the technique for forcing low-temperature
+determinism even on creative tasks. **Prompt engineering** is the
+control surface upstream of all of this. **Chain-of-thought** is when
+the model talks itself into a better answer.

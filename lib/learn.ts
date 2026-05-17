@@ -15,6 +15,12 @@ export type ConceptMeta = {
   sources?: number;
   difficulty?: "beginner" | "intermediate" | "advanced";
   author?: string;
+  // Phase J — used by the per-concept mini-map and the misconception pills.
+  prerequisites?: string[];    // concept slugs needed before this one
+  successors?: string[];       // concepts that build on this one
+  exemplar_tools?: string[];   // tool slugs that show this concept in action
+  key_fields?: string[];       // field slugs where this matters most
+  misconceptions?: string[];   // 1–3 short "wrong intuition" sentences
 };
 
 // Solo project — every article is by Mankaran unless the MDX overrides it.
@@ -48,6 +54,11 @@ export function getAllConcepts(): ConceptMeta[] {
       sources: data.sources as number | undefined,
       difficulty: data.difficulty as ConceptMeta["difficulty"],
       author: data.author as string | undefined,
+      prerequisites: data.prerequisites as string[] | undefined,
+      successors: data.successors as string[] | undefined,
+      exemplar_tools: data.exemplar_tools as string[] | undefined,
+      key_fields: data.key_fields as string[] | undefined,
+      misconceptions: data.misconceptions as string[] | undefined,
     };
   });
 }

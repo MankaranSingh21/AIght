@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
+import { sendWelcomeEmail } from "@/lib/email-templates/welcome";
 
 export async function subscribeNewsletter(
   email: string
@@ -17,10 +18,15 @@ export async function subscribeNewsletter(
     .insert({ email: cleaned });
 
   if (error) {
-    // Unique constraint violation — already subscribed. Treat as success.
+    // Unique constraint violation — already subscribed. Treat as success
+    // (don't re-send the welcome — they got it the first time).
     if (error.code === "23505") return {};
     return { error: "Something went wrong. Please try again." };
   }
+
+  // Fire-and-forget welcome email. If RESEND_API_KEY isn't set or Resend
+  // fails, the subscription is still recorded.
+  sendWelcomeEmail(cleaned).catch(() => { /* logged inside */ });
 
   return {};
 }

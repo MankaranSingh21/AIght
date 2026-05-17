@@ -1,0 +1,94 @@
+---
+title: "Structured Output"
+tagline: "Forcing the model to fill in a shape — and why it's harder than it looks."
+readTime: "5 min read"
+slug: "structured-output"
+date: "2026-05-17"
+lastUpdated: "2026-05-17"
+related: ["function-calling", "temperature-sampling", "chain-of-thought"]
+prerequisites: ["tokenization", "temperature-sampling"]
+successors: ["function-calling", "agents"]
+exemplar_tools: ["chatgpt", "claude", "gemini"]
+key_fields: ["software-engineering", "sales-business-development", "law-legal", "finance-economics", "medicine-healthcare"]
+misconceptions:
+  - "Asking for JSON in the prompt is enough."
+  - "Strict mode means the content is correct."
+  - "Schemas don't slow things down."
+difficulty: "beginner"
+sources: 4
+---
+
+<Misconception think="Just ask for JSON in the prompt and you'll get JSON.">
+You'll get JSON-shaped text most of the time, with a small but
+catastrophic failure rate: a stray comma, a trailing backtick, a
+markdown code fence the model added because that's what people on
+Stack Overflow do. Production systems that depend on parseable JSON
+without strict-mode enforcement *will* fail in flight — and the
+hardest part is that the failure is rare enough to ship and frequent
+enough to ruin a Monday.
+</Misconception>
+
+Plain text is what models output by default. Structured output is the
+craft of getting them to output something a downstream program can
+parse — JSON, XML, CSV, a specific format you defined. It sounds
+trivial. It is the source of a surprising amount of production AI
+pain.
+
+## The three levels of structure
+
+**Level 1: Ask nicely.** "Respond in JSON with the keys `name` and
+`age`." Works ~95% of the time on a frontier model. Fails on edge cases
+in ways your tests don't catch.
+
+**Level 2: Schema-aware prompting.** Show the model a JSON Schema or
+TypeScript interface, give a few-shot example, ask explicitly for valid
+JSON, no prose, no markdown fences. Works ~99% of the time.
+
+**Level 3: Constrained decoding.** The model provider enforces the
+schema *at the token level* during generation. Every token sampled is
+restricted to those that keep the output schema-valid. You get 100%
+valid JSON, by construction. OpenAI calls this "strict mode" / "JSON
+schema mode"; Anthropic offers tool-use schemas; open-source has
+libraries like Outlines and Guidance.
+
+## The gotcha that's not about parsing
+
+Even when the JSON is perfectly valid, the **content** can be wrong.
+The model can produce `{"price": "free"}` when you asked for a number.
+It can produce `{"date": "tomorrow"}` when you needed an ISO 8601
+string. The schema only constrains the shape; correctness still
+depends on the model.
+
+The practical move: combine strict-mode JSON with explicit field
+descriptions (`{"price": "amount in USD as a number"}`) and let the
+model reason in prose first ("First, identify the price. Then…"),
+then emit the JSON.
+
+## When structure costs you
+
+Constrained decoding is slightly slower than free generation — the
+model has to compute the probability of every allowed token at every
+step. For long outputs this adds up.
+
+More importantly, a tight schema can prevent the model from doing
+useful work. If your schema demands a category from a fixed list of
+three but the right answer is "none of the above," the model picks
+the least-wrong one. Always include an "other" / "unknown" option.
+
+## Why this matters for your work
+
+Anything you build that pipes AI output into another system needs
+structured output. Logs into a dashboard, extractions into a database,
+classifications into a workflow — all of it. The 1-in-100 silent
+parse failure is the difference between a demo and a production
+system you can sleep through.
+
+Always validate the parsed object against expectations — even with
+strict mode. The shape is enforced; the meaning isn't.
+
+## What to read next
+
+**Function calling** is structured output applied to "which tool to
+call." **Temperature sampling** is the wider control surface. **Chain
+of thought** + structured output is the pattern of "reason in prose,
+then constrain the conclusion."

@@ -28,6 +28,9 @@ import ArticleMeta from "@/components/learn/ArticleMeta";
 import RelatedConcepts from "@/components/learn/RelatedConcepts";
 import Footnote from "@/components/learn/Footnote";
 import Footnotes from "@/components/learn/Footnotes";
+import ConceptMiniMap from "@/components/learn/ConceptMiniMap";
+import Misconception from "@/components/learn/Misconception";
+import fields from "@/content/paths/fields.json";
 import Cite from "@/components/learn/Cite";
 import Glossary from "@/components/learn/Glossary";
 import type { JSX } from "react";
@@ -77,6 +80,7 @@ const mdxComponents = {
   Footnote,
   Cite,
   Glossary,
+  Misconception,
   pre: (props: JSX.IntrinsicElements["pre"]) => <CodeBlock {...props} />,
   h2: (props: JSX.IntrinsicElements["h2"]) => (
     <h2
@@ -249,6 +253,31 @@ export default async function LearnConceptPage({ params }: Props) {
     .limit(4);
   const relatedTools = relatedToolsData ?? [];
 
+  // Resolve exemplar tool slugs (from frontmatter) → { slug, name } pairs
+  // for the mini-map. Uses the service client we already have.
+  const exemplarToolSlugs = (conceptMeta?.exemplar_tools ?? []).slice(0, 4);
+  const exemplarTools: { slug: string; name: string }[] =
+    exemplarToolSlugs.length > 0
+      ? await (async () => {
+          const { data } = await supabase
+            .from("tools")
+            .select("slug, name")
+            .in("slug", exemplarToolSlugs);
+          const byKey = new Map((data ?? []).map((t: { slug: string; name: string }) => [t.slug, t.name]));
+          return exemplarToolSlugs
+            .filter((s) => byKey.has(s))
+            .map((s) => ({ slug: s, name: byKey.get(s)! }));
+        })()
+      : [];
+
+  // Resolve key fields from frontmatter slugs to { slug, field } pairs.
+  const keyFields =
+    (conceptMeta?.key_fields ?? [])
+      .map((s) => fields.find((f) => f.slug === s))
+      .filter((f): f is (typeof fields)[number] => Boolean(f))
+      .slice(0, 4)
+      .map((f) => ({ slug: f.slug, field: f.field }));
+
   // Build the related-concepts list from front-matter slugs
   const relatedConcepts =
     (frontmatter.related ?? [])
@@ -396,6 +425,47 @@ export default async function LearnConceptPage({ params }: Props) {
             )}
           </div>
         </header>
+
+        {/* Per-concept mini-map — Phase J. Renders only when concept frontmatter
+            declares at least one of: prerequisites, exemplar_tools, key_fields,
+            misconceptions. Falls back to nothing on bare concepts. */}
+        {conceptMeta && (
+          (conceptMeta.prerequisites?.length ?? 0) > 0 ||
+          (conceptMeta.exemplar_tools?.length ?? 0) > 0 ||
+          (conceptMeta.key_fields?.length ?? 0) > 0 ||
+          (conceptMeta.misconceptions?.length ?? 0) > 0
+        ) ? (
+          <ConceptMiniMap
+            concept={conceptMeta}
+            allConcepts={allConcepts}
+            exemplarTools={exemplarTools}
+            keyFields={keyFields}
+          />
+        ) : null}
+
+        {/* Misconception pills — Phase J. Quick scan of what people get wrong. */}
+        {conceptMeta?.misconceptions && conceptMeta.misconceptions.length > 0 && (
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 32 }}>
+            <span style={{
+              fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.14em",
+              textTransform: "uppercase", color: "rgba(224,112,112,0.65)",
+              alignSelf: "center", marginRight: 4,
+            }}>
+              You might think:
+            </span>
+            {conceptMeta.misconceptions.map((m, i) => (
+              <span key={i} style={{
+                fontFamily: "var(--font-editorial)", fontStyle: "italic", fontSize: 13,
+                lineHeight: 1.4, padding: "5px 12px", borderRadius: 999,
+                background: "rgba(224,112,112,0.06)",
+                border: "1px solid rgba(224,112,112,0.25)",
+                color: "rgba(245,239,224,0.78)",
+              }}>
+                {m}
+              </span>
+            ))}
+          </div>
+        )}
 
         <hr
           style={{

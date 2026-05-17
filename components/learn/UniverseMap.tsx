@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import type { UniverseGraph, UniverseNode, UniverseEdge } from "@/lib/universe-graph";
 import UniverseTrajectory from "./UniverseTrajectory";
@@ -37,10 +38,36 @@ function edgePath(from: UniverseNode, to: UniverseNode): string {
 
 export default function UniverseMap({ graph }: UniverseMapProps) {
   const [hoverId, setHoverId] = useState<string | null>(null);
+  const [lockedId, setLockedId] = useState<string | null>(null);
   const [filter, setFilter] = useState<FilterMode>("all");
   const [userField, setUserField] = useState<{ slug: string; name: string } | null>(null);
   const svgRef = useRef<SVGSVGElement | null>(null);
   const scrolledOnce = useRef(false);
+  const router = useRouter();
+
+  // Escape clears the locked field; click on the SVG background does too.
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape" && lockedId) setLockedId(null);
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [lockedId]);
+
+  // Two-click behavior for field nodes: first click locks, second navigates.
+  // Concepts and tools navigate immediately (single click).
+  function handleNodeClick(e: React.MouseEvent, node: UniverseNode) {
+    if (node.kind !== "field") {
+      // Default <a> navigation handles it.
+      return;
+    }
+    e.preventDefault();
+    if (lockedId === node.id) {
+      router.push(node.href);
+    } else {
+      setLockedId(node.id);
+    }
+  }
 
   // Read stored quiz result so we can enable the "My field" filter pill.
   useEffect(() => {
@@ -115,11 +142,13 @@ export default function UniverseMap({ graph }: UniverseMapProps) {
     return null;
   }, [filter, userField, graph.nodes, adjacency]);
 
-  const focusedNeighbors = hoverId ? adjacency.get(hoverId) : null;
+  // Effective "active" id is hover OR lock (lock acts like a sticky hover).
+  const activeId = hoverId ?? lockedId;
+  const focusedNeighbors = activeId ? adjacency.get(activeId) : null;
 
   function edgeIsFocused(e: UniverseEdge): boolean {
-    if (!hoverId) return false;
-    return e.from === hoverId || e.to === hoverId;
+    if (!activeId) return false;
+    return e.from === activeId || e.to === activeId;
   }
 
   function edgeIsVisible(e: UniverseEdge): boolean {
@@ -128,8 +157,8 @@ export default function UniverseMap({ graph }: UniverseMapProps) {
   }
 
   function nodeIsFocused(n: UniverseNode): boolean {
-    if (!hoverId) return true;
-    if (n.id === hoverId) return true;
+    if (!activeId) return true;
+    if (n.id === activeId) return true;
     return focusedNeighbors?.has(n.id) ?? false;
   }
 
@@ -154,6 +183,17 @@ export default function UniverseMap({ graph }: UniverseMapProps) {
         margin: "0 auto",
       }}
     >
+      {/* aria-live region announcing lock state for screen readers */}
+      <div
+        role="status"
+        aria-live="polite"
+        style={{ position: "absolute", left: -10000, top: "auto", width: 1, height: 1, overflow: "hidden" }}
+      >
+        {lockedId
+          ? `${graph.nodes.find((n) => n.id === lockedId)?.title ?? "Field"} locked. Activate again to enter.`
+          : ""}
+      </div>
+
       {/* Filter chips */}
       <div
         style={{
@@ -207,6 +247,10 @@ export default function UniverseMap({ graph }: UniverseMapProps) {
         viewBox={`0 0 ${graph.viewBox.width} ${graph.viewBox.height}`}
         role="img"
         aria-label="The AIght universe — fields, concepts, and tools laid out as a connected map"
+        onClick={(e) => {
+          // Clicking SVG background (not a node) clears the lock.
+          if (e.target === e.currentTarget && lockedId) setLockedId(null);
+        }}
         style={{
           width: "100%",
           height: "auto",
@@ -277,6 +321,7 @@ export default function UniverseMap({ graph }: UniverseMapProps) {
           {graph.nodes.map((node) => {
             const tint = KIND_COLOR[node.kind];
             const isHover = node.id === hoverId;
+            const isLocked = node.id === lockedId;
             const visible = nodeIsVisible(node);
             const focused = nodeIsFocused(node);
             const opacity = !visible ? 0.10 : focused ? 1 : 0.25;
@@ -295,7 +340,14 @@ export default function UniverseMap({ graph }: UniverseMapProps) {
                 onMouseLeave={() => setHoverId(null)}
                 onFocus={() => setHoverId(node.id)}
                 onBlur={() => setHoverId(null)}
+                onClick={(e) => handleNodeClick(e, node)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    handleNodeClick(e as unknown as React.MouseEvent, node);
+                  }
+                }}
                 tabIndex={visible ? 0 : -1}
+                aria-pressed={node.kind === "field" ? isLocked : undefined}
               >
                 {/* Ambient glow */}
                 <circle
@@ -303,17 +355,42 @@ export default function UniverseMap({ graph }: UniverseMapProps) {
                   cy={node.y}
                   r={glowR}
                   fill={`url(#${node.kind}-glow)`}
-                  style={{ opacity: isHover ? 1 : 0.55, transition: "opacity 200ms ease" }}
+                  style={{ opacity: isHover || isLocked ? 1 : 0.55, transition: "opacity 200ms ease" }}
                 />
+                {/* Locked-field pulse ring + hint */}
+                {isLocked && (
+                  <>
+                    <circle
+                      cx={node.x}
+                      cy={node.y}
+                      r={node.r + 14}
+                      fill="none"
+                      stroke="var(--accent-primary)"
+                      strokeWidth={1.6}
+                      strokeOpacity={0.85}
+                      style={{ animation: "universe-trajectory-pulse 2.4s ease-in-out infinite" }}
+                    />
+                    <text
+                      x={node.x}
+                      y={node.y - node.r - 22}
+                      textAnchor="middle"
+                      fontSize="11"
+                      fill="var(--accent-primary)"
+                      style={{ fontFamily: "var(--font-mono), monospace", letterSpacing: "0.10em", textTransform: "uppercase" }}
+                    >
+                      click again to enter →
+                    </text>
+                  </>
+                )}
                 {/* Node body — wrapped in a Next link */}
-                <a href={node.href} aria-label={`${node.kind}: ${node.title}`}>
+                <a href={node.href} aria-label={`${node.kind}: ${node.title}${node.kind === "field" ? (isLocked ? " (press again to enter)" : " (click to see its neighborhood)") : ""}`}>
                   <circle
                     cx={node.x}
                     cy={node.y}
                     r={node.r}
                     fill={tint.fill}
                     stroke={tint.stroke}
-                    strokeWidth={isHover ? 2.2 : 1.2}
+                    strokeWidth={isHover || isLocked ? 2.2 : 1.2}
                     style={{ transition: "stroke-width 180ms ease" }}
                   />
                   <title>{`${node.title} — ${node.kind}`}</title>

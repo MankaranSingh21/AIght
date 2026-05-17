@@ -5,6 +5,7 @@ import Link from "next/link";
 import { createClient } from "@/utils/supabase/client";
 import { mapToolToCardProps } from "@/lib/tool-mapping";
 import ToolCard, { type ToolCardProps } from "@/components/ToolCard";
+import NewsletterForm from "@/components/NewsletterForm";
 
 const STORAGE_KEY = "aight_bookmarks";
 
@@ -204,6 +205,15 @@ export default function BookmarksClient() {
             <ToolCard key={tool.slug} {...tool} spanCols={[0, 3, 7, 11].includes(i) ? 2 : 1} />
           ))}
         </div>
+      )}
+
+      {/* Soft newsletter pitch — once a guest has 3+ saved tools. */}
+      {tools && tools.length >= 3 && (
+        <NewsletterForm
+          variant="inline"
+          pitch="Save your stack to your inbox?"
+          source="bookmarks"
+        />
       )}
 
       {/* Copy format preview */}

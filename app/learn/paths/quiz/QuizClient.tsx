@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import QuizToolRecs from '@/components/QuizToolRecs';
 import WheelhouseBlock from '@/components/quiz/WheelhouseBlock';
 import HowYouWorkBlock from '@/components/quiz/HowYouWorkBlock';
+import NewsletterForm from '@/components/NewsletterForm';
 import dynamic from 'next/dynamic';
 const DownloadReportButton = dynamic(() => import('@/components/quiz/DownloadReportButton'), { ssr: false });
 import { usePostHog } from 'posthog-js/react';
@@ -23,8 +24,6 @@ import {
   type CognitiveProfile,
   type StoredQuizResult,
 } from '@/lib/quiz-storage';
-import { pushQuizResult } from '@/lib/user-data-sync';
-import { createClient as createSupabaseClient } from '@/utils/supabase/client';
 import type { HumanEssayMeta } from '@/lib/human';
 
 /* ─── Types ─────────────────────────────────────────────────────────────────── */
@@ -1547,6 +1546,15 @@ function ReportScreen({ result, field, answers, onRetake, humanEssays = [] }: {
           />
         )}
 
+        {/* Soft newsletter pitch — "save your result, no spam" */}
+        <div style={{ marginTop: 8 }}>
+          <NewsletterForm
+            variant="inline"
+            pitch="Want your result back?"
+            source="quiz_report"
+          />
+        </div>
+
         {/* Tools */}
         <div style={{ marginBottom: 32, ...sectionStyle, transitionDelay: '300ms' }}>
           <h3 style={{
@@ -2025,14 +2033,6 @@ function QuizPageInner({ preFieldSlug, humanEssays }: QuizPageInnerProps) {
         };
         saveQuizResult(stored);
         setHasStoredResult(true);
-        // Fire-and-forget DB mirror — no-op when guest.
-        void (async () => {
-          try {
-            const sb = createSupabaseClient();
-            const { data: { user } } = await sb.auth.getUser();
-            await pushQuizResult(stored, !!user);
-          } catch { /* ignore */ }
-        })();
 
         posthog?.capture('quiz_completed', {
           field_slug: field.slug,

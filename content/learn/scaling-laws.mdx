@@ -1,0 +1,100 @@
+---
+title: "Scaling Laws"
+tagline: "Why bigger keeps working — and the question of where it stops."
+readTime: "7 min read"
+slug: "scaling-laws"
+date: "2026-05-17"
+lastUpdated: "2026-05-17"
+related: ["training", "transformers"]
+prerequisites: ["transformers", "training"]
+successors: ["fine-tuning"]
+exemplar_tools: ["chatgpt", "claude", "gemini"]
+key_fields: ["physics-engineering", "history-humanities", "environmental-science-climate"]
+misconceptions:
+  - "Bigger models are smarter."
+  - "We've hit the scaling wall."
+  - "Doubling parameters doubles capability."
+difficulty: "intermediate"
+sources: 7
+---
+
+<Misconception think="Bigger models are just smarter.">
+Capability scales with the right *mix* of model size, training data, and
+compute. A 70B model trained on too little data is worse than a 7B model
+trained well. The Chinchilla paper from DeepMind in 2022 made this
+concrete: most "frontier" models at the time were under-trained, not
+under-sized. The headline number (parameter count) is the easiest to
+quote and the most misleading to compare alone.
+</Misconception>
+
+In 2020 a group at OpenAI published a paper showing something surprising:
+model performance, measured as loss on held-out text, follows a smooth
+power law in three variables — model size, dataset size, and compute. Not
+a fuzzy correlation. A clean log-log line that held for orders of
+magnitude.
+
+This was the discovery that justified building $100M+ training runs:
+you could predict, before spending the money, roughly how much better
+the model would be.
+
+## The scaling laws, in plain English
+
+- **More parameters help.** A 70B model can fit patterns a 7B model
+  can't.
+- **More data helps.** A model trained on a trillion tokens learns more
+  than one trained on 100 billion.
+- **More compute helps.** Bigger models need more training steps to
+  reach their potential.
+
+But the kicker is that these three need to scale *together*. Doubling
+parameters without doubling training tokens leaves capability on the
+table. The Chinchilla paper showed the optimal ratio is roughly 20
+tokens per parameter — and most published models were way under-trained
+by that standard. That's why a well-trained 7B model can match a poorly
+trained 70B one.
+
+## Why the curves are scary
+
+Power laws are deceptive. The line keeps going. When researchers
+extrapolate to "what would a 10× more compute model look like," the
+answer is almost always: better, in roughly predictable ways. We don't
+have a principled reason for this to stop, and we don't yet know when
+it does.
+
+The argument that we've "hit a wall" usually comes from people noticing
+that the *headline* benchmarks have saturated — GPT-4 to GPT-4-Turbo
+felt smaller than GPT-3 to GPT-4. But that's about what the benchmarks
+measure, not what scaling does. New capabilities (long context, code,
+reasoning, multimodal) keep emerging when you scale.
+
+## Where it might stop
+
+Three forces could end the scaling era:
+
+1. **Data exhaustion.** Web-scale text isn't infinite. Models have
+   already crossed beyond it; synthetic data is filling the gap, but
+   it's not the same.
+2. **Compute economics.** Each 10× capability boost has roughly cost
+   10× more to train. At some point the next 10× is unaffordable for
+   even the largest labs.
+3. **Architectural plateaus.** Attention's `O(n²)` cost is one. Most
+   research now is about making the existing approach more efficient,
+   not finding a fundamentally new one.
+
+## Why this matters for your work
+
+When a new model launches, the headline parameter count tells you very
+little. What matters is the **training token count** and the
+**post-training treatment** (RLHF, DPO, constitutional AI). Don't
+upgrade just because the number went up.
+
+If you're hiring or planning around AI capability, the safe bet for the
+next 2–3 years is that the curve continues — *if* the labs keep
+spending. The riskier bet is exactly when it stops.
+
+## What to read next
+
+**Training** is what scaling-laws are about. **Fine-tuning** is what
+happens after — adapting a scaled model to your domain. The **RLHF**
+and **DPO** post-training stages are what turn a raw scaled model into
+something pleasant to talk to.

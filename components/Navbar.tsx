@@ -4,8 +4,6 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { createClient } from '@/utils/supabase/client';
-import { syncOnSignIn } from '@/lib/user-data-sync';
 
 // Desktop nav drops Home — the logo serves that role. Mobile menu shows
 // the full set including Home for users who don't know the logo is clickable.
@@ -43,26 +41,9 @@ export default function Navbar() {
   const [searchFocused, setFocused]       = useState(false);
   const [bookmarkCount, setBookmarkCount] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [signedIn, setSignedIn]           = useState<boolean | null>(null);
   const searchInputRef                    = useRef<HTMLInputElement>(null);
   const pathname                          = usePathname();
   const router                            = useRouter();
-
-  // Track auth state in the client. The Supabase client auto-reads cookies
-  // set by the SSR middleware, so this picks up sign-in/sign-out across tabs.
-  useEffect(() => {
-    const supabase = createClient();
-    supabase.auth.getUser().then(({ data: { user } }) => setSignedIn(!!user));
-    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
-      const next = !!session?.user;
-      setSignedIn(next);
-      // On a fresh sign-in, merge local data up to DB and pull authoritative state back.
-      if (event === 'SIGNED_IN') {
-        syncOnSignIn();
-      }
-    });
-    return () => sub.subscription.unsubscribe();
-  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -174,33 +155,6 @@ export default function Navbar() {
               Take the quiz
             </Link>
 
-            {/* Sign-in / Account — only renders once auth state is known to avoid layout flash */}
-            {signedIn === true && (
-              <Link
-                href="/account"
-                aria-label="Your account"
-                className={cn(
-                  "hidden sm:inline-flex items-center justify-center w-8 h-8 rounded-lg transition-all duration-150 shrink-0",
-                  pathname === '/account'
-                    ? "text-accent bg-accent/10"
-                    : "text-muted/60 hover:text-primary"
-                )}
-              >
-                <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <circle cx="8" cy="5.5" r="3" />
-                  <path d="M2.5 14a5.5 5.5 0 0 1 11 0" />
-                </svg>
-              </Link>
-            )}
-            {signedIn === false && (
-              <Link
-                href="/signin"
-                className="hidden sm:inline-flex items-center font-sans text-[12px] font-medium text-secondary hover:text-primary transition-colors no-underline px-3 py-1.5 rounded-lg"
-              >
-                Sign in
-              </Link>
-            )}
-
             {/* Bookmark icon link */}
             <Link
               href="/bookmarks"
@@ -280,31 +234,6 @@ export default function Navbar() {
               );
             })}
           </div>
-
-          {/* Sign-in / Account in mobile menu */}
-          {signedIn === true && (
-            <Link
-              href="/account"
-              className="inline-flex items-center gap-3 mt-2 px-5 py-4 rounded-2xl border border-primary/15 bg-primary/5 font-sans text-base font-semibold no-underline text-primary"
-            >
-              <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <circle cx="8" cy="5.5" r="3" />
-                <path d="M2.5 14a5.5 5.5 0 0 1 11 0" />
-              </svg>
-              Your account
-            </Link>
-          )}
-          {signedIn === false && (
-            <Link
-              href="/signin"
-              className="inline-flex items-center gap-3 mt-2 px-5 py-4 rounded-2xl border border-primary/15 bg-primary/5 font-sans text-base font-semibold no-underline text-primary"
-            >
-              <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path d="M6 3h7v10H6M10 8H1m0 0 3-3m-3 3 3 3" />
-              </svg>
-              Sign in
-            </Link>
-          )}
 
           {/* Prominent Quiz CTA */}
           <Link

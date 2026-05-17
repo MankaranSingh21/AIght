@@ -4,6 +4,9 @@ import Link from "next/link";
 import fields from "@/content/paths/fields.json";
 import FieldBackground from "@/components/learn/FieldBackground";
 import AugmentationDiagram from "@/components/learn/AugmentationDiagram";
+import FieldRoadmap from "@/components/learn/FieldRoadmap";
+import { getAllConcepts } from "@/lib/learn";
+import fieldConceptPaths from "@/content/paths/field-concept-paths.json";
 
 type Difficulty = "Easy" | "Medium" | "Hard";
 
@@ -87,6 +90,9 @@ function DifficultyBadge({ difficulty }: { difficulty: Difficulty }) {
   );
 }
 
+type FieldConceptPaths = Record<string, { intuitions: string[]; deeper: string[] }>;
+const PATHS = fieldConceptPaths as unknown as FieldConceptPaths;
+
 export default async function PathPage({
   params,
 }: {
@@ -94,6 +100,17 @@ export default async function PathPage({
 }) {
   const { slug } = await params;
   const field = fields.find((f) => f.slug === slug);
+
+  // Resolve the two-track roadmap for this field. Skip silently if the field
+  // has no entry yet (additive — older fields keep their old layout).
+  const allConcepts = getAllConcepts();
+  const pathSpec = PATHS[slug];
+  const intuitionsConcepts = (pathSpec?.intuitions ?? [])
+    .map((s) => allConcepts.find((c) => c.slug === s))
+    .filter((c): c is NonNullable<typeof c> => Boolean(c));
+  const deeperConcepts = (pathSpec?.deeper ?? [])
+    .map((s) => allConcepts.find((c) => c.slug === s))
+    .filter((c): c is NonNullable<typeof c> => Boolean(c));
   if (!field) notFound();
 
   const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.aightai.in";
@@ -194,6 +211,17 @@ export default async function PathPage({
               </div>
               <MarginaliaForAnchor items={(field as { marginalia?: Marginalia[] }).marginalia} anchor="transformations" />
             </section>
+
+            {/* Two-track learning roadmap — Phase J. Renders only when this
+                field has an entry in content/paths/field-concept-paths.json. */}
+            {(intuitionsConcepts.length > 0 || deeperConcepts.length > 0) && (
+              <FieldRoadmap
+                fieldSlug={slug}
+                fieldName={field.field}
+                intuitions={intuitionsConcepts}
+                deeper={deeperConcepts}
+              />
+            )}
 
             {/* Augmentation diagram */}
             <section style={{ marginBottom: 56, padding: 32, borderRadius: 16, border: '1px solid rgba(245,239,224,0.07)', background: 'rgba(255,250,240,0.03)', backdropFilter: 'blur(12px)' }}>

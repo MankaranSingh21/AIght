@@ -1,0 +1,81 @@
+---
+title: "Tokenization"
+tagline: "The first thing every model does to your words — and the thing that quietly limits what it can do."
+readTime: "6 min read"
+slug: "tokenization"
+date: "2026-05-17"
+lastUpdated: "2026-05-17"
+related: ["embeddings", "attention", "context-windows"]
+prerequisites: []
+successors: ["embeddings", "attention", "context-windows"]
+exemplar_tools: ["chatgpt", "claude", "cursor"]
+key_fields: ["software-engineering", "creative-writing-literature", "journalism-media"]
+misconceptions:
+  - "Tokens are just words."
+  - "More tokens means more 'thinking'."
+  - "Every language costs the same to process."
+difficulty: "beginner"
+sources: 5
+---
+
+<Misconception think="Tokens are just words.">
+They're a unit somewhere between letters and words, picked by a learned compression scheme.
+"Strawberry" might be one token in English but split into `straw` + `berry` in some
+tokenizers; the same word in Bengali might be six tokens because the alphabet wasn't
+in the training set as much. The model never sees your sentence — it sees a sequence
+of integers, each pointing to a token-shaped piece of text.
+</Misconception>
+
+Every model in 2026 starts by chopping your text into tokens. The chopping
+rule is fixed at training time — once a tokenizer is trained, that's it.
+GPT and Claude use slightly different ones, which is part of why the same
+prompt can give surprisingly different outputs.
+
+## How tokens get picked
+
+The dominant scheme is **byte-pair encoding** (BPE). Start with single
+characters. Find the pair of adjacent characters that occurs most often in
+the training corpus. Merge them into a new "token." Repeat tens of
+thousands of times. The result is a vocabulary of ~50–100k pieces, where
+common substrings like `the`, `ing`, `tion` get their own slot and rare
+words get split into smaller pieces.
+
+This is why `lol` is one token and `unprecedented` might be three. The
+tokenizer optimizes for the corpus it saw, not for being intuitive.
+
+## Why this bites
+
+**Counting.** Asking a model "how many R's are in strawberry?" used to
+fail confidently because the model can't see letters — it sees the
+token `straw|berry`, both pre-chunked. The model has to reason about
+characters it never directly observed. Newer models partly fix this
+through better training. The underlying limitation remains.
+
+**Multilingual asymmetry.** English text is densely tokenized; many
+non-English languages aren't. A paragraph of Hindi or Bengali or
+Vietnamese can use 2–4× the tokens of the same paragraph in English —
+which means it costs more, fits less in the context window, and can hit
+quality issues from rare-token sparsity.
+
+**Edge cases.** Spelling out a word with spaces (`"H E L L O"`) gives
+completely different tokens than `"HELLO"`. Asking the model to count
+characters or reverse a string is harder than asking it to count words.
+
+## Why this matters for your work
+
+If you're paying per token, prefer concise prompts. If you're a non-English
+writer, your prompts may use 2–3× the tokens you'd expect — adjust your
+budget. If you're building tools, tokenization is your first hidden cost.
+
+If you're a writer or editor: the *granularity* the model perceives is not
+your sentences, it's tokens. Sometimes a tiny rewrite — `"don't"` →
+`"do not"` — changes the model's reasoning because the tokens it sees
+change.
+
+## What to read next
+
+Tokens become **embeddings** (each token gets a learned vector). Those
+vectors flow through **attention** (which lets the model relate distant
+tokens). The number you can fit at once is the **context window**.
+Tokenization is upstream of all of them — and the constraint nobody
+talks about.

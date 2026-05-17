@@ -1,0 +1,101 @@
+---
+title: "Chain-of-Thought"
+tagline: "When 'think step by step' actually earns its keep — and when it's just expensive theater."
+readTime: "6 min read"
+slug: "chain-of-thought"
+date: "2026-05-17"
+lastUpdated: "2026-05-17"
+related: ["in-context-learning", "prompt-engineering", "structured-output"]
+prerequisites: ["in-context-learning", "prompt-engineering"]
+successors: ["structured-output"]
+exemplar_tools: ["chatgpt", "claude", "gemini"]
+key_fields: ["physics-engineering", "finance-economics", "medicine-healthcare", "education-teaching", "software-engineering"]
+misconceptions:
+  - "'Think step by step' makes any model better."
+  - "Chain-of-thought is the model 'actually reasoning'."
+  - "More steps = more correct."
+difficulty: "intermediate"
+sources: 6
+---
+
+<Misconception think="The model is actually reasoning through the problem.">
+What the model is doing is producing a sequence of tokens that *look like*
+reasoning, because the training data contains lots of human reasoning that
+looks like that. Sometimes the produced sequence really does compute the
+right answer (multi-step arithmetic is a clear case). Sometimes it's a
+plausible-looking justification for a wrong answer the model committed to
+on token 5. The reasoning is downstream of probability over text, not the
+upstream cause of the answer.
+</Misconception>
+
+In 2022, a Google paper showed that adding "Let's think step by step"
+to math word problems improved accuracy from ~18% to ~58% on the
+GSM8K benchmark — using the *same model*, no retraining. The trick
+became known as chain-of-thought prompting, and it's one of the most
+durable findings in prompt engineering.
+
+## How it works
+
+When you ask a model "what's 17 × 24?" it tries to produce the answer
+in one token, and frequently flubs it. When you ask "what's 17 × 24?
+Show your work step by step," it produces:
+
+```
+17 × 24 = 17 × (20 + 4)
+       = (17 × 20) + (17 × 4)
+       = 340 + 68
+       = 408
+```
+
+The model didn't get smarter. It got more *space*. Each intermediate
+step is now grounded in the previous tokens, and the final answer is
+constrained by all of them. Errors that would compound silently in a
+one-shot answer get exposed and (often) corrected.
+
+This works for any task that *decomposes*: math, multi-hop reasoning,
+code debugging, legal analysis, complex extraction. It doesn't work
+for tasks that are atomic: identification, single-fact recall,
+classification.
+
+## The variants worth knowing
+
+- **Zero-shot CoT.** Just adding "Let's think step by step" — almost
+  free, often a 10–30% boost on reasoning tasks.
+- **Few-shot CoT.** Showing 2–3 examples of step-by-step reasoning
+  before your actual question — biggest gains, costs more tokens.
+- **Self-consistency.** Run CoT multiple times with temperature > 0,
+  take the majority answer. Significant accuracy improvement, but you
+  pay for N runs.
+- **Tree-of-thought.** Let the model branch into multiple reasoning
+  paths and evaluate them. More expensive, occasionally worth it for
+  truly hard problems.
+
+## When it's expensive theater
+
+For simple lookups, classification, and one-step answers, CoT just
+adds tokens (and cost). On modern reasoning-tuned models (`o1`,
+`o3`, Claude Opus), much of CoT is baked in — adding "think step by
+step" to those models can actively *hurt* because they're already
+doing internal reasoning and the explicit framing redirects them.
+
+A useful test: **does removing the CoT make the answer worse?** If
+not, you're paying for tokens you don't need.
+
+## Why this matters for your work
+
+If you're building anything that involves multi-step decisions
+(quoting, diagnosing, debugging, planning), explicit CoT usually
+helps and is cheap to try. For the new reasoning models, trust them
+to do it internally — don't over-prompt.
+
+For evaluation, watch your benchmarks: the same model on the same
+test gives very different scores depending on whether CoT was used,
+and whether you average over multiple runs. Headline numbers are
+almost always best-case.
+
+## What to read next
+
+**Structured output** pairs well with CoT — let the model reason in
+prose, then constrain the final answer to JSON. **Prompt engineering**
+is the broader skill of which CoT is one technique. **In-context
+learning** is the underlying mechanism that makes CoT examples work.
