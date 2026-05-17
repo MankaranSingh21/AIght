@@ -157,17 +157,20 @@ export default async function ToolPage({ params }: Props) {
       .map((a) => ({ slug: a.slug, name: nameMap.get(a.slug)!, reason: a.reason }));
   }
 
-  // Resolve concept slugs to titles so we can render a "Related concepts" block.
-  const conceptSlugs = tool.related_concepts ?? [];
-  const conceptLinks = conceptSlugs.length > 0
-    ? (() => {
-        const all = getAllConcepts();
-        return conceptSlugs
-          .map((s) => all.find((c) => c.slug === s))
-          .filter((c): c is NonNullable<typeof c> => Boolean(c))
-          .map((c) => ({ slug: c.slug, title: c.title, tagline: c.tagline }));
-      })()
-    : [];
+  // Resolve concept slugs to titles. Combines two sources:
+  //   1. Forward edge: tools.related_concepts[] (set in DB)
+  //   2. Reverse edge: concepts whose frontmatter exemplar_tools includes this slug
+  // Dedupes on slug.
+  const allConceptsForTool = getAllConcepts();
+  const forwardSlugs = tool.related_concepts ?? [];
+  const reverseSlugs = allConceptsForTool
+    .filter((c) => (c.exemplar_tools ?? []).includes(tool.slug))
+    .map((c) => c.slug);
+  const conceptSlugs = Array.from(new Set([...forwardSlugs, ...reverseSlugs]));
+  const conceptLinks = conceptSlugs
+    .map((s) => allConceptsForTool.find((c) => c.slug === s))
+    .filter((c): c is NonNullable<typeof c> => Boolean(c))
+    .map((c) => ({ slug: c.slug, title: c.title, tagline: c.tagline }));
 
   const toolDetail: ToolDetailData = {
     name: tool.name,

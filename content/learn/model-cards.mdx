@@ -1,0 +1,63 @@
+---
+title: "Model Cards"
+tagline: "The documentation labs publish when they release a model — and what they leave out."
+readTime: "4 min read"
+slug: "model-cards"
+date: "2026-05-17"
+lastUpdated: "2026-05-17"
+related: ["evals", "alignment", "training"]
+prerequisites: ["evals"]
+successors: ["alignment"]
+exemplar_tools: ["claude", "chatgpt", "gemini"]
+key_fields: ["software-engineering", "social-work-public-policy", "education-teaching", "law-legal"]
+misconceptions:
+  - "Model cards are objective spec sheets."
+  - "Disclosed limitations are the actual limitations."
+  - "Two models with similar cards behave similarly."
+difficulty: "beginner"
+sources: 4
+---
+
+<Misconception think="Model cards are objective spec sheets.">
+They're marketing artefacts shaped by what the lab chose to disclose,
+on benchmarks the lab chose to run, with limitations described in
+language the lab's policy team approved. The numbers are usually
+honest. The framing is rarely neutral. Two model cards with similar
+headline benchmarks can describe models that behave very differently
+in your task.
+</Misconception>
+
+A model card is the document a lab publishes alongside a model release.
+The format was proposed in 2018 (Mitchell et al.) and has become
+standard practice — though the rigour varies wildly.
+
+## What a good card includes
+
+- **Identity.** Architecture, parameter count, training data
+  description, training compute.
+- **Intended use.** Where the model is meant to be deployed.
+- **Limitations.** Failure modes the lab has documented.
+- **Evaluations.** Benchmark results — usually selective.
+- **Ethical considerations.** Bias evaluations, safety testing.
+- **Training data.** Sources, filtering criteria, known issues.
+
+## What's usually missing
+
+- **Full training data.** "Web text and books" is the typical
+  disclosure. The specifics — which books, which web sources, what was
+  excluded — are commercially sensitive.
+- **Negative results.** Benchmarks the model did poorly on rarely
+  appear.
+- **Behavioural quirks.** The model's idiosyncratic voice, refusal
+  patterns, sycophancy tendencies — usually discovered post-launch by
+  users.
+
+## How to read one
+
+Search for the bullet points the lab spent the most words on — those
+are usually where their genuine value lies. Then run your own eval.
+
+## What to read next
+
+**Evals** are how you verify the card's claims on your task. **Alignment**
+covers the ethical-considerations section.

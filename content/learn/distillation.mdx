@@ -1,0 +1,65 @@
+---
+title: "Distillation"
+tagline: "Teaching a small model to imitate a big one — and what gets lost in the lesson."
+readTime: "5 min read"
+slug: "distillation"
+date: "2026-05-17"
+lastUpdated: "2026-05-17"
+related: ["quantization", "training", "fine-tuning"]
+prerequisites: ["training", "fine-tuning"]
+successors: ["quantization"]
+exemplar_tools: ["chatgpt", "claude"]
+key_fields: ["software-engineering", "physics-engineering"]
+misconceptions:
+  - "A distilled model is a smaller copy of the original."
+  - "Distillation is just supervised fine-tuning."
+  - "Distilled models work as well as the teacher on every task."
+difficulty: "intermediate"
+sources: 4
+---
+
+<Misconception think="A distilled model is basically a smaller copy of the teacher.">
+It's more like a smaller model trained to *imitate the teacher's
+behaviour pattern*, not its internal structure. The small model develops
+its own way of producing similar outputs. On the tasks the teacher was
+strong at, the student is competitive. On tasks the teacher was weak at,
+the student inherits the weakness. And on tasks far from the teacher's
+fine-tuning distribution, the student often does worse than its own
+base model would have.
+</Misconception>
+
+Distillation trains a smaller "student" model on the outputs of a
+larger "teacher." The teacher generates examples — questions and
+answers, or in the soft-distillation variant, full probability
+distributions — and the student learns to reproduce them.
+
+The result: a model with the teacher's behaviour and the student's
+inference cost.
+
+## Why it works
+
+The teacher does the expensive work of figuring out what good outputs
+look like for a given input distribution. The student gets to learn
+from already-processed, high-quality examples — much more efficient
+than learning from raw web data.
+
+## What it costs
+
+The student is bounded by the teacher. It can't surpass the teacher
+on the teacher's blind spots. It often inherits subtle biases too — if
+the teacher was prone to a specific failure, the student picks it up.
+
+It also requires running the teacher a lot. For a serious distillation
+you generate millions of examples — significant API spend if the
+teacher is a frontier proprietary model.
+
+## In practice
+
+Most "small" frontier models — GPT-4 mini, Claude Haiku, Gemini Flash —
+are distilled from their larger siblings. The pricing reflects the
+inference difference, not the training cost.
+
+## What to read next
+
+**Quantization** is the orthogonal compression technique.
+**Fine-tuning** is the broader process distillation is one variant of.

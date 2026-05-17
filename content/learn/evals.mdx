@@ -1,0 +1,53 @@
+---
+title: "Evals"
+tagline: "How you measure whether a model is good at the thing you actually care about."
+readTime: "5 min read"
+slug: "evals"
+date: "2026-05-17"
+lastUpdated: "2026-05-17"
+related: ["rlhf", "scaling-laws", "hallucination"]
+prerequisites: ["prompt-engineering"]
+successors: ["rlhf", "alignment"]
+exemplar_tools: ["chatgpt", "claude"]
+key_fields: ["software-engineering", "physics-engineering", "medicine-healthcare", "law-legal"]
+misconceptions:
+  - "Public benchmarks tell you which model is best."
+  - "A 95% accuracy means 95% of cases work."
+  - "Eval is something you do once before launch."
+difficulty: "beginner"
+sources: 5
+---
+
+<Misconception think="Public benchmarks tell you which model is best for your work.">
+They tell you which model performed best on someone else's specific test
+set. Public benchmarks get gamed (training on the test set, even
+inadvertently) and often don't match your task distribution. The
+benchmark a frontier model wins might be irrelevant to your case. Your
+own eval — even 50 hand-picked examples — beats a leaderboard.
+</Misconception>
+
+Evaluation is the unglamorous backbone of AI work. Three rules nobody
+follows enough:
+
+1. **Build your own eval set.** Collect 50–200 real inputs from your
+   actual use case. Hand-label the expected outputs. That's your truth.
+2. **Run it on every model change.** Prompt tweak, model upgrade,
+   temperature adjustment — re-run. Without this you don't know if
+   you've improved or just shifted the failures.
+3. **Track failure modes, not just accuracy.** "85% correct" tells you
+   nothing about the 15%. Read them.
+
+## Eval types
+
+- **Exact-match.** Cheap, brittle, works for classification.
+- **LLM-as-judge.** Use a stronger model to grade outputs. Fast,
+  decent, but has its own biases.
+- **Human review.** Slow, expensive, the gold standard. Sample 20–50
+  outputs weekly.
+- **Pairwise preference.** A vs. B; collect votes. Less noisy than
+  absolute scoring.
+
+## What to read next
+
+**RLHF** uses preference evals as its core signal. **Hallucination** is
+the failure mode evals exist to catch.

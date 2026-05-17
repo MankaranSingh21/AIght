@@ -1,0 +1,68 @@
+---
+title: "Quantization"
+tagline: "Why a 70B-parameter model can run on your laptop — and the quality you trade for it."
+readTime: "5 min read"
+slug: "quantization"
+date: "2026-05-17"
+lastUpdated: "2026-05-17"
+related: ["distillation", "kv-cache", "training"]
+prerequisites: ["transformers"]
+successors: ["distillation"]
+exemplar_tools: ["deepseek", "claude", "chatgpt"]
+key_fields: ["software-engineering", "physics-engineering"]
+misconceptions:
+  - "Quantized models are clearly worse."
+  - "4-bit means 4× compression with no cost."
+  - "Quantization is just rounding."
+difficulty: "intermediate"
+sources: 4
+---
+
+<Misconception think="A quantized model is just a worse version of the original.">
+4-bit quantized open-source models often score within 1–2 points of
+their 16-bit originals on benchmarks. The "loss" is mostly invisible
+in chat-style use. Where it shows up is reasoning-heavy tasks at the
+edge of the model's capability and tasks requiring precise number
+manipulation. For most use, modern 4-bit is good enough.
+</Misconception>
+
+Quantization compresses a model's weights from 16-bit floats to 8, 4,
+or even 2 bits per parameter. The math gets messier but the storage and
+memory bandwidth shrink dramatically. A 70B model goes from ~140GB at
+16-bit to ~40GB at 4-bit — small enough to fit on a single high-end
+consumer GPU.
+
+## How it works (in one paragraph)
+
+Pick a scaling factor per weight group. Round each weight to the nearest
+quantized level within that scale. At inference, multiply by the scale
+to recover an approximate float. Variants like GPTQ, AWQ, and bitsandbytes
+add cleverness about *which* weights matter most and preserve those at
+higher precision.
+
+## What survives, what doesn't
+
+**Survives well.** Standard chat, summarization, classification,
+retrieval-style tasks.
+
+**Degrades.** Multi-step math, code completion on edge cases, long-
+context reasoning. The errors are mostly small but compound.
+
+**Catastrophic.** Going below 4 bits without special techniques
+typically destroys quality. 2-bit is research; not production.
+
+## Why this matters for your work
+
+If you self-host: 4-bit quantization is the default. The cost savings
+are real (less GPU memory, faster inference) and the quality penalty is
+usually invisible.
+
+If you use API models: the provider may be silently quantizing too —
+"Claude Haiku" or "GPT-4 mini" variants involve quantization plus
+distillation under the hood. The cheaper tier isn't only fewer
+parameters; it's the same model run at lower precision.
+
+## What to read next
+
+**Distillation** is the bigger-model-to-smaller-model technique.
+**KV cache** is the orthogonal memory optimisation.
