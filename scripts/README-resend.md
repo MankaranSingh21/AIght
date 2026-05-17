@@ -6,45 +6,21 @@ successful Supabase `subscribers` insert.
 
 ## Status today
 
-- `RESEND_API_KEY` is set in `.env.local` (gitignored).
-- `RESEND_FROM_EMAIL` defaults to `"AIght <onboarding@resend.dev>"` — Resend's
-  sandbox sender. Works immediately, but emails will look transactional and
-  may land in Promotions/Updates tabs.
+- `aightai.in` is **verified** in Resend (DKIM/SPF/MX live in GoDaddy DNS).
+- `RESEND_API_KEY` is set in `.env.local` (gitignored) and on Vercel.
+- `RESEND_FROM` defaults to `"Mankaran at AIght <hello@aightai.in>"` directly
+  in `lib/resend.ts` — no env var needed unless you want to override per env.
 - Fire-and-forget — if the send fails, the subscriber is still recorded.
 
-## What you need to do (one-time, optional but recommended)
+## Required Vercel env vars
 
-### 1. Verify the `aightai.in` domain in Resend
+In the Vercel dashboard → AIght project → Settings → Environment Variables:
 
-1. Log into the Resend dashboard.
-2. **Domains → Add Domain → `aightai.in`**.
-3. Copy the **DKIM, SPF, and (optional) MX** records Resend gives you.
-4. Add those records in your domain registrar's DNS panel (Cloudflare,
-   Namecheap, etc.).
-5. Wait ~5–60 minutes for DNS propagation, then click **Verify** in
-   Resend.
-
-### 2. Switch the sender
-
-Once verified, update `.env.local` and the Vercel project's environment
-variables:
-
-```bash
-RESEND_FROM_EMAIL="Mankaran at AIght <hello@aightai.in>"
-```
-
-Redeploy. The welcome email will now land from `hello@aightai.in` and avoid
-Promotions tab routing.
-
-### 3. Add the production environment variable to Vercel
-
-In the Vercel dashboard → AIght project → Settings → Environment Variables,
-add both:
-
-- `RESEND_API_KEY` (the same value as `.env.local`)
-- `RESEND_FROM_EMAIL` (the value above once domain is verified)
-
-Production won't send welcome emails until both are present.
+- `RESEND_API_KEY` — Resend dashboard → API Keys
+- `SUPABASE_SERVICE_ROLE_KEY` — Supabase → Project Settings → API → service_role
+- `CRON_SECRET` — any long random string (used to auth `/api/digest` cron)
+- `RESEND_FROM_EMAIL` — *optional*; only set if you want to override
+  the default `hello@aightai.in` sender per environment.
 
 ## Rate-limit reality on free tier
 
@@ -67,13 +43,18 @@ If nothing arrives:
 3. Confirm the address isn't bouncing — Resend shows recent sends in the
    dashboard's **Emails** tab.
 
-## What's NOT wired yet (Phase K candidates)
+## What's wired in Phase K
 
-- Weekly digest email — would be a Vercel cron route hitting `/api/digest`
-  that pulls last-7-days of `/signal` posts + new tools and sends to all
-  subscribers.
-- Unsubscribe flow — currently the welcome email says "reply with
-  unsubscribe" or email `hello@aightai.in`. Auto-handle this when Mankaran
-  asks.
+- **Weekly digest** — `app/api/digest/route.ts` + `vercel.json` cron at
+  `0 14 * * 1` (Mondays 14:00 UTC). Pulls concepts updated in the last 7
+  days + tools created in the last 7 days. If nothing changed, the route
+  returns `{ skipped: "no items this week" }` and no email goes out.
+  Authed via `CRON_SECRET` bearer header.
+
+## What's still NOT wired
+
+- Unsubscribe flow — currently the welcome + digest emails say "reply
+  with unsubscribe" or email `hello@aightai.in`. Auto-handle this when
+  the list grows enough to justify it.
 - Resend audience sync — pushing Supabase `subscribers` into a Resend
-  Audience for native unsubscribe management.
+  Audience for native unsubscribe management + sender reputation tracking.

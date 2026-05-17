@@ -15,9 +15,10 @@ export function getResend(): Resend | null {
   return _client;
 }
 
-// Default `from` — falls back to Resend's sandbox sender until the user
-// verifies aightai.in in the Resend dashboard. See scripts/README-resend.md.
-export const RESEND_FROM = process.env.RESEND_FROM_EMAIL ?? "AIght <onboarding@resend.dev>";
+// Default `from` — aightai.in is verified in Resend (DKIM/SPF pass). Override
+// via RESEND_FROM_EMAIL if you ever need to switch sender identity per env.
+export const RESEND_FROM =
+  process.env.RESEND_FROM_EMAIL ?? "Mankaran at AIght <hello@aightai.in>";
 
 export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.aightai.in";
