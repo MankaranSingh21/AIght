@@ -37,6 +37,10 @@ The first stage is cheap and approximate. The second is expensive and
 precise. You can't afford to run the expensive model over a million
 documents, but you can afford to run it over 50.
 
+<ConceptDemo shape="stepthrough" ariaLabel="Retrieval + rerank pipeline">
+  <RetrievalRerankDemo />
+</ConceptDemo>
+
 ## Why two stages
 
 Embedding models encode the query and document *separately*, then

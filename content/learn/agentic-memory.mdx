@@ -31,6 +31,10 @@ Language models are stateless. Each request starts fresh; the model's
 weights don't update. Agentic memory is the engineered layer that
 fakes persistence on top of this.
 
+<ConceptDemo shape="stepthrough" ariaLabel="Agentic memory across turns">
+  <AgenticMemoryDemo />
+</ConceptDemo>
+
 ## The patterns
 
 - **Conversation buffer.** Keep the last N turns in the context window.

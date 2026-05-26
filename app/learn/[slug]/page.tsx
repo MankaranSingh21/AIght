@@ -36,6 +36,35 @@ import TemperatureDemo from "@/components/learn/TemperatureDemo";
 import ChainOfThoughtDemo from "@/components/learn/ChainOfThoughtDemo";
 import KvCacheDemo from "@/components/learn/KvCacheDemo";
 import AttentionQkvDemo from "@/components/learn/AttentionQkvDemo";
+import AgenticMemoryDemo from "@/components/learn/AgenticMemoryDemo";
+import AlignmentDemo from "@/components/learn/AlignmentDemo";
+import ConstitutionalAiDemo from "@/components/learn/ConstitutionalAiDemo";
+import ContextWindowsDemo from "@/components/learn/ContextWindowsDemo";
+import DiffusionDemo from "@/components/learn/DiffusionDemo";
+import DistillationDemo from "@/components/learn/DistillationDemo";
+import DpoDemo from "@/components/learn/DpoDemo";
+import EvalsDemo from "@/components/learn/EvalsDemo";
+import FunctionCallingDemo from "@/components/learn/FunctionCallingDemo";
+import HallucinationDemo from "@/components/learn/HallucinationDemo";
+import InContextLearningDemo from "@/components/learn/InContextLearningDemo";
+import JailbreaksDemo from "@/components/learn/JailbreaksDemo";
+import MixtureOfExpertsDemo from "@/components/learn/MixtureOfExpertsDemo";
+import ModelCardsDemo from "@/components/learn/ModelCardsDemo";
+import ModelCollapseDemo from "@/components/learn/ModelCollapseDemo";
+import MultiagentDemo from "@/components/learn/MultiagentDemo";
+import MultimodalDemo from "@/components/learn/MultimodalDemo";
+import PromptEngineeringDemo from "@/components/learn/PromptEngineeringDemo";
+import PromptInjectionDemo from "@/components/learn/PromptInjectionDemo";
+import QuantizationDemo from "@/components/learn/QuantizationDemo";
+import ReasoningModelsDemo from "@/components/learn/ReasoningModelsDemo";
+import RetrievalRerankDemo from "@/components/learn/RetrievalRerankDemo";
+import RlhfDemo from "@/components/learn/RlhfDemo";
+import ScalingLawsDemo from "@/components/learn/ScalingLawsDemo";
+import StructuredOutputDemo from "@/components/learn/StructuredOutputDemo";
+import SyntheticDataDemo from "@/components/learn/SyntheticDataDemo";
+import TrainingDemo from "@/components/learn/TrainingDemo";
+import VisionLanguageDemo from "@/components/learn/VisionLanguageDemo";
+import WatermarkingDemo from "@/components/learn/WatermarkingDemo";
 import fields from "@/content/paths/fields.json";
 import Cite from "@/components/learn/Cite";
 import Glossary from "@/components/learn/Glossary";
@@ -94,6 +123,35 @@ const mdxComponents = {
   ChainOfThoughtDemo,
   KvCacheDemo,
   AttentionQkvDemo,
+  AgenticMemoryDemo,
+  AlignmentDemo,
+  ConstitutionalAiDemo,
+  ContextWindowsDemo,
+  DiffusionDemo,
+  DistillationDemo,
+  DpoDemo,
+  EvalsDemo,
+  FunctionCallingDemo,
+  HallucinationDemo,
+  InContextLearningDemo,
+  JailbreaksDemo,
+  MixtureOfExpertsDemo,
+  ModelCardsDemo,
+  ModelCollapseDemo,
+  MultiagentDemo,
+  MultimodalDemo,
+  PromptEngineeringDemo,
+  PromptInjectionDemo,
+  QuantizationDemo,
+  ReasoningModelsDemo,
+  RetrievalRerankDemo,
+  RlhfDemo,
+  ScalingLawsDemo,
+  StructuredOutputDemo,
+  SyntheticDataDemo,
+  TrainingDemo,
+  VisionLanguageDemo,
+  WatermarkingDemo,
   pre: (props: JSX.IntrinsicElements["pre"]) => <CodeBlock {...props} />,
   h2: (props: JSX.IntrinsicElements["h2"]) => (
     <h2
