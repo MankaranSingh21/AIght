@@ -1,9 +1,11 @@
 'use client';
 
+import { STATS } from '@/lib/stats';
+
 const ITEMS = [
-  '52+ curated tools',
-  '20 fields covered',
-  '0 affiliate links',
+  `${STATS.tools}+ curated tools`,
+  `${STATS.fields} fields covered`,
+  `${STATS.affiliateLinks} affiliate links`,
   'Daily signal updates',
   'Healthcare',
   'Law & Legal',

@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import fields from "@/content/paths/fields.json";
 import HeroWidgets, { type HeroTool, type HeroRiskStats, type HeroTopScored } from './HeroWidgets';
 import MagneticLink from './MagneticLink';
+import { STATS } from '@/lib/stats';
 
 interface HeroProps {
   tools?: HeroTool[];
@@ -63,11 +64,11 @@ export default function Hero({ tools, riskStats, topScored, fieldNames, totalToo
     return () => window.removeEventListener('mousemove', onMove);
   }, []);
 
-  const toolCountLabel = totalTools && totalTools > 0 ? `${totalTools}+` : '60+';
-  const STATS = [
+  const toolCountLabel = totalTools && totalTools > 0 ? `${totalTools}+` : `${STATS.tools}+`;
+  const heroStats = [
     { num: toolCountLabel,  label: 'Curated tools'  },
     { num: fields.length.toString(), label: 'Fields covered' },
-    { num: '0',    label: 'Affiliate links' },
+    { num: String(STATS.affiliateLinks), label: 'Affiliate links' },
   ];
 
   return (
@@ -184,7 +185,7 @@ export default function Hero({ tools, riskStats, topScored, fieldNames, totalToo
               animate="visible"
               className="flex gap-10 pt-6 border-t border-primary/10 w-full max-w-md"
             >
-              {STATS.map(({ num, label }) => (
+              {heroStats.map(({ num, label }) => (
                 <div key={label}>
                   <div className="font-display text-3xl font-bold text-primary mb-1">{num}</div>
                   <div className="font-mono text-[10px] font-medium tracking-[0.12em] uppercase text-muted">{label}</div>

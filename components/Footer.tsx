@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import NewsletterForm from "./NewsletterForm";
+import { STATS } from "@/lib/stats";
 
 const NAV_LINKS = [
   { href: "/",              label: "Home"                    },
@@ -21,10 +22,10 @@ const NAV_LINKS = [
   { href: "https://ko-fi.com/aightai", label: "Support the Project (Ko-fi)" },
 ];
 
-const STATS = [
-  { stat: "52+",   label: "curated tools"         },
-  { stat: "100%",  label: "no sponsored rankings"  },
-  { stat: "0",     label: "affiliate links"        },
+const FOOTER_STATS = [
+  { stat: `${STATS.tools}+`,               label: "curated tools"         },
+  { stat: "100%",                          label: "no sponsored rankings"  },
+  { stat: String(STATS.affiliateLinks),    label: "affiliate links"        },
 ];
 
 export default function Footer() {
@@ -49,7 +50,7 @@ export default function Footer() {
           paddingBottom: 40,
           borderBottom: '1px solid rgba(245,239,224,0.06)',
         }}>
-          {STATS.map(({ stat, label }) => (
+          {FOOTER_STATS.map(({ stat, label }) => (
             <div key={label} style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
               <span style={{
                 fontFamily: 'var(--font-display)',
@@ -175,14 +176,14 @@ export default function Footer() {
             margin: 0,
           }}>
             © {new Date().getFullYear()} AIght. Built by{' '}
-            <a
-              href="mailto:singhmankaran05@gmail.com"
+            <Link
+              href="/author/moon"
               style={{ color: 'rgba(245,239,224,0.40)', textDecoration: 'none', transition: 'color 150ms' }}
               onMouseEnter={e => (e.currentTarget.style.color = '#F5EFE0')}
               onMouseLeave={e => (e.currentTarget.style.color = 'rgba(245,239,224,0.40)')}
             >
-              Mankaran Singh
-            </a>
+              Moon
+            </Link>
           </p>
           <p style={{
             fontFamily: 'var(--font-editorial)',

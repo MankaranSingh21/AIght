@@ -18,6 +18,7 @@ import { getAllHumanEssays } from "@/lib/human";
 import { getSignalPosts } from "@/lib/signal";
 import { getHomeData } from "@/lib/home-data";
 import fields from "@/content/paths/fields.json";
+import { STATS } from "@/lib/stats";
 
 import HomepageParticles from "@/components/HomepageParticles";
 
@@ -271,7 +272,7 @@ async function ToolsSection() {
             </div>
           </ScrollParallax>
           <Marginalia side="right" eyebrow="In the archive">
-            60+ tools, 0 affiliate links.
+            {STATS.tools}+ tools, {STATS.affiliateLinks} affiliate links.
             Curated weekly, judged ruthlessly.
           </Marginalia>
         </div>

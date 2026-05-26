@@ -33,6 +33,7 @@ import Misconception from "@/components/learn/Misconception";
 import fields from "@/content/paths/fields.json";
 import Cite from "@/components/learn/Cite";
 import Glossary from "@/components/learn/Glossary";
+import Byline from "@/components/Byline";
 import type { JSX } from "react";
 
 type Props = {
@@ -393,37 +394,7 @@ export default async function LearnConceptPage({ params }: Props) {
             {frontmatter.tagline}
           </p>
           {/* Byline */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 12,
-              fontFamily: "var(--font-mono)",
-              fontSize: 11,
-              letterSpacing: "0.08em",
-              color: "rgba(245,239,224,0.45)",
-            }}
-          >
-            <Link
-              href="/about"
-              style={{
-                color: "rgba(245,239,224,0.80)",
-                textDecoration: "none",
-                borderBottom: "1px solid rgba(170,255,77,0.30)",
-                paddingBottom: 1,
-              }}
-            >
-              {authorName}
-            </Link>
-            {conceptMeta?.lastUpdated && (
-              <>
-                <span aria-hidden style={{ opacity: 0.35 }}>·</span>
-                <time dateTime={conceptMeta.lastUpdated}>
-                  Updated {new Date(conceptMeta.lastUpdated).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
-                </time>
-              </>
-            )}
-          </div>
+          <Byline variant="inline" lastUpdated={conceptMeta?.lastUpdated} />
         </header>
 
         {/* Per-concept mini-map — Phase J. Renders only when concept frontmatter
@@ -585,6 +556,9 @@ export default async function LearnConceptPage({ params }: Props) {
             </div>
           </section>
         )}
+
+        {/* Block byline — author credit before footer nav */}
+        <Byline variant="block" lastUpdated={conceptMeta?.lastUpdated} />
 
         {/* Footer nav */}
         <div
