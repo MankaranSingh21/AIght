@@ -30,6 +30,9 @@ import Footnote from "@/components/learn/Footnote";
 import Footnotes from "@/components/learn/Footnotes";
 import ConceptMiniMap from "@/components/learn/ConceptMiniMap";
 import Misconception from "@/components/learn/Misconception";
+import { ConceptDemo } from "@/components/learn/ConceptDemo";
+import TokenizationDemo from "@/components/learn/TokenizationDemo";
+import TemperatureDemo from "@/components/learn/TemperatureDemo";
 import fields from "@/content/paths/fields.json";
 import Cite from "@/components/learn/Cite";
 import Glossary from "@/components/learn/Glossary";
@@ -82,6 +85,9 @@ const mdxComponents = {
   Cite,
   Glossary,
   Misconception,
+  ConceptDemo,
+  TokenizationDemo,
+  TemperatureDemo,
   pre: (props: JSX.IntrinsicElements["pre"]) => <CodeBlock {...props} />,
   h2: (props: JSX.IntrinsicElements["h2"]) => (
     <h2

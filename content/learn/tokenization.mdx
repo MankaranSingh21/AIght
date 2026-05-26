@@ -31,6 +31,10 @@ rule is fixed at training time — once a tokenizer is trained, that's it.
 GPT and Claude use slightly different ones, which is part of why the same
 prompt can give surprisingly different outputs.
 
+<ConceptDemo shape="stepthrough" ariaLabel="Tokenization demo">
+  <TokenizationDemo />
+</ConceptDemo>
+
 ## How tokens get picked
 
 The dominant scheme is **byte-pair encoding** (BPE). Start with single
