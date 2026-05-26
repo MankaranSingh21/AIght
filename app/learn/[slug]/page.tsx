@@ -33,6 +33,9 @@ import Misconception from "@/components/learn/Misconception";
 import { ConceptDemo } from "@/components/learn/ConceptDemo";
 import TokenizationDemo from "@/components/learn/TokenizationDemo";
 import TemperatureDemo from "@/components/learn/TemperatureDemo";
+import ChainOfThoughtDemo from "@/components/learn/ChainOfThoughtDemo";
+import KvCacheDemo from "@/components/learn/KvCacheDemo";
+import AttentionQkvDemo from "@/components/learn/AttentionQkvDemo";
 import fields from "@/content/paths/fields.json";
 import Cite from "@/components/learn/Cite";
 import Glossary from "@/components/learn/Glossary";
@@ -88,6 +91,9 @@ const mdxComponents = {
   ConceptDemo,
   TokenizationDemo,
   TemperatureDemo,
+  ChainOfThoughtDemo,
+  KvCacheDemo,
+  AttentionQkvDemo,
   pre: (props: JSX.IntrinsicElements["pre"]) => <CodeBlock {...props} />,
   h2: (props: JSX.IntrinsicElements["h2"]) => (
     <h2

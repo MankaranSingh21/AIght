@@ -40,6 +40,10 @@ and value vectors for a token, it *stores* them. The next token's
 attention reads from the cache instead of recomputing. Generation
 goes from `O(n²)` per token to `O(n)`.
 
+<ConceptDemo shape="stepthrough" ariaLabel="KV cache step-by-step demo">
+  <KvCacheDemo />
+</ConceptDemo>
+
 ## How it works (the short version)
 
 In an attention layer, each token gets three vectors: query (Q), key

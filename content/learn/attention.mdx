@@ -34,6 +34,10 @@ every token in a sequence look at every other token in parallel. That
 mechanism is attention, and every model you've heard of — GPT, Claude,
 Gemini, Llama — is built around it.
 
+<ConceptDemo shape="playground" ariaLabel="Attention QKV computation demo">
+  <AttentionQkvDemo />
+</ConceptDemo>
+
 ## How it works (the short version)
 
 For each token, the model computes three vectors: a **query** (Q), a
