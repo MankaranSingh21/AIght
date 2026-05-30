@@ -627,6 +627,94 @@ export default async function LearnConceptPage({ params }: Props) {
           </section>
         )}
 
+        {/* Prev/next sequential reading — uses prerequisites[0] and successors[0]
+            from frontmatter. Hidden if neither resolves to an existing concept. */}
+        {(() => {
+          const prev = conceptMeta?.prerequisites?.length
+            ? allConcepts.find((c) => c.slug === conceptMeta.prerequisites![0])
+            : undefined;
+          const next = conceptMeta?.successors?.length
+            ? allConcepts.find((c) => c.slug === conceptMeta.successors![0])
+            : undefined;
+          if (!prev && !next) return null;
+          return (
+            <nav
+              aria-label="Concept reading sequence"
+              style={{
+                marginTop: 64,
+                paddingTop: 32,
+                borderTop: "1px solid rgba(245,239,224,0.07)",
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: 16,
+              }}
+              className="concept-prev-next"
+            >
+              {prev ? (
+                <Link
+                  href={`/learn/${prev.slug}`}
+                  style={{
+                    padding: "20px 24px",
+                    borderRadius: 12,
+                    border: "1px solid rgba(245,239,224,0.08)",
+                    background: "rgba(255,250,240,0.02)",
+                    textDecoration: "none",
+                    transition: "border-color 200ms ease",
+                  }}
+                  className="group hover:border-accent"
+                >
+                  <p style={{
+                    fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.14em",
+                    textTransform: "uppercase", color: "var(--text-muted)", margin: "0 0 8px",
+                  }}>
+                    ← Prerequisite
+                  </p>
+                  <p style={{
+                    fontFamily: "var(--font-display)", fontSize: 17, fontWeight: 600,
+                    color: "var(--text-primary)", margin: 0, letterSpacing: "-0.01em",
+                    transition: "color 150ms ease",
+                  }}
+                    className="group-hover:text-accent"
+                  >
+                    {prev.title}
+                  </p>
+                </Link>
+              ) : <div />}
+              {next ? (
+                <Link
+                  href={`/learn/${next.slug}`}
+                  style={{
+                    padding: "20px 24px",
+                    borderRadius: 12,
+                    border: "1px solid rgba(245,239,224,0.08)",
+                    background: "rgba(255,250,240,0.02)",
+                    textDecoration: "none",
+                    textAlign: "right",
+                    transition: "border-color 200ms ease",
+                  }}
+                  className="group hover:border-accent"
+                >
+                  <p style={{
+                    fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.14em",
+                    textTransform: "uppercase", color: "var(--text-muted)", margin: "0 0 8px",
+                  }}>
+                    Next →
+                  </p>
+                  <p style={{
+                    fontFamily: "var(--font-display)", fontSize: 17, fontWeight: 600,
+                    color: "var(--text-primary)", margin: 0, letterSpacing: "-0.01em",
+                    transition: "color 150ms ease",
+                  }}
+                    className="group-hover:text-accent"
+                  >
+                    {next.title}
+                  </p>
+                </Link>
+              ) : <div />}
+            </nav>
+          );
+        })()}
+
         {/* Block byline — author credit before footer nav */}
         <Byline variant="block" lastUpdated={conceptMeta?.lastUpdated} />
 

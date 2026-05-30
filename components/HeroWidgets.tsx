@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 
 interface MousePos { x: number; y: number; }
 
@@ -137,8 +138,8 @@ export default function HeroWidgets({
   const [shown, setShown] = useState<number[]>([]);
 
   useEffect(() => {
-    [0, 500, 900, 1300, 1700].forEach((delay, i) => {
-      setTimeout(() => setShown(p => [...p, i]), 1200 + delay);
+    [0, 200, 400, 600, 800].forEach((delay, i) => {
+      setTimeout(() => setShown(p => [...p, i]), 400 + delay);
     });
   }, []);
 
@@ -196,7 +197,12 @@ export default function HeroWidgets({
           {displayTools.map(t => <ToolRow key={t.name} t={t} />)}
           <div style={{ marginTop: 12, paddingTop: 10, borderTop: '1px solid rgba(245,239,224,0.08)', display: 'flex', justifyContent: 'space-between' }}>
             <span style={{ fontFamily: 'var(--font-editorial)', fontSize: 11, color: 'rgba(245,239,224,0.4)', fontStyle: 'italic' }}>{displayCount}+ tools indexed</span>
-            <span style={{ fontFamily: 'var(--font-ui)', fontSize: 11, fontWeight: 600, color: '#AAFF4D', cursor: 'pointer' }}>All tools →</span>
+            <Link
+              href="/tools"
+              style={{ fontFamily: 'var(--font-ui)', fontSize: 11, fontWeight: 600, color: 'var(--accent-primary)', textDecoration: 'none' }}
+            >
+              All tools →
+            </Link>
           </div>
         </Glass>
       </div>

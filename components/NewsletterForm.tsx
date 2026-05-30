@@ -38,7 +38,7 @@ export default function NewsletterForm({ variant = "block", pitch, source }: New
 
   if (done) {
     return (
-      <p style={{ fontFamily: 'var(--font-ui)', fontSize: 14, color: '#AAFF4D', fontWeight: 600 }}>
+      <p style={{ fontFamily: 'var(--font-ui)', fontSize: 14, color: 'var(--accent-primary)', fontWeight: 600 }}>
         You&apos;re in. See you in the signal.
       </p>
     );
@@ -82,7 +82,7 @@ export default function NewsletterForm({ variant = "block", pitch, source }: New
             style={{
               flex: 1, minWidth: 200, height: 38,
               fontFamily: 'var(--font-ui)', fontSize: 13,
-              color: '#F5EFE0', background: 'rgba(255,250,240,0.04)',
+              color: 'var(--text-primary)', background: 'rgba(255,250,240,0.04)',
               border: '1px solid rgba(245,239,224,0.10)', borderRadius: 8,
               padding: '0 12px', outline: 'none',
             }}
@@ -125,7 +125,7 @@ export default function NewsletterForm({ variant = "block", pitch, source }: New
             fontSize: 13,
             color: '#F5EFE0',
             background: 'rgba(255,250,240,0.04)',
-            border: '1px solid rgba(245,239,224,0.09)',
+            border: '1px solid var(--glass-border)',
             borderRadius: 8,
             padding: '0 14px',
             outline: 'none',

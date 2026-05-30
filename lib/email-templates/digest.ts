@@ -1,5 +1,6 @@
 import "server-only";
 import { getResend, RESEND_FROM, SITE_URL } from "@/lib/resend";
+import { buildUnsubscribeUrl } from "@/lib/unsubscribe-token";
 
 export type DigestItem = {
   kind: "concept" | "tool" | "signal";
@@ -10,7 +11,7 @@ export type DigestItem = {
 
 const SUBJECT = "This week on AIght.";
 
-function plainText(items: DigestItem[]): string {
+function plainText(items: DigestItem[], unsubscribeUrl: string | null): string {
   const groups: Record<DigestItem["kind"], DigestItem[]> = {
     concept: items.filter((i) => i.kind === "concept"),
     tool: items.filter((i) => i.kind === "tool"),
@@ -46,7 +47,11 @@ function plainText(items: DigestItem[]): string {
   lines.push("— Mankaran");
   lines.push(`AIght · ${SITE_URL}`);
   lines.push("");
-  lines.push("Reply 'unsubscribe' to stop.");
+  if (unsubscribeUrl) {
+    lines.push(`Unsubscribe: ${unsubscribeUrl}`);
+  } else {
+    lines.push("Reply 'unsubscribe' to stop.");
+  }
   return lines.join("\n");
 }
 
@@ -70,7 +75,7 @@ function section(label: string, items: DigestItem[]): string {
     </td></tr>`;
 }
 
-function html(items: DigestItem[]): string {
+function html(items: DigestItem[], unsubscribeUrl: string | null): string {
   const signal = items.filter((i) => i.kind === "signal");
   const concept = items.filter((i) => i.kind === "concept");
   const tool = items.filter((i) => i.kind === "tool");
@@ -116,7 +121,11 @@ function html(items: DigestItem[]): string {
 
         <tr><td style="padding-top:40px;">
           <p style="font-size:11px;line-height:1.6;color:rgba(245,239,224,0.35);margin:0;">
-            You're receiving this because you signed up at aightai.in. Reply "unsubscribe" to remove yourself, or <a href="mailto:hello@aightai.in?subject=unsubscribe" style="color:rgba(245,239,224,0.55);">email me directly</a>.
+            You're receiving this because you signed up at aightai.in.
+            ${unsubscribeUrl
+              ? `<a href="${unsubscribeUrl}" style="color:rgba(245,239,224,0.55);">Unsubscribe in one click</a>, or `
+              : ""}
+            <a href="mailto:hello@aightai.in?subject=unsubscribe" style="color:rgba(245,239,224,0.55);">email me directly</a>.
           </p>
         </td></tr>
       </table>
@@ -133,13 +142,22 @@ export async function sendDigestEmail(
   const resend = getResend();
   if (!resend) return false;
   if (!items.length) return false;
+  const unsubscribeUrl = buildUnsubscribeUrl(to, SITE_URL);
   try {
     const { error } = await resend.emails.send({
       from: RESEND_FROM,
       to,
       subject: SUBJECT,
-      html: html(items),
-      text: plainText(items),
+      html: html(items, unsubscribeUrl),
+      text: plainText(items, unsubscribeUrl),
+      // RFC 8058 one-click unsubscribe: Gmail/Apple Mail honor this header
+      // and surface a native "Unsubscribe" button in the message.
+      headers: unsubscribeUrl
+        ? {
+            "List-Unsubscribe": `<${unsubscribeUrl}>`,
+            "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+          }
+        : undefined,
     });
     if (error) {
       console.error("[sendDigestEmail] resend error:", error.message);

@@ -22,9 +22,13 @@
     --color-lavender:      #A373D7;          /* purple — third accent */
 
     /* ── Text ─────────────────────────────────────────────────── */
+    /* Contrast ratios against --bg-base (#0C0A08):
+       primary  ≈ 14.4:1, secondary ≈ 6.8:1, muted ≈ 4.8:1, inverse ≈ inverse.
+       --text-muted raised from 0.35 → 0.55 to clear WCAG AA 4.5:1 for the
+       many timestamps, eyebrows, and metadata strings using it. */
     --text-primary:   #F5EFE0;
     --text-secondary: rgba(245,239,224,0.60);
-    --text-muted:     rgba(245,239,224,0.35);
+    --text-muted:     rgba(245,239,224,0.55);
     --text-inverse:   #0C0A08;
 
     /* ── Borders ──────────────────────────────────────────────── */
@@ -1001,4 +1005,40 @@
   .paths-header-grid    { grid-template-columns: 1fr; }
   .quiz-cta-panel       { max-width: 100% !important; }
   .augmentation-grid    { grid-template-columns: 1fr !important; }
+}
+
+/* ── Compare page ──────────────────────────────────────────────────
+   Below 768px the two-tool grids collapse and the radar/table row
+   stacks vertically. CompareSearch collapses its 3-col form below
+   640px so the dual selects stack above the submit button. */
+@media (max-width: 768px) {
+  .compare-strip,
+  .compare-pair        { grid-template-columns: 1fr !important; }
+  .compare-radar-row {
+    grid-template-columns: 1fr !important;
+    gap: var(--space-6) !important;
+    justify-items: center;
+  }
+}
+@media (max-width: 640px) {
+  .compare-search-form { grid-template-columns: 1fr !important; }
+}
+
+/* ── Reduced motion ────────────────────────────────────────────────
+   Respect users who've asked the OS to scrub animation. We zero out
+   any keyframe, transition, scroll-snap, or smooth-scroll without
+   removing visual styles — the page still works, it just doesn't move.
+   Components reading `window.matchMedia('(prefers-reduced-motion)')`
+   in JS (e.g. GlowCursor lerp, framer-motion stagger) should also
+   check the same media query and skip their rAF loops. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration:   0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration:  0.001ms !important;
+    scroll-behavior:      auto !important;
+  }
+  .logo-cursor { animation: none !important; opacity: 1 !important; }
 }

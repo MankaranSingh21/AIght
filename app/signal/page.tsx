@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getSignalPosts, EDITOR_POSTS } from "@/lib/signal";
 import { buildCollectionLd } from "@/utils/jsonld";
+import Footer from "@/components/Footer";
 
 export const revalidate = 3600;
 
@@ -31,7 +32,11 @@ export default async function SignalPage() {
       dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
     />
     <main style={{ minHeight: '100vh', background: 'var(--bg-base)' }}>
-      <div style={{ maxWidth: 'var(--max-width-editorial)', margin: '0 auto', padding: '64px 48px 96px' }}>
+      <div style={{
+        maxWidth: 'var(--max-width-editorial)',
+        margin: '0 auto',
+        padding: 'var(--space-16) clamp(20px, 5vw, 48px) var(--space-24)',
+      }}>
 
         {/* Header */}
         <div style={{ marginBottom: 56, paddingBottom: 32, borderBottom: '1px solid rgba(245,239,224,0.07)' }}>
@@ -152,6 +157,7 @@ export default async function SignalPage() {
 
       </div>
     </main>
+    <Footer />
     </>
   );
 }

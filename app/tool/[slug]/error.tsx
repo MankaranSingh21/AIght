@@ -15,31 +15,97 @@ export default function Error({
   }, [error]);
 
   return (
-    <main className="min-h-screen bg-parchment flex items-center justify-center px-6">
-      <div className="text-center max-w-sm space-y-5">
-        <p className="font-serif text-6xl font-bold text-espresso/20">✦</p>
-        <h2 className="font-serif text-2xl font-bold text-espresso leading-snug">
-          Tool page failed to load
-        </h2>
-        <p className="font-body text-sm text-forest/60 leading-relaxed">
-          We hit a snag pulling this tool&rsquo;s details. Give it another shot
-          or browse all tools.
+    <div
+      style={{
+        minHeight: "calc(100vh - 64px)",
+        background: "var(--bg-base)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "24px",
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: "25%",
+          width: 384,
+          height: 384,
+          background: "var(--accent-primary-glow)",
+          borderRadius: "50%",
+          filter: "blur(80px)",
+          transform: "translateY(-50%)",
+          pointerEvents: "none",
+        }}
+      />
+
+      <div style={{ position: "relative", zIndex: 10, textAlign: "center", maxWidth: 380 }}>
+        <p
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: "var(--text-4xl)",
+            color: "var(--accent-primary)",
+            opacity: 0.15,
+            marginBottom: 24,
+            userSelect: "none",
+          }}
+        >
+          ✦
         </p>
-        <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
-          <button
-            onClick={reset}
-            className="font-body text-sm font-semibold px-5 py-2.5 rounded-xl bg-moss-500 hover:bg-moss-600 text-parchment transition-colors duration-150"
+
+        <div style={{ marginBottom: 24 }}>
+          <h2
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "var(--text-3xl)",
+              fontWeight: 600,
+              color: "var(--text-primary)",
+              letterSpacing: "-0.02em",
+              lineHeight: 1.2,
+              marginBottom: 12,
+            }}
           >
+            Tool page failed to load.
+          </h2>
+          <p
+            style={{
+              fontFamily: "var(--font-ui)",
+              fontSize: "var(--text-sm)",
+              color: "var(--text-secondary)",
+              lineHeight: 1.7,
+            }}
+          >
+            We hit a snag pulling this tool&rsquo;s details. Give it another try
+            or browse the rest of the archive.
+          </p>
+          {error.digest && (
+            <p
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "var(--text-xs)",
+                color: "var(--text-muted)",
+                textTransform: "uppercase",
+                letterSpacing: "0.1em",
+                marginTop: 8,
+              }}
+            >
+              Error ID: {error.digest}
+            </p>
+          )}
+        </div>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 12, alignItems: "center" }}>
+          <button onClick={reset} className="btn-primary">
             Try again
           </button>
-          <Link
-            href="/"
-            className="font-body text-sm font-semibold px-5 py-2.5 rounded-xl border border-moss-200 hover:bg-moss-50 text-forest transition-colors duration-150"
-          >
-            ← Browse tools
+          <Link href="/tools" className="btn-ghost" style={{ textDecoration: "none" }}>
+            ← Browse all tools
           </Link>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

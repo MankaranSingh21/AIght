@@ -4,7 +4,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Support AIght",
   description:
-    "AIght is an independent project — no VC funding, no corporate backing. If it's been useful to you, here's how to help keep it running.",
+    "AIght is an independent project. If it's been useful to you, here's how to help — no money required.",
 };
 
 export default function SupportPage() {
@@ -47,7 +47,7 @@ export default function SupportPage() {
             margin: "0 0 var(--space-6)",
           }}
         >
-          Keep the archive independent
+          How to help the archive grow
         </h1>
 
         <p
@@ -91,38 +91,10 @@ export default function SupportPage() {
               margin: 0,
             }}
           >
-            The tools directory, concept articles, field guides, and quiz are all
-            free and will stay that way. There are no sponsored rankings, no
-            affiliate links, no data sold. The site costs money to run and time
-            to maintain.
-          </p>
-
-          <p
-            style={{
-              fontFamily: "var(--font-editorial)",
-              fontSize: 16,
-              color: "var(--text-secondary)",
-              lineHeight: 1.85,
-              margin: 0,
-            }}
-          >
-            If AIght has helped you understand something about AI — a concept
-            that clicked, a tool that turned out to be exactly right, a quiz
-            result that reframed your thinking — consider throwing a few dollars
-            toward keeping it going.
-          </p>
-
-          <p
-            style={{
-              fontFamily: "var(--font-editorial)",
-              fontSize: 16,
-              color: "var(--text-secondary)",
-              lineHeight: 1.85,
-              margin: 0,
-            }}
-          >
-            Every contribution directly funds new content, more tools in the
-            archive, and the hosting that keeps the site fast.
+            The tools directory, concept articles, field guides, and quiz are
+            all free and will stay that way. There are no sponsored rankings,
+            no affiliate links, no data sold. If AIght has been useful to you,
+            the most valuable thing you can do is keep it from being a secret.
           </p>
         </div>
 
@@ -136,15 +108,10 @@ export default function SupportPage() {
             alignItems: "center",
           }}
         >
-          <a
-            href="https://ko-fi.com/aightai"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-primary"
-          >
-            Support on Ko-fi →
-          </a>
-          <Link href="/about" className="btn-ghost">
+          <Link href="/#stay-in-signal" className="btn-primary" style={{ textDecoration: "none" }}>
+            Subscribe to the signal →
+          </Link>
+          <Link href="/about" className="btn-ghost" style={{ textDecoration: "none" }}>
             About the project
           </Link>
         </div>
@@ -167,7 +134,7 @@ export default function SupportPage() {
               marginBottom: "var(--space-6)",
             }}
           >
-            Other ways to help
+            More ways to help
           </p>
 
           <ul

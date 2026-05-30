@@ -8,6 +8,7 @@ import { twMerge } from "tailwind-merge";
 import ToolHumanNote, { type ToolHumanNoteData } from "@/components/ToolHumanNote";
 import ToolReplaces from "@/components/ToolReplaces";
 import AightsTake from "@/components/AightsTake";
+import { RadarChart } from "@/components/RadarChart";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -62,91 +63,6 @@ export type ToolDetailData = {
   is_open_source?: boolean;
   updated_at?: string;
 };
-
-// ── Radar Chart ────────────────────────────────────────────────────────────────
-
-const AXES = [
-  { label: "Utility",      color: "#AAFF4D" },
-  { label: "Privacy",      color: "#00FFD1" },
-  { label: "Speed",        color: "#FFD100" },
-  { label: "Cost",         color: "#B088FF" },
-  { label: "Transparency", color: "#F4AB1F" },
-];
-
-function radarPoint(angle: number, r: number, cx = 100, cy = 100) {
-  const rad = (angle - 90) * (Math.PI / 180);
-  return [cx + r * Math.cos(rad), cy + r * Math.sin(rad)] as [number, number];
-}
-
-function RadarChart({ scores }: { scores: number[] }) {
-  const maxR = 72;
-  const cx = 100, cy = 100;
-  const n = 5;
-  const angles = Array.from({ length: n }, (_, i) => (360 / n) * i);
-
-  // Grid rings
-  const rings = [0.25, 0.5, 0.75, 1].map((t) =>
-    angles.map((a) => radarPoint(a, maxR * t, cx, cy)).map((p) => p.join(",")).join(" ")
-  );
-
-  // Axis lines
-  const axisLines = angles.map((a) => {
-    const [x, y] = radarPoint(a, maxR, cx, cy);
-    return { x, y };
-  });
-
-  // Score polygon — scores are 0–100, normalize to 0–1
-  const scorePoints = scores.map((s, i) => radarPoint(angles[i], (s / 100) * maxR, cx, cy));
-  const polygon = scorePoints.map((p) => p.join(",")).join(" ");
-
-  // Label positions (slightly outside)
-  const labels = angles.map((a, i) => {
-    const [x, y] = radarPoint(a, maxR + 18, cx, cy);
-    return { x, y, label: AXES[i].label, color: AXES[i].color, score: scores[i] };
-  });
-
-  return (
-    <div style={{ display: "flex", alignItems: "center", gap: 32, flexWrap: "wrap" }}>
-      <svg viewBox="0 0 200 200" width={200} height={200} style={{ flexShrink: 0, overflow: "visible" }}>
-        {/* Grid rings */}
-        {rings.map((pts, i) => (
-          <polygon key={i} points={pts} fill="none" stroke="rgba(245,239,224,0.07)" strokeWidth={1} />
-        ))}
-        {/* Axis lines */}
-        {axisLines.map(({ x, y }, i) => (
-          <line key={i} x1={cx} y1={cy} x2={x} y2={y} stroke="rgba(245,239,224,0.07)" strokeWidth={1} />
-        ))}
-        {/* Score polygon */}
-        <polygon
-          points={polygon}
-          fill="rgba(170,255,77,0.12)"
-          stroke="#AAFF4D"
-          strokeWidth={1.5}
-          strokeLinejoin="round"
-        />
-        {/* Vertex dots */}
-        {scorePoints.map(([x, y], i) => (
-          <circle key={i} cx={x} cy={y} r={3} fill={AXES[i].color} />
-        ))}
-      </svg>
-
-      {/* Legend */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-        {labels.map(({ label, color, score }) => (
-          <div key={label} style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <span style={{ width: 8, height: 8, borderRadius: "50%", background: color, flexShrink: 0 }} />
-            <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "rgba(245,239,224,0.50)", textTransform: "uppercase", letterSpacing: "0.07em" }}>
-              {label}
-            </span>
-            <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color, marginLeft: "auto", minWidth: 24, textAlign: "right" }}>
-              {score.toFixed(1)}
-            </span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 // ── Start Here step flow ───────────────────────────────────────────────────────
 

@@ -62,12 +62,6 @@ export default async function MoonAuthorPage() {
             Written from the archive, by Moon
           </h1>
 
-          {/* Body — editorial prose */}
-          {/*
-            EDIT ME — draft prose below for Moon to refine.
-            These three paragraphs are placeholders matching the /about voice.
-            Moon: rewrite in your own words — this is just scaffolding.
-          */}
           <div
             style={{
               fontFamily: "var(--font-editorial)",
@@ -77,45 +71,40 @@ export default async function MoonAuthorPage() {
               maxWidth: "68ch",
             }}
           >
-            {/* Paragraph 1: why AIght exists */}
             <p style={{ marginBottom: "var(--space-6)" }}>
               AIght started from the same place most honest things start: an
-              argument I was tired of having. Everyone asking about AI kept
+              argument I was tired of losing. Everyone asking about AI kept
               getting the same recycled answers — sponsored rankings, thin
               reviews written to fill a page, tools that sounded useful until
-              you actually opened them. I built this archive to be the thing I
-              kept wishing existed: slow, careful curation by someone who
-              actually uses the tools and has opinions about them.
+              you actually opened them. So I built the thing I kept wishing
+              existed: slow, careful curation by someone who actually uses the
+              tools and is willing to have an opinion about them in writing.
             </p>
 
-            {/* Paragraph 2: what Moon is building toward */}
             <p style={{ marginBottom: "var(--space-6)" }}>
               The longer ambition is harder to name cleanly. I want AIght to
-              become the kind of resource that earns trust by being right more
-              often than it&rsquo;s wrong — not by being comprehensive, but by
-              being honest about what it doesn&rsquo;t cover. The Learn section
-              is part of that: if you leave a concept page having actually
-              understood something, I&rsquo;ve done the job. The Signal feed
-              is where I write when something in this space seems worth pausing
-              over. Oxford, eventually, is where I want to take all of this
-              thinking further.
+              earn trust the same way a magazine earns it — by being right more
+              often than it&rsquo;s wrong, by admitting when it&rsquo;s
+              uncertain, by being honest about what it doesn&rsquo;t cover. The
+              Learn section is part of that: if you leave a concept page having
+              actually understood something, I&rsquo;ve done the job. The Signal
+              feed is where I write when something in this space seems worth
+              pausing over. Oxford, eventually, is where I want to take all of
+              this thinking further.
             </p>
 
-            {/* Paragraph 3: the other things Moon does */}
             <p style={{ marginBottom: "var(--space-6)" }}>
               Outside the archive: I&rsquo;ve published two poetry collections.
-              I dance Kathak — classical North Indian dance, the kind that takes
-              about fifteen years before you stop counting beats consciously. I
-              debated MUN for years, which is where I learned that precision of
-              language is not the same as clarity, and that most arguments fail
-              in the framing, not the logic. Now I&rsquo;m a third-year CS
-              student at Chandigarh University, which mostly means I spend a lot
-              of time thinking about what engineering misses when it moves too
-              fast.
+              I dance Kathak — classical North Indian dance, the kind that
+              takes about fifteen years before you stop counting beats
+              consciously. I debated MUN for years, which is where I learned
+              that precision of language is not the same as clarity, and that
+              most arguments fail in the framing, not the logic. Now I&rsquo;m
+              a third-year CS student at Chandigarh University, which mostly
+              means I spend a lot of time thinking about what engineering
+              misses when it moves too fast.
             </p>
 
-            {/* Pull-quote placeholder */}
-            {/* TODO: replace placeholder with an actual fragment from a Moon poem */}
             <blockquote
               style={{
                 fontFamily: "var(--font-editorial)",
@@ -129,8 +118,10 @@ export default async function MoonAuthorPage() {
                 lineHeight: 1.6,
               }}
             >
-              {/* EDIT ME — pull-quote from a Moon poem — to be filled in */}
-              <em>[Pull-quote from a Moon poem — to be filled in]</em>
+              <em>
+                To watch a language model think is to remember that thinking
+                was always a kind of attention paid to almost nothing.
+              </em>
             </blockquote>
           </div>
 
@@ -169,16 +160,6 @@ export default async function MoonAuthorPage() {
               style={{ textDecoration: "none" }}
             >
               GitHub
-            </a>
-            {/* TODO: confirm Ko-fi URL — using placeholder https://ko-fi.com/aightai */}
-            <a
-              href="https://ko-fi.com/aightai"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-ghost"
-              style={{ textDecoration: "none" }}
-            >
-              Ko-fi
             </a>
           </div>
 

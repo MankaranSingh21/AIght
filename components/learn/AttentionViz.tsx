@@ -86,9 +86,20 @@ export default function AttentionViz() {
         ◉ INTERACTIVE — click any word
       </p>
 
+      <div
+        style={{
+          overflowX: 'auto',
+          WebkitOverflowScrolling: 'touch',
+          paddingBottom: 'var(--space-2)',
+          marginLeft: 'calc(-1 * var(--space-2))',
+          marginRight: 'calc(-1 * var(--space-2))',
+          paddingLeft: 'var(--space-2)',
+          paddingRight: 'var(--space-2)',
+        }}
+      >
       <svg
         viewBox="0 0 460 148"
-        style={{ width: '100%', height: 'auto', display: 'block' }}
+        style={{ width: '100%', minWidth: 460, height: 'auto', display: 'block' }}
         aria-label="Transformer attention visualisation — click a word to see what the model attends to"
       >
         <style>{`
@@ -132,9 +143,17 @@ export default function AttentionViz() {
             <g
               key={i}
               onClick={() => handleClick(i)}
-              style={{ cursor: 'pointer' }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  handleClick(i);
+                }
+              }}
+              tabIndex={0}
+              style={{ cursor: 'pointer', outline: 'none' }}
               role="button"
-              aria-label={`Click to see attention from "${text}"`}
+              aria-label={`Show attention from "${text}"`}
+              aria-pressed={selected === i}
             >
               <rect
                 x={chipX}
@@ -182,6 +201,7 @@ export default function AttentionViz() {
           );
         })}
       </svg>
+      </div>
 
       {/* Label */}
       <div style={{

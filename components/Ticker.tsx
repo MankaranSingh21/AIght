@@ -2,21 +2,42 @@
 
 import { STATS } from '@/lib/stats';
 
-const ITEMS = [
+const STATIC_ITEMS = [
   `${STATS.tools}+ curated tools`,
   `${STATS.fields} fields covered`,
   `${STATS.affiliateLinks} affiliate links`,
-  'Daily signal updates',
-  'Healthcare',
-  'Law & Legal',
-  'Design',
-  'Engineering',
-  'Education',
-  'Finance',
 ];
 
-export default function Ticker() {
-  const str = ITEMS.join('  ·  ') + '  ·  ';
+const FIELD_FALLBACK = [
+  'Healthcare', 'Law & Legal', 'Design', 'Engineering', 'Education', 'Finance',
+];
+
+// Optional live data. The homepage fetches the most-recent tool/concept titles
+// once (server-side) and passes them in — keeps the ticker honest instead of
+// rotating six hardcoded field names.
+export interface TickerProps {
+  recentToolNames?: string[];
+  recentConceptTitles?: string[];
+  fields?: string[];
+}
+
+export default function Ticker({
+  recentToolNames,
+  recentConceptTitles,
+  fields,
+}: TickerProps = {}) {
+  const live: string[] = [];
+  if (recentToolNames?.length) {
+    live.push(`Just added: ${recentToolNames.slice(0, 3).join(', ')}`);
+  }
+  if (recentConceptTitles?.length) {
+    live.push(`Latest essay: ${recentConceptTitles[0]}`);
+  }
+
+  const fieldChips = (fields?.length ? fields : FIELD_FALLBACK).slice(0, 6);
+
+  const items = [...STATIC_ITEMS, ...live, ...fieldChips];
+  const str = items.join('  ·  ') + '  ·  ';
 
   return (
     <div

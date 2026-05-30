@@ -331,8 +331,12 @@ export default async function Home() {
           totalTools={homeData.totalTools}
         />
 
-        {/* Ticker strip */}
-        <Ticker />
+        {/* Ticker strip — fed real data so it stops lying about being live */}
+        <Ticker
+          recentToolNames={homeData.recentCards?.slice(0, 3).map((t) => t.name)}
+          recentConceptTitles={allConcepts.slice(0, 1).map((c) => c.title)}
+          fields={fieldNamesForCycler}
+        />
 
         {/* §01 — From the archive */}
         <SectionDivider number="01" label="From the archive" />
@@ -634,13 +638,13 @@ export default async function Home() {
               fontFamily: "var(--font-display)",
               fontSize: "clamp(36px, 5vw, 64px)",
               fontWeight: 900,
-              color: "#F5EFE0",
+              color: "var(--text-primary)",
               letterSpacing: "-0.03em",
               lineHeight: 1.05,
               margin: "0 0 24px",
             }}>
               Stop doomscrolling.{" "}
-              <em style={{ color: "#AAFF4D", fontStyle: "italic" }}>Start knowing.</em>
+              <em style={{ color: "var(--accent-primary)", fontStyle: "italic" }}>Start knowing.</em>
             </h2>
             <p style={{
               fontFamily: "var(--font-editorial)",

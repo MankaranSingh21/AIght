@@ -19,7 +19,6 @@ const NAV_LINKS = [
   { href: "/support",       label: "Contact / Support"       },
   { href: "/privacy",       label: "Privacy Policy"          },
   { href: "https://github.com/MankaranSingh21/AIght", label: "GitHub" },
-  { href: "https://ko-fi.com/aightai", label: "Support the Project (Ko-fi)" },
 ];
 
 const FOOTER_STATS = [
@@ -56,7 +55,7 @@ export default function Footer() {
                 fontFamily: 'var(--font-display)',
                 fontSize: 22,
                 fontWeight: 700,
-                color: '#AAFF4D',
+                color: 'var(--accent-primary)',
               }}>{stat}</span>
               <span style={{
                 fontFamily: 'var(--font-ui)',
@@ -79,9 +78,9 @@ export default function Footer() {
               marginBottom: 10,
               margin: '0 0 10px',
             }}>
-              <span style={{ color: '#F5EFE0' }}>AI</span>
-              <span style={{ color: '#AAFF4D' }}>ght</span>
-              <span className="logo-cursor" style={{ color: '#AAFF4D' }}>_</span>
+              <span style={{ color: 'var(--text-primary)' }}>AI</span>
+              <span style={{ color: 'var(--accent-primary)' }}>ght</span>
+              <span className="logo-cursor" style={{ color: 'var(--accent-primary)' }}>_</span>
             </p>
             <p style={{
               fontFamily: 'var(--font-editorial)',
@@ -97,7 +96,7 @@ export default function Footer() {
           </div>
 
           {/* Nav */}
-          <nav>
+          <nav aria-label="Footer navigation">
             <p style={{
               fontFamily: 'var(--font-ui)',
               fontSize: 10,
@@ -122,7 +121,7 @@ export default function Footer() {
                     textDecoration: 'none',
                     transition: 'color 150ms ease',
                   }}
-                  onMouseEnter={e => (e.currentTarget.style.color = '#F5EFE0')}
+                  onMouseEnter={e => (e.currentTarget.style.color = 'var(--text-primary)')}
                   onMouseLeave={e => (e.currentTarget.style.color = 'rgba(245,239,224,0.45)')}
                 >
                   {label}
@@ -179,7 +178,7 @@ export default function Footer() {
             <Link
               href="/author/moon"
               style={{ color: 'rgba(245,239,224,0.40)', textDecoration: 'none', transition: 'color 150ms' }}
-              onMouseEnter={e => (e.currentTarget.style.color = '#F5EFE0')}
+              onMouseEnter={e => (e.currentTarget.style.color = 'var(--text-primary)')}
               onMouseLeave={e => (e.currentTarget.style.color = 'rgba(245,239,224,0.40)')}
             >
               Moon

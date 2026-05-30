@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import ConceptCarouselClient from "@/components/learn/ConceptCarouselClient";
-import { getAllConcepts } from "@/lib/learn";
+import { getAllConcepts, getConceptsGrouped } from "@/lib/learn";
 import { buildCollectionLd } from "@/utils/jsonld";
 import Footer from "@/components/Footer";
 
@@ -35,6 +35,7 @@ function EdgeOrb({
 
 export default function LearnPage() {
   const allConcepts = getAllConcepts();
+  const grouped = getConceptsGrouped();
 
   const jsonLd = buildCollectionLd({
     path: "/learn",
@@ -107,6 +108,11 @@ export default function LearnPage() {
       </section>
 
       {/* ── Bridge section ──────────────────────────────────────────────── */}
+      <style>{`
+        @media (max-width: 768px) {
+          .learn-bridge-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
       <section style={{
         borderTop: "1px solid rgba(245,239,224,0.07)",
         background: "rgba(255,250,240,0.02)",
@@ -241,7 +247,7 @@ export default function LearnPage() {
         </div>
       </section>
 
-      {/* ── All concepts ────────────────────────────────────────────────── */}
+      {/* ── All concepts — grouped ────────────────────────────────────── */}
       <section style={{
         borderTop: "1px solid rgba(245,239,224,0.07)",
         padding: "64px 0 80px",
@@ -253,81 +259,118 @@ export default function LearnPage() {
         }}>
           <p style={{
             fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.14em",
-            textTransform: "uppercase", color: "rgba(245,239,224,0.30)", marginBottom: 32,
+            textTransform: "uppercase", color: "rgba(245,239,224,0.30)", marginBottom: 8,
           }}>
-            All concepts — {allConcepts.length} articles
+            All concepts — {allConcepts.length} articles · {grouped.length} groups
           </p>
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-            gap: 1,
+          <p style={{
+            fontFamily: "var(--font-editorial)", fontStyle: "italic", fontSize: 14,
+            color: "var(--text-muted)", margin: "0 0 40px", maxWidth: "52ch",
           }}>
-            {allConcepts.map((concept) => (
-              <Link
-                key={concept.slug}
-                href={`/learn/${concept.slug}`}
-                style={{ textDecoration: "none" }}
-                className="group"
-              >
-                <div style={{
-                  padding: "20px 0",
-                  borderBottom: "1px solid rgba(245,239,224,0.06)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  gap: 16,
+            Grouped by where each idea lives in the stack — read in any order,
+            but each group reads as a story if you take it top-to-bottom.
+          </p>
+
+          {grouped.map(({ group, description, concepts }) => (
+            <div key={group} style={{ marginBottom: "var(--space-16)" }}>
+              <div style={{
+                display: "flex", alignItems: "baseline", gap: 16, flexWrap: "wrap",
+                paddingBottom: 16, marginBottom: 8,
+                borderBottom: "1px solid rgba(245,239,224,0.10)",
+              }}>
+                <h2 style={{
+                  fontFamily: "var(--font-display)", fontSize: 22, fontWeight: 700,
+                  color: "var(--accent-primary)", letterSpacing: "-0.02em", margin: 0,
                 }}>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <h3 style={{
-                      fontFamily: "var(--font-ui)",
-                      fontSize: 15,
-                      fontWeight: 600,
-                      color: "var(--text-primary)",
-                      margin: "0 0 4px",
-                      letterSpacing: "-0.01em",
-                      transition: "color 150ms ease",
-                    }}
-                      className="group-hover:text-accent"
-                    >
-                      {concept.title}
-                    </h3>
-                    <p style={{
-                      fontFamily: "var(--font-editorial)",
-                      fontStyle: "italic",
-                      fontSize: 13,
-                      color: "rgba(245,239,224,0.45)",
-                      margin: 0,
-                      lineHeight: 1.5,
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
+                  {group}
+                </h2>
+                <span style={{
+                  fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.14em",
+                  textTransform: "uppercase", color: "var(--text-muted)",
+                }}>
+                  {concepts.length} {concepts.length === 1 ? "concept" : "concepts"}
+                </span>
+                <p style={{
+                  fontFamily: "var(--font-editorial)", fontStyle: "italic", fontSize: 13,
+                  color: "var(--text-secondary)", margin: 0, flex: "1 1 100%",
+                  lineHeight: 1.6,
+                }}>
+                  {description}
+                </p>
+              </div>
+              <div style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+                columnGap: 32,
+              }}>
+                {concepts.map((concept) => (
+                  <Link
+                    key={concept.slug}
+                    href={`/learn/${concept.slug}`}
+                    style={{ textDecoration: "none" }}
+                    className="group"
+                  >
+                    <div style={{
+                      padding: "18px 0",
+                      borderBottom: "1px solid rgba(245,239,224,0.06)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      gap: 16,
                     }}>
-                      {concept.tagline}
-                    </p>
-                  </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
-                    <span style={{
-                      fontFamily: "var(--font-mono)", fontSize: 10,
-                      color: "rgba(245,239,224,0.25)",
-                      letterSpacing: "0.06em",
-                    }}>
-                      {concept.readTime}
-                    </span>
-                    <span style={{
-                      fontFamily: "var(--font-mono)", fontSize: 12,
-                      color: "var(--accent-primary)",
-                      opacity: 0,
-                      transition: "opacity 150ms ease",
-                    }}
-                      className="group-hover:opacity-100"
-                    >
-                      →
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <h3 style={{
+                          fontFamily: "var(--font-ui)",
+                          fontSize: 15,
+                          fontWeight: 600,
+                          color: "var(--text-primary)",
+                          margin: "0 0 4px",
+                          letterSpacing: "-0.01em",
+                          transition: "color 150ms ease",
+                        }}
+                          className="group-hover:text-accent"
+                        >
+                          {concept.title}
+                        </h3>
+                        <p style={{
+                          fontFamily: "var(--font-editorial)",
+                          fontStyle: "italic",
+                          fontSize: 13,
+                          color: "rgba(245,239,224,0.45)",
+                          margin: 0,
+                          lineHeight: 1.5,
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}>
+                          {concept.tagline}
+                        </p>
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
+                        <span style={{
+                          fontFamily: "var(--font-mono)", fontSize: 10,
+                          color: "rgba(245,239,224,0.25)",
+                          letterSpacing: "0.06em",
+                        }}>
+                          {concept.readTime}
+                        </span>
+                        <span style={{
+                          fontFamily: "var(--font-mono)", fontSize: 12,
+                          color: "var(--accent-primary)",
+                          opacity: 0,
+                          transition: "opacity 150ms ease",
+                        }}
+                          className="group-hover:opacity-100"
+                        >
+                          →
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 

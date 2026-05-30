@@ -1,8 +1,86 @@
 import fs from "fs";
 import path from "path";
+import { cache } from "react";
 import matter from "gray-matter";
 
 const CONTENT_DIR = path.join(process.cwd(), "content", "learn");
+
+export type ConceptGroup =
+  | "Architecture"
+  | "Training"
+  | "Inference"
+  | "Practical"
+  | "Safety";
+
+export const GROUP_ORDER: ConceptGroup[] = [
+  "Architecture",
+  "Training",
+  "Inference",
+  "Practical",
+  "Safety",
+];
+
+export const GROUP_DESCRIPTIONS: Record<ConceptGroup, string> = {
+  Architecture: "How the models are built. The shapes underneath everything.",
+  Training:     "How they learn. What gets baked in and what gets sanded down.",
+  Inference:    "How they answer. The mechanics of producing output one token at a time.",
+  Practical:    "How to actually use them. The patterns that survive contact with real work.",
+  Safety:       "Where they fail, lie, or get tricked. The shape of the things to watch for.",
+};
+
+// Centralised grouping. Easier to evolve here than across 40 MDX frontmatters.
+// Add a new concept slug here when it ships; default group is "Practical".
+const CONCEPT_GROUPS: Record<string, ConceptGroup> = {
+  // Architecture
+  attention:                "Architecture",
+  diffusion:                "Architecture",
+  embeddings:               "Architecture",
+  "mixture-of-experts":     "Architecture",
+  multimodal:               "Architecture",
+  tokenization:             "Architecture",
+  transformers:             "Architecture",
+  "vision-language-models": "Architecture",
+
+  // Training
+  distillation:        "Training",
+  dpo:                 "Training",
+  "fine-tuning":       "Training",
+  "model-collapse":    "Training",
+  quantization:        "Training",
+  rlhf:                "Training",
+  "scaling-laws":      "Training",
+  "synthetic-data":    "Training",
+  training:            "Training",
+
+  // Inference
+  "chain-of-thought":     "Inference",
+  "context-windows":      "Inference",
+  "function-calling":     "Inference",
+  "in-context-learning":  "Inference",
+  "kv-cache":             "Inference",
+  "reasoning-models":     "Inference",
+  "structured-output":    "Inference",
+  "temperature-sampling": "Inference",
+
+  // Practical
+  "agentic-memory":     "Practical",
+  agents:               "Practical",
+  evals:                "Practical",
+  mcp:                  "Practical",
+  "model-cards":        "Practical",
+  multiagent:           "Practical",
+  "prompt-engineering": "Practical",
+  rag:                  "Practical",
+  "retrieval-rerank":   "Practical",
+
+  // Safety
+  alignment:           "Safety",
+  "constitutional-ai": "Safety",
+  hallucination:       "Safety",
+  jailbreaks:          "Safety",
+  "prompt-injection":  "Safety",
+  watermarking:        "Safety",
+};
 
 export type ConceptMeta = {
   title: string;
@@ -15,6 +93,7 @@ export type ConceptMeta = {
   sources?: number;
   difficulty?: "beginner" | "intermediate" | "advanced";
   author?: string;
+  group: ConceptGroup;
   // Phase J — used by the per-concept mini-map and the misconception pills.
   prerequisites?: string[];    // concept slugs needed before this one
   successors?: string[];       // concepts that build on this one
@@ -30,7 +109,10 @@ export const DEFAULT_AUTHOR = {
   bio: "Independent. Reads AI papers at midnight, writes about what actually matters.",
 };
 
-export function getAllConcepts(): ConceptMeta[] {
+// `cache` dedupes within a single request — the homepage, sitemap, /learn,
+// /learn/[slug], etc. all call this; without the wrap we'd re-read 40 MDX files
+// per call. Per-request only; doesn't persist across requests.
+export const getAllConcepts = cache((): ConceptMeta[] => {
   if (!fs.existsSync(CONTENT_DIR)) return [];
 
   const files = fs
@@ -54,6 +136,7 @@ export function getAllConcepts(): ConceptMeta[] {
       sources: data.sources as number | undefined,
       difficulty: data.difficulty as ConceptMeta["difficulty"],
       author: data.author as string | undefined,
+      group: CONCEPT_GROUPS[data.slug as string] ?? "Practical",
       prerequisites: data.prerequisites as string[] | undefined,
       successors: data.successors as string[] | undefined,
       exemplar_tools: data.exemplar_tools as string[] | undefined,
@@ -61,6 +144,21 @@ export function getAllConcepts(): ConceptMeta[] {
       misconceptions: data.misconceptions as string[] | undefined,
     };
   });
+});
+
+/**
+ * Bucket all concepts into the 5 groups, alphabetised within each group.
+ * Groups are returned in GROUP_ORDER so callers can iterate predictably.
+ */
+export function getConceptsGrouped(): { group: ConceptGroup; description: string; concepts: ConceptMeta[] }[] {
+  const all = getAllConcepts();
+  return GROUP_ORDER.map((group) => ({
+    group,
+    description: GROUP_DESCRIPTIONS[group],
+    concepts: all
+      .filter((c) => c.group === group)
+      .sort((a, b) => a.title.localeCompare(b.title)),
+  })).filter((g) => g.concepts.length > 0);
 }
 
 export function getConceptSource(slug: string): string | null {

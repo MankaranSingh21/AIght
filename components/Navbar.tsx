@@ -8,18 +8,21 @@ import { cn } from '@/lib/utils';
 // Desktop nav drops Home — the logo serves that role. Mobile menu shows
 // the full set including Home for users who don't know the logo is clickable.
 const DESKTOP_NAV = [
-  { href: '/tools',       label: 'Tools'    },
-  { href: '/learn',       label: 'Learn'    },
-  { href: '/learn/paths', label: 'Fields'   },
-  { href: '/learn/map',   label: 'Universe' },
-  { href: '/signal',      label: 'Signal'   },
-  { href: '/human',       label: 'Human'    },
-  { href: '/about',       label: 'About'    },
+  { href: '/tools',       label: 'Tools'     },
+  { href: '/learn',       label: 'Learn'     },
+  { href: '/learn/paths', label: 'Fields'    },
+  { href: '/workflows',   label: 'Workflows' },
+  { href: '/signal',      label: 'Signal'    },
+  { href: '/human',       label: 'Human'     },
+  { href: '/about',       label: 'About'     },
 ];
 
+// Mobile menu retains the Universe link since the desktop nav dropped it
+// to make room for Workflows. Phone users still get the full surface.
 const MOBILE_NAV = [
-  { href: '/',            label: 'Home'     },
+  { href: '/',            label: 'Home'      },
   ...DESKTOP_NAV,
+  { href: '/learn/map',   label: 'Universe'  },
 ];
 
 const QUIZ_HREF = '/learn/paths/quiz';
@@ -76,10 +79,12 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className={cn(
+      <nav
+        aria-label="Main navigation"
+        className={cn(
         "h-16 sticky top-0 z-50 transition-all duration-300 ease-in-out",
-        scrolled 
-          ? "bg-page/90 backdrop-blur-2xl border-b border-primary/10" 
+        scrolled
+          ? "bg-page/90 backdrop-blur-2xl border-b border-primary/10"
           : "bg-transparent border-b border-transparent"
       )}>
         <div className="max-w-content mx-auto px-4 md:px-12 h-full flex items-center justify-between gap-4">
