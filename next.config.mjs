@@ -7,7 +7,13 @@ const nextConfig = {
         hostname: "logo.clearbit.com",
         pathname: "/**",
       },
-
+      // Supabase Storage — for tool screenshots uploaded to the
+      // `tool-screenshots` bucket. Hostname follows `<project>.supabase.co`.
+      {
+        protocol: "https",
+        hostname: "pfxjaqcclwogedsxtman.supabase.co",
+        pathname: "/storage/v1/object/public/**",
+      },
     ],
   },
 

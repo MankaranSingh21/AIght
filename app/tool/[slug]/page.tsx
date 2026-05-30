@@ -188,6 +188,7 @@ export default async function ToolPage({ params }: Props) {
     humanNote: tool.human_note ?? null,
     aightsTake: tool.aights_take ?? null,
     replaces: tool.replaces ?? null,
+    screenshots: tool.screenshots ?? null,
     weaknesses: tool.weaknesses ?? [],
     status: tool.status ?? "stable",
     deprecated_reason: tool.deprecated_reason ?? null,

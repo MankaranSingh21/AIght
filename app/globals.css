@@ -1007,6 +1007,14 @@
   .augmentation-grid    { grid-template-columns: 1fr !important; }
 }
 
+/* ── Screenshots lightbox fade-in ──────────────────────────────────
+   Used by `components/ToolScreenshots.tsx` for the click-to-expand
+   overlay. Tiny — keeps the open transition from feeling abrupt. */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
 /* ── Compare page ──────────────────────────────────────────────────
    Below 768px the two-tool grids collapse and the radar/table row
    stacks vertically. CompareSearch collapses its 3-col form below

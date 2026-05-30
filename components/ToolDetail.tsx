@@ -9,6 +9,7 @@ import ToolHumanNote, { type ToolHumanNoteData } from "@/components/ToolHumanNot
 import ToolReplaces from "@/components/ToolReplaces";
 import AightsTake from "@/components/AightsTake";
 import { RadarChart } from "@/components/RadarChart";
+import ToolScreenshots from "@/components/ToolScreenshots";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -49,6 +50,7 @@ export type ToolDetailData = {
   humanNote?: ToolHumanNoteData | null;
   aightsTake?: string | null;
   replaces?: string[] | null;
+  screenshots?: string[] | null;
   weaknesses?: string[];
   status?: "stable" | "beta" | "rising" | "deprecated";
   deprecated_reason?: string | null;
@@ -523,6 +525,9 @@ export default function ToolDetail({ tool }: { tool: ToolDetailData }) {
             </div>
           </section>
         )}
+
+        {/* Screenshots gallery — renders nothing until tool.screenshots is populated */}
+        <ToolScreenshots screenshots={tool.screenshots} toolName={tool.name} />
 
         {/* "You can probably stop using…" — concrete savings list */}
         <ToolReplaces toolName={tool.name} replaces={tool.replaces} />
