@@ -1,0 +1,52 @@
+---
+title: "What I look for when a new model ships"
+slug: "what-i-look-for-when-a-model-ships"
+date: "2026-05-15"
+excerpt: "Benchmark scores are loud and almost useless to most people. Here's the personal checklist I run on every release before I update the archive."
+tags: ["methodology", "process"]
+author: "Moon"
+draft: false
+---
+
+A model launches on Monday. By Wednesday there are sixteen YouTube videos with the same thumbnail and a chart that goes up. Almost none of them are useful, because almost none of them ask the question I actually need answered: *does this change anything I do?*
+
+This is the checklist I run, in order, when I'm trying to figure out whether a release belongs in the archive or in the noise file.
+
+## 1. Read the system card before reading the marketing.
+
+The model card buried two clicks deep in the docs is almost always more honest than the launch tweet. It will tell you what the model is *not* good at, what hallucination rate it admits to, what guardrails it ships with. If the launch tweet says "thinks like a human" and the model card says "fails at multi-hop reasoning above three steps", trust the model card.
+
+## 2. Run my own three prompts.
+
+Not the benchmark prompts. The three prompts I use every week. One is a writing task I have a strong opinion about how it should sound. One is a code refactor I've already tried in another tool. One is a research question where I already know the right citation.
+
+If a model gets all three right, that's news. If it gets one of three, that's noise.
+
+## 3. Check the latency.
+
+I keep a stopwatch open. Long-form output, 800-ish tokens, first byte to last byte. A model that's 30% smarter but 2× slower is not 30% better at the work I'm doing. The headline benchmarks measure quality, not the integral of quality over time. Real workflows live in the integral.
+
+## 4. Check the pricing.
+
+Specifically, the cliff. Most models have a free tier; the free tier is the marketing. Find the place where the per-month cost starts and ask: would I pay that if I were spending my own money instead of the company's? The answer changes how you read the rest of the review.
+
+## 5. Look at what the model refuses.
+
+Refusals are calibrated. Some models refuse things they should answer; some answer things they should refuse. The shape of the refusal pattern tells you what the lab values. If a model refuses to help me draft an email but happily generates legal text on a topic it shouldn't, that lab has a values problem dressed up as a safety problem.
+
+## 6. Then, finally, read what other reviewers wrote.
+
+I save this for last on purpose. The first five steps are mine. The sixth is a sanity check against the rest of the world. If everyone else loves the model and I don't, I want to know what they're seeing that I'm missing. If everyone else hates it and I don't, same thing in reverse.
+
+## What doesn't make the list
+
+- The leaderboard chart. (Designed to be looked at, not to inform a decision.)
+- The day-one hands-on video. (Made before the reviewer had time to find the failure modes.)
+- The "5 mind-blowing use cases" thread. (None of them are use cases. They are demos.)
+- The CEO interview. (Useful for the lab's positioning, not for whether the tool is good.)
+
+This list is short on purpose. Most of the work of reviewing a tool happens after the news cycle moves on — when you've used it for two weeks and noticed what you stopped trying to do, what you used to use a different tool for, what habit changed quietly.
+
+That's the part that ends up in the archive.
+
+— Moon

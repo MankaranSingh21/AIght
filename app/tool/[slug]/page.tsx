@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { createClient } from "@/utils/supabase/server";
 import ToolDetail, { type ToolDetailData, type UseCase, type Alternative } from "@/components/ToolDetail";
+import RelatedTools from "@/components/RelatedTools";
 import type { Tool, AlternativeEntry } from "@/utils/supabase/types";
 import { getAllConcepts } from "@/lib/learn";
 
@@ -234,6 +235,15 @@ export default async function ToolPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <ToolDetail tool={toolDetail} />
+      {/* Renders nothing until migration 011 has been applied and embeddings
+          backfilled via `scripts/embed-tools.ts --apply`. Safe to ship. */}
+      <div style={{
+        maxWidth: 1200,
+        margin: "0 auto",
+        padding: "0 clamp(20px, 5vw, 48px) var(--space-16)",
+      }}>
+        <RelatedTools slug={tool.slug} toolName={tool.name} />
+      </div>
     </>
   );
 }

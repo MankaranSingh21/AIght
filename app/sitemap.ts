@@ -4,6 +4,7 @@ import { getAllConcepts } from "@/lib/learn";
 import { getAllHumanEssays } from "@/lib/human";
 import { getAllUseCases } from "@/lib/use-cases";
 import { getAllWorkflows } from "@/lib/workflows";
+import { getNativeSignalPosts } from "@/lib/signal";
 import fields from "@/content/paths/fields.json";
 import categories from "@/content/categories.json";
 
@@ -58,6 +59,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
+  const signalUrls = getNativeSignalPosts().map((post) => ({
+    url: `${SITE_URL}/signal/${post.slug}`,
+    lastModified: post.date ? new Date(post.date) : new Date(),
+    changeFrequency: "yearly" as const,
+    priority: 0.7,
+  }));
+
   const categoryUrls = Object.values(categories).map((cat: any) => ({
     url: `${SITE_URL}/tools/category/${cat.slug}`,
     lastModified: new Date(),
@@ -90,5 +98,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...workflowUrls,
     ...categoryUrls,
     ...humanUrls,
+    ...signalUrls,
   ];
 }

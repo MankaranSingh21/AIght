@@ -1,3 +1,7 @@
+import fs from "fs";
+import path from "path";
+import { cache } from "react";
+import matter from "gray-matter";
 import { XMLParser } from "fast-xml-parser";
 
 export type SignalPost = {
@@ -6,6 +10,79 @@ export type SignalPost = {
   excerpt: string;
   href: string;
 };
+
+// Native MDX-backed Signal posts live in `content/signal/`. Each file has
+// frontmatter (title, slug, date, excerpt, tags, author, draft) + body.
+// These render at `/signal/<slug>` and link from `/signal` above the
+// Medium RSS feed.
+
+const SIGNAL_DIR = path.join(process.cwd(), "content", "signal");
+
+export type NativeSignalMeta = {
+  slug: string;
+  title: string;
+  date: string;
+  excerpt: string;
+  tags?: string[];
+  author?: string;
+  draft?: boolean;
+};
+
+function formatNativeDate(iso: string): string {
+  try {
+    return new Date(iso).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  } catch {
+    return iso;
+  }
+}
+
+/**
+ * All native Signal posts, newest first, drafts excluded.
+ * Wrapped in `cache` so multiple consumers (Signal index, sitemap, digest)
+ * share the same disk read per request.
+ */
+export const getNativeSignalPosts = cache((): NativeSignalMeta[] => {
+  if (!fs.existsSync(SIGNAL_DIR)) return [];
+  return fs
+    .readdirSync(SIGNAL_DIR)
+    .filter((f) => f.endsWith(".mdx"))
+    .map((filename) => {
+      const raw = fs.readFileSync(path.join(SIGNAL_DIR, filename), "utf-8");
+      const { data } = matter(raw);
+      return {
+        slug: (data.slug as string | undefined) ?? filename.replace(/\.mdx$/, ""),
+        title: data.title as string,
+        date: data.date as string,
+        excerpt: data.excerpt as string,
+        tags: data.tags as string[] | undefined,
+        author: data.author as string | undefined,
+        draft: data.draft === true,
+      };
+    })
+    .filter((p) => !p.draft && p.title && p.date && p.excerpt)
+    .sort((a, b) => (a.date < b.date ? 1 : -1));
+});
+
+/** Raw MDX source for a native Signal post, or `null` if not found / drafted. */
+export function getNativeSignalSource(slug: string): string | null {
+  const filePath = path.join(SIGNAL_DIR, `${slug}.mdx`);
+  if (!fs.existsSync(filePath)) return null;
+  return fs.readFileSync(filePath, "utf-8");
+}
+
+/** Native posts mapped to the `SignalPost` card shape used on /signal index. */
+export function getNativeSignalCards(): SignalPost[] {
+  return getNativeSignalPosts().map((p) => ({
+    date: formatNativeDate(p.date),
+    title: p.title,
+    excerpt: p.excerpt,
+    href: `/signal/${p.slug}`,
+  }));
+}
 
 const FEED_URL = "https://medium.com/feed/@singhmankaran05";
 
