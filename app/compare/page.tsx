@@ -143,12 +143,25 @@ export async function generateMetadata({ searchParams }: { searchParams: SP }): 
   const bName = bRow?.name ?? b;
   const title = `${aName} vs ${bName}`;
   const description = `Side-by-side comparison of ${aName} and ${bName} — the five-axis AIght score, pricing, and a writer's honest take.`;
+  // Dynamic per-pair OG via the /api/og/compare route handler.
+  // (Static opengraph-image.tsx can't see searchParams, so we override here.)
+  const ogUrl = `${SITE_URL}/api/og/compare?a=${encodeURIComponent(a)}&b=${encodeURIComponent(b)}`;
   return {
     title,
     description,
     alternates: { canonical: `${SITE_URL}/compare?a=${a}&b=${b}` },
-    openGraph: { title: `${title} — AIght`, description, type: "website" },
-    twitter: { card: "summary_large_image", title: `${title} — AIght`, description },
+    openGraph: {
+      title: `${title} — AIght`,
+      description,
+      type: "website",
+      images: [{ url: ogUrl, width: 1200, height: 630, alt: title }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${title} — AIght`,
+      description,
+      images: [ogUrl],
+    },
   };
 }
 

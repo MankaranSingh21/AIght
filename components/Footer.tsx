@@ -7,8 +7,10 @@ import { STATS } from "@/lib/stats";
 const NAV_LINKS = [
   { href: "/",              label: "Home"                    },
   { href: "/tools",         label: "Tools"                   },
+  { href: "/compare",       label: "Compare Tools"           },
   { href: "/learn",         label: "Learn"                   },
   { href: "/learn/paths",   label: "Fields"                  },
+  { href: "/learn/map",     label: "Universe"                },
   { href: "/workflows",     label: "Workflows"               },
   { href: "/use-cases",     label: "Use Cases"               },
   { href: "/signal",        label: "Signal Archive"          },
