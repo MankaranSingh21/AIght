@@ -169,6 +169,22 @@ export default async function RelatedTools({
           </Link>
         ))}
       </div>
+
+      {/* Discovery CTA: take the highest-similarity neighbour to /compare */}
+      <div style={{ marginTop: 16 }}>
+        <Link
+          href={`/compare?a=${slug}&b=${rows[0].slug}`}
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: 12,
+            letterSpacing: "0.08em",
+            color: "var(--accent-secondary)",
+            textDecoration: "none",
+          }}
+        >
+          Compare {toolName} vs {rows[0].name} side-by-side →
+        </Link>
+      </div>
     </section>
   );
 }

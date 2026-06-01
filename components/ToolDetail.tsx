@@ -191,6 +191,37 @@ function AlternativesTable({ tool, alternatives }: { tool: ToolDetailData; alter
           ))}
         </div>
       ))}
+
+      {/* Per-alt Compare row — pairs `tool` with each alternative on /compare */}
+      <div style={{
+        display: "grid", gridTemplateColumns: `120px repeat(${cols.length}, 1fr)`,
+        borderTop: "1px solid rgba(245,239,224,0.05)",
+        background: "rgba(170,255,77,0.02)",
+      }}>
+        <div style={{ padding: "12px 16px" }}>
+          <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.08em", color: "rgba(245,239,224,0.30)" }}>
+            Compare
+          </span>
+        </div>
+        {cols.map((col) => (
+          <div key={col.slug} style={{ padding: "12px 16px", borderLeft: "1px solid rgba(245,239,224,0.06)" }}>
+            {col.isThis ? (
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "rgba(245,239,224,0.30)" }}>—</span>
+            ) : (
+              <Link
+                href={`/compare?a=${tool.slug}&b=${col.slug}`}
+                style={{
+                  fontFamily: "var(--font-mono)", fontSize: 11,
+                  color: "var(--accent-primary)", textDecoration: "none",
+                  letterSpacing: "0.06em",
+                }}
+              >
+                Compare →
+              </Link>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -486,15 +517,37 @@ export default function ToolDetail({ tool }: { tool: ToolDetailData }) {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {tool.alternatives.map((alt) => (
-                  <Link
+                  <div
                     key={alt.slug}
-                    href={`/tool/${alt.slug}`}
-                    className="p-6 rounded-xl bg-surface/30 border border-primary/5 hover:border-accent/30 transition-all no-underline flex flex-col gap-2"
+                    className="p-6 rounded-xl bg-surface/30 border border-primary/5 hover:border-accent/30 transition-all flex flex-col gap-2"
                   >
-                    <span className="font-sans font-bold text-accent">{alt.name}</span>
+                    <Link
+                      href={`/tool/${alt.slug}`}
+                      className="font-sans font-bold text-accent no-underline"
+                    >
+                      {alt.name}
+                    </Link>
                     <p className="font-editorial text-sm text-secondary m-0 italic">&ldquo;{alt.reason}&rdquo;</p>
-                  </Link>
+                    <Link
+                      href={`/compare?a=${tool.slug}&b=${alt.slug}`}
+                      className="font-mono text-[11px] tracking-wider text-secondary hover:text-accent no-underline mt-1"
+                    >
+                      Compare {tool.name} vs {alt.name} →
+                    </Link>
+                  </div>
                 ))}
+              </div>
+            )}
+
+            {/* Always-on compare CTA — works for any non-zero alternatives list */}
+            {tool.alternatives.length > 0 && (
+              <div className="mt-2">
+                <Link
+                  href={`/compare?a=${tool.slug}`}
+                  className="btn-ghost no-underline inline-block"
+                >
+                  Compare {tool.name} with anything →
+                </Link>
               </div>
             )}
           </section>

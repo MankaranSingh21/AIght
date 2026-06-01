@@ -7,22 +7,25 @@ import { cn } from '@/lib/utils';
 
 // Desktop nav drops Home — the logo serves that role. Mobile menu shows
 // the full set including Home for users who don't know the logo is clickable.
+// Desktop nav at 7 slots. Compare and Universe are first-class — they were
+// the two routes flagged as orphans in the recent IA audit. About moves to
+// footer-only (it's already in NAV_LINKS there) so we stay under 8.
 const DESKTOP_NAV = [
   { href: '/tools',       label: 'Tools'     },
+  { href: '/compare',     label: 'Compare'   },
   { href: '/learn',       label: 'Learn'     },
-  { href: '/learn/paths', label: 'Fields'    },
+  { href: '/learn/map',   label: 'Universe'  },
   { href: '/workflows',   label: 'Workflows' },
   { href: '/signal',      label: 'Signal'    },
   { href: '/human',       label: 'Human'     },
-  { href: '/about',       label: 'About'     },
 ];
 
-// Mobile menu retains the Universe link since the desktop nav dropped it
-// to make room for Workflows. Phone users still get the full surface.
+// Mobile menu shows everything the desktop dropped: Home, Fields, About.
 const MOBILE_NAV = [
   { href: '/',            label: 'Home'      },
   ...DESKTOP_NAV,
-  { href: '/learn/map',   label: 'Universe'  },
+  { href: '/learn/paths', label: 'Fields'    },
+  { href: '/about',       label: 'About'     },
 ];
 
 const QUIZ_HREF = '/learn/paths/quiz';

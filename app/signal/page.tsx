@@ -95,7 +95,12 @@ export default async function SignalPage() {
                 style={{ display: 'block', padding: '28px 0', borderBottom: '1px solid var(--border-subtle)', textDecoration: 'none' }}
                 className="group"
               >
-                <p style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--text-muted)', marginBottom: 8 }}>{post.date}</p>
+                <p style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--text-muted)', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span>{post.date}</span>
+                  <span aria-label="Internal essay" style={{ color: 'var(--accent-primary)', fontSize: 9, letterSpacing: '0.14em', textTransform: 'uppercase' }}>
+                    · Read on AIght
+                  </span>
+                </p>
                 <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.02em', lineHeight: 1.3, marginBottom: 10, transition: 'color 150ms ease' }}
                   className="group-hover:text-accent">
                   {post.title}
@@ -149,15 +154,20 @@ export default async function SignalPage() {
                   href={post.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ display: 'block', padding: '28px 0', borderBottom: '1px solid rgba(245,239,224,0.07)', textDecoration: 'none' }}
+                  style={{ display: 'block', padding: '28px 0', borderBottom: '1px solid var(--border-subtle)', textDecoration: 'none' }}
                   className="group"
                 >
-                  <p style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'rgba(245,239,224,0.30)', marginBottom: 8 }}>{post.date}</p>
-                  <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontWeight: 700, color: '#F5EFE0', letterSpacing: '-0.02em', lineHeight: 1.3, marginBottom: 10, transition: 'color 150ms ease' }}
+                  <p style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--text-muted)', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <span>{post.date}</span>
+                    <span aria-label="External link" style={{ color: 'rgba(245,239,224,0.40)', fontSize: 9, letterSpacing: '0.14em', textTransform: 'uppercase' }}>
+                      ↗ Read on Medium
+                    </span>
+                  </p>
+                  <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.02em', lineHeight: 1.3, marginBottom: 10, transition: 'color 150ms ease' }}
                     className="group-hover:text-accent">
                     {post.title}
                   </h2>
-                  <p style={{ fontFamily: 'var(--font-editorial)', fontSize: 14, color: 'rgba(245,239,224,0.50)', lineHeight: 1.7, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                  <p style={{ fontFamily: 'var(--font-editorial)', fontSize: 14, color: 'var(--text-secondary)', lineHeight: 1.7, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                     {post.excerpt}
                   </p>
                 </a>

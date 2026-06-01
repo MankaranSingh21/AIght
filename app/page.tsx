@@ -15,7 +15,7 @@ import MagneticLink from "@/components/MagneticLink";
 import AuroraBackground from "@/components/AuroraBackground";
 import { getAllConcepts } from "@/lib/learn";
 import { getAllHumanEssays } from "@/lib/human";
-import { getSignalPosts } from "@/lib/signal";
+import { getSignalPosts, getNativeSignalCards } from "@/lib/signal";
 import { getHomeData } from "@/lib/home-data";
 import fields from "@/content/paths/fields.json";
 import { STATS } from "@/lib/stats";
@@ -129,15 +129,23 @@ function PathBody({
 function SignalBody({
   date, title, excerpt, href,
 }: { date: string; title: string; excerpt: string; href: string }) {
+  // Native posts use internal /signal/<slug> hrefs; Medium posts are external.
+  const isExternal = /^https?:\/\//.test(href);
   return (
     <a
       href={href}
-      target="_blank"
-      rel="noopener noreferrer"
+      {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
       className="group block p-6 rounded-xl h-full"
       style={{ background: "rgba(22,18,16,0.65)", border: "1px solid var(--border-subtle)", width: "100%" }}
     >
-      <p className="font-mono text-sm text-muted mb-2">{date}</p>
+      <p className="font-mono text-sm text-muted mb-2">
+        {date}
+        {!isExternal && (
+          <span style={{ marginLeft: 10, color: "var(--accent-primary)", letterSpacing: "0.12em", fontSize: 9 }}>
+            · ESSAY ON AIGHT
+          </span>
+        )}
+      </p>
       <h3 className="font-sans text-xl font-medium text-primary group-hover:text-accent group-hover:translate-x-1 transition-[color,transform] duration-150 mb-2">
         {title}
       </h3>
@@ -151,7 +159,13 @@ function SignalBody({
 // ── Async server sections ──────────────────────────────────────────────────────
 
 async function SignalSection() {
-  const posts = await getSignalPosts(3);
+  // Native MDX essays take precedence over the Medium feed on the homepage —
+  // they're the canonical voice surface and they link to internal reading
+  // routes. We backfill from Medium only if natives don't fill the 3-card slot.
+  const native = getNativeSignalCards().slice(0, 3);
+  const externalNeeded = Math.max(0, 3 - native.length);
+  const external = externalNeeded > 0 ? await getSignalPosts(externalNeeded) : [];
+  const posts = [...native, ...external];
   if (posts.length === 0) return null;
 
   return (
