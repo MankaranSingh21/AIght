@@ -1,0 +1,72 @@
+---
+title: "Gradient Descent"
+tagline: "Rolling downhill toward a better model."
+readTime: "6 min read"
+slug: "gradient-descent"
+date: "2026-06-10"
+lastUpdated: "2026-06-10"
+related: ["loss-functions", "backpropagation"]
+prerequisites: ["loss-functions"]
+successors: ["overfitting-underfitting"]
+misconceptions:
+  - "Training searches through possible models until it finds the best one."
+  - "The algorithm can see where the lowest point is."
+difficulty: "beginner"
+sources: 2
+---
+
+<Misconception think="The algorithm can see where the lowest point is.">
+It can't see anything. At each step it knows exactly one fact: the slope
+of the ground under its feet. It steps downhill, re-measures, steps
+again. All of deep learning is this near-blind shuffle, repeated
+trillions of times.
+</Misconception>
+
+Picture the loss as a landscape. Every possible setting of the model's
+parameters is a location; the altitude at that location is how wrong the
+model is there. Somewhere in this terrain are low valleys — parameter
+settings where the model performs well. Training is the search for low
+ground.
+
+The catch: for a real model this landscape has billions of dimensions,
+and there's no map. You can't survey it. The only measurement available
+is local: *standing right here, which direction is downhill?* That
+direction is the **gradient**, and the algorithm is exactly what you'd
+guess — take a small step downhill, then ask again.
+
+<ConceptDemo shape="playground" ariaLabel="Gradient descent on a loss curve">
+  <GradientDescentDemo />
+</ConceptDemo>
+
+## The one knob that matters
+
+How big should each step be? That's the **learning rate**, and it's the
+most consequential setting in training:
+
+- **Too small** — convergence takes geological time, and the ball can
+  settle in the first shallow dip it finds.
+- **Too large** — it overshoots the valley, ricochets between slopes, or
+  diverges entirely. (Crank the slider above past 2 and watch.)
+
+Real training schedules treat the learning rate like a landing: fast
+early, gentle at the end.
+
+## Wrinkles worth knowing
+
+In practice the slope isn't even measured on all the data — that would
+be too slow. Each step uses a small random **batch** of examples, making
+the descent slightly drunk: noisy, wandering, and — usefully — able to
+stumble out of bad shallow valleys. This is *stochastic* gradient
+descent, the workhorse of the field.
+
+And the landscape for deep networks isn't a tidy bowl; it's a
+billion-dimensional mountain range. The minor miracle the modern era
+rests on: in very high dimensions, this stumbling walk reliably finds
+valleys that are good enough. Nobody fully knows why it works this well.
+It just does, every day, on every model you've used.
+
+## What to read next
+
+Downhill on the *training* data, though, can mean memorizing it.
+**Overfitting and underfitting** — the tension that defines what "a good
+model" even means.

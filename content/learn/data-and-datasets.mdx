@@ -1,0 +1,63 @@
+---
+title: "Data & Datasets"
+tagline: "The raw material everything else is made of."
+readTime: "5 min read"
+slug: "data-and-datasets"
+date: "2026-06-10"
+lastUpdated: "2026-06-10"
+related: ["bias-in-data", "features-and-labels"]
+prerequisites: ["what-is-ai"]
+successors: ["statistics-essentials"]
+misconceptions:
+  - "More data is always better."
+  - "Data is neutral — it's just facts."
+difficulty: "beginner"
+sources: 3
+---
+
+<Misconception think="More data is always better.">
+A million noisy, mislabeled, duplicated examples teach a model less than
+ten thousand clean ones — and can actively teach it wrong. Volume only
+helps when quality holds. Every serious ML team spends more time cleaning
+data than training models.
+</Misconception>
+
+A model is only ever as good as what it was shown. Before any of the
+clever math happens, someone has to decide: what examples does this
+system learn from? That collection of examples is the dataset, and it is
+the least glamorous, most consequential object in all of AI.
+
+A dataset is just a structured pile of examples. For a spam filter:
+thousands of emails, each tagged *spam* or *not spam*. For a language
+model: a vast slice of the internet's text. For a medical imaging model:
+scans paired with diagnoses from radiologists.
+
+## Three things that matter more than size
+
+- **Coverage.** The dataset has to contain the situations the model will
+  face. A self-driving dataset with no snowy roads produces a model that
+  has never seen snow. It won't be cautious about the gap — it won't know
+  the gap exists.
+- **Quality.** Wrong labels teach wrong lessons. If 5% of your *cat*
+  photos are actually dogs, the model learns a 5% lie.
+- **Provenance.** Where did this come from, and was it yours to use?
+  Scraped text carries the biases, errors, and copyrights of its sources.
+  This question is now the center of multiple lawsuits and most of the
+  trust debate around AI.
+
+## The quiet decision that shapes everything
+
+Choosing the dataset *is* choosing what the model believes the world
+looks like. A hiring model trained on a decade of one company's decisions
+learns that company's habits — including the ones nobody would defend out
+loud. The data isn't a neutral window onto reality. It's a record of
+particular people, places, and choices, with all the gaps that implies.
+
+That's worth holding onto: when a model behaves strangely, the first
+question isn't "what's wrong with the math?" It's "what was it shown?"
+
+## What to read next
+
+To reason about piles of examples, you need a small amount of
+statistics — **statistics essentials** covers the handful of ideas that
+do most of the work.

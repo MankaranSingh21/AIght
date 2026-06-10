@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import ConceptCarouselClient from "@/components/learn/ConceptCarouselClient";
 import { getAllConcepts, getConceptsGrouped } from "@/lib/learn";
+import { hasLesson } from "@/lib/lessons";
+import { getTracks } from "@/lib/curriculum";
+import TrackCardProgress from "@/components/progress/TrackCardProgress";
 import { buildCollectionLd } from "@/utils/jsonld";
 import Footer from "@/components/Footer";
 
@@ -36,6 +39,7 @@ function EdgeOrb({
 export default function LearnPage() {
   const allConcepts = getAllConcepts();
   const grouped = getConceptsGrouped();
+  const tracks = getTracks();
 
   const jsonLd = buildCollectionLd({
     path: "/learn",
@@ -247,6 +251,94 @@ export default function LearnPage() {
         </div>
       </section>
 
+      {/* ── Learning tracks — ordered roadmaps from zero ───────────────── */}
+      <section style={{
+        borderTop: "1px solid rgba(245,239,224,0.07)",
+        padding: "64px 0 16px",
+      }}>
+        <div style={{
+          maxWidth: "var(--max-width-content)",
+          margin: "0 auto",
+          padding: "0 clamp(24px, 5vw, 48px)",
+        }}>
+          <p style={{
+            fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.14em",
+            textTransform: "uppercase", color: "var(--accent-primary)", marginBottom: 8,
+          }}>
+            Learning tracks — start from zero
+          </p>
+          <p style={{
+            fontFamily: "var(--font-editorial)", fontStyle: "italic", fontSize: 14,
+            color: "var(--text-muted)", margin: "0 0 32px", maxWidth: "52ch",
+          }}>
+            Five ordered paths from &quot;what is AI&quot; to working with agents.
+            No code required to start. Pick the one that matches where you are.
+          </p>
+
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+            gap: 20,
+          }}>
+            {tracks.map((track) => (
+              <Link
+                key={track.slug}
+                href={`/learn/tracks/${track.slug}`}
+                style={{ textDecoration: "none" }}
+                className="group"
+              >
+                <div style={{
+                  background: "var(--bg-surface)",
+                  border: "1px solid var(--border-subtle)",
+                  borderLeft: "3px solid var(--accent-primary)",
+                  borderRadius: "var(--radius-lg)",
+                  padding: "var(--space-6)",
+                  height: "100%",
+                  transition: "border-color 200ms ease, transform 200ms ease",
+                }}
+                  className="group-hover:-translate-y-0.5"
+                >
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+                    <span style={{
+                      fontFamily: "var(--font-mono)", fontSize: 10,
+                      letterSpacing: "0.12em", textTransform: "uppercase",
+                      color: "var(--text-muted)",
+                    }}>
+                      {track.eyebrow}
+                    </span>
+                    <TrackCardProgress slugs={track.nodes.filter((n) => !n.soon).map((n) => n.slug)} />
+                  </div>
+                  <h3 style={{
+                    fontFamily: "var(--font-ui)", fontSize: 18, fontWeight: 600,
+                    color: "var(--text-primary)", margin: "0 0 8px",
+                    letterSpacing: "-0.01em", transition: "color 150ms ease",
+                  }}
+                    className="group-hover:text-accent"
+                  >
+                    {track.title}
+                  </h3>
+                  <p style={{
+                    fontFamily: "var(--font-editorial)", fontStyle: "italic",
+                    fontSize: 13, color: "var(--text-secondary)", lineHeight: 1.6,
+                    margin: "0 0 14px",
+                  }}>
+                    {track.description}
+                  </p>
+                  <p style={{
+                    fontFamily: "var(--font-mono)", fontSize: 10,
+                    letterSpacing: "0.06em", color: "var(--text-muted)", margin: 0,
+                  }}>
+                    {track.nodes.length} stops
+                    {track.lessonCount > 0 && <span style={{ color: "var(--accent-primary)" }}> · ◈ {track.lessonCount} interactive</span>}
+                    {track.soonCount > 0 && ` · ${track.soonCount} coming`}
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── All concepts — grouped ────────────────────────────────────── */}
       <section style={{
         borderTop: "1px solid rgba(245,239,224,0.07)",
@@ -347,6 +439,15 @@ export default function LearnPage() {
                         </p>
                       </div>
                       <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
+                        {hasLesson(concept.slug) && (
+                          <span style={{
+                            fontFamily: "var(--font-mono)", fontSize: 10,
+                            color: "var(--accent-primary)",
+                            letterSpacing: "0.06em",
+                          }}>
+                            ◈ interactive
+                          </span>
+                        )}
                         <span style={{
                           fontFamily: "var(--font-mono)", fontSize: 10,
                           color: "rgba(245,239,224,0.25)",

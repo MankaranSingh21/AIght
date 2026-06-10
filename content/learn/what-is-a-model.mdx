@@ -1,0 +1,65 @@
+---
+title: "What is a Model?"
+tagline: "A compressed theory of the data it saw."
+readTime: "5 min read"
+slug: "what-is-a-model"
+date: "2026-06-10"
+lastUpdated: "2026-06-10"
+related: ["training", "neural-networks"]
+prerequisites: ["patterns-and-predictions"]
+successors: ["bias-in-data"]
+misconceptions:
+  - "A model is a database of its training data."
+  - "The model file contains code someone wrote."
+difficulty: "beginner"
+sources: 2
+---
+
+<Misconception think="A model is a database of its training data.">
+A model can't look anything up — the training data is gone. What remains
+is more like a residue: millions or billions of numbers adjusted, example
+by example, until the patterns of the data left their shape in them. It
+remembers the way a riverbed remembers the river.
+</Misconception>
+
+You've heard that systems "train a model." Here is what the noun
+actually refers to.
+
+A model is a giant mathematical function — a machine that takes numbers
+in and pushes numbers out — with millions or billions of adjustable
+dials, called **parameters** (or weights). Before training, the dials are
+random and the function's outputs are noise. Training nudges the dials,
+a tiny amount per example, in whichever direction makes the function's
+guesses slightly less wrong. Repeat a few billion times. The final
+setting of all those dials *is* the model. On disk, it's literally just
+the numbers.
+
+## Compression, not storage
+
+A frontier language model trains on far more text than fits in its
+parameters. It physically cannot keep a copy. What survives is whatever
+regularities were worth keeping: grammar, facts repeated often enough to
+leave a dent, styles, structures. Think of it as the *summary* of the
+data, written in a notation no human reads.
+
+This explains a family of behaviors at once:
+
+- It can write a sonnet it never saw — the *pattern* of sonnets got in,
+  not the sonnets themselves.
+- It misremembers rare facts — one mention leaves a shallow groove;
+  a thousand mentions leave a deep one.
+- It can't tell you its sources — there are no sources inside, only
+  settings.
+
+## "All models are wrong, some are useful"
+
+Statisticians have said this for fifty years and it survives the trip to
+AI intact. A model is a *theory* of its data — necessarily simplified,
+faithful only where the data was. The interesting question is never "is
+the model right?" It's "where does its theory hold, and where does the
+world stop resembling the data it summarized?"
+
+## What to read next
+
+A model inherits its theory from the data — including the parts nobody
+meant to put there. **Bias in data** is where that bill comes due.

@@ -1,0 +1,244 @@
+[
+  {
+    "slug": "ai-from-zero",
+    "title": "AI from zero",
+    "eyebrow": "Track 00",
+    "description": "No code, no math fear. What AI actually is, what data is, and how prediction works — for anyone starting cold.",
+    "audience": "Complete beginners. If you've only ever used AI through a chat box, start here.",
+    "order": 0,
+    "nodes": [
+      {
+        "concept": "what-is-ai"
+      },
+      {
+        "concept": "data-and-datasets"
+      },
+      {
+        "concept": "statistics-essentials"
+      },
+      {
+        "concept": "probability-and-uncertainty"
+      },
+      {
+        "concept": "correlation-vs-causation"
+      },
+      {
+        "concept": "patterns-and-predictions"
+      },
+      {
+        "concept": "what-is-a-model"
+      },
+      {
+        "concept": "bias-in-data"
+      }
+    ]
+  },
+  {
+    "slug": "foundations-of-ml",
+    "title": "Foundations of ML",
+    "eyebrow": "Track 01",
+    "description": "How machines learn from examples: features, loss, gradient descent, and the eternal fight against overfitting.",
+    "audience": "You know what AI is and want to understand how learning actually works.",
+    "order": 1,
+    "nodes": [
+      {
+        "concept": "features-and-labels"
+      },
+      {
+        "concept": "training-vs-testing"
+      },
+      {
+        "concept": "loss-functions"
+      },
+      {
+        "concept": "gradient-descent"
+      },
+      {
+        "concept": "overfitting-underfitting"
+      },
+      {
+        "concept": "regression-classification"
+      },
+      {
+        "concept": "clustering"
+      },
+      {
+        "concept": "evaluation-metrics"
+      }
+    ]
+  },
+  {
+    "slug": "deep-learning",
+    "title": "Deep Learning",
+    "eyebrow": "Track 02",
+    "description": "From a single neuron to the transformer: the architecture story that leads directly to modern AI.",
+    "audience": "You're comfortable with ML basics and want to know what's inside the black box.",
+    "order": 2,
+    "nodes": [
+      {
+        "concept": "neural-networks"
+      },
+      {
+        "concept": "backpropagation"
+      },
+      {
+        "concept": "gpus-and-compute"
+      },
+      {
+        "concept": "tokenization"
+      },
+      {
+        "concept": "embeddings"
+      },
+      {
+        "concept": "attention"
+      },
+      {
+        "concept": "transformers"
+      },
+      {
+        "concept": "scaling-laws"
+      }
+    ]
+  },
+  {
+    "slug": "llms-and-genai",
+    "title": "LLMs & Generative AI",
+    "eyebrow": "Track 03",
+    "description": "How the models you actually use get trained, tuned, shrunk, and pushed to reason.",
+    "audience": "You want to understand the systems behind ChatGPT, Claude, and the image generators.",
+    "order": 3,
+    "nodes": [
+      {
+        "concept": "training"
+      },
+      {
+        "concept": "rlhf"
+      },
+      {
+        "concept": "dpo",
+        "optional": true
+      },
+      {
+        "concept": "fine-tuning"
+      },
+      {
+        "concept": "synthetic-data",
+        "optional": true
+      },
+      {
+        "concept": "distillation",
+        "optional": true
+      },
+      {
+        "concept": "quantization",
+        "optional": true
+      },
+      {
+        "concept": "mixture-of-experts",
+        "optional": true
+      },
+      {
+        "concept": "context-windows"
+      },
+      {
+        "concept": "kv-cache",
+        "optional": true
+      },
+      {
+        "concept": "temperature-sampling"
+      },
+      {
+        "concept": "in-context-learning"
+      },
+      {
+        "concept": "chain-of-thought"
+      },
+      {
+        "concept": "reasoning-models"
+      },
+      {
+        "concept": "multimodal"
+      },
+      {
+        "concept": "vision-language-models",
+        "optional": true
+      },
+      {
+        "concept": "diffusion"
+      },
+      {
+        "concept": "model-collapse",
+        "optional": true
+      }
+    ]
+  },
+  {
+    "slug": "working-with-ai",
+    "title": "Working with AI",
+    "eyebrow": "Track 04",
+    "description": "The practical layer: prompting, retrieval, agents, evals — and the failure modes that bite in production.",
+    "audience": "You use AI for real work and want the patterns that survive contact with it.",
+    "order": 4,
+    "nodes": [
+      {
+        "concept": "prompt-engineering"
+      },
+      {
+        "concept": "structured-output"
+      },
+      {
+        "concept": "function-calling"
+      },
+      {
+        "concept": "hallucination"
+      },
+      {
+        "concept": "rag"
+      },
+      {
+        "concept": "retrieval-rerank",
+        "optional": true
+      },
+      {
+        "concept": "agents"
+      },
+      {
+        "concept": "agentic-memory",
+        "optional": true
+      },
+      {
+        "concept": "multiagent",
+        "optional": true
+      },
+      {
+        "concept": "mcp"
+      },
+      {
+        "concept": "evals"
+      },
+      {
+        "concept": "prompt-injection"
+      },
+      {
+        "concept": "jailbreaks",
+        "optional": true
+      },
+      {
+        "concept": "alignment"
+      },
+      {
+        "concept": "constitutional-ai",
+        "optional": true
+      },
+      {
+        "concept": "watermarking",
+        "optional": true
+      },
+      {
+        "concept": "model-cards",
+        "optional": true
+      }
+    ]
+  }
+]

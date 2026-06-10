@@ -1,0 +1,70 @@
+---
+title: "Neural Networks"
+tagline: "Layers of simple math that add up to something strange."
+readTime: "6 min read"
+slug: "neural-networks"
+date: "2026-06-10"
+lastUpdated: "2026-06-10"
+related: ["what-is-a-model", "transformers"]
+prerequisites: ["evaluation-metrics"]
+successors: ["backpropagation"]
+misconceptions:
+  - "Neural networks work like the brain."
+  - "Each neuron detects something a human could name."
+difficulty: "beginner"
+sources: 3
+---
+
+<Misconception think="Neural networks work like the brain.">
+The brain inspired the *vocabulary* — neurons, connections, firing — but
+the resemblance is loose poetry. Real neurons are vastly more complex,
+wired in ways no network copies, and learn by rules nobody fully
+understands. A neural network is a stack of multiplications with a
+biology-flavored name.
+</Misconception>
+
+Take a single "neuron": it receives a few numbers, multiplies each by a
+**weight** (its private dial), adds them up, and — the crucial twist —
+passes the sum through a simple nonlinear gate, like *if negative,
+output zero*. That's the whole unit. It can barely do anything.
+
+Now stack them. A **layer** is many neurons working on the same inputs
+in parallel; a **network** is layers feeding into layers. Each layer
+transforms its input and hands the result onward, and the gates between
+layers are what make depth meaningful — without them, a hundred stacked
+layers would collapse into the math of one.
+
+<ConceptDemo shape="playground" ariaLabel="Toy neural network forward pass">
+  <NeuralNetworkDemo />
+</ConceptDemo>
+
+Slide the inputs and watch the signal flow. This toy has 13 parameters.
+The models behind modern chatbots have hundreds of billions — but it is
+*this picture*, tiled, with nothing conceptually new in the tiling.
+
+## Why depth matters
+
+Each layer builds on what the previous one extracted, so features
+compose: in an image network, early layers respond to edges, middle
+layers to textures and parts — an eye, a wheel arch — and late layers to
+whole objects. Nobody designs this hierarchy. It emerges from training,
+because composing simple detectors into complex ones is the cheapest way
+to push the loss down.
+
+That's the real claim behind "deep" learning: stop hand-crafting
+features and let depth grow them.
+
+## The honest mystery
+
+The weights are learned, not written, which means nobody can fully read
+a trained network. Why *these* billions of dial-settings produce a
+working translator is understood at the level of recipe — train this
+architecture, on this data, with this loss — far better than at the
+level of explanation. Interpretability research is the field's attempt
+to open its own black box, and it is very much unfinished.
+
+## What to read next
+
+Stacking neurons creates a monster question: with billions of dials,
+which one was responsible for the mistake? **Backpropagation** — how
+blame gets assigned through a network.

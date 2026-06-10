@@ -1,0 +1,68 @@
+---
+title: "Training vs Testing"
+tagline: "Why you never grade a model on questions it has seen."
+readTime: "5 min read"
+slug: "training-vs-testing"
+date: "2026-06-10"
+lastUpdated: "2026-06-10"
+related: ["overfitting-underfitting", "evals"]
+prerequisites: ["features-and-labels"]
+successors: ["loss-functions"]
+misconceptions:
+  - "High accuracy on the training data means the model works."
+  - "Testing once is enough."
+difficulty: "beginner"
+sources: 2
+---
+
+<Misconception think="High accuracy on the training data means the model works.">
+A model can score 100% on data it trained on by doing the statistical
+equivalent of memorizing the answer key. Training accuracy measures how
+well it absorbed the examples. Only performance on *unseen* data measures
+whether it learned anything usable.
+</Misconception>
+
+Imagine a student who gets a perfect score — on the exact problem set
+they studied from. Impressive? You have no idea. Maybe they understand
+calculus; maybe they memorized forty answers. To find out, you'd hand
+them problems they've never seen.
+
+Machine learning institutionalizes this suspicion. Before training
+starts, the dataset is split — typically something like 80% for
+**training** and 20% held back for **testing**. The model learns only
+from the training portion. The test portion stays locked away until the
+end, then gets used exactly once to answer the only question that
+matters: *how does this thing do on data it has never seen?*
+
+That number — test performance — is the model's real grade.
+Generalization, not memorization.
+
+## The cardinal sin: leakage
+
+The whole scheme depends on the test set being genuinely unseen. When
+information from it sneaks into training — even indirectly — the grade
+inflates and means nothing. This is **data leakage**, and it's
+everywhere:
+
+- Duplicate records that land on both sides of the split.
+- Tuning the model repeatedly against the test set until it fits —
+  memorization by a thousand peeks.
+- Splitting time-series data randomly, letting the model "train on
+  Tuesday" to predict Monday.
+
+Leakage is why a model that aced every internal benchmark can faceplant
+in production. The exam was compromised; the world isn't.
+
+## The version you already know
+
+This is also the cleanest lens on language model benchmarks. When a
+model scores brilliantly on a famous test, the first question
+researchers ask is: *was the test in the training data?* The internet
+contains the benchmarks, so frontier labs go to real lengths to scrub
+them out — and skeptics go to equal lengths to check. Same student, same
+answer key, higher stakes.
+
+## What to read next
+
+Training works by making wrongness measurable. **Loss functions** — the
+single number a model spends its whole life trying to shrink.

@@ -1,0 +1,63 @@
+---
+title: "Statistics Essentials"
+tagline: "Means, distributions, and why averages mislead."
+readTime: "5 min read"
+slug: "statistics-essentials"
+date: "2026-06-10"
+lastUpdated: "2026-06-10"
+related: ["probability-and-uncertainty", "evaluation-metrics"]
+prerequisites: ["data-and-datasets"]
+successors: ["probability-and-uncertainty"]
+misconceptions:
+  - "The average tells you what's typical."
+  - "Statistics is about math, not judgment."
+difficulty: "beginner"
+sources: 2
+---
+
+<Misconception think="The average tells you what's typical.">
+Put one billionaire in a room with nine broke students and the average
+person in the room is worth a hundred million dollars. The average
+describes nobody. Whenever a single number summarizes many, ask what got
+flattened to produce it.
+</Misconception>
+
+You don't need a statistics degree to understand AI. You need about four
+ideas, held firmly.
+
+## The four ideas
+
+**Distribution.** Don't ask "what's the value?" — ask "what's the spread
+of values?" Heights cluster near the middle; incomes pile up at the
+bottom with a long tail of outliers. The *shape* of the data decides
+which summaries are honest. Models learn distributions, not facts: a
+language model's entire skill is knowing the distribution of what word
+plausibly comes next.
+
+**Mean vs median.** The mean adds everything and divides; the median is
+the middle value when sorted. The mean is dragged around by outliers, the
+median isn't. When a company says "average salary," reach for the median
+before you nod.
+
+**Variance.** How spread out is the data? Two neighborhoods can share an
+average temperature — one a mild coast, the other a desert that swings
+from freezing to scorching. Same mean, wildly different experience. In
+AI, a model with high variance in its answers is unreliable even when
+it's right on average.
+
+**Sampling.** You almost never see all the data — you see a sample, and
+samples can lie. Poll only landline owners and you've measured landline
+owners, not voters. Every dataset is a sample of the world, which means
+every model inherits the question: *a sample of what, collected how?*
+
+## Why this is the load-bearing floor
+
+Every claim you'll ever read about AI — "95% accurate," "outperforms
+doctors," "state of the art" — is a statistical claim about a
+distribution, summarized into a headline number. The four ideas above are
+how you open that number back up and look inside.
+
+## What to read next
+
+Statistics describes the data you have. **Probability and uncertainty**
+is about the data you don't — and it's the language models actually speak.

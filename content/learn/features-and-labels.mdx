@@ -1,0 +1,69 @@
+---
+title: "Features & Labels"
+tagline: "How the world gets turned into columns."
+readTime: "5 min read"
+slug: "features-and-labels"
+date: "2026-06-10"
+lastUpdated: "2026-06-10"
+related: ["data-and-datasets", "embeddings"]
+prerequisites: ["bias-in-data"]
+successors: ["training-vs-testing"]
+misconceptions:
+  - "The model sees the thing itself."
+  - "Choosing features is a technical detail."
+difficulty: "beginner"
+sources: 2
+---
+
+<Misconception think="The model sees the thing itself.">
+No model has ever seen a house, a patient, or an email. It sees the
+columns someone chose to record: square footage, blood pressure, word
+counts. Whatever didn't become a number doesn't exist for the model — and
+that editing decision happened before any learning began.
+</Misconception>
+
+Machine learning runs on tables. Before a model can learn anything, the
+messy world has to be flattened into rows and columns — and the
+vocabulary for that is two words you'll meet everywhere.
+
+**Features** are the inputs: the measurable properties of each example.
+For a house — square footage, bedrooms, year built, distance to the
+train. **Labels** are the answers: the thing you want the model to
+predict. The house's sale price. Each row is one example; the model's
+job is to learn the relationship between the feature columns and the
+label column, so it can fill in the label for rows that don't have one
+yet.
+
+## The art hiding in the columns
+
+Deciding *what becomes a feature* quietly shapes everything downstream:
+
+- **Leave something out** and the model can't use it. Predicting crop
+  yields without rainfall data means the model will attribute rain's
+  effects to whatever correlates with it.
+- **Put the wrong thing in** and it will be used. Include "name" in a
+  loan model and the model will extract every demographic signal a name
+  carries.
+- **Encode it badly** and the signal blurs. "Date of last purchase" is
+  weak; "days since last purchase" is strong. Same information, different
+  shape — and the shape matters.
+
+This craft is called *feature engineering*, and for decades it was most
+of the job. Deep learning's headline trick is learning useful internal
+features from raw inputs — pixels, audio, text — by itself. That moved
+the work, but didn't abolish the lesson: what enters the model bounds
+what can come out.
+
+## Labels are expensive opinions
+
+Features are often easy to collect. Labels usually require a human
+judgment — this scan *is* a tumor, this review *is* positive — repeated
+thousands of times. Labeling is slow, costly, and quietly subjective:
+two radiologists disagree, and whichever one labeled your dataset just
+became the model's definition of truth.
+
+## What to read next
+
+With data in columns, the next question is how to grade the learning
+honestly — **training vs testing**, and why a model never gets graded on
+questions it has seen.

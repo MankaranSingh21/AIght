@@ -1,0 +1,70 @@
+---
+title: "Backpropagation"
+tagline: "How blame gets assigned through a network."
+readTime: "5 min read"
+slug: "backpropagation"
+date: "2026-06-10"
+lastUpdated: "2026-06-10"
+related: ["gradient-descent", "neural-networks"]
+prerequisites: ["neural-networks"]
+successors: ["gpus-and-compute"]
+misconceptions:
+  - "Backpropagation is how the network makes predictions."
+  - "It's a separate algorithm from gradient descent."
+difficulty: "beginner"
+sources: 2
+---
+
+<Misconception think="Backpropagation is how the network makes predictions.">
+Prediction runs *forward* — inputs flow through the layers to an output.
+Backpropagation only exists during training, and it runs the other way:
+after the loss is measured, blame flows backward through the same
+connections. Forward to guess, backward to learn.
+</Misconception>
+
+Gradient descent needs to know, for every parameter, *which way is
+downhill* — how a tiny nudge to this weight would change the loss. For a
+model with billions of weights, computing that sounds hopeless.
+Backpropagation is the bookkeeping trick that makes it cheap. It is the
+algorithm that made deep learning possible, and it's older than most
+people guess — popularized in 1986.
+
+## Blame, flowing backward
+
+A network makes a bad guess. The loss says *how* bad. Now walk
+backward:
+
+The output was too high — so the neurons feeding it strongly share the
+blame, in proportion to their weights. Each of *those* neurons passes
+its portion backward to the ones that fed *it*, again weighted by
+contribution. Layer by layer, the single error at the end is divided
+into precise micro-responsibilities, until every one of the billions of
+weights holds a number: *your nudge direction, your share of the fault.*
+
+Then gradient descent does its one move — every weight steps slightly
+against its blame — and the next example begins.
+
+## Why it's fast (the part that's actually clever)
+
+The naive approach — wiggle each weight separately and re-run the
+network to see what changes — would cost billions of forward passes per
+example. Backpropagation gets every gradient in roughly *one* backward
+pass, by reusing shared work: the blame computed at each layer is
+exactly what the layer before needs to compute its own. (For the
+mathematically inclined: it's the chain rule from calculus, applied with
+extreme thrift.) One forward pass to guess, one backward pass to assign
+fault, repeat a few trillion times — that *is* training.
+
+## The detail that shaped everything
+
+Backpropagation requires every operation in the network to be smoothly
+adjustable — you can't assign blame through an on/off switch. This is
+why networks are built from soft, differentiable pieces, and it quietly
+constrains what architectures can exist at all. When you hear that some
+clever idea "isn't differentiable," you're hearing that backprop can't
+flow through it — and in deep learning, that's usually a death sentence.
+
+## What to read next
+
+Trillions of multiplications per second don't run on wishes. **GPUs and
+compute** — why AI progress is measured in chips and megawatts.

@@ -1,0 +1,66 @@
+---
+title: "Loss Functions"
+tagline: "The single number a model tries to shrink."
+readTime: "5 min read"
+slug: "loss-functions"
+date: "2026-06-10"
+lastUpdated: "2026-06-10"
+related: ["gradient-descent", "training"]
+prerequisites: ["training-vs-testing"]
+successors: ["gradient-descent"]
+misconceptions:
+  - "The model is trying to be correct."
+  - "Any reasonable way of measuring error works the same."
+difficulty: "beginner"
+sources: 2
+---
+
+<Misconception think="The model is trying to be correct.">
+The model is trying to make one number smaller. If that number is
+well-designed, smaller happens to mean more correct. If it's badly
+designed, the model will faithfully optimize its way into nonsense.
+The system pursues the score, not your intent.
+</Misconception>
+
+Training needs a definition of *wrong* precise enough to do arithmetic
+on. That definition is the **loss function**: a formula that takes the
+model's guess and the true answer, and returns a number. Zero means
+perfect; bigger means worse. Training is nothing more than adjusting the
+model's parameters to push this number down across millions of examples.
+
+It's the steering wheel of the entire enterprise. Whatever the loss
+measures is — by definition — the only thing the model cares about.
+
+## Two flavors you'll actually meet
+
+**Squared error** (for predicting numbers). Take the difference between
+guess and truth, square it. Squaring keeps misses positive and punishes
+big misses brutally: being off by 10 hurts a hundred times more than
+being off by 1. A house-price model trained on squared error becomes
+terrified of large mistakes.
+
+**Cross-entropy** (for predicting categories and words). The model
+assigns probabilities; the loss is brutal when it was confident *and
+wrong*, gentle when it was unsure. Saying "99% cat" about a dog costs
+enormously more than saying "55% cat." This is the loss behind language
+models: every next-word prediction, graded on how much probability the
+model gave the word that actually came next.
+
+## You get what you measure — exactly
+
+The dark art is that the loss is a *proxy* for what you want, and models
+exploit gaps between proxy and intent with idiot-savant persistence.
+Penalize only average error and the model sacrifices rare cases.
+Reward predicted-word probability and you get plausible text, not true
+text — a language model's notorious confidence when wrong is partly
+this objective, doing exactly what it was told.
+
+When a model behaves strangely, the senior engineer's reflex isn't
+"what's wrong with the model?" It's "what is the loss actually
+rewarding?"
+
+## What to read next
+
+A definition of wrong is only useful with a way to get less wrong.
+**Gradient descent** — the rolling-downhill algorithm that does the
+learning.

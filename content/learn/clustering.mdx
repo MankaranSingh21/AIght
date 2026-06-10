@@ -1,0 +1,71 @@
+---
+title: "Clustering"
+tagline: "Finding structure nobody labelled."
+readTime: "5 min read"
+slug: "clustering"
+date: "2026-06-10"
+lastUpdated: "2026-06-10"
+related: ["embeddings", "features-and-labels"]
+prerequisites: ["regression-classification"]
+successors: ["evaluation-metrics"]
+misconceptions:
+  - "Clusters discovered by the algorithm are real categories."
+  - "Clustering tells you how many groups exist."
+difficulty: "beginner"
+sources: 2
+---
+
+<Misconception think="Clusters discovered by the algorithm are real categories.">
+A clustering algorithm will find groups in *any* data — including pure
+noise. It answers "how would I divide this into k piles?" not "are there
+really k piles?" The groups are a proposal. Whether they mean anything
+is your judgment to make.
+</Misconception>
+
+Everything so far needed labeled answers: features in, known label out.
+But labels are expensive, and often nobody knows the right categories in
+advance. What can be learned from a pile of examples with *no answers
+attached*?
+
+Structure. **Clustering** algorithms group examples so that members of a
+group are similar to each other and different from everyone else — with
+no teacher, no labels, no predefined categories. This is the flagship of
+*unsupervised learning*: learning without an answer key.
+
+## The classic move: k-means
+
+The most famous algorithm is almost embarrassingly simple. Pick k — say,
+five. Drop five pins randomly among your data points. Assign every point
+to its nearest pin; move each pin to the center of its assigned points;
+repeat until nothing moves. The five neighborhoods that emerge are your
+clusters.
+
+Notice what you had to provide: k. The algorithm doesn't know whether
+your customers naturally form three groups or thirty — it will dutifully
+produce however many you ask for. Choosing k well (and checking the
+clusters survive scrutiny) is the actual work.
+
+## Where it earns its keep
+
+- **Customer segmentation.** Run clustering on purchase behavior and
+  discover your "users" are actually four tribes with different needs —
+  before anyone defined the tribes.
+- **Anomaly detection.** Whatever fits *no* cluster is interesting:
+  fraud, sensor failure, a new kind of attack.
+- **Making sense of embeddings.** Modern models turn text and images
+  into points in space where similarity is distance — clustering that
+  space surfaces themes in thousands of documents nobody has read.
+
+## The honest caveat
+
+"Similar" depends entirely on the features you measured and how you
+scaled them. Cluster people by income and height, and whether income
+dominates is decided by your units, not by nature. Clustering doesn't
+discover *the* structure of the data; it discovers the structure of the
+data *as you chose to describe it*. Same lesson as always, one level up:
+the columns decide what can be seen.
+
+## What to read next
+
+You can now train models and group data — but how do you *grade* any of
+it honestly? **Evaluation metrics**, where accuracy turns out to lie.

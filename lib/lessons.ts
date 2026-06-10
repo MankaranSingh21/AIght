@@ -1,0 +1,79 @@
+import type { ComponentType, ReactNode } from "react";
+
+/**
+ * Brilliant-style step-based lessons.
+ *
+ * Lessons are typed TSX modules in /content/lessons — one module per concept,
+ * lazy-loaded client-side via the registry in content/lessons/index.ts.
+ * This file stays free of client imports so server code (routes, sitemap,
+ * the essay page pill) can read lesson metadata without pulling demo
+ * components into the server bundle.
+ */
+
+export type LessonChoice = {
+  text: string;
+  correct?: boolean;
+  /** Shown after the user picks this choice — explain, don't shame. */
+  feedback: string;
+};
+
+export type LessonStep =
+  | {
+      kind: "explain";
+      id: string;
+      /** Small mono label above the body, e.g. "THE IDEA". */
+      eyebrow?: string;
+      body: ReactNode;
+      /** Optional supporting visual below the prose. */
+      demo?: ComponentType;
+    }
+  | {
+      kind: "interact";
+      id: string;
+      body: ReactNode;
+      demo: ComponentType;
+      /** One-line nudge rendered under the demo, e.g. "Try a longer word." */
+      tryThis?: string;
+    }
+  | {
+      kind: "check";
+      id: string;
+      prompt: string;
+      choices: LessonChoice[];
+    };
+
+export type Lesson = {
+  /** Concept slug — the lesson lives at /learn/[slug]/lesson. */
+  slug: string;
+  title: string;
+  tagline: string;
+  minutes: number;
+  steps: LessonStep[];
+};
+
+/**
+ * Static metadata for every lesson that exists. Single source of truth for
+ * generateStaticParams, the sitemap, and "interactive" affordances on essay
+ * pages and the /learn index. Adding a lesson = add the module in
+ * content/lessons + register it here and in content/lessons/index.ts.
+ */
+export const LESSON_META: Record<string, { minutes: number; steps: number }> = {
+  tokenization: { minutes: 6, steps: 8 },
+  embeddings: { minutes: 6, steps: 8 },
+  "temperature-sampling": { minutes: 5, steps: 7 },
+  attention: { minutes: 7, steps: 8 },
+  "context-windows": { minutes: 6, steps: 8 },
+  hallucination: { minutes: 6, steps: 8 },
+  rag: { minutes: 7, steps: 8 },
+  "prompt-engineering": { minutes: 6, steps: 8 },
+  agents: { minutes: 7, steps: 8 },
+  training: { minutes: 7, steps: 8 },
+};
+
+export function getLessonSlugs(): string[] {
+  return Object.keys(LESSON_META);
+}
+
+export function hasLesson(slug: string): boolean {
+  return slug in LESSON_META;
+}

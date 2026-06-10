@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import StreakChip from '@/components/progress/StreakChip';
 
 // Desktop nav drops Home — the logo serves that role. Mobile menu shows
 // the full set including Home for users who don't know the logo is clickable.
@@ -147,6 +148,11 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center gap-2.5 ml-auto sm:ml-0">
+            {/* Learning progress — level ring + streak; hidden until first XP */}
+            <span className="hidden lg:inline-flex">
+              <StreakChip />
+            </span>
+
             {/* Take-the-quiz CTA — primary action, visible md+ to avoid crowding. */}
             <Link
               href={QUIZ_HREF}

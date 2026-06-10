@@ -1,0 +1,65 @@
+---
+title: "Regression & Classification"
+tagline: "Predicting numbers, predicting categories."
+readTime: "5 min read"
+slug: "regression-classification"
+date: "2026-06-10"
+lastUpdated: "2026-06-10"
+related: ["loss-functions", "evaluation-metrics"]
+prerequisites: ["overfitting-underfitting"]
+successors: ["clustering"]
+misconceptions:
+  - "Classification models output a category."
+  - "These are different kinds of AI."
+difficulty: "beginner"
+sources: 2
+---
+
+<Misconception think="Classification models output a category.">
+Under the hood, almost every classifier outputs *probabilities* — spam:
+0.93, not-spam: 0.07 — and a threshold turns them into a verdict. The
+threshold is a human choice, and moving it trades one kind of mistake
+for another. The category you see is the last step, not the model.
+</Misconception>
+
+Strip the buzzwords from applied machine learning and most of it is two
+jobs.
+
+**Regression: predict a number.** What will this house sell for? How
+many kilowatts will the grid need at 6pm? Output: a value on a sliding
+scale, where *close* counts. Being $5k off on a house price is a good
+miss.
+
+**Classification: predict a category.** Spam or not? Tumor or benign?
+Which of 10,000 species is in this photo? Output: a verdict, where close
+doesn't obviously exist — the email is junk or it isn't.
+
+The split sounds cosmetic. It isn't: it decides the loss function
+(squared error vs cross-entropy), how you measure success, and what
+kinds of mistakes are even possible.
+
+## The threshold is a policy decision
+
+Because classifiers really output probabilities, someone must choose
+where the verdict flips. A fraud model flagging at 0.5 catches less
+fraud but bothers fewer customers; at 0.2 it catches more and annoys
+thousands. Neither setting is "more accurate" — they're different
+trade-offs between false alarms and missed cases. The math can't make
+that call. It's a question about which mistake your institution can
+better afford, answered by a human and laundered through a decimal.
+
+## Where you've already met them
+
+- Your inbox runs classification (spam), your bank runs both (fraud:
+  classification; credit limit: regression).
+- Weather apps: regression for temperature, classification for
+  rain/no-rain.
+- And the strangest example: a language model is a classifier run in a
+  loop — at every step it classifies the context into one of ~100,000
+  possible next tokens, picks, and repeats. The chatbot writing your
+  email is classification at machine-gun pace.
+
+## What to read next
+
+Both jobs need labeled answers to learn from. What can a model find when
+nobody labeled anything? **Clustering** — structure without a teacher.

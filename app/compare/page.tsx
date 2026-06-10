@@ -315,15 +315,18 @@ export default async function ComparePage({ searchParams }: { searchParams: SP }
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
       <main style={{
         minHeight: "calc(100vh - 64px)",
         background: "var(--bg-base)",
         padding: "var(--space-16) var(--space-8)",
       }}>
+        {/* Inside <main> so externally injected scripts (PostHog) can't occupy
+            this hydration slot — first-child <script> tags collide with them. */}
+        <script
+          key="compare-jsonld"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <div style={{ maxWidth: "var(--max-width-content)", margin: "0 auto" }}>
           <p style={{
             fontFamily: "var(--font-mono)",

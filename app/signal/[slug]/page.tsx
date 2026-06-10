@@ -148,8 +148,14 @@ export default async function SignalPostPage({ params }: Props) {
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <main style={{ minHeight: "100vh", background: "var(--bg-base)" }}>
+        {/* Inside <main> so externally injected scripts (PostHog) can't occupy
+            this hydration slot — first-child <script> tags collide with them. */}
+        <script
+          key="signal-jsonld"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <div style={{
           maxWidth: "var(--max-width-editorial)",
           margin: "0 auto",

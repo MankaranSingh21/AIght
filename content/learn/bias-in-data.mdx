@@ -1,0 +1,67 @@
+---
+title: "Bias in Data"
+tagline: "Why models inherit the world's blind spots."
+readTime: "5 min read"
+slug: "bias-in-data"
+date: "2026-06-10"
+lastUpdated: "2026-06-10"
+related: ["data-and-datasets", "alignment", "evals"]
+prerequisites: ["what-is-a-model"]
+successors: ["features-and-labels"]
+misconceptions:
+  - "Bias means someone built the model with bad intentions."
+  - "Removing the sensitive column removes the bias."
+difficulty: "beginner"
+sources: 4
+---
+
+<Misconception think="Bias means someone built the model with bad intentions.">
+Most biased systems were built by people trying to be fair. The bias
+rides in with the data — a faithful model of a skewed record is skewed,
+automatically, no malice required. That's what makes it hard: you can't
+fix it by hiring nicer engineers.
+</Misconception>
+
+A model is a compressed theory of its data. So ask: what if the data is a
+record of an unfair world?
+
+Then the model learns the unfairness as if it were a law of nature —
+and applies it with perfect consistency, at scale, wearing the costume of
+mathematical objectivity.
+
+## How it actually gets in
+
+- **Skewed coverage.** Early face-recognition datasets were mostly
+  light-skinned faces. Error rates for dark-skinned women ran more than
+  thirty times higher than for light-skinned men. The model wasn't
+  hostile; it was *under-taught*.
+- **History as label.** Train a hiring model on ten years of past
+  decisions and "successful candidate" means "person we used to hire."
+  Amazon famously scrapped a recruiting tool that penalized the word
+  "women's" on a résumé. Nobody programmed that. The data did.
+- **Proxies.** Delete the race column and the model rediscovers it
+  through zip code, school, name. Correlated features mean the
+  information leaks back in — removing the labeled column mostly removes
+  your ability to *measure* the problem.
+- **Feedback loops.** Send police where past arrests were recorded, and
+  new arrests happen where the police are. The prediction manufactures
+  its own confirmation, rounds it to "accuracy," and tightens.
+
+## What can actually be done
+
+No neutral dataset exists — every record was collected by someone, about
+something, for some purpose. The honest path isn't purity; it's
+engineering: measure error rates *per group*, not just overall; audit
+what features drive decisions; diversify what the data covers; and keep
+humans accountable for the calls that matter. Bias work is testing work,
+unglamorous and permanent.
+
+The wrong response is the shrug — "humans are biased too." Humans are
+biased one decision at a time. A model is biased ten thousand times a
+second, identically, with a straight face.
+
+## What to read next
+
+You've finished the foundations. The machine-learning track starts with
+the mechanics: **features and labels** — how the world gets turned into
+columns a model can learn from.

@@ -1,0 +1,63 @@
+---
+title: "Probability & Uncertainty"
+tagline: "Thinking in likelihoods instead of certainties."
+readTime: "5 min read"
+slug: "probability-and-uncertainty"
+date: "2026-06-10"
+lastUpdated: "2026-06-10"
+related: ["temperature-sampling", "hallucination"]
+prerequisites: ["statistics-essentials"]
+successors: ["correlation-vs-causation"]
+misconceptions:
+  - "A confident answer is a correct answer."
+  - "70% likely means it will happen."
+difficulty: "beginner"
+sources: 2
+---
+
+<Misconception think="A confident answer is a correct answer.">
+Models produce fluent, assured prose at any level of actual reliability.
+The confidence in the wording and the probability of being right are two
+separate dials — and language models, by default, only show you the first
+one.
+</Misconception>
+
+Here is the single most useful reframe for understanding modern AI: a
+model never *knows* anything. It assigns likelihoods.
+
+When a language model continues the sentence "The capital of France
+is…", it doesn't retrieve a fact. It computes a probability for every
+word it could say next: *Paris* 0.97, *Lyon* 0.01, *the* 0.005, and so
+on, then picks from that spread. The right answer being overwhelmingly
+likely is what correctness looks like from inside the machine. There is
+no separate compartment holding the truth.
+
+## Living with likelihoods
+
+- **Probabilities describe long runs, not single events.** "70% chance of
+  rain" doesn't mean it will mostly rain. It means: across many days like
+  today, seven in ten get wet. One dry afternoon doesn't make the
+  forecast wrong.
+- **Calibration is the virtue to ask about.** A system is well-calibrated
+  if, of all the times it says "80% sure," it's right about 80% of them.
+  A model can be impressively accurate and badly calibrated — confidently
+  wrong in exactly the cases that matter.
+- **Uncertainty is information.** A model that says "I'm not sure" is
+  handing you something valuable. Most chat interfaces sand this off,
+  presenting the top guess in the same warm prose whether it was a 0.97
+  or a 0.4.
+
+## Why this explains so much
+
+Once you see the likelihood machinery, several mysteries dissolve.
+Why do models sometimes give different answers to the same question?
+They're sampling from a distribution. Why do they make things up?
+Because *some* continuation always has the highest probability, even
+when no continuation is true. The machine is doing exactly what it was
+built to do — the surprise was ours, for mistaking fluency for knowledge.
+
+## What to read next
+
+Likelihood tells you two things move together. It cannot tell you one
+causes the other — that trap gets its own essay: **correlation vs
+causation**.

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { compileMDX } from "next-mdx-remote/rsc";
 import { getAllConcepts, getConceptSource, DEFAULT_AUTHOR } from "@/lib/learn";
+import { hasLesson, LESSON_META } from "@/lib/lessons";
 import { createServiceClient } from "@/utils/supabase/service";
 import RagSimulation from "@/components/learn/RagSimulation";
 import McpSimulation from "@/components/learn/McpSimulation";
@@ -14,6 +15,7 @@ import Pullquote from "@/components/learn/Pullquote";
 import PullquoteMargin from "@/components/learn/PullquoteMargin";
 import CodeBlock from "@/components/learn/CodeBlock";
 import ReadingProgressBar from "@/components/learn/ReadingProgressBar";
+import ConceptReadTracker from "@/components/learn/ConceptReadTracker";
 import ConceptHeader3DClient from "@/components/learn/ConceptHeader3DClient";
 import ArticleReveal from "@/components/learn/ArticleReveal";
 import MarginNote from "@/components/learn/MarginNote";
@@ -45,6 +47,7 @@ import DistillationDemo from "@/components/learn/DistillationDemo";
 import DpoDemo from "@/components/learn/DpoDemo";
 import EvalsDemo from "@/components/learn/EvalsDemo";
 import FunctionCallingDemo from "@/components/learn/FunctionCallingDemo";
+import GradientDescentDemo from "@/components/learn/GradientDescentDemo";
 import HallucinationDemo from "@/components/learn/HallucinationDemo";
 import InContextLearningDemo from "@/components/learn/InContextLearningDemo";
 import JailbreaksDemo from "@/components/learn/JailbreaksDemo";
@@ -53,6 +56,8 @@ import ModelCardsDemo from "@/components/learn/ModelCardsDemo";
 import ModelCollapseDemo from "@/components/learn/ModelCollapseDemo";
 import MultiagentDemo from "@/components/learn/MultiagentDemo";
 import MultimodalDemo from "@/components/learn/MultimodalDemo";
+import NeuralNetworkDemo from "@/components/learn/NeuralNetworkDemo";
+import OverfittingDemo from "@/components/learn/OverfittingDemo";
 import PromptEngineeringDemo from "@/components/learn/PromptEngineeringDemo";
 import PromptInjectionDemo from "@/components/learn/PromptInjectionDemo";
 import QuantizationDemo from "@/components/learn/QuantizationDemo";
@@ -132,6 +137,7 @@ const mdxComponents = {
   DpoDemo,
   EvalsDemo,
   FunctionCallingDemo,
+  GradientDescentDemo,
   HallucinationDemo,
   InContextLearningDemo,
   JailbreaksDemo,
@@ -140,6 +146,8 @@ const mdxComponents = {
   ModelCollapseDemo,
   MultiagentDemo,
   MultimodalDemo,
+  NeuralNetworkDemo,
+  OverfittingDemo,
   PromptEngineeringDemo,
   PromptInjectionDemo,
   QuantizationDemo,
@@ -387,6 +395,7 @@ export default async function LearnConceptPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <ReadingProgressBar />
+      <ConceptReadTracker slug={slug} />
 
       {/* Full-width 3D constellation header */}
       <ConceptHeader3DClient slug={slug} />
@@ -465,6 +474,46 @@ export default async function LearnConceptPage({ params }: Props) {
           </p>
           {/* Byline */}
           <Byline variant="inline" lastUpdated={conceptMeta?.lastUpdated} />
+
+          {/* Interactive lesson pill — shown when a step-based lesson exists */}
+          {hasLesson(slug) && (
+            <Link
+              href={`/learn/${slug}/lesson`}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 10,
+                marginTop: 24,
+                padding: "12px 20px",
+                borderRadius: "var(--radius-md)",
+                background: "var(--accent-primary-glow)",
+                border: "1px solid var(--border-emphasis)",
+                textDecoration: "none",
+                transition: "border-color 150ms ease",
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 11,
+                  letterSpacing: "0.1em",
+                  textTransform: "uppercase",
+                  color: "var(--accent-primary)",
+                }}
+              >
+                ◈ Learn it interactively
+              </span>
+              <span
+                style={{
+                  fontFamily: "var(--font-ui)",
+                  fontSize: 13,
+                  color: "var(--text-secondary)",
+                }}
+              >
+                {LESSON_META[slug].steps} steps · ~{LESSON_META[slug].minutes} min →
+              </span>
+            </Link>
+          )}
         </header>
 
         {/* Per-concept mini-map — Phase J. Renders only when concept frontmatter

@@ -1,0 +1,19 @@
+import type { Lesson } from "@/lib/lessons";
+
+/**
+ * Lazy lesson registry — one dynamic import per lesson so a lesson's demo
+ * components are only bundled for its own route. Keep keys in sync with
+ * LESSON_META in lib/lessons.ts (the lesson page validates both at build).
+ */
+export const LESSON_LOADERS: Record<string, () => Promise<{ default: Lesson }>> = {
+  tokenization: () => import("./tokenization"),
+  embeddings: () => import("./embeddings"),
+  "temperature-sampling": () => import("./temperature-sampling"),
+  attention: () => import("./attention"),
+  "context-windows": () => import("./context-windows"),
+  hallucination: () => import("./hallucination"),
+  rag: () => import("./rag"),
+  "prompt-engineering": () => import("./prompt-engineering"),
+  agents: () => import("./agents"),
+  training: () => import("./training"),
+};

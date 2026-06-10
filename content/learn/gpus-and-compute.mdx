@@ -1,0 +1,71 @@
+---
+title: "GPUs & Compute"
+tagline: "Why AI progress is measured in chips and megawatts."
+readTime: "5 min read"
+slug: "gpus-and-compute"
+date: "2026-06-10"
+lastUpdated: "2026-06-10"
+related: ["scaling-laws", "quantization"]
+prerequisites: ["backpropagation"]
+successors: ["transformers"]
+misconceptions:
+  - "GPUs are for graphics; AI must need something else."
+  - "Software cleverness matters more than raw compute."
+difficulty: "beginner"
+sources: 3
+---
+
+<Misconception think="Software cleverness matters more than raw compute.">
+The bitterest lesson of the field's history — literally titled "The
+Bitter Lesson" in a famous 2019 essay — is that general methods plus
+more compute have beaten human cleverness over and over. The clever
+ideas that won are mostly the ones that let compute scale. Hardware
+isn't the boring part of the story. It's the plot.
+</Misconception>
+
+A neural network's life is multiplication: multiply inputs by weights,
+sum, repeat — billions of times per training step, trillions per second
+at frontier scale. None of these multiplications is hard. There are just
+unspeakably many, and most don't depend on each other, so they could in
+principle all happen *at once*.
+
+That word — at once — is why the AI era runs on a chip designed for
+video games.
+
+## CPU vs GPU, in one image
+
+A CPU is a few brilliant workers: a handful of cores, each fast and
+flexible, built to race through tasks where step two needs step one. A
+GPU is a stadium of ten thousand interns who can each only multiply —
+useless for running your operating system, perfect for painting three
+million pixels at once. Researchers around 2010 noticed that "update
+every pixel" and "update every neuron" are the same *shape* of problem.
+Deep learning's breakout moment — AlexNet, 2012 — was a neural network
+that wedged itself onto two gaming GPUs and embarrassed two decades of
+hand-crafted computer vision.
+
+Modern AI chips (NVIDIA's data-center GPUs, Google's TPUs) are that
+insight industrialized: silicon specialized for matrix multiplication
+plus enormous **memory bandwidth** — because feeding billions of weights
+to the cores fast enough is usually the real bottleneck, not the math
+itself.
+
+## Compute as the field's currency
+
+Training compute is measured in FLOPs (floating-point operations), and
+frontier training runs are measured in *months of thousands of GPUs* —
+costing hundreds of millions of dollars in chips and electricity. This
+single fact explains much of the industry's shape: why a handful of
+companies train frontier models and everyone else fine-tunes them, why
+export controls on chips are foreign policy, why data centers negotiate
+with power grids, and why **quantization** and **distillation** — doing
+more with less compute — are entire subfields.
+
+When you read AI news, follow the compute. It predicts more than the
+press releases do.
+
+## What to read next
+
+You have the full stack now — data, learning, networks, hardware. Next:
+the architecture that turned all of it into the modern era.
+**Transformers.**

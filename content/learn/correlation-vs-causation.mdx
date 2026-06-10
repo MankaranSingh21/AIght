@@ -1,0 +1,67 @@
+---
+title: "Correlation vs Causation"
+tagline: "The mistake every model — and every human — makes."
+readTime: "5 min read"
+slug: "correlation-vs-causation"
+date: "2026-06-10"
+lastUpdated: "2026-06-10"
+related: ["bias-in-data", "evaluation-metrics"]
+prerequisites: ["probability-and-uncertainty"]
+successors: ["patterns-and-predictions"]
+misconceptions:
+  - "If the model found the pattern, the pattern is real."
+  - "Big data makes spurious correlations go away."
+difficulty: "beginner"
+sources: 3
+---
+
+<Misconception think="If the model found the pattern, the pattern is real.">
+The pattern is real *in the dataset*. Whether it reflects how the world
+works — or just how the data was collected — is a different question, and
+no amount of model sophistication answers it. Models are correlation
+engines. Causation is not on the menu.
+</Misconception>
+
+Ice cream sales and drowning deaths rise together every year. Ice cream
+doesn't drown anyone; summer causes both. Everyone laughs at this example
+and then walks into the same trap wearing a lab coat.
+
+Correlation means two things move together. Causation means one produces
+the other. Data — any data, any amount — can only ever show you the
+first. The second requires knowing *why*, and why is not stored in the
+columns.
+
+## How machines fall in
+
+Machine learning is, mechanically, the industrial-scale discovery of
+correlations. That's not a criticism; it's the job description. The
+trouble is that the model has no way to distinguish a deep pattern from
+an accidental one:
+
+- A famous medical model learned that asthma patients had *better*
+  pneumonia survival — because doctors, knowing the danger, rushed them
+  into intensive care. The correlation was real. Acting on it as
+  causation would kill people.
+- An image classifier learned to spot huskies by detecting **snow in the
+  background**. The correlation held in the training photos. It collapsed
+  the moment a husky stood on grass.
+- A hiring model learns that certain zip codes "predict" job success —
+  laundering decades of housing discrimination into a clean-looking score.
+
+These are called *spurious correlations* or *shortcut learning*, and more
+data often makes them worse, not better: bigger datasets contain more
+accidents to discover.
+
+## The question that protects you
+
+When a model — or a chart, or a confident colleague — shows you a
+pattern, ask: *what else could produce this?* The drowning numbers don't
+need ice cream; they need summer. The husky detector doesn't need a
+husky; it needs snow. If you can tell a cheaper story that fits the same
+data, the pattern hasn't earned your trust yet.
+
+## What to read next
+
+With the trap marked, you're ready for the core move of all machine
+learning: **patterns and predictions** — how finding regularities becomes
+the engine of everything.

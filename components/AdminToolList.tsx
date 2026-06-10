@@ -198,8 +198,13 @@ export default function AdminToolList({ tools }: { tools: AdminTool[] }) {
                 {/* Score sliders */}
                 <div className="space-y-3">
                   <p className="font-sans text-xs font-medium uppercase tracking-widest text-muted">
-                    Scoring (0–10)
+                    Scoring (0–100)
                   </p>
+                  {!hasScores && (
+                    <p className="font-mono text-xs text-warm">
+                      ⚠ All scores are zero — this tool renders an empty radar on /compare and its detail page.
+                    </p>
+                  )}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {SCORE_AXES.map(({ key, label, color }) => (
                       <div key={key} className="space-y-1.5">
@@ -214,15 +219,15 @@ export default function AdminToolList({ tools }: { tools: AdminTool[] }) {
                             className="font-mono text-xs font-bold"
                             style={{ color }}
                           >
-                            {state[key].toFixed(1)}
+                            {Math.round(state[key])}
                           </span>
                         </div>
                         <input
                           id={`${tool.id}-${key}`}
                           type="range"
                           min={0}
-                          max={10}
-                          step={0.5}
+                          max={100}
+                          step={1}
                           value={state[key]}
                           onChange={(e) =>
                             patch(tool.id, {

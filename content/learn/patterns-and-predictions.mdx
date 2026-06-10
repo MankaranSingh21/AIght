@@ -1,0 +1,69 @@
+---
+title: "Patterns & Predictions"
+tagline: "The core intuition behind all machine learning."
+readTime: "5 min read"
+slug: "patterns-and-predictions"
+date: "2026-06-10"
+lastUpdated: "2026-06-10"
+related: ["what-is-a-model", "training"]
+prerequisites: ["correlation-vs-causation"]
+successors: ["what-is-a-model"]
+misconceptions:
+  - "Machine learning understands the task it performs."
+  - "Prediction means forecasting the future."
+difficulty: "beginner"
+sources: 2
+---
+
+<Misconception think="Prediction means forecasting the future.">
+In machine learning, "prediction" just means filling in something the
+system wasn't shown — tomorrow's weather, yes, but also the next word of
+a sentence, the missing pixels of an image, or whether this email is
+spam. The future is only one kind of blank.
+</Misconception>
+
+Every machine learning system, from a spam filter to the model behind
+this paragraph, is doing one thing: it found regularities in old examples
+and uses them to fill in new blanks.
+
+That's the whole move. Hold it clearly and the entire field stops being
+mysterious.
+
+## One move, many costumes
+
+- **Spam filtering.** Pattern: emails containing certain phrases, sender
+  histories, and link structures tended to be junk. Prediction: this new
+  email, sharing those traits, probably is too.
+- **Image recognition.** Pattern: certain arrangements of edges, textures
+  and shapes co-occurred with the label *cat*. Prediction: this new
+  arrangement is probably a cat.
+- **Language models.** Pattern: across trillions of words, which word
+  tends to follow which context. Prediction: the next word. Then the
+  next. An entire essay is just this prediction repeated, each word
+  becoming context for the one after.
+
+Notice what's absent: rules, definitions, understanding. The spam filter
+holds no concept of deception. The language model holds no opinion it's
+trying to express. There is regularity in, regularity out.
+
+## Why such a simple move feels like magic
+
+Scale. A pattern over ten examples is a hunch. A pattern over a trillion
+words encodes grammar, idiom, facts, genre, the rhythm of an apology, the
+structure of a proof. Past a certain scale, *predicting what comes next*
+becomes indistinguishable, on the surface, from knowing what you're
+talking about. Whether something deeper emerges in there is a genuinely
+open question — but the training objective never changes. Find the
+pattern. Fill the blank.
+
+## The limit baked into the move
+
+A pattern-matcher is loyal to the world its data described. When the
+world shifts — new slang, new fraud tactics, a pandemic that breaks every
+purchasing pattern at once — the old regularities quietly stop applying,
+and the system keeps confidently filling blanks with yesterday's shapes.
+
+## What to read next
+
+Where does the found pattern live? In a strange compressed artifact
+called a model — **what is a model?** opens the box.

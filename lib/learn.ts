@@ -6,6 +6,8 @@ import matter from "gray-matter";
 const CONTENT_DIR = path.join(process.cwd(), "content", "learn");
 
 export type ConceptGroup =
+  | "Foundations"
+  | "Machine Learning"
   | "Architecture"
   | "Training"
   | "Inference"
@@ -13,6 +15,8 @@ export type ConceptGroup =
   | "Safety";
 
 export const GROUP_ORDER: ConceptGroup[] = [
+  "Foundations",
+  "Machine Learning",
   "Architecture",
   "Training",
   "Inference",
@@ -21,6 +25,8 @@ export const GROUP_ORDER: ConceptGroup[] = [
 ];
 
 export const GROUP_DESCRIPTIONS: Record<ConceptGroup, string> = {
+  Foundations:        "Zero assumed. What AI actually is, what data is, and why statistics runs the show.",
+  "Machine Learning": "How machines learn from examples. The ideas every model — old or frontier — is built on.",
   Architecture: "How the models are built. The shapes underneath everything.",
   Training:     "How they learn. What gets baked in and what gets sanded down.",
   Inference:    "How they answer. The mechanics of producing output one token at a time.",
@@ -31,6 +37,29 @@ export const GROUP_DESCRIPTIONS: Record<ConceptGroup, string> = {
 // Centralised grouping. Easier to evolve here than across 40 MDX frontmatters.
 // Add a new concept slug here when it ships; default group is "Practical".
 const CONCEPT_GROUPS: Record<string, ConceptGroup> = {
+  // Foundations — zero assumed
+  "what-is-ai":                  "Foundations",
+  "data-and-datasets":           "Foundations",
+  "statistics-essentials":       "Foundations",
+  "probability-and-uncertainty": "Foundations",
+  "correlation-vs-causation":    "Foundations",
+  "patterns-and-predictions":    "Foundations",
+  "what-is-a-model":             "Foundations",
+  "bias-in-data":                "Foundations",
+
+  // Machine Learning — classic ML + the deep-learning on-ramp
+  "features-and-labels":       "Machine Learning",
+  "training-vs-testing":       "Machine Learning",
+  "loss-functions":            "Machine Learning",
+  "gradient-descent":          "Machine Learning",
+  "overfitting-underfitting":  "Machine Learning",
+  "regression-classification": "Machine Learning",
+  clustering:                  "Machine Learning",
+  "evaluation-metrics":        "Machine Learning",
+  "neural-networks":           "Machine Learning",
+  backpropagation:             "Machine Learning",
+  "gpus-and-compute":          "Machine Learning",
+
   // Architecture
   attention:                "Architecture",
   diffusion:                "Architecture",

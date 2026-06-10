@@ -326,7 +326,7 @@ export default async function Home() {
   // Use up to 8 field guides for the horizontal scroll strip
   const stripFields = fields.slice(0, 8);
 
-  // Real data for the hero widgets — same fetch is shared with ToolsSection via React cache.
+  // Shared fetch with ToolsSection via React cache.
   const homeData = await getHomeData();
   const fieldNamesForCycler = fields.slice(0, 8).map((f) => f.field);
 
@@ -338,11 +338,9 @@ export default async function Home() {
 
         {/* Hero */}
         <Hero
-          tools={homeData.heroTools}
-          riskStats={homeData.riskStats}
-          topScored={homeData.topScored}
-          fieldNames={fieldNamesForCycler}
           totalTools={homeData.totalTools}
+          latestTool={homeData.recentCards?.[0]?.name}
+          latestConcept={allConcepts[0]?.title}
         />
 
         {/* Ticker strip — fed real data so it stops lying about being live */}

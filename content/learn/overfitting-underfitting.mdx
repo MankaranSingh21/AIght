@@ -1,0 +1,71 @@
+---
+title: "Overfitting & Underfitting"
+tagline: "Memorizing the textbook vs understanding the subject."
+readTime: "6 min read"
+slug: "overfitting-underfitting"
+date: "2026-06-10"
+lastUpdated: "2026-06-10"
+related: ["training-vs-testing", "model-collapse"]
+prerequisites: ["gradient-descent"]
+successors: ["regression-classification"]
+misconceptions:
+  - "A model that fits the data perfectly is a good model."
+  - "More training always improves a model."
+difficulty: "beginner"
+sources: 2
+---
+
+<Misconception think="A model that fits the data perfectly is a good model.">
+Perfect fit on training data is a warning sign, not a victory. Real data
+contains noise — measurement error, flukes, one-offs. A curve that
+passes through *every* point has learned the flukes as faithfully as the
+trend, and flukes don't repeat.
+</Misconception>
+
+Two students prepare for the same exam. One reads only the chapter
+summaries — too crude, misses everything subtle. The other memorizes the
+practice tests word-for-word — flawless on those exact questions,
+helpless the moment one is rephrased. Machine learning lives between
+these two failures.
+
+**Underfitting**: the model is too simple to capture the real pattern. A
+straight line through seasonal data. High error everywhere — it hasn't
+even learned what it was shown.
+
+**Overfitting**: the model is so flexible it fits the noise. Training
+error: superb. Test error: falling apart. It memorized the practice
+test.
+
+<ConceptDemo shape="playground" ariaLabel="Overfitting and underfitting with model complexity">
+  <OverfittingDemo />
+</ConceptDemo>
+
+Drag the complexity slider and watch the two error numbers separate.
+That gap — great on training data, worse on unseen data — is the
+signature of overfitting, visible in every ML dashboard ever built.
+
+## The standard defenses
+
+- **Hold-out testing.** You can't detect overfitting without unseen
+  data. This is *why* the train/test split exists.
+- **More data.** Noise averages out; real patterns reinforce. The most
+  reliable cure, when you can afford it.
+- **Regularization.** Penalize the model for complexity itself, so
+  wiggly solutions must earn their wiggles. Dozens of techniques, one
+  instinct: prefer the simpler explanation.
+- **Early stopping.** Watch test error during training and stop when it
+  turns upward — even though training error would keep falling.
+
+## Why this never goes away
+
+Frontier language models live the same tension at scale: train too hard
+on a narrow dataset and they *memorize* it — sometimes verbatim, which
+is also a privacy problem. The vocabulary has gotten fancier
+(researchers argue about "grokking" and double descent), but the
+underlying question hasn't moved since the straight line and the wiggly
+curve: did it learn the subject, or the answer key?
+
+## What to read next
+
+Time to meet the two basic jobs models do: **regression and
+classification** — predicting numbers and predicting categories.

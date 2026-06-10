@@ -24,6 +24,7 @@ import {
   type CognitiveProfile,
   type StoredQuizResult,
 } from '@/lib/quiz-storage';
+import { recordQuizComplete } from '@/lib/progress';
 import type { HumanEssayMeta } from '@/lib/human';
 
 /* ─── Types ─────────────────────────────────────────────────────────────────── */
@@ -2033,6 +2034,7 @@ function QuizPageInner({ preFieldSlug, humanEssays }: QuizPageInnerProps) {
         };
         saveQuizResult(stored);
         setHasStoredResult(true);
+        recordQuizComplete();
 
         posthog?.capture('quiz_completed', {
           field_slug: field.slug,

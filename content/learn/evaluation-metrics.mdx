@@ -1,0 +1,70 @@
+---
+title: "Evaluation Metrics"
+tagline: "Accuracy lies. Here's what to measure instead."
+readTime: "6 min read"
+slug: "evaluation-metrics"
+date: "2026-06-10"
+lastUpdated: "2026-06-10"
+related: ["training-vs-testing", "evals", "bias-in-data"]
+prerequisites: ["clustering"]
+successors: ["neural-networks"]
+misconceptions:
+  - "99% accuracy means an excellent model."
+  - "There is one correct metric for a task."
+difficulty: "beginner"
+sources: 3
+---
+
+<Misconception think="99% accuracy means an excellent model.">
+A disease affects 1% of patients. A "model" that just says *healthy* to
+everyone scores 99% accuracy — while missing every single sick person.
+On imbalanced data, accuracy measures the imbalance, not the model.
+</Misconception>
+
+The most dangerous number in machine learning is a high accuracy score,
+because it ends conversations that should be starting.
+
+Accuracy — the fraction of predictions that were right — silently
+assumes all mistakes cost the same and all categories are common. Both
+assumptions are usually false. The interesting failures live in *which*
+mistakes a model makes, and that takes a slightly richer vocabulary.
+
+## The two mistakes, and the two questions
+
+Every yes/no classifier can fail two ways: a **false positive** (cried
+wolf — flagged the innocent email) and a **false negative** (missed the
+wolf — let the fraud through). These mistakes almost never cost the
+same. A false positive in spam filtering buries a job offer; a false
+negative in cancer screening buries a diagnosis.
+
+Two metrics give each mistake its own dial:
+
+- **Precision** — of everything the model flagged, how much was really
+  there? (When it cries wolf, is there a wolf?)
+- **Recall** — of everything really there, how much did the model catch?
+  (How many wolves got past it?)
+
+They fight. Flag more aggressively and recall rises while precision
+falls. The model's threshold lets you slide between them — which is why
+*"what should we optimize?"* is a question about your costs, not your
+code. The F1 score smooshes both into one number when you must rank
+models, at the price of hiding the trade-off again.
+
+## Beyond the single number
+
+Whatever the metric, the deeper habit is **disaggregation**: a model
+that's 95% accurate overall can be 99% on one group and 70% on another —
+the overall number hides exactly the failures that matter most. (This is
+how biased models pass review.) Serious evaluation reports performance
+*per slice*, not per average.
+
+And for systems with fuzzy outputs — translations, summaries, chat
+answers — clean metrics run out entirely, and the field reaches for
+human ratings and model-judging-model schemes. That mess has its own
+essay: **evals**.
+
+## What to read next
+
+Foundations laid. The deep learning track opens with the object at the
+center of the modern era: **neural networks** — layers of simple math
+that add up to something strange.

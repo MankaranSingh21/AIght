@@ -1,6 +1,8 @@
 import type { MetadataRoute } from "next";
 import { createServiceClient } from "@/utils/supabase/service";
 import { getAllConcepts } from "@/lib/learn";
+import { getLessonSlugs } from "@/lib/lessons";
+import { getTracks } from "@/lib/curriculum";
 import { getAllHumanEssays } from "@/lib/human";
 import { getAllUseCases } from "@/lib/use-cases";
 import { getAllWorkflows } from "@/lib/workflows";
@@ -26,6 +28,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const conceptUrls = getAllConcepts().map((concept) => ({
     url: `${SITE_URL}/learn/${concept.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
+  }));
+
+  const lessonUrls = getLessonSlugs().map((slug) => ({
+    url: `${SITE_URL}/learn/${slug}/lesson`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
+  }));
+
+  const trackUrls = getTracks().map((t) => ({
+    url: `${SITE_URL}/learn/tracks/${t.slug}`,
     lastModified: new Date(),
     changeFrequency: "monthly" as const,
     priority: 0.8,
@@ -124,6 +140,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/privacy`,        lastModified: new Date(), changeFrequency: "yearly",  priority: 0.2 },
     { url: `${SITE_URL}/terms`,          lastModified: new Date(), changeFrequency: "yearly",  priority: 0.2 },
     ...conceptUrls,
+    ...lessonUrls,
+    ...trackUrls,
     ...pathUrls,
     ...toolUrls,
     ...useCaseUrls,
