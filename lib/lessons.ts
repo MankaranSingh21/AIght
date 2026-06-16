@@ -72,6 +72,8 @@ export const LESSON_META: Record<string, { minutes: number; steps: number }> = {
   "gradient-descent": { minutes: 6, steps: 8 },
   "overfitting-underfitting": { minutes: 6, steps: 8 },
   "chain-of-thought": { minutes: 6, steps: 8 },
+  "reasoning-models": { minutes: 6, steps: 8 },
+  diffusion: { minutes: 6, steps: 8 },
 };
 
 export function getLessonSlugs(): string[] {

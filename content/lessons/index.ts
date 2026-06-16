@@ -20,4 +20,6 @@ export const LESSON_LOADERS: Record<string, () => Promise<{ default: Lesson }>> 
   "gradient-descent": () => import("./gradient-descent"),
   "overfitting-underfitting": () => import("./overfitting-underfitting"),
   "chain-of-thought": () => import("./chain-of-thought"),
+  "reasoning-models": () => import("./reasoning-models"),
+  diffusion: () => import("./diffusion"),
 };
