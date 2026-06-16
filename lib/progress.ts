@@ -28,6 +28,8 @@ export type ProgressState = {
    * due date. Optional for backward compatibility — same pattern as above.
    */
   reviews?: Record<string, ReviewEntry>;
+  /** slug -> ISO date a curriculum track was completed. Optional/backward-compatible. */
+  tracks?: Record<string, string>;
   badges: string[];
 };
 
@@ -55,6 +57,7 @@ export const XP = {
   quizComplete: 20,
   conceptCheck: 12,
   review: 5,
+  trackComplete: 40,
   firstActionOfDay: 10,
 } as const;
 
@@ -76,6 +79,7 @@ export const BADGES: Badge[] = [
   { id: "close-reader", name: "Close Reader", hint: "Read five essays to the end" },
   { id: "seven-days", name: "Seven Days of Signal", hint: "A seven-day streak" },
   { id: "polymath", name: "Polymath", hint: "Finish five lessons" },
+  { id: "through-line", name: "Through-Line", hint: "Finish a learning track" },
 ];
 
 function emptyState(): ProgressState {
@@ -87,6 +91,7 @@ function emptyState(): ProgressState {
     conceptsRead: {},
     conceptChecks: {},
     reviews: {},
+    tracks: {},
     badges: [],
   };
 }
@@ -167,6 +172,7 @@ function touchStreak(state: ProgressState): ProgressState {
 function awardBadges(state: ProgressState): ProgressState {
   const completedLessons = Object.values(state.lessons).filter((l) => l.completedAt).length;
   const essaysRead = Object.keys(state.conceptsRead).length;
+  const tracksDone = Object.keys(state.tracks ?? {}).length;
 
   const earned: string[] = [];
   const has = (id: string) => state.badges.includes(id) || earned.includes(id);
@@ -175,6 +181,7 @@ function awardBadges(state: ProgressState): ProgressState {
   if (completedLessons >= 5 && !has("polymath")) earned.push("polymath");
   if (essaysRead >= 5 && !has("close-reader")) earned.push("close-reader");
   if (state.streak.current >= 7 && !has("seven-days")) earned.push("seven-days");
+  if (tracksDone >= 1 && !has("through-line")) earned.push("through-line");
 
   if (earned.length === 0) return state;
   for (const id of earned) capture("badge_earned", { badge: id });
@@ -249,6 +256,25 @@ export function recordConceptCheck(slug: string): ProgressState {
       ...s,
       xp: s.xp + XP.conceptCheck,
       conceptChecks: { ...checks, [slug]: new Date().toISOString() },
+    };
+  });
+}
+
+/**
+ * Award the one-time bonus for finishing every live concept in a curriculum
+ * track. Idempotent per slug — re-visiting a completed track earns nothing.
+ * The component decides when a track is "done" (all its live nodes read or
+ * lessons completed); this just records and rewards it.
+ */
+export function completeTrack(slug: string): ProgressState {
+  return mutate((s) => {
+    const tracks = s.tracks ?? {};
+    if (tracks[slug]) return s;
+    capture("track_completed", { slug });
+    return {
+      ...s,
+      xp: s.xp + XP.trackComplete,
+      tracks: { ...tracks, [slug]: new Date().toISOString() },
     };
   });
 }

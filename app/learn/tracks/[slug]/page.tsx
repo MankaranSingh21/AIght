@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getTrack, getTracks } from "@/lib/curriculum";
 import TrackRoadmap from "@/components/learn/TrackRoadmap";
+import TrackCompletion from "@/components/learn/TrackCompletion";
 import Footer from "@/components/Footer";
 
 type Props = {
@@ -142,6 +143,13 @@ export default async function TrackPage({ params }: Props) {
               {track.lessonCount > 0 && ` · ${track.lessonCount} interactive`}
             </p>
           </header>
+
+          <TrackCompletion
+            trackSlug={track.slug}
+            trackTitle={track.title}
+            conceptSlugs={track.nodes.filter((n) => !n.soon).map((n) => n.slug)}
+            nextTrack={nextTrack ? { slug: nextTrack.slug, title: nextTrack.title } : null}
+          />
 
           <TrackRoadmap track={track} />
 
