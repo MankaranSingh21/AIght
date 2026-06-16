@@ -28,4 +28,6 @@ export const LESSON_LOADERS: Record<string, () => Promise<{ default: Lesson }>> 
   rlhf: () => import("./rlhf"),
   dpo: () => import("./dpo"),
   "prompt-injection": () => import("./prompt-injection"),
+  "in-context-learning": () => import("./in-context-learning"),
+  "mixture-of-experts": () => import("./mixture-of-experts"),
 };
