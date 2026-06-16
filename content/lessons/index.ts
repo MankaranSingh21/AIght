@@ -24,4 +24,6 @@ export const LESSON_LOADERS: Record<string, () => Promise<{ default: Lesson }>> 
   diffusion: () => import("./diffusion"),
   "function-calling": () => import("./function-calling"),
   evals: () => import("./evals"),
+  "fine-tuning": () => import("./fine-tuning"),
+  rlhf: () => import("./rlhf"),
 };

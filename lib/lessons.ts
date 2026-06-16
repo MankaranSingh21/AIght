@@ -76,6 +76,8 @@ export const LESSON_META: Record<string, { minutes: number; steps: number }> = {
   diffusion: { minutes: 6, steps: 8 },
   "function-calling": { minutes: 6, steps: 8 },
   evals: { minutes: 6, steps: 8 },
+  "fine-tuning": { minutes: 6, steps: 8 },
+  rlhf: { minutes: 6, steps: 8 },
 };
 
 export function getLessonSlugs(): string[] {
