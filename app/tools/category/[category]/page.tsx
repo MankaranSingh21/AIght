@@ -5,9 +5,16 @@ import { mapToolToCardProps } from "@/lib/tool-mapping";
 
 import ToolCard, { type ToolCardProps } from "@/components/ToolCard";
 import Footer from "@/components/Footer";
-import { createClient } from "@/utils/supabase/server";
+import { createPublicClient } from "@/utils/supabase/public";
 import type { Tool } from "@/utils/supabase/types";
 import categoriesData from "@/content/categories.json";
+
+export const revalidate = 3600;
+
+// Prerender every category page at build (cookie-less reads → static + ISR).
+export function generateStaticParams() {
+  return Object.values(categoriesData).map((cat) => ({ category: cat.slug }));
+}
 
 type Props = {
   params: Promise<{ category: string }>;
@@ -44,7 +51,7 @@ export default async function CategoryPage({ params }: Props) {
   if (!cat) notFound();
 
   const dbCategory = SLUG_TO_DB[category];
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   const { data } = await supabase
     .from("tools")
     .select("*")

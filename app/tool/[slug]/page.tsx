@@ -1,12 +1,20 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { createClient } from "@/utils/supabase/server";
+import { createPublicClient } from "@/utils/supabase/public";
 import ToolDetail, { type ToolDetailData, type UseCase, type Alternative } from "@/components/ToolDetail";
 import RelatedTools from "@/components/RelatedTools";
 import type { Tool, AlternativeEntry } from "@/utils/supabase/types";
 import { getAllConcepts } from "@/lib/learn";
 
 export const revalidate = 3600;
+
+// Prerender all tool pages at build so they're static + ISR (cookie-less reads),
+// instead of rendering dynamically per request.
+export async function generateStaticParams() {
+  const supabase = createPublicClient();
+  const { data } = await supabase.from("tools").select("slug");
+  return (data ?? []).map((t: { slug: string }) => ({ slug: t.slug }));
+}
 
 // ── Use-case copy keyed by category ───────────────────────────────────────
 // Editorial content — lives here until we add a use_cases table.
@@ -115,7 +123,7 @@ type Props = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   const { data } = await supabase
     .from("tools")
     .select("name, vibe_description")
@@ -132,7 +140,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ToolPage({ params }: Props) {
   const { slug } = await params;
 
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   const { data: t } = await supabase
     .from("tools")
     .select("*")
