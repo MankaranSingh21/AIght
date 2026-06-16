@@ -25,6 +25,10 @@ import { STATS } from "@/lib/stats";
 
 import HomepageParticles from "@/components/HomepageParticles";
 
+// ISR: the Supabase reads now use a cookie-less client, so the homepage can be
+// cached and revalidated hourly instead of re-rendering dynamically per request.
+export const revalidate = 3600;
+
 // ── Skeleton states (no shimmer — just a breath pulse) ─────────────────────────
 
 function SkeletonSignalSection() {

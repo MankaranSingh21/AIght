@@ -1,5 +1,5 @@
 import { cache } from "react";
-import { createClient } from "@/utils/supabase/server";
+import { createPublicClient } from "@/utils/supabase/public";
 import { mapToolToCardProps } from "@/lib/tool-mapping";
 import type { Tool } from "@/utils/supabase/types";
 import type { ToolCardProps } from "@/components/ToolCard";
@@ -11,7 +11,7 @@ export type HomeData = {
 };
 
 export const getHomeData = cache(async (): Promise<HomeData> => {
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   const { data, error } = await supabase
     .from("tools")
     .select("*")

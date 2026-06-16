@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { createClient } from "@/utils/supabase/server";
+import { createPublicClient } from "@/utils/supabase/public";
 import ToolsClient from "@/components/ToolsClient";
 import Footer from "@/components/Footer";
 import { mapToolToCardProps } from "@/lib/tool-mapping";
@@ -44,7 +44,9 @@ function EdgeOrb({
 }
 
 export default async function ToolsArchivePage() {
-  const supabase = await createClient();
+  // Cookie-less client so `revalidate` above takes effect (ISR), instead of
+  // the route silently rendering dynamically on every request.
+  const supabase = createPublicClient();
   const { data } = await supabase
     .from("tools")
     .select("*")
