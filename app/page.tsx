@@ -16,6 +16,7 @@ import AuroraBackground from "@/components/AuroraBackground";
 import { getAllConcepts } from "@/lib/learn";
 import { hasLesson } from "@/lib/lessons";
 import RecommendedNext from "@/components/learn/RecommendedNext";
+import ConceptOfTheDay from "@/components/learn/ConceptOfTheDay";
 import { getAllHumanEssays } from "@/lib/human";
 import { getSignalPosts, getNativeSignalCards } from "@/lib/signal";
 import { getHomeData } from "@/lib/home-data";
@@ -364,6 +365,9 @@ export default async function Home() {
           recentConceptTitles={allConcepts.slice(0, 1).map((c) => c.title)}
           fields={fieldNamesForCycler}
         />
+
+        {/* Concept of the day — a daily return hook (renders for everyone) */}
+        <ConceptOfTheDay concepts={conceptGraph} />
 
         {/* Recommended next — returning readers only (renders nothing for new visitors) */}
         <RecommendedNext concepts={conceptGraph} />
