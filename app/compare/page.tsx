@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { createClient } from "@/utils/supabase/server";
+import { createPublicClient } from "@/utils/supabase/public";
 import Footer from "@/components/Footer";
 import CompareSearch from "@/components/CompareSearch";
 import { CompareRadar, RADAR_AXES } from "@/components/RadarChart";
@@ -25,6 +25,13 @@ function delta(a: number, b: number) {
 
 function avgScore(t: Tool) {
   return (t.utility_score + t.privacy_score + t.speed_score + t.cost_score + t.transparency_score) / 5;
+}
+
+// A tool with every axis at (effectively) zero hasn't been scored yet — show an
+// honest "not yet scored" state rather than a misleading wall of 0.0s.
+function isUnscored(t: Tool) {
+  return [t.utility_score, t.privacy_score, t.speed_score, t.cost_score, t.transparency_score]
+    .every((s) => !s || s < 0.05);
 }
 
 // ── Top-strip card ────────────────────────────────────────────────────────────
@@ -80,10 +87,10 @@ function ToolHeaderStrip({ tool, color, sideLabel }: { tool: Tool; color: string
             fontFamily: "var(--font-display)",
             fontSize: "var(--text-3xl)",
             fontWeight: 700,
-            color: "var(--text-primary)",
+            color: isUnscored(tool) ? "var(--text-muted)" : "var(--text-primary)",
             lineHeight: 1,
           }}>
-            {avgScore(tool).toFixed(0)}
+            {isUnscored(tool) ? "—" : avgScore(tool).toFixed(0)}
           </div>
           <div style={{
             fontFamily: "var(--font-mono)",
@@ -93,7 +100,7 @@ function ToolHeaderStrip({ tool, color, sideLabel }: { tool: Tool; color: string
             color: "var(--text-muted)",
             marginTop: 4,
           }}>
-            AIght score
+            {isUnscored(tool) ? "not yet scored" : "AIght score"}
           </div>
         </div>
       </div>
@@ -132,7 +139,7 @@ export async function generateMetadata({ searchParams }: { searchParams: SP }): 
       alternates: { canonical: `${SITE_URL}/compare` },
     };
   }
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   const { data } = await supabase
     .from("tools")
     .select("slug, name, vibe_description")
@@ -169,7 +176,7 @@ export async function generateMetadata({ searchParams }: { searchParams: SP }): 
 
 export default async function ComparePage({ searchParams }: { searchParams: SP }) {
   const { a, b } = await searchParams;
-  const supabase = await createClient();
+  const supabase = createPublicClient();
 
   // Picker list — slim view of all tools
   const { data: pickerRows } = await supabase
@@ -289,6 +296,8 @@ export default async function ComparePage({ searchParams }: { searchParams: SP }
   // ── Full comparison ──
   const scoresA = [toolA.utility_score, toolA.privacy_score, toolA.speed_score, toolA.cost_score, toolA.transparency_score];
   const scoresB = [toolB.utility_score, toolB.privacy_score, toolB.speed_score, toolB.cost_score, toolB.transparency_score];
+  const aUnscored = isUnscored(toolA);
+  const bUnscored = isUnscored(toolB);
 
   // Alternatives intersection
   const altsA = (toolA.alternatives ?? []).map((x) => x.slug);
@@ -375,6 +384,21 @@ export default async function ComparePage({ searchParams }: { searchParams: SP }
             }}>
               Five-axis score
             </p>
+            {(aUnscored || bUnscored) && (
+              <p style={{
+                fontFamily: "var(--font-editorial)",
+                fontStyle: "italic",
+                fontSize: 13,
+                color: "var(--text-muted)",
+                margin: "0 0 var(--space-6)",
+                maxWidth: "56ch",
+                lineHeight: 1.6,
+              }}>
+                {aUnscored && bUnscored
+                  ? "Neither tool has been scored yet — the AIght score is hand-assigned, not generated."
+                  : `${(aUnscored ? toolA : toolB).name} hasn't been scored yet, so its axes read “—”.`}
+              </p>
+            )}
             <div className="compare-radar-row" style={{
               display: "grid",
               gridTemplateColumns: "auto 1fr",
@@ -414,10 +438,14 @@ export default async function ComparePage({ searchParams }: { searchParams: SP }
                       }}
                     >
                       <span style={cellLabelStyle}>{label}</span>
-                      <span style={{ ...cellNumStyle, textAlign: "right" }}>{scoresA[i].toFixed(1)}</span>
-                      <span style={{ ...cellNumStyle, textAlign: "right" }}>{scoresB[i].toFixed(1)}</span>
-                      <span style={{ ...cellNumStyle, color: d.color, textAlign: "right" }}>
-                        {d.sign} {d.value}
+                      <span style={{ ...cellNumStyle, textAlign: "right", color: aUnscored ? "var(--text-muted)" : "var(--text-primary)" }}>
+                        {aUnscored ? "—" : scoresA[i].toFixed(1)}
+                      </span>
+                      <span style={{ ...cellNumStyle, textAlign: "right", color: bUnscored ? "var(--text-muted)" : "var(--text-primary)" }}>
+                        {bUnscored ? "—" : scoresB[i].toFixed(1)}
+                      </span>
+                      <span style={{ ...cellNumStyle, color: aUnscored || bUnscored ? "var(--text-muted)" : d.color, textAlign: "right" }}>
+                        {aUnscored || bUnscored ? "—" : `${d.sign} ${d.value}`}
                       </span>
                     </div>
                   );
