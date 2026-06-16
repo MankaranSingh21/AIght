@@ -4,7 +4,7 @@ import Footer from "@/components/Footer";
 import { getAllConcepts } from "@/lib/learn";
 import { getLessonSlugs } from "@/lib/lessons";
 import { getTracks } from "@/lib/curriculum";
-import { getCheckCount } from "@/lib/checks";
+import { getCheckCount, getAllCheckSlugs } from "@/lib/checks";
 
 export const metadata: Metadata = {
   title: "Your progress",
@@ -38,6 +38,7 @@ export default function YouPage() {
           totalConcepts={concepts.length}
           lessonSlugs={getLessonSlugs()}
           totalChecks={getCheckCount()}
+          checkSlugs={getAllCheckSlugs()}
           tracks={tracks}
         />
       </main>

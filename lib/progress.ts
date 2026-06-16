@@ -23,8 +23,29 @@ export type ProgressState = {
    * passed. Optional so states saved before this field shipped still load.
    */
   conceptChecks?: Record<string, string>;
+  /**
+   * Spaced-repetition state (the /review queue). slug -> Leitner box + next
+   * due date. Optional for backward compatibility — same pattern as above.
+   */
+  reviews?: Record<string, ReviewEntry>;
   badges: string[];
 };
+
+export type ReviewEntry = {
+  /** ISO date this concept next becomes due for review. */
+  due: string;
+  /** Leitner box index into REVIEW_INTERVALS_DAYS — higher = remembered longer. */
+  box: number;
+  /** ISO date last reviewed. */
+  last: string;
+};
+
+// Leitner ladder: days until next review per box. "Remembered" climbs the
+// ladder (longer gaps); "again" drops to box 0. Deliberately gentle — this is
+// a reading site, not an exam crammer.
+export const REVIEW_INTERVALS_DAYS = [1, 3, 7, 16, 35] as const;
+// A freshly-learned concept isn't due until this many days have passed.
+export const FIRST_REVIEW_DELAY_DAYS = 1;
 
 // XP economy — small numbers on purpose. This is a reading site, not a casino.
 export const XP = {
@@ -33,6 +54,7 @@ export const XP = {
   conceptRead: 15,
   quizComplete: 20,
   conceptCheck: 12,
+  review: 5,
   firstActionOfDay: 10,
 } as const;
 
@@ -64,6 +86,7 @@ function emptyState(): ProgressState {
     lessons: {},
     conceptsRead: {},
     conceptChecks: {},
+    reviews: {},
     badges: [],
   };
 }
@@ -228,6 +251,48 @@ export function recordConceptCheck(slug: string): ProgressState {
       conceptChecks: { ...checks, [slug]: new Date().toISOString() },
     };
   });
+}
+
+/**
+ * Grade one review card. "Remembered" climbs the Leitner ladder (longer gap
+ * before it returns); "again" drops to box 0 (back tomorrow). Reviewing counts
+ * as activity, so the streak is touched via mutate. XP only on a clean recall.
+ */
+export function gradeReview(slug: string, remembered: boolean): ProgressState {
+  return mutate((s) => {
+    const reviews = s.reviews ?? {};
+    const prevBox = reviews[slug]?.box ?? 0;
+    const box = remembered ? Math.min(prevBox + 1, REVIEW_INTERVALS_DAYS.length - 1) : 0;
+    const due = new Date(Date.now() + REVIEW_INTERVALS_DAYS[box] * 86_400_000).toISOString();
+    capture("review_graded", { slug, remembered, box });
+    return {
+      ...s,
+      xp: s.xp + (remembered ? XP.review : 0),
+      reviews: { ...reviews, [slug]: { due, box, last: new Date().toISOString() } },
+    };
+  });
+}
+
+/**
+ * Of the concepts that have authored checks (`available`), which has the
+ * learner engaged with AND is due for review now? A concept is "learned" once
+ * its check is passed or the essay is read; it first comes due after
+ * FIRST_REVIEW_DELAY_DAYS, and thereafter on its Leitner schedule. Pure — safe
+ * to call client-side with loadProgress().
+ */
+export function dueForReview(state: ProgressState, available: string[], now = Date.now()): string[] {
+  return available.filter((slug) => {
+    const learned = state.conceptChecks?.[slug] ?? state.conceptsRead[slug];
+    if (!learned) return false;
+    const r = state.reviews?.[slug];
+    if (r) return new Date(r.due).getTime() <= now;
+    return now - new Date(learned).getTime() >= FIRST_REVIEW_DELAY_DAYS * 86_400_000;
+  });
+}
+
+/** Every engaged concept with a check, ignoring due dates — for "practice anyway". */
+export function reviewable(state: ProgressState, available: string[]): string[] {
+  return available.filter((slug) => Boolean(state.conceptChecks?.[slug] ?? state.conceptsRead[slug]));
 }
 
 export function levelFor(xp: number): { level: Badge["name"]; next: { name: string; xp: number } | null; progress: number } {

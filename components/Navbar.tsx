@@ -27,6 +27,7 @@ const MOBILE_NAV = [
   ...DESKTOP_NAV,
   { href: '/learn/paths', label: 'Fields'    },
   { href: '/you',         label: 'Progress'  },
+  { href: '/review',      label: 'Review'    },
   { href: '/about',       label: 'About'     },
 ];
 

@@ -5,6 +5,7 @@ import Link from "next/link";
 import {
   loadProgress,
   levelFor,
+  dueForReview,
   BADGES,
   PROGRESS_CHANGED_EVENT,
   type ProgressState,
@@ -23,6 +24,7 @@ interface YouClientProps {
   totalConcepts: number;
   lessonSlugs: string[];
   totalChecks: number;
+  checkSlugs: string[];
   tracks: TrackSummary[];
 }
 
@@ -39,6 +41,7 @@ export default function YouClient({
   totalConcepts,
   lessonSlugs,
   totalChecks,
+  checkSlugs,
   tracks,
 }: YouClientProps) {
   // null = before first client read (avoids hydration mismatch — same pattern
@@ -150,6 +153,7 @@ export default function YouClient({
   // ---- Active dashboard ----
   const { level, next, progress } = levelFor(state.xp);
   const xpToNext = next ? next.xp - state.xp : 0;
+  const dueCount = dueForReview(state, checkSlugs).length;
 
   // Continue target: an unfinished lesson first, else the most recent read.
   const inProgressLesson = lessonEntries.find(([, l]) => !l.completedAt && l.step > 0);
@@ -299,6 +303,52 @@ export default function YouClient({
             </p>
           </div>
           <span style={{ fontFamily: "var(--font-mono)", fontSize: 20, color: "var(--accent-primary)" }}>→</span>
+        </Link>
+      )}
+
+      {/* Due-for-review nudge — the spaced-repetition loop's entry point */}
+      {dueCount > 0 && (
+        <Link
+          href="/review"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 16,
+            padding: "16px 24px",
+            background: "var(--bg-surface)",
+            border: "1px solid var(--border-default)",
+            borderRadius: "var(--radius-lg)",
+            textDecoration: "none",
+            marginBottom: 40,
+          }}
+          className="group hover:border-accent"
+        >
+          <p
+            style={{
+              fontFamily: "var(--font-ui)",
+              fontSize: 15,
+              color: "var(--text-secondary)",
+              margin: 0,
+            }}
+          >
+            <span style={{ color: "var(--accent-primary)", fontWeight: 600 }}>
+              {dueCount} concept{dueCount !== 1 ? "s" : ""}
+            </span>{" "}
+            due for review — keep {dueCount !== 1 ? "them" : "it"} from fading.
+          </p>
+          <span
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: 11,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              color: "var(--accent-primary)",
+              whiteSpace: "nowrap",
+            }}
+          >
+            Review →
+          </span>
         </Link>
       )}
 
