@@ -16,4 +16,6 @@ export const LESSON_LOADERS: Record<string, () => Promise<{ default: Lesson }>> 
   "prompt-engineering": () => import("./prompt-engineering"),
   agents: () => import("./agents"),
   training: () => import("./training"),
+  "neural-networks": () => import("./neural-networks"),
+  "gradient-descent": () => import("./gradient-descent"),
 };

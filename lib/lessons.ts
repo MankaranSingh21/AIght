@@ -68,6 +68,8 @@ export const LESSON_META: Record<string, { minutes: number; steps: number }> = {
   "prompt-engineering": { minutes: 6, steps: 8 },
   agents: { minutes: 7, steps: 8 },
   training: { minutes: 7, steps: 8 },
+  "neural-networks": { minutes: 6, steps: 8 },
+  "gradient-descent": { minutes: 6, steps: 8 },
 };
 
 export function getLessonSlugs(): string[] {
