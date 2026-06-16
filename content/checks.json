@@ -256,5 +256,375 @@
         { "text": "They always know when they're unsure and say so.", "feedback": "They often don't — confidence and correctness can come apart." }
       ]
     }
+  ],
+  "loss-functions": [
+    {
+      "prompt": "What does a loss function measure during training?",
+      "choices": [
+        { "text": "How far the model's predictions are from the right answers.", "correct": true, "feedback": "Right — training works to make that number smaller." },
+        { "text": "How fast the model runs.", "feedback": "That's speed/latency, not loss. Loss is about prediction error." },
+        { "text": "How much memory the model uses.", "feedback": "That's resource usage — loss measures how wrong the predictions are." }
+      ]
+    }
+  ],
+  "regression-classification": [
+    {
+      "prompt": "What's the core difference between regression and classification?",
+      "choices": [
+        { "text": "Regression predicts a number; classification predicts a category.", "correct": true, "feedback": "Exactly — a price vs a label like spam/not-spam." },
+        { "text": "Regression is for images, classification for text.", "feedback": "Neither is tied to a data type — the difference is number vs category." },
+        { "text": "They're two names for the same thing.", "feedback": "They're distinct tasks: continuous values vs discrete classes." }
+      ]
+    }
+  ],
+  "clustering": [
+    {
+      "prompt": "Clustering is an example of which kind of learning?",
+      "choices": [
+        { "text": "Unsupervised — it groups data without labels.", "correct": true, "feedback": "Right — it finds structure on its own, no answer key." },
+        { "text": "Supervised — it needs labelled examples.", "feedback": "No labels required — that's what makes clustering unsupervised." },
+        { "text": "Reinforcement — it learns from rewards.", "feedback": "No reward signal here; clustering just groups similar points." }
+      ]
+    }
+  ],
+  "evaluation-metrics": [
+    {
+      "prompt": "Why isn't raw accuracy always a good metric?",
+      "choices": [
+        { "text": "On imbalanced data, always guessing the majority class can still score high.", "correct": true, "feedback": "Exactly — 99% accuracy is meaningless if 99% of cases are one class." },
+        { "text": "Accuracy is always the single best metric.", "feedback": "It can hide real failure modes — that's the whole point of the question." },
+        { "text": "Accuracy can't be computed for classifiers.", "feedback": "It can — it's just not always the most informative measure." }
+      ]
+    }
+  ],
+  "backpropagation": [
+    {
+      "prompt": "What does backpropagation do during training?",
+      "choices": [
+        { "text": "Sends the error backward through the network to update each weight.", "correct": true, "feedback": "Right — it figures out how much each weight contributed to the error." },
+        { "text": "Generates new training data.", "feedback": "It adjusts weights using existing data; it doesn't create data." },
+        { "text": "Chooses which examples to train on.", "feedback": "That's data selection — backprop is about propagating the error to weights." }
+      ]
+    }
+  ],
+  "gpus-and-compute": [
+    {
+      "prompt": "Why are GPUs central to modern AI?",
+      "choices": [
+        { "text": "They do the massively parallel matrix math training needs, far faster than CPUs.", "correct": true, "feedback": "Right — neural nets are mostly matrix multiplications, which GPUs excel at." },
+        { "text": "They store the training data.", "feedback": "Storage is disks; GPUs do the heavy parallel computation." },
+        { "text": "They write the model's code.", "feedback": "They run the math, they don't author code." }
+      ]
+    }
+  ],
+  "diffusion": [
+    {
+      "prompt": "How does a diffusion model generate an image?",
+      "choices": [
+        { "text": "It starts from noise and removes it step by step toward a coherent image.", "correct": true, "feedback": "Right — it learns to reverse a noising process, denoising into an image." },
+        { "text": "It pastes together cropped pieces of training images.", "feedback": "No collage — it denoises from scratch, it doesn't copy-paste." },
+        { "text": "It looks the image up in a stored database.", "feedback": "There's no lookup — it generates pixels by iterative denoising." }
+      ]
+    }
+  ],
+  "mixture-of-experts": [
+    {
+      "prompt": "What does a mixture-of-experts (MoE) model do?",
+      "choices": [
+        { "text": "Routes each input to a few specialised sub-networks instead of using the whole model.", "correct": true, "feedback": "Right — only a fraction of the parameters fire per token, saving compute." },
+        { "text": "Averages the answers of many separate full models.", "feedback": "That's ensembling — MoE routes within one model to chosen experts." },
+        { "text": "Asks human experts to label the data.", "feedback": "The 'experts' are sub-networks, not people." }
+      ]
+    }
+  ],
+  "multimodal": [
+    {
+      "prompt": "What makes a model \"multimodal\"?",
+      "choices": [
+        { "text": "It works across more than one kind of input — e.g. text and images together.", "correct": true, "feedback": "Right — multiple modalities like text, images, audio in one model." },
+        { "text": "It runs in multiple languages.", "feedback": "Many languages is still one modality (text). Multimodal spans types of input." },
+        { "text": "It runs multiple copies at once.", "feedback": "That's scaling, not modality — multimodal is about kinds of input." }
+      ]
+    }
+  ],
+  "vision-language-models": [
+    {
+      "prompt": "A vision-language model can…",
+      "choices": [
+        { "text": "connect images and text — e.g. describe a photo or answer questions about it.", "correct": true, "feedback": "Right — it ties what it 'sees' to language." },
+        { "text": "only process text, never images.", "feedback": "The 'vision' half means it handles images too." },
+        { "text": "only generate images, never read them.", "feedback": "It can interpret images, not just make them." }
+      ]
+    }
+  ],
+  "distillation": [
+    {
+      "prompt": "What is model distillation?",
+      "choices": [
+        { "text": "Training a smaller \"student\" model to mimic a larger \"teacher\" model.", "correct": true, "feedback": "Right — you get most of the quality in a cheaper, faster model." },
+        { "text": "Removing water from the training data.", "feedback": "It's a model-compression idea, nothing to do with literal distilling." },
+        { "text": "Deleting the worst-performing layers.", "feedback": "That's pruning — distillation trains a student to copy a teacher." }
+      ]
+    }
+  ],
+  "dpo": [
+    {
+      "prompt": "Direct Preference Optimization (DPO) tunes a model using…",
+      "choices": [
+        { "text": "pairs of preferred vs rejected answers, optimised directly without a separate reward model.", "correct": true, "feedback": "Right — it skips RLHF's reward-model step and learns straight from preferences." },
+        { "text": "a hand-written rulebook of correct answers.", "feedback": "It learns from comparative preferences, not a fixed rulebook." },
+        { "text": "more raw pretraining text.", "feedback": "That's pretraining — DPO is preference alignment." }
+      ]
+    }
+  ],
+  "fine-tuning": [
+    {
+      "prompt": "Fine-tuning a model means…",
+      "choices": [
+        { "text": "further training a pretrained model on a narrower dataset to specialise it.", "correct": true, "feedback": "Right — you start from a general model and adapt its weights." },
+        { "text": "writing a longer, more detailed prompt.", "feedback": "That's prompting — fine-tuning actually updates the weights." },
+        { "text": "running the model on a faster GPU.", "feedback": "Hardware doesn't specialise a model; training on new data does." }
+      ]
+    }
+  ],
+  "model-collapse": [
+    {
+      "prompt": "What is model collapse?",
+      "choices": [
+        { "text": "Quality degrades when models are trained repeatedly on AI-generated data.", "correct": true, "feedback": "Right — errors compound as models learn from other models' output." },
+        { "text": "The training server physically crashes.", "feedback": "It's a data-quality spiral, not a hardware failure." },
+        { "text": "The model forgets its own name.", "feedback": "It's about degrading output quality across generations, not amnesia." }
+      ]
+    }
+  ],
+  "quantization": [
+    {
+      "prompt": "What does quantization do to a model?",
+      "choices": [
+        { "text": "Stores its weights at lower numerical precision to shrink size and speed it up.", "correct": true, "feedback": "Right — e.g. 16-bit down to 4-bit, trading a little accuracy for efficiency." },
+        { "text": "Adds more parameters to boost accuracy.", "feedback": "The opposite — it compresses existing weights, it doesn't add any." },
+        { "text": "Encrypts the weights for security.", "feedback": "It reduces precision, not for secrecy but for size and speed." }
+      ]
+    }
+  ],
+  "rlhf": [
+    {
+      "prompt": "What does RLHF (reinforcement learning from human feedback) do?",
+      "choices": [
+        { "text": "Tunes a model toward responses humans rated as better.", "correct": true, "feedback": "Right — human preferences train a reward signal the model optimises for." },
+        { "text": "Replaces all training data with human-written text.", "feedback": "It uses preference ratings to fine-tune, not a wholesale data swap." },
+        { "text": "Lets the model browse the internet live.", "feedback": "That's retrieval/tools — RLHF is about aligning to human preferences." }
+      ]
+    }
+  ],
+  "scaling-laws": [
+    {
+      "prompt": "What do scaling laws describe?",
+      "choices": [
+        { "text": "How performance improves predictably as model size, data, and compute grow.", "correct": true, "feedback": "Right — smooth, roughly power-law gains as you scale the inputs." },
+        { "text": "How to scale a website's traffic.", "feedback": "Different 'scaling' — these laws are about model performance vs resources." },
+        { "text": "Legal limits on how large a model may be.", "feedback": "They're empirical performance trends, not regulations." }
+      ]
+    }
+  ],
+  "synthetic-data": [
+    {
+      "prompt": "Synthetic data is…",
+      "choices": [
+        { "text": "data generated by a model or simulation rather than collected from the real world.", "correct": true, "feedback": "Right — useful to fill gaps, but it can amplify a model's own biases." },
+        { "text": "data stored in a fake database.", "feedback": "It's about how the data was produced, not where it's stored." },
+        { "text": "data that has been deleted.", "feedback": "Synthetic means generated, not removed." }
+      ]
+    }
+  ],
+  "training": [
+    {
+      "prompt": "What happens during \"training\" of a model?",
+      "choices": [
+        { "text": "Its weights are adjusted over many examples to reduce prediction error.", "correct": true, "feedback": "Right — repeated passes nudge the parameters toward better predictions." },
+        { "text": "It memorises a fixed script of answers.", "feedback": "It learns general patterns in weights, not a lookup script." },
+        { "text": "It downloads a finished model from the internet.", "feedback": "That's loading a model — training is the process that creates one." }
+      ]
+    }
+  ],
+  "chain-of-thought": [
+    {
+      "prompt": "What is chain-of-thought prompting?",
+      "choices": [
+        { "text": "Asking the model to reason step by step before giving its answer.", "correct": true, "feedback": "Right — laying out intermediate steps often improves hard answers." },
+        { "text": "Chaining several separate models into a pipeline.", "feedback": "That's a multi-model pipeline — chain-of-thought is one model reasoning aloud." },
+        { "text": "Linking the model directly to a database.", "feedback": "No database — it's about the model showing its working." }
+      ]
+    }
+  ],
+  "function-calling": [
+    {
+      "prompt": "Function calling lets a model…",
+      "choices": [
+        { "text": "output a structured request to run a tool or API, then use the result.", "correct": true, "feedback": "Right — the model picks the function and arguments; your code runs it." },
+        { "text": "rewrite its own source code.", "feedback": "It calls external tools, it doesn't edit itself." },
+        { "text": "train itself on new data.", "feedback": "Calling a function isn't training — no weights change." }
+      ]
+    }
+  ],
+  "in-context-learning": [
+    {
+      "prompt": "In-context learning is when a model…",
+      "choices": [
+        { "text": "picks up a task from examples in the prompt, with no weight updates.", "correct": true, "feedback": "Right — it 'learns' for that request only; nothing is saved to the weights." },
+        { "text": "permanently learns from every conversation.", "feedback": "No — the effect lasts only within the prompt's context." },
+        { "text": "is retrained overnight on user chats.", "feedback": "That would be fine-tuning; in-context learning changes nothing permanently." }
+      ]
+    }
+  ],
+  "kv-cache": [
+    {
+      "prompt": "What problem does the KV cache solve?",
+      "choices": [
+        { "text": "It avoids recomputing earlier tokens' attention, speeding up generation.", "correct": true, "feedback": "Right — past keys/values are stored so each new token is cheaper." },
+        { "text": "It stores the user's password.", "feedback": "Nothing to do with credentials — it caches attention state." },
+        { "text": "It permanently saves the conversation to disk.", "feedback": "It's a short-lived in-memory speedup, not persistent storage." }
+      ]
+    }
+  ],
+  "reasoning-models": [
+    {
+      "prompt": "What distinguishes a \"reasoning\" model?",
+      "choices": [
+        { "text": "It spends extra compute thinking through steps before answering.", "correct": true, "feedback": "Right — more deliberate intermediate reasoning, often better on hard problems." },
+        { "text": "It never makes mistakes.", "feedback": "It still can — it just reasons more before answering." },
+        { "text": "It has literally read every book ever written.", "feedback": "Its edge is how it processes, not impossibly complete knowledge." }
+      ]
+    }
+  ],
+  "structured-output": [
+    {
+      "prompt": "Why ask a model for structured output like JSON?",
+      "choices": [
+        { "text": "So its answer can be reliably parsed and used by other software.", "correct": true, "feedback": "Right — predictable structure lets code consume the output safely." },
+        { "text": "Because models can't produce plain prose.", "feedback": "They can — structure is for machine-readability, not a limitation." },
+        { "text": "To make the model run faster.", "feedback": "It's about usable format, not speed." }
+      ]
+    }
+  ],
+  "agentic-memory": [
+    {
+      "prompt": "What is \"memory\" for an AI agent?",
+      "choices": [
+        { "text": "A way to store and recall information across steps or sessions, beyond the context window.", "correct": true, "feedback": "Right — it lets an agent remember past actions and facts over time." },
+        { "text": "The RAM installed in the server.", "feedback": "Not hardware memory — it's persisted task state the agent can recall." },
+        { "text": "The model's original training data.", "feedback": "Training data is baked in; agent memory is what it accrues while working." }
+      ]
+    }
+  ],
+  "agents": [
+    {
+      "prompt": "What makes an LLM an \"agent\"?",
+      "choices": [
+        { "text": "It can take actions — using tools in a loop toward a goal — not just produce text.", "correct": true, "feedback": "Right — perceive, decide, act, repeat, rather than a single reply." },
+        { "text": "It runs with no model behind it.", "feedback": "An agent is built on a model plus tools and a loop." },
+        { "text": "It's a human assistant.", "feedback": "Here 'agent' means the autonomous software, not a person." }
+      ]
+    }
+  ],
+  "evals": [
+    {
+      "prompt": "What are \"evals\" in AI?",
+      "choices": [
+        { "text": "Systematic tests that measure how well a model performs a task.", "correct": true, "feedback": "Right — they turn 'seems good' into something measurable and repeatable." },
+        { "text": "The model's internal monologue.", "feedback": "That's reasoning traces — evals are external measurements." },
+        { "text": "A kind of training data.", "feedback": "Evals assess a model; they aren't what it trains on." }
+      ]
+    }
+  ],
+  "mcp": [
+    {
+      "prompt": "What does the Model Context Protocol (MCP) standardise?",
+      "choices": [
+        { "text": "How AI apps connect to external tools and data sources.", "correct": true, "feedback": "Right — a common plug so models and tools interoperate." },
+        { "text": "How models are physically manufactured.", "feedback": "It's a software interface, not hardware." },
+        { "text": "The pricing of API calls.", "feedback": "It's about connectivity, not billing." }
+      ]
+    }
+  ],
+  "model-cards": [
+    {
+      "prompt": "What is a model card?",
+      "choices": [
+        { "text": "A short document describing a model's intended use, limits, and risks.", "correct": true, "feedback": "Right — like a nutrition label for a model." },
+        { "text": "A collectible trading card with the model's stats.", "feedback": "It's documentation for responsible use, not a collectible." },
+        { "text": "The invoice for using the model.", "feedback": "It's about transparency, not billing." }
+      ]
+    }
+  ],
+  "multiagent": [
+    {
+      "prompt": "A multi-agent system is…",
+      "choices": [
+        { "text": "several AI agents coordinating, often with different roles, on a task.", "correct": true, "feedback": "Right — e.g. a planner, a researcher, and a critic working together." },
+        { "text": "one agent simply run several times for speed.", "feedback": "That's parallelism — multi-agent means distinct cooperating agents." },
+        { "text": "a single model with extra memory.", "feedback": "More memory isn't multiple agents." }
+      ]
+    }
+  ],
+  "retrieval-rerank": [
+    {
+      "prompt": "In retrieval, what does a reranker do?",
+      "choices": [
+        { "text": "Reorders the first-pass results so the most relevant rise to the top.", "correct": true, "feedback": "Right — a cheap search casts a wide net; the reranker sharpens the order." },
+        { "text": "Deletes the user's query.", "feedback": "It refines results for the query, it doesn't discard it." },
+        { "text": "Writes the final answer itself.", "feedback": "That's the generator's job — the reranker just orders retrieved items." }
+      ]
+    }
+  ],
+  "alignment": [
+    {
+      "prompt": "What does AI \"alignment\" refer to?",
+      "choices": [
+        { "text": "Getting a model's goals and behaviour to match human intentions and values.", "correct": true, "feedback": "Right — making capable systems also do what we actually want." },
+        { "text": "Lining up the text neatly on screen.", "feedback": "Not layout — it's about goals matching human intent." },
+        { "text": "Synchronising servers in a data centre.", "feedback": "That's infrastructure; alignment is about behaviour and values." }
+      ]
+    }
+  ],
+  "constitutional-ai": [
+    {
+      "prompt": "Constitutional AI trains a model to…",
+      "choices": [
+        { "text": "critique and revise its own answers against a set of written principles.", "correct": true, "feedback": "Right — the 'constitution' guides self-correction, reducing human labelling." },
+        { "text": "memorise a country's actual constitution.", "feedback": "The 'constitution' is a set of behavioural principles, not a legal text." },
+        { "text": "follow no rules at all.", "feedback": "The opposite — it's explicitly governed by stated principles." }
+      ]
+    }
+  ],
+  "jailbreaks": [
+    {
+      "prompt": "What is a \"jailbreak\" of an AI model?",
+      "choices": [
+        { "text": "A prompt crafted to get the model to bypass its safety rules.", "correct": true, "feedback": "Right — tricking the model into doing what it's meant to refuse." },
+        { "text": "Installing the model on a phone.", "feedback": "Nothing to do with devices — it's about defeating guardrails." },
+        { "text": "Making the model run faster.", "feedback": "It's a safety bypass, not a performance trick." }
+      ]
+    }
+  ],
+  "prompt-injection": [
+    {
+      "prompt": "Prompt injection is an attack where…",
+      "choices": [
+        { "text": "hidden instructions in content trick the model into doing something unintended.", "correct": true, "feedback": "Right — e.g. a web page telling the model to ignore its real instructions." },
+        { "text": "too many prompts crash the server.", "feedback": "That's a load problem — injection is about smuggled instructions." },
+        { "text": "the user simply types very fast.", "feedback": "Speed is irrelevant; it's about malicious instructions in the input." }
+      ]
+    }
+  ],
+  "watermarking": [
+    {
+      "prompt": "What is the goal of watermarking AI output?",
+      "choices": [
+        { "text": "Embedding a detectable signal so AI-generated content can be identified later.", "correct": true, "feedback": "Right — a statistical fingerprint, usually invisible to the reader." },
+        { "text": "Adding a visible company logo to every answer.", "feedback": "Watermarks are typically hidden signals, not visible branding." },
+        { "text": "Protecting the model from computer viruses.", "feedback": "It's about provenance of output, not security." }
+      ]
+    }
   ]
 }
