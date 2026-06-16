@@ -18,4 +18,6 @@ export const LESSON_LOADERS: Record<string, () => Promise<{ default: Lesson }>> 
   training: () => import("./training"),
   "neural-networks": () => import("./neural-networks"),
   "gradient-descent": () => import("./gradient-descent"),
+  "overfitting-underfitting": () => import("./overfitting-underfitting"),
+  "chain-of-thought": () => import("./chain-of-thought"),
 };

@@ -70,6 +70,8 @@ export const LESSON_META: Record<string, { minutes: number; steps: number }> = {
   training: { minutes: 7, steps: 8 },
   "neural-networks": { minutes: 6, steps: 8 },
   "gradient-descent": { minutes: 6, steps: 8 },
+  "overfitting-underfitting": { minutes: 6, steps: 8 },
+  "chain-of-thought": { minutes: 6, steps: 8 },
 };
 
 export function getLessonSlugs(): string[] {
