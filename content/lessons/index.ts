@@ -22,4 +22,6 @@ export const LESSON_LOADERS: Record<string, () => Promise<{ default: Lesson }>> 
   "chain-of-thought": () => import("./chain-of-thought"),
   "reasoning-models": () => import("./reasoning-models"),
   diffusion: () => import("./diffusion"),
+  "function-calling": () => import("./function-calling"),
+  evals: () => import("./evals"),
 };

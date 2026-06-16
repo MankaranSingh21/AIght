@@ -74,6 +74,8 @@ export const LESSON_META: Record<string, { minutes: number; steps: number }> = {
   "chain-of-thought": { minutes: 6, steps: 8 },
   "reasoning-models": { minutes: 6, steps: 8 },
   diffusion: { minutes: 6, steps: 8 },
+  "function-calling": { minutes: 6, steps: 8 },
+  evals: { minutes: 6, steps: 8 },
 };
 
 export function getLessonSlugs(): string[] {
