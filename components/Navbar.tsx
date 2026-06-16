@@ -21,11 +21,12 @@ const DESKTOP_NAV = [
   { href: '/human',       label: 'Human'     },
 ];
 
-// Mobile menu shows everything the desktop dropped: Home, Fields, About.
+// Mobile menu shows everything the desktop dropped: Home, Fields, Progress, About.
 const MOBILE_NAV = [
   { href: '/',            label: 'Home'      },
   ...DESKTOP_NAV,
   { href: '/learn/paths', label: 'Fields'    },
+  { href: '/you',         label: 'Progress'  },
   { href: '/about',       label: 'About'     },
 ];
 

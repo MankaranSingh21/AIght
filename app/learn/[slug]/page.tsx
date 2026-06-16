@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { compileMDX } from "next-mdx-remote/rsc";
 import { getAllConcepts, getConceptSource, DEFAULT_AUTHOR } from "@/lib/learn";
 import { hasLesson, LESSON_META } from "@/lib/lessons";
+import { getChecks } from "@/lib/checks";
 import { createServiceClient } from "@/utils/supabase/service";
 import RagSimulation from "@/components/learn/RagSimulation";
 import McpSimulation from "@/components/learn/McpSimulation";
@@ -31,6 +32,7 @@ import RelatedConcepts from "@/components/learn/RelatedConcepts";
 import Footnote from "@/components/learn/Footnote";
 import Footnotes from "@/components/learn/Footnotes";
 import ConceptMiniMap from "@/components/learn/ConceptMiniMap";
+import ConceptCheck from "@/components/learn/ConceptCheck";
 import Misconception from "@/components/learn/Misconception";
 import { ConceptDemo } from "@/components/learn/ConceptDemo";
 import TokenizationDemo from "@/components/learn/TokenizationDemo";
@@ -315,6 +317,7 @@ export default async function LearnConceptPage({ params }: Props) {
 
   const allConcepts = getAllConcepts();
   const conceptMeta = allConcepts.find((c) => c.slug === slug);
+  const checks = getChecks(slug);
 
   const { content, frontmatter } = await compileMDX<ConceptFrontmatter>({
     source,
@@ -572,6 +575,10 @@ export default async function LearnConceptPage({ params }: Props) {
 
         {/* Footnotes + References */}
         <Footnotes />
+
+        {/* Inline knowledge check — Wave 2. Active recall right after reading;
+            renders only for concepts with authored questions in content/checks.json. */}
+        {checks && <ConceptCheck slug={slug} questions={checks} />}
 
         {/* Related tools */}
         {relatedTools.length > 0 && (

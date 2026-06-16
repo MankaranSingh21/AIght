@@ -18,6 +18,11 @@ export type ProgressState = {
   };
   lessons: Record<string, { step: number; completedAt?: string; checksRight: number }>;
   conceptsRead: Record<string, string>; // slug -> ISO date
+  /**
+   * slug -> ISO date the inline knowledge check on that concept was first
+   * passed. Optional so states saved before this field shipped still load.
+   */
+  conceptChecks?: Record<string, string>;
   badges: string[];
 };
 
@@ -27,6 +32,7 @@ export const XP = {
   lessonComplete: 25,
   conceptRead: 15,
   quizComplete: 20,
+  conceptCheck: 12,
   firstActionOfDay: 10,
 } as const;
 
@@ -57,6 +63,7 @@ function emptyState(): ProgressState {
     streak: { current: 0, longest: 0, lastDay: "" },
     lessons: {},
     conceptsRead: {},
+    conceptChecks: {},
     badges: [],
   };
 }
@@ -203,6 +210,24 @@ export function recordConceptRead(slug: string): ProgressState {
 
 export function recordQuizComplete(): ProgressState {
   return mutate((s) => ({ ...s, xp: s.xp + XP.quizComplete }));
+}
+
+/**
+ * Award XP the first time the inline knowledge check on a concept is passed.
+ * Idempotent per slug — re-passing the same check (or revisiting the page)
+ * earns nothing. The timestamp doubles as the seed for the /review queue.
+ */
+export function recordConceptCheck(slug: string): ProgressState {
+  return mutate((s) => {
+    const checks = s.conceptChecks ?? {};
+    if (checks[slug]) return s;
+    capture("concept_check_passed", { slug });
+    return {
+      ...s,
+      xp: s.xp + XP.conceptCheck,
+      conceptChecks: { ...checks, [slug]: new Date().toISOString() },
+    };
+  });
 }
 
 export function levelFor(xp: number): { level: Badge["name"]; next: { name: string; xp: number } | null; progress: number } {

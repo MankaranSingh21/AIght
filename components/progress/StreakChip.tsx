@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import {
   loadProgress,
   levelFor,
@@ -10,9 +11,9 @@ import {
 import ProgressRing from './ProgressRing';
 
 /**
- * Quiet progress indicator for the navbar: level ring + streak count.
- * Renders nothing until the visitor has earned any XP — the chrome stays
- * clean for first-time readers.
+ * Quiet progress indicator for the navbar: level ring + streak count. Links to
+ * the /you dashboard. Renders nothing until the visitor has earned any XP — the
+ * chrome stays clean for first-time readers (so there's no empty link either).
  */
 export default function StreakChip() {
   const [state, setState] = useState<ProgressState | null>(null);
@@ -29,8 +30,9 @@ export default function StreakChip() {
   const { level, progress } = levelFor(state.xp);
 
   return (
-    <span
-      title={`${level} · ${state.xp} xp${state.streak.current > 1 ? ` · day ${state.streak.current} streak` : ''}`}
+    <Link
+      href="/you"
+      title={`${level} · ${state.xp} xp${state.streak.current > 1 ? ` · day ${state.streak.current} streak` : ''} — see your progress`}
       style={{
         display: 'inline-flex',
         alignItems: 'center',
@@ -39,6 +41,7 @@ export default function StreakChip() {
         borderRadius: 'var(--radius-full)',
         border: '1px solid var(--border-subtle)',
         background: 'var(--bg-surface)',
+        textDecoration: 'none',
       }}
     >
       <ProgressRing progress={progress} />
@@ -57,6 +60,6 @@ export default function StreakChip() {
           <span style={{ color: 'var(--accent-primary)' }}> · {state.streak.current}d</span>
         )}
       </span>
-    </span>
+    </Link>
   );
 }

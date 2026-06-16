@@ -1,0 +1,260 @@
+{
+  "what-is-ai": [
+    {
+      "prompt": "What best describes how most of today's AI systems work?",
+      "choices": [
+        { "text": "They follow a fixed set of hand-written rules for every situation.", "feedback": "That's classic rule-based software. Modern AI learns patterns from data instead of being told every rule." },
+        { "text": "They learn statistical patterns from large amounts of example data.", "correct": true, "feedback": "Right — today's AI is pattern-matching at scale, not hand-coded logic." },
+        { "text": "They are conscious and understand meaning the way people do.", "feedback": "No — they model patterns in data. There's no understanding or awareness behind the output." }
+      ]
+    },
+    {
+      "prompt": "A model that writes fluent text must therefore understand what it's saying. True?",
+      "choices": [
+        { "text": "True — fluency requires comprehension.", "feedback": "Fluency comes from predicting likely next tokens. A model can be confidently, fluently wrong." },
+        { "text": "False — fluency is pattern prediction, not understanding.", "correct": true, "feedback": "Exactly. Sounding right and being right are different things." }
+      ]
+    }
+  ],
+  "data-and-datasets": [
+    {
+      "prompt": "Why does \"garbage in, garbage out\" matter so much for AI?",
+      "choices": [
+        { "text": "Models mostly inherit the patterns — and flaws — of the data they're trained on.", "correct": true, "feedback": "Yes. A model is a mirror of its training data, biases and gaps included." },
+        { "text": "Because more data always makes a model worse.", "feedback": "Not quantity itself — it's the quality and representativeness of the data that matter." },
+        { "text": "Because models ignore their training data once deployed.", "feedback": "They don't — everything they 'know' was shaped by that data." }
+      ]
+    }
+  ],
+  "statistics-essentials": [
+    {
+      "prompt": "An AI predicts a 70% chance of rain. What does that 70% best represent?",
+      "choices": [
+        { "text": "It will definitely rain on 70% of the map.", "feedback": "Probability isn't area — it's a degree of confidence about the outcome." },
+        { "text": "A measure of the model's confidence, not a guarantee.", "correct": true, "feedback": "Right — it's an estimate of likelihood, and roughly 30% of such days it should be dry." },
+        { "text": "The model is 70% finished computing the answer.", "feedback": "Probability describes the prediction, not how far along the computation is." }
+      ]
+    }
+  ],
+  "probability-and-uncertainty": [
+    {
+      "prompt": "A model gives an answer with high confidence. Can it still be wrong?",
+      "choices": [
+        { "text": "No — high confidence means it's correct.", "feedback": "Confidence is the model's own estimate; it can be confidently, fluently wrong." },
+        { "text": "Yes — confidence and correctness are different things.", "correct": true, "feedback": "Exactly. Whether confidence actually matches accuracy (calibration) is its own hard problem." }
+      ]
+    }
+  ],
+  "correlation-vs-causation": [
+    {
+      "prompt": "A model notices ice-cream sales and drownings rise together. What's the safe conclusion?",
+      "choices": [
+        { "text": "Ice cream causes drowning.", "feedback": "The classic trap. A shared cause — hot weather — drives both." },
+        { "text": "They're correlated, but one may not cause the other.", "correct": true, "feedback": "Right — correlation is a pattern; causation needs more than co-occurrence." },
+        { "text": "Drowning causes ice-cream sales.", "feedback": "Reversing the arrow doesn't fix it — correlation alone can't tell you direction." }
+      ]
+    }
+  ],
+  "patterns-and-predictions": [
+    {
+      "prompt": "At its core, generating text from a language model is closest to which task?",
+      "choices": [
+        { "text": "Looking the answer up in a stored database of facts.", "feedback": "There's no lookup table — it predicts, it doesn't retrieve (unless you bolt retrieval on)." },
+        { "text": "Predicting the next most-likely piece of text, step by step.", "correct": true, "feedback": "Yes — it's sequential next-token prediction, one piece at a time." },
+        { "text": "Running a formal logical proof to derive the answer.", "feedback": "It approximates reasoning through patterns; it isn't executing formal logic." }
+      ]
+    }
+  ],
+  "what-is-a-model": [
+    {
+      "prompt": "What is an AI \"model\", concretely?",
+      "choices": [
+        { "text": "A set of learned numbers (parameters) that map inputs to outputs.", "correct": true, "feedback": "Right — training tunes those weights; the model is those numbers plus its architecture." },
+        { "text": "A physical robot or server.", "feedback": "Hardware runs the model, but the model itself is the learned parameters." },
+        { "text": "A copy of the internet stored word-for-word.", "feedback": "It doesn't store text verbatim — it compresses patterns into weights." }
+      ]
+    }
+  ],
+  "bias-in-data": [
+    {
+      "prompt": "Where does most harmful bias in AI systems originate?",
+      "choices": [
+        { "text": "Patterns and imbalances in the training data and its labels.", "correct": true, "feedback": "Yes — models absorb the skews of their data and how it was labelled." },
+        { "text": "Random electrical noise in the hardware.", "feedback": "Bias is systematic, not random noise — it traces back to data and design choices." },
+        { "text": "The user's phrasing, and nothing else.", "feedback": "Phrasing can surface bias, but the bias was learned from data first." }
+      ]
+    }
+  ],
+  "features-and-labels": [
+    {
+      "prompt": "In supervised learning, what is a \"label\"?",
+      "choices": [
+        { "text": "The correct answer the model is trained to predict.", "correct": true, "feedback": "Right — features are the inputs, the label is the target answer." },
+        { "text": "The name of the dataset file.", "feedback": "That's just a filename — a label is the ground-truth output for each example." },
+        { "text": "A tag the model invents entirely on its own.", "feedback": "Labels are supplied by humans or a process; inventing them is unsupervised territory." }
+      ]
+    }
+  ],
+  "training-vs-testing": [
+    {
+      "prompt": "Why hold out a separate test set the model never trains on?",
+      "choices": [
+        { "text": "To check whether it generalises, not just memorises.", "correct": true, "feedback": "Exactly — testing on training data flatters the model and hides overfitting." },
+        { "text": "To give the model more data to learn from.", "feedback": "The test set is deliberately withheld — learning from it defeats its purpose." },
+        { "text": "Because testing is faster than training.", "feedback": "Speed isn't the point — an honest estimate of real-world performance is." }
+      ]
+    }
+  ],
+  "overfitting-underfitting": [
+    {
+      "prompt": "A model scores 99% on its training data but 60% on new data. What's happening?",
+      "choices": [
+        { "text": "Underfitting — the model is too simple.", "feedback": "Underfitting scores poorly on both. The big gap points the other way." },
+        { "text": "Overfitting — it memorised the training set instead of generalising.", "correct": true, "feedback": "Right — a large train/test gap is the signature of overfitting." },
+        { "text": "Perfect generalisation.", "feedback": "Generalisation means close scores on both; a 39-point gap is the opposite." }
+      ]
+    }
+  ],
+  "neural-networks": [
+    {
+      "prompt": "What does a single artificial \"neuron\" actually do?",
+      "choices": [
+        { "text": "Stores one fact, like a row in a spreadsheet.", "feedback": "Neurons don't store facts — they compute a weighted sum and pass it through a function." },
+        { "text": "Takes weighted inputs, sums them, and applies an activation function.", "correct": true, "feedback": "Yes — stack millions of these and the network learns patterns." },
+        { "text": "Makes the final yes/no decision for the whole network.", "feedback": "At most that's the output layer's job; one neuron is a tiny building block." }
+      ]
+    }
+  ],
+  "gradient-descent": [
+    {
+      "prompt": "Gradient descent improves a model by…",
+      "choices": [
+        { "text": "randomly guessing weights until one happens to work.", "feedback": "It's not random — the gradient points toward weights that reduce the error." },
+        { "text": "nudging weights in the direction that lowers the loss, step by step.", "correct": true, "feedback": "Right — follow the slope downhill on the loss surface, repeatedly." },
+        { "text": "deleting the worst training examples.", "feedback": "It adjusts the weights, not the dataset." }
+      ]
+    }
+  ],
+  "tokenization": [
+    {
+      "prompt": "Before a language model reads your text, what happens first?",
+      "choices": [
+        { "text": "It's split into tokens — chunks like words or word-pieces — mapped to numbers.", "correct": true, "feedback": "Yes — models operate on token IDs, not raw letters." },
+        { "text": "It's translated into English.", "feedback": "There's no translation step — it's tokenized in whatever language it's in." },
+        { "text": "It's checked and corrected for spelling.", "feedback": "No spell-check stage — the text is simply tokenized." }
+      ]
+    },
+    {
+      "prompt": "Why can a common word and a rare word cost different numbers of tokens?",
+      "choices": [
+        { "text": "Rare or unusual words get split into several sub-word pieces.", "correct": true, "feedback": "Right — frequent words are often one token; rare ones fragment into many." },
+        { "text": "Longer words are always exactly one token.", "feedback": "Length doesn't guarantee one token — rare strings split into pieces." },
+        { "text": "Tokens are counted one per character, always.", "feedback": "Most modern tokenizers use sub-words, not single characters." }
+      ]
+    }
+  ],
+  "embeddings": [
+    {
+      "prompt": "What is an embedding?",
+      "choices": [
+        { "text": "A list of numbers (a vector) that captures the meaning of a piece of text.", "correct": true, "feedback": "Yes — similar meanings land near each other in that vector space." },
+        { "text": "A compressed image file.", "feedback": "Embeddings are numeric vectors for meaning, not an image format." },
+        { "text": "The raw text, stored exactly as written.", "feedback": "It's a learned numeric representation, not the original text." }
+      ]
+    },
+    {
+      "prompt": "In embedding space, \"king\" and \"queen\" end up close together because…",
+      "choices": [
+        { "text": "they're spelled similarly.", "feedback": "Spelling isn't it — 'king' and 'kindle' look alike but mean different things." },
+        { "text": "they appear in similar contexts, so they get similar vectors.", "correct": true, "feedback": "Right — meaning comes from usage patterns, captured as nearby vectors." },
+        { "text": "they have the same number of letters.", "feedback": "Letter count has nothing to do with embeddings." }
+      ]
+    }
+  ],
+  "transformers": [
+    {
+      "prompt": "What key idea made transformers so effective for language?",
+      "choices": [
+        { "text": "An attention mechanism that weighs the relationships between all tokens.", "correct": true, "feedback": "Yes — attention lets each token look at every other token in context." },
+        { "text": "Reading text strictly one word at a time, like older RNNs.", "feedback": "That's the older approach transformers replaced; attention sees the whole context at once." },
+        { "text": "Storing the entire internet to look answers up.", "feedback": "No lookup store — they learn weighted patterns through attention." }
+      ]
+    },
+    {
+      "prompt": "In a transformer, \"attention\" lets a token…",
+      "choices": [
+        { "text": "decide which other tokens matter most for interpreting it.", "correct": true, "feedback": "Right — attention assigns learned weights to other tokens' relevance." },
+        { "text": "pay exactly equal attention to every token, always.", "feedback": "The whole point is unequal, learned weighting — not uniform attention." },
+        { "text": "ignore all of the other tokens.", "feedback": "The opposite — attention is about relating tokens to each other." }
+      ]
+    }
+  ],
+  "attention": [
+    {
+      "prompt": "In \"The trophy didn't fit in the suitcase because it was too big\", attention helps the model figure out…",
+      "choices": [
+        { "text": "what \"it\" refers to, by weighing the surrounding words.", "correct": true, "feedback": "Exactly — attention links 'it' to 'trophy' using the context." },
+        { "text": "the correct spelling of \"suitcase\".", "feedback": "Attention is about relationships in meaning, not spelling." },
+        { "text": "nothing — pronouns are skipped entirely.", "feedback": "Resolving references like this is precisely what attention is good at." }
+      ]
+    }
+  ],
+  "context-windows": [
+    {
+      "prompt": "What is a model's \"context window\"?",
+      "choices": [
+        { "text": "The maximum amount of text it can consider at once.", "correct": true, "feedback": "Right — beyond that limit, earlier content falls out of view." },
+        { "text": "The size of your browser window.", "feedback": "It's a token limit inside the model, not anything on your screen." },
+        { "text": "How long the model spent training.", "feedback": "That's training time; the context window is about input length at inference." }
+      ]
+    }
+  ],
+  "temperature-sampling": [
+    {
+      "prompt": "Raising the \"temperature\" when generating text does what?",
+      "choices": [
+        { "text": "Makes the output more random and varied.", "correct": true, "feedback": "Yes — higher temperature flattens the odds, so less-likely tokens appear more often." },
+        { "text": "Makes the hardware physically run hotter.", "feedback": "It's a sampling parameter, not hardware heat." },
+        { "text": "Guarantees more factual answers.", "feedback": "Higher temperature usually means less predictable output, not more accurate." }
+      ]
+    }
+  ],
+  "prompt-engineering": [
+    {
+      "prompt": "Why does giving a model an example or two in the prompt often help?",
+      "choices": [
+        { "text": "It demonstrates the format and task, steering the next prediction.", "correct": true, "feedback": "Right — in-context examples shape what the model produces next." },
+        { "text": "It permanently retrains the model's weights.", "feedback": "Prompting doesn't change weights — the effect lasts only for that request." },
+        { "text": "It makes the model run faster.", "feedback": "Examples affect quality and format, not speed — they can even cost more tokens." }
+      ]
+    }
+  ],
+  "rag": [
+    {
+      "prompt": "What problem does Retrieval-Augmented Generation (RAG) mainly solve?",
+      "choices": [
+        { "text": "Giving the model relevant, up-to-date facts it wasn't trained on.", "correct": true, "feedback": "Yes — retrieve documents, then let the model answer grounded in them." },
+        { "text": "Making the model retrain itself overnight.", "feedback": "RAG adds context at query time; it doesn't retrain anything." },
+        { "text": "Removing the need for a model at all.", "feedback": "RAG feeds a model — it doesn't replace one." }
+      ]
+    },
+    {
+      "prompt": "In RAG, where do the retrieved documents go?",
+      "choices": [
+        { "text": "Into the model's prompt/context for that single answer.", "correct": true, "feedback": "Right — they're injected as context, not baked into the weights." },
+        { "text": "Permanently into the model's parameters.", "feedback": "Nothing is written to the weights — retrieval happens per request." },
+        { "text": "They replace the user's question.", "feedback": "They supplement the question as supporting context, not replace it." }
+      ]
+    }
+  ],
+  "hallucination": [
+    {
+      "prompt": "Why do language models sometimes \"hallucinate\" confident but false statements?",
+      "choices": [
+        { "text": "They generate plausible-sounding text, and plausible isn't always true.", "correct": true, "feedback": "Exactly — they optimise for likely continuations, not verified facts." },
+        { "text": "Someone manually typed the wrong answer in.", "feedback": "No human typed it — the model produced a fluent guess." },
+        { "text": "They always know when they're unsure and say so.", "feedback": "They often don't — confidence and correctness can come apart." }
+      ]
+    }
+  ]
+}

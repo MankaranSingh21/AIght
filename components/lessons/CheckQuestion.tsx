@@ -7,26 +7,31 @@ interface CheckQuestionProps {
   choices: LessonChoice[];
   selected: number | null;
   onSelect: (index: number) => void;
+  /** Suppress the "◈ Check yourself" eyebrow — used when a parent groups
+   *  several questions under one shared header (e.g. ConceptCheck). */
+  hideEyebrow?: boolean;
 }
 
-export default function CheckQuestion({ prompt, choices, selected, onSelect }: CheckQuestionProps) {
+export default function CheckQuestion({ prompt, choices, selected, onSelect, hideEyebrow }: CheckQuestionProps) {
   const picked = selected !== null ? choices[selected] : null;
   const solved = picked?.correct === true;
 
   return (
     <div role="group" aria-label="Check question">
-      <p
-        style={{
-          fontFamily: 'var(--font-mono)',
-          fontSize: '11px',
-          letterSpacing: '0.1em',
-          textTransform: 'uppercase',
-          color: 'var(--accent-primary)',
-          margin: '0 0 var(--space-4)',
-        }}
-      >
-        ◈ Check yourself
-      </p>
+      {!hideEyebrow && (
+        <p
+          style={{
+            fontFamily: 'var(--font-mono)',
+            fontSize: '11px',
+            letterSpacing: '0.1em',
+            textTransform: 'uppercase',
+            color: 'var(--accent-primary)',
+            margin: '0 0 var(--space-4)',
+          }}
+        >
+          ◈ Check yourself
+        </p>
+      )}
       <p
         style={{
           fontFamily: 'var(--font-ui)',
