@@ -26,4 +26,6 @@ export const LESSON_LOADERS: Record<string, () => Promise<{ default: Lesson }>> 
   evals: () => import("./evals"),
   "fine-tuning": () => import("./fine-tuning"),
   rlhf: () => import("./rlhf"),
+  dpo: () => import("./dpo"),
+  "prompt-injection": () => import("./prompt-injection"),
 };
