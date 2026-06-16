@@ -14,6 +14,8 @@ import Marginalia from "@/components/Marginalia";
 import MagneticLink from "@/components/MagneticLink";
 import AuroraBackground from "@/components/AuroraBackground";
 import { getAllConcepts } from "@/lib/learn";
+import { hasLesson } from "@/lib/lessons";
+import RecommendedNext from "@/components/learn/RecommendedNext";
 import { getAllHumanEssays } from "@/lib/human";
 import { getSignalPosts, getNativeSignalCards } from "@/lib/signal";
 import { getHomeData } from "@/lib/home-data";
@@ -319,6 +321,19 @@ export default async function Home() {
   const featuredConcepts = allConcepts.slice(0, 3);
   const humanEssays = getAllHumanEssays();
 
+  // Concept graph for the personalised "where to go next" module (Wave 4) —
+  // renders nothing for first-time visitors, so the curated layout is intact.
+  const conceptGraph = allConcepts.map((c) => ({
+    slug: c.slug,
+    title: c.title,
+    tagline: c.tagline,
+    group: c.group,
+    readTime: c.readTime,
+    hasLesson: hasLesson(c.slug),
+    prerequisites: c.prerequisites ?? [],
+    successors: c.successors ?? [],
+  }));
+
   const featuredFields = (FEATURED_SLUGS
     .map((s) => fields.find((f) => f.slug === s))
     .filter(Boolean)) as typeof fields;
@@ -349,6 +364,9 @@ export default async function Home() {
           recentConceptTitles={allConcepts.slice(0, 1).map((c) => c.title)}
           fields={fieldNamesForCycler}
         />
+
+        {/* Recommended next — returning readers only (renders nothing for new visitors) */}
+        <RecommendedNext concepts={conceptGraph} />
 
         {/* §01 — From the archive */}
         <SectionDivider number="01" label="From the archive" />

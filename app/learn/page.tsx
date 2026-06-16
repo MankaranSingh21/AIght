@@ -5,6 +5,7 @@ import { getAllConcepts, getConceptsGrouped } from "@/lib/learn";
 import { hasLesson } from "@/lib/lessons";
 import { getTracks } from "@/lib/curriculum";
 import TrackCardProgress from "@/components/progress/TrackCardProgress";
+import RecommendedNext from "@/components/learn/RecommendedNext";
 import { buildCollectionLd } from "@/utils/jsonld";
 import Footer from "@/components/Footer";
 
@@ -41,6 +42,18 @@ export default function LearnPage() {
   const grouped = getConceptsGrouped();
   const tracks = getTracks();
 
+  // Concept graph for the personalised "where to go next" module (Wave 4).
+  const conceptGraph = allConcepts.map((c) => ({
+    slug: c.slug,
+    title: c.title,
+    tagline: c.tagline,
+    group: c.group,
+    readTime: c.readTime,
+    hasLesson: hasLesson(c.slug),
+    prerequisites: c.prerequisites ?? [],
+    successors: c.successors ?? [],
+  }));
+
   const jsonLd = buildCollectionLd({
     path: "/learn",
     name: "Learn — Concepts behind the tools",
@@ -51,11 +64,13 @@ export default function LearnPage() {
 
   return (
     <>
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-    />
     <main style={{ minHeight: "100vh", position: "relative", zIndex: 1 }}>
+      {/* JSON-LD lives inside <main> to avoid the PostHog script-injection
+          hydration collision (see Session 33 fix on /compare + /signal). */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
 
       {/* ── Full-bleed header ────────────────────────────────────────────── */}
       <section className="section-full" style={{ paddingBottom: 0 }}>
@@ -96,6 +111,9 @@ export default function LearnPage() {
 
         <div style={{ height: 1, background: "linear-gradient(90deg, transparent, rgba(245,239,224,0.08) 20%, rgba(245,239,224,0.08) 80%, transparent)" }} />
       </section>
+
+      {/* ── Recommended next — returning readers only (renders nothing for new visitors) ── */}
+      <RecommendedNext concepts={conceptGraph} />
 
       {/* ── Carousel ────────────────────────────────────────────────────── */}
       <section style={{ position: "relative", background: "rgba(20,17,14,0.45)", overflow: "hidden" }}>
