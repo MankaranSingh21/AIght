@@ -30,4 +30,6 @@ export const LESSON_LOADERS: Record<string, () => Promise<{ default: Lesson }>> 
   "prompt-injection": () => import("./prompt-injection"),
   "in-context-learning": () => import("./in-context-learning"),
   "mixture-of-experts": () => import("./mixture-of-experts"),
+  quantization: () => import("./quantization"),
+  distillation: () => import("./distillation"),
 };

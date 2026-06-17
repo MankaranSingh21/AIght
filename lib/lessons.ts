@@ -82,6 +82,8 @@ export const LESSON_META: Record<string, { minutes: number; steps: number }> = {
   "prompt-injection": { minutes: 6, steps: 8 },
   "in-context-learning": { minutes: 6, steps: 8 },
   "mixture-of-experts": { minutes: 6, steps: 8 },
+  quantization: { minutes: 6, steps: 8 },
+  distillation: { minutes: 6, steps: 8 },
 };
 
 export function getLessonSlugs(): string[] {
