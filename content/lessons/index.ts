@@ -44,4 +44,6 @@ export const LESSON_LOADERS: Record<string, () => Promise<{ default: Lesson }>> 
   "structured-output": () => import("./structured-output"),
   "synthetic-data": () => import("./synthetic-data"),
   "model-collapse": () => import("./model-collapse"),
+  "kv-cache": () => import("./kv-cache"),
+  mcp: () => import("./mcp"),
 };

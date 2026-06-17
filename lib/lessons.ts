@@ -96,6 +96,8 @@ export const LESSON_META: Record<string, { minutes: number; steps: number }> = {
   "structured-output": { minutes: 6, steps: 8 },
   "synthetic-data": { minutes: 6, steps: 8 },
   "model-collapse": { minutes: 6, steps: 8 },
+  "kv-cache": { minutes: 6, steps: 8 },
+  mcp: { minutes: 6, steps: 8 },
 };
 
 export function getLessonSlugs(): string[] {
