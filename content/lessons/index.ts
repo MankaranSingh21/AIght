@@ -54,4 +54,6 @@ export const LESSON_LOADERS: Record<string, () => Promise<{ default: Lesson }>> 
   "probability-and-uncertainty": () => import("./probability-and-uncertainty"),
   "correlation-vs-causation": () => import("./correlation-vs-causation"),
   "bias-in-data": () => import("./bias-in-data"),
+  "patterns-and-predictions": () => import("./patterns-and-predictions"),
+  "what-is-a-model": () => import("./what-is-a-model"),
 };

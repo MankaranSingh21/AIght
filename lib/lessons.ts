@@ -106,6 +106,8 @@ export const LESSON_META: Record<string, { minutes: number; steps: number }> = {
   "probability-and-uncertainty": { minutes: 5, steps: 8 },
   "correlation-vs-causation": { minutes: 5, steps: 8 },
   "bias-in-data": { minutes: 5, steps: 8 },
+  "patterns-and-predictions": { minutes: 5, steps: 8 },
+  "what-is-a-model": { minutes: 5, steps: 8 },
 };
 
 export function getLessonSlugs(): string[] {
