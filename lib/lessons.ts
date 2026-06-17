@@ -100,6 +100,8 @@ export const LESSON_META: Record<string, { minutes: number; steps: number }> = {
   mcp: { minutes: 6, steps: 8 },
   "model-cards": { minutes: 5, steps: 7 },
   watermarking: { minutes: 5, steps: 8 },
+  "what-is-ai": { minutes: 5, steps: 8 },
+  "data-and-datasets": { minutes: 5, steps: 8 },
 };
 
 export function getLessonSlugs(): string[] {

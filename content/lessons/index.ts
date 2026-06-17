@@ -48,4 +48,6 @@ export const LESSON_LOADERS: Record<string, () => Promise<{ default: Lesson }>> 
   mcp: () => import("./mcp"),
   "model-cards": () => import("./model-cards"),
   watermarking: () => import("./watermarking"),
+  "what-is-ai": () => import("./what-is-ai"),
+  "data-and-datasets": () => import("./data-and-datasets"),
 };
