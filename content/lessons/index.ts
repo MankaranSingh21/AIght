@@ -58,4 +58,6 @@ export const LESSON_LOADERS: Record<string, () => Promise<{ default: Lesson }>> 
   "what-is-a-model": () => import("./what-is-a-model"),
   "features-and-labels": () => import("./features-and-labels"),
   "training-vs-testing": () => import("./training-vs-testing"),
+  transformers: () => import("./transformers"),
+  "loss-functions": () => import("./loss-functions"),
 };
