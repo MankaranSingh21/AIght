@@ -62,4 +62,6 @@ export const LESSON_LOADERS: Record<string, () => Promise<{ default: Lesson }>> 
   "loss-functions": () => import("./loss-functions"),
   "regression-classification": () => import("./regression-classification"),
   clustering: () => import("./clustering"),
+  "evaluation-metrics": () => import("./evaluation-metrics"),
+  backpropagation: () => import("./backpropagation"),
 };

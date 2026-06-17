@@ -114,6 +114,8 @@ export const LESSON_META: Record<string, { minutes: number; steps: number }> = {
   "loss-functions": { minutes: 5, steps: 8 },
   "regression-classification": { minutes: 5, steps: 7 },
   clustering: { minutes: 5, steps: 8 },
+  "evaluation-metrics": { minutes: 5, steps: 8 },
+  backpropagation: { minutes: 6, steps: 8 },
 };
 
 export function getLessonSlugs(): string[] {
