@@ -126,7 +126,7 @@ export default function ToolsClient({ tools, initialCategory = "all" }: Props) {
       <div className="flex flex-col gap-6 mb-10 bg-surface/30 p-6 rounded-xl border border-primary/5">
         <div className="flex flex-col gap-3">
           <span className="font-mono text-[10px] tracking-widest uppercase text-muted">Category</span>
-          <div className="flex overflow-x-auto no-scrollbar gap-2 pb-1">
+          <div className="flex overflow-x-auto scrollbar-hide gap-2 pb-1">
             {CATEGORIES.map((cat) => (
               <button
                 key={cat.id}
