@@ -289,6 +289,69 @@ export default function ReviewClient({ bank, titles }: ReviewClientProps) {
           </Link>
         </div>
       )}
+
+      {/* Quiet "how it works" — fills the idle screen with the why, not blank space */}
+      <section
+        style={{
+          marginTop: 72,
+          paddingTop: 40,
+          borderTop: "1px solid var(--border-subtle)",
+        }}
+      >
+        <p style={{ ...MONO_EYEBROW, color: "var(--accent-primary)", margin: "0 0 24px" }}>
+          how spaced review works
+        </p>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+            gap: "var(--space-8)",
+          }}
+        >
+          {[
+            ["01", "Read it once", "Every concept you read or check on AIght quietly enters the rotation."],
+            ["02", "It comes back", "Concepts resurface on a schedule — soonest for the ones you fumble, later for the ones you nail."],
+            ["03", "It sticks", "A minute of recall beats an hour of re-reading. That's the whole trick behind spaced repetition."],
+          ].map(([n, title, body]) => (
+            <div key={n}>
+              <p
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 11,
+                  letterSpacing: "0.14em",
+                  color: "var(--accent-primary)",
+                  margin: "0 0 10px",
+                }}
+              >
+                {n}
+              </p>
+              <h3
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: 18,
+                  fontWeight: 700,
+                  letterSpacing: "-0.01em",
+                  color: "var(--text-primary)",
+                  margin: "0 0 6px",
+                }}
+              >
+                {title}
+              </h3>
+              <p
+                style={{
+                  fontFamily: "var(--font-editorial)",
+                  fontSize: 14,
+                  lineHeight: 1.6,
+                  color: "var(--text-secondary)",
+                  margin: 0,
+                }}
+              >
+                {body}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }

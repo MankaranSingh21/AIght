@@ -134,6 +134,21 @@ export default function LearnPage() {
         @media (max-width: 768px) {
           .learn-bridge-grid { grid-template-columns: 1fr !important; }
         }
+        /* Concept rows in the grouped "All concepts" list — a quiet lime
+           left-accent that slides in on hover, so the long list feels crafted
+           rather than like a bare directory. */
+        .concept-row {
+          padding: 16px 0;
+          border-bottom: 1px solid rgba(245,239,224,0.06);
+          border-left: 2px solid transparent;
+          border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+          transition: border-left-color 200ms ease, padding-left 200ms ease, background 200ms ease;
+        }
+        .group:hover .concept-row {
+          border-left-color: var(--accent-primary);
+          padding-left: 14px;
+          background: linear-gradient(90deg, rgba(170,255,77,0.05), transparent 65%);
+        }
       `}</style>
       <section style={{
         borderTop: "1px solid rgba(245,239,224,0.07)",
@@ -420,14 +435,15 @@ export default function LearnPage() {
                     style={{ textDecoration: "none" }}
                     className="group"
                   >
-                    <div style={{
-                      padding: "18px 0",
-                      borderBottom: "1px solid rgba(245,239,224,0.06)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      gap: 16,
-                    }}>
+                    <div
+                      className="concept-row"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        gap: 16,
+                      }}
+                    >
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <h3 style={{
                           fontFamily: "var(--font-ui)",
@@ -449,9 +465,10 @@ export default function LearnPage() {
                           color: "rgba(245,239,224,0.45)",
                           margin: 0,
                           lineHeight: 1.5,
+                          display: "-webkit-box",
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: "vertical",
                           overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          whiteSpace: "nowrap",
                         }}>
                           {concept.tagline}
                         </p>
