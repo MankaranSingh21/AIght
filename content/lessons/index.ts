@@ -36,4 +36,6 @@ export const LESSON_LOADERS: Record<string, () => Promise<{ default: Lesson }>> 
   jailbreaks: () => import("./jailbreaks"),
   "constitutional-ai": () => import("./constitutional-ai"),
   multimodal: () => import("./multimodal"),
+  "vision-language-models": () => import("./vision-language-models"),
+  "scaling-laws": () => import("./scaling-laws"),
 };
