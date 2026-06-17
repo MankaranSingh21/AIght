@@ -64,4 +64,5 @@ export const LESSON_LOADERS: Record<string, () => Promise<{ default: Lesson }>> 
   clustering: () => import("./clustering"),
   "evaluation-metrics": () => import("./evaluation-metrics"),
   backpropagation: () => import("./backpropagation"),
+  "gpus-and-compute": () => import("./gpus-and-compute"),
 };
