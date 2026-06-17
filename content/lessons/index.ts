@@ -32,4 +32,6 @@ export const LESSON_LOADERS: Record<string, () => Promise<{ default: Lesson }>> 
   "mixture-of-experts": () => import("./mixture-of-experts"),
   quantization: () => import("./quantization"),
   distillation: () => import("./distillation"),
+  alignment: () => import("./alignment"),
+  jailbreaks: () => import("./jailbreaks"),
 };

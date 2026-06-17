@@ -84,6 +84,8 @@ export const LESSON_META: Record<string, { minutes: number; steps: number }> = {
   "mixture-of-experts": { minutes: 6, steps: 8 },
   quantization: { minutes: 6, steps: 8 },
   distillation: { minutes: 6, steps: 8 },
+  alignment: { minutes: 6, steps: 8 },
+  jailbreaks: { minutes: 6, steps: 8 },
 };
 
 export function getLessonSlugs(): string[] {
