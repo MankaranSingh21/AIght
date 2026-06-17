@@ -56,4 +56,6 @@ export const LESSON_LOADERS: Record<string, () => Promise<{ default: Lesson }>> 
   "bias-in-data": () => import("./bias-in-data"),
   "patterns-and-predictions": () => import("./patterns-and-predictions"),
   "what-is-a-model": () => import("./what-is-a-model"),
+  "features-and-labels": () => import("./features-and-labels"),
+  "training-vs-testing": () => import("./training-vs-testing"),
 };

@@ -108,6 +108,8 @@ export const LESSON_META: Record<string, { minutes: number; steps: number }> = {
   "bias-in-data": { minutes: 5, steps: 8 },
   "patterns-and-predictions": { minutes: 5, steps: 8 },
   "what-is-a-model": { minutes: 5, steps: 8 },
+  "features-and-labels": { minutes: 5, steps: 8 },
+  "training-vs-testing": { minutes: 5, steps: 8 },
 };
 
 export function getLessonSlugs(): string[] {
