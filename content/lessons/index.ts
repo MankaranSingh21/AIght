@@ -46,4 +46,6 @@ export const LESSON_LOADERS: Record<string, () => Promise<{ default: Lesson }>> 
   "model-collapse": () => import("./model-collapse"),
   "kv-cache": () => import("./kv-cache"),
   mcp: () => import("./mcp"),
+  "model-cards": () => import("./model-cards"),
+  watermarking: () => import("./watermarking"),
 };

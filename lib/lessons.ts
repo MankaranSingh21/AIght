@@ -98,6 +98,8 @@ export const LESSON_META: Record<string, { minutes: number; steps: number }> = {
   "model-collapse": { minutes: 6, steps: 8 },
   "kv-cache": { minutes: 6, steps: 8 },
   mcp: { minutes: 6, steps: 8 },
+  "model-cards": { minutes: 5, steps: 7 },
+  watermarking: { minutes: 5, steps: 8 },
 };
 
 export function getLessonSlugs(): string[] {
