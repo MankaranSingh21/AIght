@@ -40,4 +40,6 @@ export const LESSON_LOADERS: Record<string, () => Promise<{ default: Lesson }>> 
   "scaling-laws": () => import("./scaling-laws"),
   "agentic-memory": () => import("./agentic-memory"),
   multiagent: () => import("./multiagent"),
+  "retrieval-rerank": () => import("./retrieval-rerank"),
+  "structured-output": () => import("./structured-output"),
 };

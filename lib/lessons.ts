@@ -92,6 +92,8 @@ export const LESSON_META: Record<string, { minutes: number; steps: number }> = {
   "scaling-laws": { minutes: 6, steps: 8 },
   "agentic-memory": { minutes: 6, steps: 8 },
   multiagent: { minutes: 6, steps: 8 },
+  "retrieval-rerank": { minutes: 6, steps: 8 },
+  "structured-output": { minutes: 6, steps: 8 },
 };
 
 export function getLessonSlugs(): string[] {
