@@ -102,6 +102,8 @@ export const LESSON_META: Record<string, { minutes: number; steps: number }> = {
   watermarking: { minutes: 5, steps: 8 },
   "what-is-ai": { minutes: 5, steps: 8 },
   "data-and-datasets": { minutes: 5, steps: 8 },
+  "statistics-essentials": { minutes: 5, steps: 8 },
+  "probability-and-uncertainty": { minutes: 5, steps: 8 },
 };
 
 export function getLessonSlugs(): string[] {

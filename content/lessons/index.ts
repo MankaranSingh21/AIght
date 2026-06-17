@@ -50,4 +50,6 @@ export const LESSON_LOADERS: Record<string, () => Promise<{ default: Lesson }>> 
   watermarking: () => import("./watermarking"),
   "what-is-ai": () => import("./what-is-ai"),
   "data-and-datasets": () => import("./data-and-datasets"),
+  "statistics-essentials": () => import("./statistics-essentials"),
+  "probability-and-uncertainty": () => import("./probability-and-uncertainty"),
 };
