@@ -52,4 +52,6 @@ export const LESSON_LOADERS: Record<string, () => Promise<{ default: Lesson }>> 
   "data-and-datasets": () => import("./data-and-datasets"),
   "statistics-essentials": () => import("./statistics-essentials"),
   "probability-and-uncertainty": () => import("./probability-and-uncertainty"),
+  "correlation-vs-causation": () => import("./correlation-vs-causation"),
+  "bias-in-data": () => import("./bias-in-data"),
 };

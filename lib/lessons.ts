@@ -104,6 +104,8 @@ export const LESSON_META: Record<string, { minutes: number; steps: number }> = {
   "data-and-datasets": { minutes: 5, steps: 8 },
   "statistics-essentials": { minutes: 5, steps: 8 },
   "probability-and-uncertainty": { minutes: 5, steps: 8 },
+  "correlation-vs-causation": { minutes: 5, steps: 8 },
+  "bias-in-data": { minutes: 5, steps: 8 },
 };
 
 export function getLessonSlugs(): string[] {
