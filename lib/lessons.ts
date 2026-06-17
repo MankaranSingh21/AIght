@@ -86,6 +86,8 @@ export const LESSON_META: Record<string, { minutes: number; steps: number }> = {
   distillation: { minutes: 6, steps: 8 },
   alignment: { minutes: 6, steps: 8 },
   jailbreaks: { minutes: 6, steps: 8 },
+  "constitutional-ai": { minutes: 6, steps: 8 },
+  multimodal: { minutes: 6, steps: 8 },
 };
 
 export function getLessonSlugs(): string[] {
