@@ -38,4 +38,6 @@ export const LESSON_LOADERS: Record<string, () => Promise<{ default: Lesson }>> 
   multimodal: () => import("./multimodal"),
   "vision-language-models": () => import("./vision-language-models"),
   "scaling-laws": () => import("./scaling-laws"),
+  "agentic-memory": () => import("./agentic-memory"),
+  multiagent: () => import("./multiagent"),
 };

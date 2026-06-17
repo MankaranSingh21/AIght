@@ -90,6 +90,8 @@ export const LESSON_META: Record<string, { minutes: number; steps: number }> = {
   multimodal: { minutes: 6, steps: 8 },
   "vision-language-models": { minutes: 6, steps: 8 },
   "scaling-laws": { minutes: 6, steps: 8 },
+  "agentic-memory": { minutes: 6, steps: 8 },
+  multiagent: { minutes: 6, steps: 8 },
 };
 
 export function getLessonSlugs(): string[] {
