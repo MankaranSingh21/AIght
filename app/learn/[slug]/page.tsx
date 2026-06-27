@@ -23,6 +23,7 @@ import MarginNote from "@/components/learn/MarginNote";
 import SectionBreak from "@/components/learn/SectionBreak";
 import Callout from "@/components/learn/Callout";
 import StepDiagram, { Step } from "@/components/learn/StepDiagram";
+import Figure from "@/components/learn/Figure";
 import CompareTable, { CompareRow } from "@/components/learn/CompareTable";
 import StatPill from "@/components/learn/StatPill";
 import EditorialLayout from "@/components/learn/EditorialLayout";
@@ -117,6 +118,7 @@ const mdxComponents = {
   Callout,
   StepDiagram,
   Step,
+  Figure,
   CompareTable,
   CompareRow,
   StatPill,
