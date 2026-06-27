@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { usePostHog } from "posthog-js/react";
@@ -61,6 +62,43 @@ function toggleBookmark(slug: string): boolean {
   }
   window.dispatchEvent(new Event("aight_bookmarks_changed"));
   return idx === -1;
+}
+
+/** Derive a bare domain (clay.com) from a tool's homepage URL, for Clearbit logos. */
+function logoDomain(url?: string | null): string | null {
+  if (!url) return null;
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Small tool logo for the card header. Sourced from Clearbit (already an allowed
+ * image domain in next.config.mjs). Clearbit 404s for unknown domains, so on error
+ * we hide entirely and the card falls back to its text-only header.
+ */
+function ToolLogo({ url, accentColor }: { url?: string | null; accentColor: string }) {
+  const domain = logoDomain(url);
+  const [ok, setOk] = useState(true);
+  if (!domain || !ok) return null;
+  return (
+    <span
+      className="flex items-center justify-center rounded-md overflow-hidden shrink-0 bg-elevated border border-subtle"
+      style={{ width: 26, height: 26, boxShadow: `0 0 0 1px ${accentColor}14` }}
+    >
+      <Image
+        src={`https://logo.clearbit.com/${domain}`}
+        alt=""
+        width={26}
+        height={26}
+        unoptimized
+        onError={() => setOk(false)}
+        style={{ objectFit: "contain" }}
+      />
+    </span>
+  );
 }
 
 function isNew(created_at?: string): boolean {
@@ -382,11 +420,14 @@ export default function ToolCard({
           >
             <div className="flex flex-col flex-1 p-5 gap-2">
               <div className="flex items-start justify-between gap-4 mb-1">
-                <span 
-                  className="font-mono text-[9px] tracking-[0.14em] uppercase opacity-75 leading-none"
-                  style={{ color: accentColor }}
-                >
-                  {category}
+                <span className="flex items-center gap-2 min-w-0">
+                  <ToolLogo url={url} accentColor={accentColor} />
+                  <span
+                    className="font-mono text-[9px] tracking-[0.14em] uppercase opacity-75 leading-none"
+                    style={{ color: accentColor }}
+                  >
+                    {category}
+                  </span>
                 </span>
                 {aightScore !== null && (
                   <div className="flex flex-col items-end">
