@@ -44,6 +44,56 @@ weights holds a number: *your nudge direction, your share of the fault.*
 Then gradient descent does its one move — every weight steps slightly
 against its blame — and the next example begins.
 
+<Figure number={1} caption="Two passes over the same wires. Inputs flow forward to a guess and a measured loss; then that single error flows backward along the same connections, splitting into each weight's share of the blame.">
+  <svg viewBox="0 0 600 320" width="100%" style={{ maxWidth: 540, fontFamily: "var(--font-ui)" }} role="img" aria-label="A small neural network with an input layer, a hidden layer, and an output feeding a loss. A green arrow across the top shows the forward pass that produces a prediction; an amber arrow across the bottom shows the backward pass that assigns blame to each weight.">
+    <defs>
+      <marker id="bp-fwd" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" fill="var(--accent-primary)" />
+      </marker>
+      <marker id="bp-bwd" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" fill="var(--accent-warm)" />
+      </marker>
+    </defs>
+
+    {/* Forward pass banner */}
+    <line x1={70} y1={44} x2={540} y2={44} stroke="var(--accent-primary)" strokeWidth={2} markerEnd="url(#bp-fwd)" />
+    <text x={70} y={32} fontFamily="var(--font-mono)" fontSize={11} letterSpacing="0.12em" fill="var(--accent-primary)">FORWARD · predict</text>
+
+    {/* Edges: input → hidden → output */}
+    {[110, 165, 220].map((iy) =>
+      [100, 160, 220].map((hy) => (
+        <line key={`ih-${iy}-${hy}`} x1={130} y1={iy} x2={280} y2={hy} stroke="var(--border-default)" strokeWidth={1} />
+      ))
+    )}
+    {[100, 160, 220].map((hy) => (
+      <line key={`ho-${hy}`} x1={280} y1={hy} x2={420} y2={160} stroke="var(--border-default)" strokeWidth={1} />
+    ))}
+    <line x1={420} y1={160} x2={470} y2={160} stroke="var(--border-default)" strokeWidth={1} />
+
+    {/* Nodes */}
+    {[110, 165, 220].map((iy) => (
+      <circle key={`in-${iy}`} cx={130} cy={iy} r={13} fill="var(--bg-elevated)" stroke="var(--border-default)" />
+    ))}
+    {[100, 160, 220].map((hy) => (
+      <circle key={`hn-${hy}`} cx={280} cy={hy} r={13} fill="var(--bg-elevated)" stroke="var(--border-default)" />
+    ))}
+    <circle cx={420} cy={160} r={13} fill="var(--accent-primary-glow)" stroke="var(--accent-primary)" />
+
+    {/* Loss */}
+    <rect x={470} y={140} width={70} height={40} rx={8} fill="var(--bg-elevated)" stroke="var(--accent-warm)" />
+    <text x={505} y={165} textAnchor="middle" fontSize={14} fontWeight={600} fill="var(--accent-warm)">loss</text>
+
+    {/* Layer labels */}
+    <text x={130} y={258} textAnchor="middle" fontFamily="var(--font-mono)" fontSize={10} fill="var(--text-muted)">input</text>
+    <text x={280} y={258} textAnchor="middle" fontFamily="var(--font-mono)" fontSize={10} fill="var(--text-muted)">hidden</text>
+    <text x={420} y={258} textAnchor="middle" fontFamily="var(--font-mono)" fontSize={10} fill="var(--text-muted)">output</text>
+
+    {/* Backward pass banner */}
+    <line x1={540} y1={292} x2={70} y2={292} stroke="var(--accent-warm)" strokeWidth={2} markerEnd="url(#bp-bwd)" />
+    <text x={540} y={312} textAnchor="end" fontFamily="var(--font-mono)" fontSize={11} letterSpacing="0.12em" fill="var(--accent-warm)">BACKWARD · assign blame</text>
+  </svg>
+</Figure>
+
 ## Why it's fast (the part that's actually clever)
 
 The naive approach — wiggle each weight separately and re-run the

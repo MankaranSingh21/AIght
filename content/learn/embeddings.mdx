@@ -35,6 +35,39 @@ Take the vector for "king." Subtract "man." Add "woman." The result lands very c
 
 Nobody hand-coded that. The model learned it from patterns in text. And it holds across many kinds of relationships — capitals and countries, verb tenses, comparatives. The structure of meaning shows up as structure in space.
 
+<Figure number={1} caption="Relationships show up as consistent directions. The step from “man” to “woman” matches the step from “king” to “queen” — so king − man + woman lands on queen. The coordinates are arbitrary; the directions carry the meaning.">
+  <svg viewBox="0 0 600 360" width="100%" style={{ maxWidth: 520, fontFamily: "var(--font-ui)" }} role="img" aria-label="A 2D map of meaning showing four words: man and woman along the bottom, king and queen above them. The arrow from man to king is parallel to the arrow from woman to queen (the royalty direction), and the arrow from man to woman is parallel to the arrow from king to queen (the gender direction).">
+    <defs>
+      <marker id="emb-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" fill="var(--text-muted)" />
+      </marker>
+      <marker id="emb-arr-accent" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" fill="var(--accent-primary)" />
+      </marker>
+    </defs>
+
+    {/* Royalty direction — vertical, solid */}
+    <line x1={170} y1={278} x2={170} y2={126} stroke="var(--text-muted)" strokeWidth={1.5} markerEnd="url(#emb-arr)" />
+    <line x1={430} y1={278} x2={430} y2={126} stroke="var(--text-muted)" strokeWidth={1.5} markerEnd="url(#emb-arr)" />
+    <text transform="rotate(-90 132 202)" x={132} y={202} textAnchor="middle" fontFamily="var(--font-mono)" fontSize={10} letterSpacing="0.12em" fill="var(--text-muted)">ROYALTY →</text>
+
+    {/* Gender direction — horizontal, dashed accent */}
+    <line x1={186} y1={290} x2={414} y2={290} stroke="var(--accent-primary)" strokeWidth={1.5} strokeDasharray="5 4" markerEnd="url(#emb-arr-accent)" />
+    <line x1={186} y1={110} x2={414} y2={110} stroke="var(--accent-primary)" strokeWidth={1.5} strokeDasharray="5 4" markerEnd="url(#emb-arr-accent)" />
+    <text x={300} y={84} textAnchor="middle" fontFamily="var(--font-mono)" fontSize={10} letterSpacing="0.12em" fill="var(--accent-primary)">GENDER →</text>
+
+    {/* Points */}
+    <circle cx={170} cy={290} r={5} fill="var(--text-secondary)" />
+    <text x={170} y={314} textAnchor="middle" fontSize={14} fill="var(--text-primary)">man</text>
+    <circle cx={430} cy={290} r={5} fill="var(--text-secondary)" />
+    <text x={430} y={314} textAnchor="middle" fontSize={14} fill="var(--text-primary)">woman</text>
+    <circle cx={170} cy={110} r={5} fill="var(--text-secondary)" />
+    <text x={170} y={104} textAnchor="middle" fontSize={14} fill="var(--text-primary)">king</text>
+    <circle cx={430} cy={110} r={6} fill="var(--accent-primary)" />
+    <text x={430} y={104} textAnchor="middle" fontSize={14} fontWeight={600} fill="var(--accent-primary)">queen</text>
+  </svg>
+</Figure>
+
 ```python
 import numpy as np
 
