@@ -57,6 +57,59 @@ def self_attention(query, keys, values, scale):
 
 <AttentionViz />
 
+<Figure number={1} caption="Attention is the famous part, not the whole machine. Each transformer layer wraps multi-head attention and a feed-forward network in residual connections and normalization — then stacks that same block N times.">
+  <svg viewBox="0 0 600 412" width="100%" style={{ maxWidth: 560, fontFamily: "var(--font-ui)" }} role="img" aria-label="Diagram of a transformer's data flow: input tokens become embeddings, pass through N stacked layers each containing multi-head attention and a feed-forward network with add-and-norm steps, and emerge as next-token probabilities.">
+    <defs>
+      <marker id="tf-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" fill="var(--text-muted)" />
+      </marker>
+    </defs>
+
+    {/* Input tokens */}
+    {["The", "cat", "sat"].map((t, i) => (
+      <g key={t}>
+        <rect x={183 + i * 82} y={14} width={70} height={30} rx={6} fill="var(--bg-elevated)" stroke="var(--border-subtle)" />
+        <text x={218 + i * 82} y={33} textAnchor="middle" fontFamily="var(--font-mono)" fontSize={13} fill="var(--text-secondary)">{t}</text>
+      </g>
+    ))}
+    <line x1={300} y1={44} x2={300} y2={62} stroke="var(--text-muted)" strokeWidth={1.5} markerEnd="url(#tf-arrow)" />
+
+    {/* Embeddings */}
+    <rect x={160} y={64} width={280} height={40} rx={8} fill="var(--bg-elevated)" stroke="var(--border-default)" />
+    <text x={300} y={89} textAnchor="middle" fontSize={14} fill="var(--text-primary)">Token + position embeddings</text>
+    <line x1={300} y1={104} x2={300} y2={122} stroke="var(--text-muted)" strokeWidth={1.5} markerEnd="url(#tf-arrow)" />
+
+    {/* Repeated layer block */}
+    <rect x={108} y={124} width={384} height={224} rx={14} fill="none" stroke="var(--accent-primary)" strokeOpacity={0.45} strokeWidth={1.5} strokeDasharray="5 5" />
+    <text x={300} y={142} textAnchor="middle" fontFamily="var(--font-mono)" fontSize={11} letterSpacing="0.14em" fill="var(--accent-primary)">REPEAT × N LAYERS</text>
+
+    {/* Multi-head attention (the highlighted part) */}
+    <rect x={150} y={152} width={300} height={46} rx={9} fill="var(--accent-primary-glow)" stroke="var(--accent-primary)" />
+    <text x={300} y={180} textAnchor="middle" fontSize={14} fontWeight={600} fill="var(--accent-primary)">Multi-head self-attention</text>
+    <line x1={300} y1={198} x2={300} y2={210} stroke="var(--text-muted)" strokeWidth={1.5} markerEnd="url(#tf-arrow)" />
+
+    {/* Add & Norm */}
+    <rect x={210} y={210} width={180} height={22} rx={11} fill="none" stroke="var(--border-subtle)" />
+    <text x={300} y={225} textAnchor="middle" fontFamily="var(--font-mono)" fontSize={10} fill="var(--text-muted)">add &amp; norm</text>
+    <line x1={300} y1={232} x2={300} y2={244} stroke="var(--text-muted)" strokeWidth={1.5} markerEnd="url(#tf-arrow)" />
+
+    {/* Feed-forward */}
+    <rect x={150} y={244} width={300} height={44} rx={9} fill="var(--bg-elevated)" stroke="var(--border-default)" />
+    <text x={300} y={271} textAnchor="middle" fontSize={14} fill="var(--text-primary)">Feed-forward network</text>
+    <line x1={300} y1={288} x2={300} y2={300} stroke="var(--text-muted)" strokeWidth={1.5} markerEnd="url(#tf-arrow)" />
+
+    {/* Add & Norm */}
+    <rect x={210} y={300} width={180} height={22} rx={11} fill="none" stroke="var(--border-subtle)" />
+    <text x={300} y={315} textAnchor="middle" fontFamily="var(--font-mono)" fontSize={10} fill="var(--text-muted)">add &amp; norm</text>
+
+    <line x1={300} y1={348} x2={300} y2={366} stroke="var(--text-muted)" strokeWidth={1.5} markerEnd="url(#tf-arrow)" />
+
+    {/* Output */}
+    <rect x={160} y={368} width={280} height={40} rx={8} fill="var(--bg-elevated)" stroke="var(--border-default)" />
+    <text x={300} y={393} textAnchor="middle" fontSize={14} fill="var(--text-primary)">Next-token probabilities</text>
+  </svg>
+</Figure>
+
 ## Why this was a big deal
 
 The previous generation of models processed text sequentially, which meant relating a word near the end of a paragraph to a word at the beginning required threading through every intermediate step. Information degraded over distance. Long documents were hard.
