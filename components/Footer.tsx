@@ -79,10 +79,10 @@ export default function Footer() {
               fontWeight: 500,
               marginBottom: 10,
               margin: '0 0 10px',
-            }}>
-              <span style={{ color: 'var(--text-primary)' }}>AI</span>
-              <span style={{ color: 'var(--accent-primary)' }}>ght</span>
-              <span className="logo-cursor" style={{ color: 'var(--accent-primary)' }}>_</span>
+            }} aria-label="AIght">
+              <span aria-hidden="true" style={{ color: 'var(--text-primary)' }}>AI</span>
+              <span aria-hidden="true" style={{ color: 'var(--accent-primary)' }}>ght</span>
+              <span aria-hidden="true" className="logo-cursor" style={{ color: 'var(--accent-primary)' }}>_</span>
             </p>
             <p style={{
               fontFamily: 'var(--font-editorial)',

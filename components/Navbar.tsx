@@ -113,14 +113,14 @@ export default function Navbar() {
           </button>
 
           {/* Logo */}
-          <Link href="/" className="no-underline shrink-0 flex items-center">
-            <span className="font-mono text-xl font-medium text-primary leading-none">
+          <Link href="/" aria-label="AIght — home" className="no-underline shrink-0 flex items-center">
+            <span aria-hidden="true" className="font-mono text-xl font-medium text-primary leading-none">
               AI
             </span>
-            <span className="font-mono text-xl font-medium text-accent leading-none">
+            <span aria-hidden="true" className="font-mono text-xl font-medium text-accent leading-none">
               ght
             </span>
-            <span className="logo-cursor font-mono text-xl font-medium text-accent ml-0.5">_</span>
+            <span aria-hidden="true" className="logo-cursor font-mono text-xl font-medium text-accent ml-0.5">_</span>
           </Link>
 
           {/* Nav links — hidden on very small screens. Tight gap to fit 7 items + CTA. */}
