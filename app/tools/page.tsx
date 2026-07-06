@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { createPublicClient } from "@/utils/supabase/public";
 import ToolsClient from "@/components/ToolsClient";
 import Footer from "@/components/Footer";
@@ -104,7 +105,21 @@ export default async function ToolsArchivePage() {
               margin: 0,
             }}>
               {tools.length} tools and counting. No sponsored rankings. No hustle energy.
-              Browse the archive. Click any card for the full breakdown.
+              Every tool here got used before it got listed — nothing earns a
+              card on its spec sheet alone. Click any card for the full breakdown.
+            </p>
+            <p style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: 11,
+              letterSpacing: "0.08em",
+              color: "rgba(245,239,224,0.35)",
+              margin: "16px 0 0",
+            }}>
+              curated by{" "}
+              <Link href="/author/moon" style={{ color: "rgba(245,239,224,0.55)", textDecoration: "none" }}>
+                Moon
+              </Link>
+              {" "}· added slowly, on purpose
             </p>
           </div>
 

@@ -152,8 +152,8 @@ export default function Footer() {
               color: 'rgba(245,239,224,0.40)',
               margin: '0 0 16px',
             }}>
-              New tools, new stacks, and the occasional note from the archive.
-              No spam — ever.
+              New tools, new concepts, the occasional essay — each one vetted
+              by hand before it reaches you. No spam — ever.
             </p>
             <NewsletterForm />
           </div>

@@ -691,11 +691,25 @@ export default async function Home() {
               color: "rgba(245,239,224,0.55)",
               margin: "0 0 36px",
             }}>
-              Join 5,000+ builders getting weekly signal. No hype, no affiliate links.
+              New tools when they earn a card, new concepts when they&apos;re worth
+              explaining. No hype, no affiliate links — unsubscribe whenever.
             </p>
             <div style={{ maxWidth: 420, margin: "0 auto" }}>
               <NewsletterForm />
             </div>
+            <p style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: 11,
+              letterSpacing: "0.08em",
+              color: "rgba(245,239,224,0.35)",
+              margin: "20px 0 0",
+            }}>
+              written and curated by{" "}
+              <Link href="/author/moon" style={{ color: "rgba(245,239,224,0.55)", textDecoration: "none" }}>
+                Moon
+              </Link>
+              {" "}— one person, no growth team
+            </p>
             <div style={{ marginTop: 48, display: "flex", justifyContent: "center", gap: 32, flexWrap: "wrap" }}>
               <MagneticLink href="/tools" className="font-sans text-sm text-secondary hover:text-accent transition-colors no-underline">
                 Browse Tools →
