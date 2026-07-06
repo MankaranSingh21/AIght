@@ -4,8 +4,10 @@ import ConceptCarouselClient from "@/components/learn/ConceptCarouselClient";
 import { getAllConcepts, getConceptsGrouped } from "@/lib/learn";
 import { hasLesson } from "@/lib/lessons";
 import { getTracks } from "@/lib/curriculum";
+import { getAllCheckSlugs } from "@/lib/checks";
 import TrackCardProgress from "@/components/progress/TrackCardProgress";
 import RecommendedNext from "@/components/learn/RecommendedNext";
+import LearnProgressStrip from "@/components/learn/LearnProgressStrip";
 import { buildCollectionLd } from "@/utils/jsonld";
 import Footer from "@/components/Footer";
 
@@ -111,6 +113,9 @@ export default function LearnPage() {
 
         <div style={{ height: 1, background: "linear-gradient(90deg, transparent, rgba(245,239,224,0.08) 20%, rgba(245,239,224,0.08) 80%, transparent)" }} />
       </section>
+
+      {/* ── Progress + review queue — returning readers only ── */}
+      <LearnProgressStrip checkSlugs={getAllCheckSlugs()} totalConcepts={allConcepts.length} />
 
       {/* ── Recommended next — returning readers only (renders nothing for new visitors) ── */}
       <RecommendedNext concepts={conceptGraph} />
@@ -474,6 +479,17 @@ export default function LearnPage() {
                         </p>
                       </div>
                       <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
+                        {concept.difficulty && concept.difficulty !== "beginner" && (
+                          <span style={{
+                            fontFamily: "var(--font-mono)", fontSize: 10,
+                            color: concept.difficulty === "advanced"
+                              ? "var(--accent-warm-dim)"
+                              : "rgba(245,239,224,0.35)",
+                            letterSpacing: "0.06em",
+                          }}>
+                            {concept.difficulty}
+                          </span>
+                        )}
                         {hasLesson(concept.slug) && (
                           <span style={{
                             fontFamily: "var(--font-mono)", fontSize: 10,

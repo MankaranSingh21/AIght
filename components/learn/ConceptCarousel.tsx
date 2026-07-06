@@ -83,7 +83,7 @@ const cf = (delay: number, dur = 280): React.CSSProperties => ({
 
 function RagDiagram() {
   return (
-    <svg viewBox="0 0 800 220" width="100%" height="auto" aria-hidden style={{ display: 'block' }}>
+    <svg viewBox="0 0 800 220" width="100%" aria-hidden style={{ display: 'block', height: 'auto' }}>
       <defs>
         <marker id="arr-rag" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto">
           <path d="M 0 0 L 8 4 L 0 8 z" style={{ fill: 'var(--text-muted)' }} />
@@ -177,7 +177,7 @@ function RagDiagram() {
 
 function AgentsDiagram() {
   return (
-    <svg viewBox="0 0 800 220" width="100%" height="auto" aria-hidden style={{ display: 'block' }}>
+    <svg viewBox="0 0 800 220" width="100%" aria-hidden style={{ display: 'block', height: 'auto' }}>
       <defs>
         <marker id="arr-ag" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto">
           <path d="M 0 0 L 8 4 L 0 8 z" style={{ fill: 'var(--text-muted)' }} />
@@ -287,7 +287,7 @@ function EmbeddingsDiagram() {
   ];
 
   return (
-    <svg viewBox="0 0 800 220" width="100%" height="auto" aria-hidden style={{ display: 'block' }}>
+    <svg viewBox="0 0 800 220" width="100%" aria-hidden style={{ display: 'block', height: 'auto' }}>
       {/* Cluster halos */}
       <circle cx="120" cy="88"  r="45" fill="none"
         strokeDasharray="3 3"
@@ -346,7 +346,7 @@ function TransformersDiagram() {
   ];
 
   return (
-    <svg viewBox="0 0 800 220" width="100%" height="auto" aria-hidden style={{ display: 'block' }}>
+    <svg viewBox="0 0 800 220" width="100%" aria-hidden style={{ display: 'block', height: 'auto' }}>
       {/* Column headers */}
       {tokens.map((t, i) => (
         <text key={`col-${t}`} x={originX + i * cellSize + cellSize / 2} y={originY - 4} textAnchor="middle"
@@ -417,7 +417,7 @@ function TransformersDiagram() {
 
 function McpDiagram() {
   return (
-    <svg viewBox="0 0 800 220" width="100%" height="auto" aria-hidden style={{ display: 'block' }}>
+    <svg viewBox="0 0 800 220" width="100%" aria-hidden style={{ display: 'block', height: 'auto' }}>
       <defs>
         <marker id="arr-mcp" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="5" markerHeight="5" orient="auto">
           <circle cx="4" cy="4" r="2" style={{ fill: 'var(--accent-primary)' }} />
@@ -479,7 +479,7 @@ function McpDiagram() {
 
 function FineTuningDiagram() {
   return (
-    <svg viewBox="0 0 800 220" width="100%" height="auto" aria-hidden style={{ display: 'block' }}>
+    <svg viewBox="0 0 800 220" width="100%" aria-hidden style={{ display: 'block', height: 'auto' }}>
       <defs>
         <marker id="arr-ft" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto">
           <path d="M 0 0 L 8 4 L 0 8 z" style={{ fill: 'var(--text-muted)' }} />
