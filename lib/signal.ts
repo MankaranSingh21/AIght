@@ -168,7 +168,51 @@ type RssItem = {
   pubDate?: unknown;
   description?: unknown;
   "content:encoded"?: unknown;
+  category?: unknown;
 };
+
+// The Medium account also publishes personal essays (poetry, books, life).
+// Only items tagged or titled with AI/tech terms belong in Signal; everything
+// else is filtered out and the AI-themed fallbacks take over when nothing passes.
+const RELEVANT_TERMS = [
+  "ai",
+  "artificial-intelligence",
+  "artificial intelligence",
+  "machine-learning",
+  "machine learning",
+  "llm",
+  "gpt",
+  "claude",
+  "gemini",
+  "agents",
+  "agentic",
+  "prompt",
+  "rag",
+  "mcp",
+  "model",
+  "tooling",
+  "software",
+  "tech",
+  "technology",
+  "developer",
+  "programming",
+];
+
+const RELEVANT_TITLE_RE = new RegExp(
+  `\\b(${RELEVANT_TERMS.map((t) => t.replace(/[- ]/g, "[- ]")).join("|")})\\b`,
+  "i"
+);
+
+function isRelevant(item: RssItem): boolean {
+  const rawCats = item.category ?? [];
+  const cats = (Array.isArray(rawCats) ? rawCats : [rawCats]).map((c) =>
+    String(c).toLowerCase()
+  );
+  return (
+    cats.some((c) => RELEVANT_TERMS.includes(c)) ||
+    RELEVANT_TITLE_RE.test(String(item.title ?? ""))
+  );
+}
 
 export async function getSignalPosts(limit?: number): Promise<SignalPost[]> {
   try {
@@ -186,7 +230,7 @@ export async function getSignalPosts(limit?: number): Promise<SignalPost[]> {
     };
 
     const raw = parsed?.rss?.channel?.item ?? [];
-    const items: RssItem[] = Array.isArray(raw) ? raw : [raw];
+    const items: RssItem[] = (Array.isArray(raw) ? raw : [raw]).filter(isRelevant);
 
     const posts: SignalPost[] = items.map((item) => {
       const rawDescription =
