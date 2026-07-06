@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import { createPublicClient } from "@/utils/supabase/public";
 import ToolsClient from "@/components/ToolsClient";
 import Footer from "@/components/Footer";
@@ -120,9 +119,7 @@ export default async function ToolsArchivePage() {
         >
           <EdgeOrb top={100} right={-180} size={500} color="rgba(170,255,77,0.03)" />
           <div className="section-inner" style={{ paddingTop: 48 }}>
-            <Suspense fallback={null}>
-              <ToolsClient tools={tools} />
-            </Suspense>
+            <ToolsClient tools={tools} />
           </div>
         </section>
 

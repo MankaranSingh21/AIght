@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useMemo, useEffect, useRef } from "react";
-import { useSearchParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import ToolCard from "./ToolCard";
 import type { ToolCardProps } from "./ToolCard";
@@ -39,12 +38,10 @@ type Props = {
 };
 
 export default function ToolsClient({ tools, initialCategory = "all" }: Props) {
-  const searchParams    = useSearchParams();
-  const initialQ        = searchParams.get("q") ?? "";
   const searchRef       = useRef<HTMLInputElement>(null);
 
-  const [inputQuery, setInputQuery]         = useState(initialQ);
-  const [query, setQuery]                   = useState(initialQ);
+  const [inputQuery, setInputQuery]         = useState("");
+  const [query, setQuery]                   = useState("");
   const [activeCategory, setActiveCategory] = useState(initialCategory);
   const [difficulty, setDifficulty]         = useState("all");
   const [pricing, setPricing]               = useState("all");
@@ -52,9 +49,17 @@ export default function ToolsClient({ tools, initialCategory = "all" }: Props) {
   const [isOpenSource, setIsOpenSource]     = useState(false);
   const [sort, setSort]                     = useState<SortOrder>("recent");
 
+  // Read ?q= on the client instead of useSearchParams so the grid stays in
+  // the prerendered (ISR) HTML — the hook would suspend the whole component
+  // out of the static page.
   useEffect(() => {
-    if (initialQ && searchRef.current) searchRef.current.focus();
-  }, [initialQ]);
+    const q = new URLSearchParams(window.location.search).get("q");
+    if (q) {
+      setInputQuery(q);
+      setQuery(q);
+      searchRef.current?.focus();
+    }
+  }, []);
 
   useEffect(() => {
     const t = setTimeout(() => setQuery(inputQuery), 200);
@@ -108,6 +113,7 @@ export default function ToolsClient({ tools, initialCategory = "all" }: Props) {
         <input
           ref={searchRef}
           type="search"
+          aria-label="Search tools, tags, or categories"
           placeholder="Search tools, tags, or categories…"
           value={inputQuery}
           onChange={(e) => setInputQuery(e.target.value)}
