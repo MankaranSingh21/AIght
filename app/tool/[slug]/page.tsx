@@ -166,16 +166,15 @@ export default async function ToolPage({ params }: Props) {
       .map((a) => ({ slug: a.slug, name: nameMap.get(a.slug)!, reason: a.reason }));
   }
 
-  // Resolve concept slugs to titles. Combines two sources:
-  //   1. Forward edge: tools.related_concepts[] (set in DB)
-  //   2. Reverse edge: concepts whose frontmatter exemplar_tools includes this slug
-  // Dedupes on slug.
+  // Concepts this tool demonstrates, from concept frontmatter `exemplar_tools`.
+  //
+  // This previously unioned a "forward edge" off tools.related_concepts[]. That
+  // column does not exist in the database, so the forward set was always empty
+  // and only the reverse edge below ever contributed anything.
   const allConceptsForTool = getAllConcepts();
-  const forwardSlugs = tool.related_concepts ?? [];
-  const reverseSlugs = allConceptsForTool
+  const conceptSlugs = allConceptsForTool
     .filter((c) => (c.exemplar_tools ?? []).includes(tool.slug))
     .map((c) => c.slug);
-  const conceptSlugs = Array.from(new Set([...forwardSlugs, ...reverseSlugs]));
   const conceptLinks = conceptSlugs
     .map((s) => allConceptsForTool.find((c) => c.slug === s))
     .filter((c): c is NonNullable<typeof c> => Boolean(c))

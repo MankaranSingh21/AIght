@@ -5,7 +5,7 @@ import { compileMDX } from "next-mdx-remote/rsc";
 import { getAllConcepts, getConceptSource, DEFAULT_AUTHOR } from "@/lib/learn";
 import { hasLesson, LESSON_META } from "@/lib/lessons";
 import { getChecks } from "@/lib/checks";
-import { createServiceClient } from "@/utils/supabase/service";
+import { createPublicClient } from "@/utils/supabase/public";
 import RagSimulation from "@/components/learn/RagSimulation";
 import McpSimulation from "@/components/learn/McpSimulation";
 import EmbeddingsViz from "@/components/learn/EmbeddingsViz";
@@ -334,32 +334,39 @@ export default async function LearnConceptPage({ params }: Props) {
     options: { parseFrontmatter: true },
   });
 
-  // Fetch tools that list this concept in their related_concepts array
-  const supabase = createServiceClient();
-  const { data: relatedToolsData } = await supabase
-    .from("tools")
-    .select("slug, name, vibe_description, category")
-    .contains("related_concepts", [slug])
-    .order("created_at", { ascending: false })
-    .limit(4);
-  const relatedTools = relatedToolsData ?? [];
-
-  // Resolve exemplar tool slugs (from frontmatter) → { slug, name } pairs
-  // for the mini-map. Uses the service client we already have.
+  // Tools that show this concept in action.
+  //
+  // This used to query `.contains("related_concepts", [slug])`. That column does
+  // not exist in the database — PostgREST answers 42703, the error was swallowed
+  // by `?? []`, and so this section rendered empty on all 59 concept pages. The
+  // column only exists in schema.sql as an un-run migration, seeded there with
+  // display names ('RAG') against slugs that aren't in the table either, so
+  // running it would just create a second broken mapping.
+  //
+  // `exemplar_tools` in the MDX frontmatter is the real, curated relation, and
+  // it was already being read three lines below for the mini-map. One query now
+  // serves both, ordered to follow the frontmatter rather than created_at.
+  const supabase = createPublicClient();
   const exemplarToolSlugs = (conceptMeta?.exemplar_tools ?? []).slice(0, 4);
-  const exemplarTools: { slug: string; name: string }[] =
+  const relatedTools =
     exemplarToolSlugs.length > 0
       ? await (async () => {
           const { data } = await supabase
             .from("tools")
-            .select("slug, name")
+            .select("slug, name, vibe_description, category")
             .in("slug", exemplarToolSlugs);
-          const byKey = new Map((data ?? []).map((t: { slug: string; name: string }) => [t.slug, t.name]));
+          const bySlug = new Map((data ?? []).map((t) => [t.slug, t]));
+          // Preserve the curated order, and drop any slug that no longer exists.
           return exemplarToolSlugs
-            .filter((s) => byKey.has(s))
-            .map((s) => ({ slug: s, name: byKey.get(s)! }));
+            .map((s) => bySlug.get(s))
+            .filter((t): t is NonNullable<typeof t> => Boolean(t));
         })()
       : [];
+
+  const exemplarTools: { slug: string; name: string }[] = relatedTools.map((t) => ({
+    slug: t.slug,
+    name: t.name,
+  }));
 
   // Resolve key fields from frontmatter slugs to { slug, field } pairs.
   const keyFields =

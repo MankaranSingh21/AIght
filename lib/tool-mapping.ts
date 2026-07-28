@@ -4,14 +4,18 @@ import type { ToolCardProps } from "@/components/ToolCard";
 export function mapToolToCardProps(t: Partial<Tool>): ToolCardProps {
   const category = t.category ?? "AI Tool";
   const tags = t.tags ?? [];
-  const relatedConcepts = t.related_concepts ?? [];
-  
+
   // 1. Difficulty derivation
+  //
+  // There used to be a second trigger here keyed on `t.related_concepts`. It was
+  // dead twice over: that column does not exist in the database (so the value was
+  // always undefined), and the trigger list held display names ("Agents", "MCP")
+  // which would never have matched the slug form stored anywhere else. Category
+  // already carries the signal, so the branch is gone rather than resurrected.
   let difficulty: "Beginner" | "Intermediate" | "Advanced" = "Beginner";
   const advancedTriggers = ["DEV TOOLS", "AUTOMATION"];
-  const advancedConceptTriggers = ["Agents", "MCP", "Embeddings", "Fine-tuning"];
-  
-  if (advancedTriggers.includes(category.toUpperCase()) || relatedConcepts.some(c => advancedConceptTriggers.includes(c))) {
+
+  if (advancedTriggers.includes(category.toUpperCase())) {
     difficulty = "Advanced";
   } else if (category.toUpperCase() === "RESEARCH" || tags.some(tag => ["advanced", "research", "complex"].includes(tag.toLowerCase()))) {
     difficulty = "Intermediate";

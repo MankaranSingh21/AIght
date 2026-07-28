@@ -26,7 +26,13 @@ export type Tool = {
   accent: string | null;
   video_url: string | null;
   learning_guide: string | null;
-  related_concepts: string[];
+  // NOTE: `related_concepts` is deliberately absent. The column does not exist in
+  // the database — PostgREST answers 42703 for it. Declaring it here is what let
+  // three separate code paths query a phantom column with full type safety, each
+  // swallowing the resulting error. The curated concept↔tool relation lives in
+  // MDX frontmatter as `exemplar_tools` (see lib/learn.ts). Do not re-add this,
+  // and do not run the schema.sql migration for it: that seeds display names
+  // ('RAG') against slugs that are not in the table either.
   created_at: string;
   is_sponsored: boolean | null;
   weaknesses: string[];
