@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "scrape": "tsx --env-file=.env.local scripts/scrape.ts",
-    "seed:manual": "tsx --env-file=.env.local scripts/seed-manual.ts"
+    "seed:manual": "tsx --env-file=.env.local scripts/seed-manual.ts",
+    "verify:universe": "tsx --env-file=.env.local scripts/verify-universe.ts"
   },
   "dependencies": {
     "@react-pdf/renderer": "^4.5.1",

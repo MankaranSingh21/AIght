@@ -2,15 +2,17 @@
 
 import { useEffect, useState } from "react";
 import { loadQuizResult, type StoredQuizResult, QUIZ_CHANGED_EVENT } from "@/lib/quiz-storage";
-import type { UniverseGraph, UniverseNode } from "@/lib/universe-graph";
+import type { PositionedGraph, PositionedNode } from "@/lib/universe-layout";
+import type { UniverseIndex } from "@/lib/universe-adjacency";
 
 interface UniverseTrajectoryProps {
-  graph: UniverseGraph;
+  graph: PositionedGraph;
+  index: UniverseIndex;
 }
 
 // Reads a stored quiz result from localStorage and overlays a glowing path
-// inside the parent UniverseMap SVG. Rendered as an inline <g>.
-export default function UniverseTrajectory({ graph }: UniverseTrajectoryProps) {
+// inside the parent UniverseSVG. Rendered as an inline <g>.
+export default function UniverseTrajectory({ graph, index }: UniverseTrajectoryProps) {
   const [stored, setStored] = useState<StoredQuizResult | null>(null);
   const [reduceMotion, setReduceMotion] = useState(false);
 
@@ -35,53 +37,35 @@ export default function UniverseTrajectory({ graph }: UniverseTrajectoryProps) {
 
   if (!stored) return null;
 
-  const fieldNode = graph.nodes.find((n) => n.id === `field:${stored.fieldSlug}`);
+  const fieldNode = index.nodeById.get(`field:${stored.fieldSlug}`);
   if (!fieldNode) return null;
 
-  // Pick concept + tool nodes connected to the user's field. If the stored
-  // recommendation arrays are empty (current default), fall back to whatever
-  // is adjacent in the graph.
-  const fieldNeighbors = graph.edges.filter((e) => e.from === fieldNode.id || e.to === fieldNode.id);
-  const conceptIds = new Set(
-    fieldNeighbors
-      .map((e) => (e.from === fieldNode.id ? e.to : e.from))
-      .filter((id) => id.startsWith("concept:"))
-  );
-  const toolIds = new Set(
-    fieldNeighbors
-      .map((e) => (e.from === fieldNode.id ? e.to : e.from))
-      .filter((id) => id.startsWith("tool:"))
-  );
+  // The quiz now writes these from the curated field roadmap + tool map, so the
+  // old "fall back to raw graph adjacency" branch is gone. An empty array here
+  // means a pre-fix result is still in localStorage; showing nothing is correct.
+  const targetConcepts: PositionedNode[] = stored.recommendedConceptSlugs
+    .map((slug) => index.nodeById.get(`concept:${slug}`))
+    .filter((n): n is PositionedNode => Boolean(n))
+    .slice(0, 3);
 
-  const targetConcepts: UniverseNode[] = stored.recommendedConceptSlugs.length > 0
-    ? stored.recommendedConceptSlugs
-        .map((s) => graph.nodes.find((n) => n.id === `concept:${s}`))
-        .filter((n): n is UniverseNode => Boolean(n))
-        .slice(0, 3)
-    : Array.from(conceptIds)
-        .map((id) => graph.nodes.find((n) => n.id === id))
-        .filter((n): n is UniverseNode => Boolean(n))
-        .slice(0, 3);
+  const targetTools: PositionedNode[] = stored.recommendedToolSlugs
+    .map((slug) => index.nodeById.get(`tool:${slug}`))
+    .filter((n): n is PositionedNode => Boolean(n))
+    .slice(0, 5);
 
-  const targetTools: UniverseNode[] = stored.recommendedToolSlugs.length > 0
-    ? stored.recommendedToolSlugs
-        .map((s) => graph.nodes.find((n) => n.id === `tool:${s}`))
-        .filter((n): n is UniverseNode => Boolean(n))
-        .slice(0, 5)
-    : Array.from(toolIds)
-        .map((id) => graph.nodes.find((n) => n.id === id))
-        .filter((n): n is UniverseNode => Boolean(n))
-        .slice(0, 5);
-
-  function lineFromTo(a: UniverseNode, b: UniverseNode): string {
-    const dx = b.x - a.x;
-    const dy = b.y - a.y;
-    const cx = a.x + dx * 0.5;
-    const cy = a.y + dy * 0.45;
-    return `M ${a.x} ${a.y} Q ${cx} ${cy}, ${b.x} ${b.y}`;
+  // Bow the path away from the centre. On concentric rings a straight line from
+  // a field to a ring-0 concept would pass straight through the densest area.
+  function lineFromTo(a: PositionedNode, b: PositionedNode): string {
+    const mx = (a.x + b.x) / 2;
+    const my = (a.y + b.y) / 2;
+    const vx = mx - graph.centre.x;
+    const vy = my - graph.centre.y;
+    const len = Math.hypot(vx, vy) || 1;
+    const bow = Math.min(Math.hypot(b.x - a.x, b.y - a.y) * 0.16, 160);
+    return `M ${a.x} ${a.y} Q ${mx + (vx / len) * bow} ${my + (vy / len) * bow}, ${b.x} ${b.y}`;
   }
 
-  const allTargets: UniverseNode[] = [...targetConcepts, ...targetTools];
+  const allTargets: PositionedNode[] = [...targetConcepts, ...targetTools];
 
   return (
     <g aria-label="Your trajectory through the universe, based on your quiz answers">

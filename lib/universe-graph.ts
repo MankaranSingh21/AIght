@@ -1,9 +1,19 @@
-// Pure builder for the /learn/map universe graph. No React, no DOM — produces
-// a deterministic { nodes, edges } structure that UniverseMap renders.
+// Pure topology for the /learn/map universe. No React, no DOM, no coordinates.
+//
+// Layout lives in lib/universe-layout.ts. Keeping the two apart means the graph
+// can be reasoned about (and its edges counted) without dragging in trigonometry,
+// and a future breakpoint-specific layout is one call site rather than a rewrite.
+//
+// Every edge here comes from hand-curated content. Nothing is inferred from prose.
+// The previous version guessed field→concept edges with a keyword ladder that
+// ended in `return "rag"` as a catch-all, so unmatched fields silently wired to
+// RAG and only ~9 of 59 concepts were reachable. All four curated sources below
+// already existed in the repo; none of them were being used by this graph.
 
 import fields from "@/content/paths/fields.json";
+import fieldConceptPaths from "@/content/paths/field-concept-paths.json";
 import { getAllConcepts } from "@/lib/learn";
-import { createServiceClient } from "@/utils/supabase/service";
+import { createPublicClient } from "@/utils/supabase/public";
 import { FIELD_TOOL_MAP } from "@/lib/field-tool-map";
 
 // ── Types ────────────────────────────────────────────────────────────────
@@ -11,202 +21,242 @@ import { FIELD_TOOL_MAP } from "@/lib/field-tool-map";
 export type UniverseNodeKind = "field" | "concept" | "tool";
 
 export interface UniverseNode {
-  id: string;          // unique across all kinds (prefixed by kind)
+  id: string; // unique across kinds, prefixed by kind
   kind: UniverseNodeKind;
   slug: string;
   title: string;
   href: string;
-  // Positioning, in viewBox coords. UniverseMap reads these directly.
-  x: number;
-  y: number;
-  r: number;           // visual radius
-  category?: string;   // tool category, for cluster + color hints
-  difficulty?: string; // field difficulty (Easy/Medium/Hard) for tint
+  /** Concept group (drives ring radius) — concepts only. */
+  group?: string;
+  /** Tool category (drives the outer-ring arc) — tools only. */
+  category?: string;
+  /** Field difficulty (Easy/Medium/Hard), for tint — fields only. */
+  difficulty?: string;
+  tagline?: string;
 }
+
+export type UniverseEdgeSource =
+  | "field-concept-path"    // curated per-field roadmap
+  | "field-concept-context" // concept frontmatter key_fields
+  | "concept-concept"       // prerequisites / successors / related
+  | "concept-tool"          // concept frontmatter exemplar_tools
+  | "field-tool";           // FIELD_TOOL_MAP
 
 export interface UniverseEdge {
   from: string;
   to: string;
-  // Edge weight: 1 = strong, 0.5 = soft. Drives stroke opacity.
+  /** Drives stroke opacity. 1 = strongest. */
   strength: number;
-  // Source for the edge — used for debugging + filtering.
-  source: "field-concept" | "concept-concept" | "field-tool";
+  source: UniverseEdgeSource;
+  /**
+   * "primary" edges render at rest; "context" edges are hidden until hover or
+   * a filter reveals them. Without this split the resting graph is ~626 paths
+   * of spaghetti.
+   */
+  tier: "primary" | "context";
+  /** Which half of the field roadmap this concept sits in. */
+  track?: "intuitions" | "deeper";
+  /** Reading order within that track, so the trajectory overlay can sequence. */
+  order?: number;
 }
 
-export interface UniverseGraph {
+/** An edge that referenced something that does not exist. Surfaced in dev. */
+export interface DroppedEdge {
+  from: string;
+  to: string;
+  reason: string;
+}
+
+export interface UniverseTopology {
   nodes: UniverseNode[];
   edges: UniverseEdge[];
-  viewBox: { width: number; height: number };
+  dropped: DroppedEdge[];
+  stats: { fields: number; concepts: number; tools: number; edges: number };
 }
 
-// ── Layout constants ─────────────────────────────────────────────────────
-// Vertical, scrollable canvas. Three bands stacked top-to-bottom: fields
-// (top), concepts (middle), tools (bottom). Soft sinusoidal jitter per band
-// makes it feel hand-positioned, not gridded.
-
-const VW = 1600;
-const VH = 3200;
-
-const FIELD_BAND   = { yCenter:  420, jitter: 110 };
-const CONCEPT_BAND = { yCenter: 1500, jitter:  90 };
-const TOOL_BAND    = { yCenter: 2520, jitter: 200 };
-
-const FIELD_PAD   = 90;
-const CONCEPT_PAD = 200;
-
-// ── Helpers ──────────────────────────────────────────────────────────────
-
-// Same concept-name → slug resolver used in field guide pages. Kept in sync
-// manually until we collapse them into one helper.
-function conceptToSlug(text: string): string {
-  const t = text.toLowerCase();
-  if (t.includes("retrieval") || t.includes("rag")) return "rag";
-  if (t.includes("mcp") || t.includes("model context protocol")) return "mcp";
-  if (t.includes("agent") || t.includes("autonomous") || t.includes("agentic") || t.includes("closed-loop")) return "agents";
-  if (t.includes("embedding") || t.includes("vector")) return "embeddings";
-  if (t.includes("transformer") || t.includes("attention") || t.includes("multimodal")) return "transformers";
-  if (t.includes("fine-tun") || t.includes("fine tuning")) return "fine-tuning";
-  if (t.includes("generative") || t.includes("generation")) return "fine-tuning";
-  if (t.includes("neural") || t.includes("deep learning") || t.includes("graph neural")) return "transformers";
-  if (t.includes("predict") || t.includes("classification")) return "embeddings";
-  return "rag";
-}
+type FieldPath = { intuitions?: string[]; deeper?: string[] };
 
 // ── Builder ──────────────────────────────────────────────────────────────
 
-export async function buildUniverseGraph(): Promise<UniverseGraph> {
+export async function buildUniverseTopology(): Promise<UniverseTopology> {
   const concepts = getAllConcepts();
-  const supabase = createServiceClient();
+
+  // Public/anon client, not the service role. This page reads three public
+  // columns that the `tools_public_read` RLS policy already exposes — there is
+  // no reason to hand it a key that bypasses RLS.
+  const supabase = createPublicClient();
   const { data: toolsData } = await supabase
     .from("tools")
     .select("slug, name, category")
     .order("created_at", { ascending: true });
 
-  const tools = (toolsData ?? []) as { slug: string; name: string; category: string | null }[];
+  const tools = (toolsData ?? []) as {
+    slug: string;
+    name: string;
+    category: string | null;
+  }[];
 
   const nodes: UniverseNode[] = [];
   const edges: UniverseEdge[] = [];
+  const dropped: DroppedEdge[] = [];
 
-  // 1. Field nodes — spread across the top band in an arc with sin jitter.
-  fields.forEach((field, i) => {
-    const t = fields.length > 1 ? i / (fields.length - 1) : 0.5;
-    const x = FIELD_PAD + t * (VW - FIELD_PAD * 2);
-    const y = FIELD_BAND.yCenter + Math.sin(i * 0.85) * FIELD_BAND.jitter;
+  // ── Nodes ──
+
+  for (const field of fields) {
     nodes.push({
       id: `field:${field.slug}`,
       kind: "field",
       slug: field.slug,
       title: field.field,
       href: `/learn/paths/${field.slug}`,
-      x,
-      y,
-      r: 14,
       difficulty: (field as { difficulty?: string }).difficulty,
+      tagline: (field as { tagline?: string }).tagline,
     });
-  });
+  }
 
-  // 2. Concept nodes — middle band, also arc-spread.
-  concepts.forEach((concept, i) => {
-    const t = concepts.length > 1 ? i / (concepts.length - 1) : 0.5;
-    const x = CONCEPT_PAD + t * (VW - CONCEPT_PAD * 2);
-    const y = CONCEPT_BAND.yCenter + Math.sin(i * 1.1 + 0.6) * CONCEPT_BAND.jitter;
+  for (const concept of concepts) {
     nodes.push({
       id: `concept:${concept.slug}`,
       kind: "concept",
       slug: concept.slug,
       title: concept.title,
       href: `/learn/${concept.slug}`,
-      x,
-      y,
-      r: 11,
+      group: concept.group,
+      tagline: concept.tagline,
     });
-  });
+  }
 
-  // 3. Tool nodes — bottom band, clustered by category. Each category gets a
-  // horizontal cell; tools fan out inside the cell in a small grid.
-  const categories = Array.from(new Set(tools.map((t) => t.category ?? "OTHER"))).sort();
-  const cellW = (VW - 200) / Math.max(1, categories.length);
-  const TOOLS_PER_ROW = 6;
-
-  categories.forEach((cat, catIdx) => {
-    const inCat = tools.filter((t) => (t.category ?? "OTHER") === cat);
-    const cellX = 100 + catIdx * cellW + cellW / 2;
-    inCat.forEach((tool, j) => {
-      const row = Math.floor(j / TOOLS_PER_ROW);
-      const col = j % TOOLS_PER_ROW;
-      const offset = (col - (TOOLS_PER_ROW - 1) / 2) * 22;
-      const x = cellX + offset;
-      const y = TOOL_BAND.yCenter + row * 36 + Math.sin(j * 0.7 + catIdx) * 10;
-      nodes.push({
-        id: `tool:${tool.slug}`,
-        kind: "tool",
-        slug: tool.slug,
-        title: tool.name,
-        href: `/tool/${tool.slug}`,
-        x,
-        y,
-        r: 7,
-        category: tool.category ?? "OTHER",
-      });
+  for (const tool of tools) {
+    nodes.push({
+      id: `tool:${tool.slug}`,
+      kind: "tool",
+      slug: tool.slug,
+      title: tool.name,
+      href: `/tool/${tool.slug}`,
+      category: tool.category ?? "OTHER",
     });
-  });
+  }
 
-  // ── Edges ──
-
-  // field ↔ concept (via field.concepts[] resolved by conceptToSlug)
+  const fieldIds = new Set(fields.map((f) => `field:${f.slug}`));
   const conceptIds = new Set(concepts.map((c) => `concept:${c.slug}`));
-  fields.forEach((field) => {
-    const seen = new Set<string>();
-    (field.concepts ?? []).forEach((conceptText) => {
-      const slug = conceptToSlug(conceptText);
-      const target = `concept:${slug}`;
-      if (!conceptIds.has(target) || seen.has(target)) return;
-      seen.add(target);
-      edges.push({
-        from: `field:${field.slug}`,
-        to: target,
-        strength: 0.8,
-        source: "field-concept",
-      });
-    });
-  });
-
-  // concept ↔ concept (MDX frontmatter `related[]`)
-  concepts.forEach((concept) => {
-    (concept.related ?? []).forEach((relatedSlug) => {
-      const target = `concept:${relatedSlug}`;
-      if (!conceptIds.has(target)) return;
-      // de-dupe symmetric edges
-      const a = `concept:${concept.slug}`;
-      if (a >= target) return;
-      edges.push({ from: a, to: target, strength: 0.6, source: "concept-concept" });
-    });
-  });
-
-  // field ↔ tool (FIELD_TOOL_MAP — manual curation)
   const toolIds = new Set(tools.map((t) => `tool:${t.slug}`));
-  fields.forEach((field) => {
-    const toolSlugs = FIELD_TOOL_MAP[field.slug] ?? [];
-    toolSlugs.forEach((toolSlug) => {
-      const target = `tool:${toolSlug}`;
-      if (!toolIds.has(target)) return;
-      edges.push({
-        from: `field:${field.slug}`,
-        to: target,
-        strength: 0.5,
-        source: "field-tool",
+
+  // Dedupe key so a pair curated in two sources keeps only its strongest edge.
+  const seen = new Set<string>();
+  const key = (a: string, b: string) => (a < b ? `${a}|${b}` : `${b}|${a}`);
+
+  function push(edge: UniverseEdge): void {
+    const k = key(edge.from, edge.to);
+    if (seen.has(k)) return;
+    seen.add(k);
+    edges.push(edge);
+  }
+
+  // ── 1. field → concept (primary): the curated per-field roadmap ──
+  // Same source FieldRoadmap.tsx already renders, so the map and the field
+  // guide can no longer disagree about what a field should read.
+  const paths = fieldConceptPaths as Record<string, FieldPath | string>;
+  for (const [fieldSlug, value] of Object.entries(paths)) {
+    if (fieldSlug === "_meta" || typeof value === "string") continue;
+    const from = `field:${fieldSlug}`;
+    if (!fieldIds.has(from)) {
+      dropped.push({ from, to: "—", reason: "unknown field in field-concept-paths.json" });
+      continue;
+    }
+    for (const track of ["intuitions", "deeper"] as const) {
+      (value[track] ?? []).forEach((conceptSlug, i) => {
+        const to = `concept:${conceptSlug}`;
+        if (!conceptIds.has(to)) {
+          dropped.push({ from, to, reason: `unknown concept slug in ${track}` });
+          return;
+        }
+        push({
+          from,
+          to,
+          strength: 1,
+          source: "field-concept-path",
+          tier: "primary",
+          track,
+          order: i,
+        });
       });
-    });
-  });
+    }
+  }
+
+  // ── 2. field → concept (context): concept frontmatter `key_fields` ──
+  for (const concept of concepts) {
+    const to = `concept:${concept.slug}`;
+    for (const fieldSlug of concept.key_fields ?? []) {
+      const from = `field:${fieldSlug}`;
+      if (!fieldIds.has(from)) {
+        dropped.push({ from, to, reason: `unknown field in ${concept.slug} key_fields` });
+        continue;
+      }
+      push({ from, to, strength: 0.5, source: "field-concept-context", tier: "context" });
+    }
+  }
+
+  // ── 3. concept ↔ concept: prerequisites ∪ successors ∪ related ──
+  // The three are not inverses of each other in the content (38 `successors`
+  // entries are not mirrored as `prerequisites` on the target), so the union is
+  // genuinely additive rather than redundant.
+  for (const concept of concepts) {
+    const from = `concept:${concept.slug}`;
+    const linked: [string[], number][] = [
+      [concept.prerequisites ?? [], 0.8],
+      [concept.successors ?? [], 0.8],
+      [concept.related ?? [], 0.5],
+    ];
+    for (const [slugs, strength] of linked) {
+      for (const slug of slugs) {
+        const to = `concept:${slug}`;
+        if (!conceptIds.has(to)) {
+          dropped.push({ from, to, reason: "unknown related concept slug" });
+          continue;
+        }
+        if (to === from) continue;
+        push({ from, to, strength, source: "concept-concept", tier: "primary" });
+      }
+    }
+  }
+
+  // ── 4. concept → tool: frontmatter `exemplar_tools` ──
+  // The only honest concept↔tool relation in the repo. The `tools.related_concepts`
+  // column that three other code paths query DOES NOT EXIST in the database.
+  for (const concept of concepts) {
+    const from = `concept:${concept.slug}`;
+    for (const toolSlug of concept.exemplar_tools ?? []) {
+      const to = `tool:${toolSlug}`;
+      if (!toolIds.has(to)) {
+        dropped.push({ from, to, reason: `unknown tool in ${concept.slug} exemplar_tools` });
+        continue;
+      }
+      push({ from, to, strength: 0.7, source: "concept-tool", tier: "context" });
+    }
+  }
+
+  // ── 5. field → tool: FIELD_TOOL_MAP ──
+  for (const field of fields) {
+    const from = `field:${field.slug}`;
+    for (const toolSlug of FIELD_TOOL_MAP[field.slug] ?? []) {
+      const to = `tool:${toolSlug}`;
+      if (!toolIds.has(to)) {
+        dropped.push({ from, to, reason: "unknown tool in FIELD_TOOL_MAP" });
+        continue;
+      }
+      push({ from, to, strength: 0.5, source: "field-tool", tier: "context" });
+    }
+  }
 
   return {
     nodes,
     edges,
-    viewBox: { width: VW, height: VH },
+    dropped,
+    stats: {
+      fields: fields.length,
+      concepts: concepts.length,
+      tools: tools.length,
+      edges: edges.length,
+    },
   };
-}
-
-// Convenience: find a node by id with O(n) — fine for ~150 nodes.
-export function findNode(graph: UniverseGraph, id: string): UniverseNode | undefined {
-  return graph.nodes.find((n) => n.id === id);
 }

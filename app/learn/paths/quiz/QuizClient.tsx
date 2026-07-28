@@ -9,8 +9,10 @@ import HowYouWorkBlock from '@/components/quiz/HowYouWorkBlock';
 import NewsletterForm from '@/components/NewsletterForm';
 import dynamic from 'next/dynamic';
 const DownloadReportButton = dynamic(() => import('@/components/quiz/DownloadReportButton'), { ssr: false });
-import { usePostHog } from 'posthog-js/react';
+import { track } from '@/lib/analytics';
 import fieldsData from '@/content/paths/fields.json';
+import fieldConceptPaths from '@/content/paths/field-concept-paths.json';
+import { FIELD_TOOL_MAP } from '@/lib/field-tool-map';
 import {
   COG_QUESTIONS,
   computeCognitiveProfile,
@@ -1940,7 +1942,6 @@ function QuizPageInner({ preFieldSlug, humanEssays }: QuizPageInnerProps) {
   const [result, setResult]           = useState<ScoreResult | null>(null);
   const [hasStoredResult, setHasStoredResult] = useState(false);
   const quizContainerRef              = useRef<HTMLDivElement>(null);
-  const posthog                        = usePostHog();
 
   // On mount, detect a prior stored result so the intro screen can offer
   // "Resume your last result" (only when on the intro screen).
@@ -2028,15 +2029,21 @@ function QuizPageInner({ preFieldSlug, humanEssays }: QuizPageInnerProps) {
           score: r.score,
           category: r.category,
           cognitiveProfile,
-          recommendedConceptSlugs: [],   // populated by QuizToolRecs server route on render
-          recommendedToolSlugs: [],      // populated by QuizToolRecs server route on render
+          // Curated, static, client-safe. Previously left empty with a comment
+          // claiming a server route filled them in — no such route ever existed,
+          // so UniverseTrajectory always fell back to raw graph adjacency.
+          recommendedConceptSlugs: (
+            (fieldConceptPaths as Record<string, { intuitions?: string[] } | undefined>)[field.slug]
+              ?.intuitions ?? []
+          ).slice(0, 3),
+          recommendedToolSlugs: (FIELD_TOOL_MAP[field.slug] ?? []).slice(0, 5),
           recommendedHumanEssaySlugs,
         };
         saveQuizResult(stored);
         setHasStoredResult(true);
         recordQuizComplete();
 
-        posthog?.capture('quiz_completed', {
+        track('quiz_completed', {
           field_slug: field.slug,
           field_name: field.field,
           risk_score: r.score,
