@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const uc = getUseCase(task);
   if (!uc) return { title: "Not Found" };
   return {
-    title: `${uc.label} | AIght`,
+    title: uc.label,
     description: uc.description,
   };
 }

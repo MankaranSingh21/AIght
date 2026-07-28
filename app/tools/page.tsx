@@ -12,7 +12,7 @@ import type { Tool } from "@/utils/supabase/types";
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "AI Tools Archive | AIght",
+  title: "AI Tools Archive",
   description: "Browse the full archive of AI tools curated for builders, founders, and creators.",
 };
 

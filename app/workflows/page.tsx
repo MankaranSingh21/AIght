@@ -5,7 +5,7 @@ import { buildCollectionLd } from "@/utils/jsonld";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "Workflows — AIght",
+  title: "Workflows",
   description: "Step-by-step guides showing how AI tools combine into real pipelines. Six real workflows, authored and tested.",
 };
 

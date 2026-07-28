@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const cat = getCategoryData(category);
   if (!cat) return { title: "Not Found" };
   return {
-    title: `${cat.headline} | AIght`,
+    title: cat.headline,
     description: cat.overview,
   };
 }

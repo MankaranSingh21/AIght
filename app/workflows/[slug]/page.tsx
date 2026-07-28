@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   });
 
   return {
-    title: `${frontmatter.title} — AIght`,
+    title: frontmatter.title,
     description: frontmatter.tagline,
   };
 }

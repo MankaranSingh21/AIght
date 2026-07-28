@@ -5,7 +5,7 @@ import Footer from "@/components/Footer";
 import UseCaseList from "@/components/UseCaseList";
 
 export const metadata: Metadata = {
-  title: "Use Cases — AIght",
+  title: "Use Cases",
   description: "Browse AI tools by what you're actually trying to do. Twelve real jobs, curated tool recommendations for each.",
 };
 
