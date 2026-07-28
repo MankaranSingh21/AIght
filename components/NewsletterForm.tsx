@@ -2,7 +2,7 @@
 
 import { useState, useTransition, useId } from "react";
 import { subscribeNewsletter } from "@/app/actions/newsletter";
-import { usePostHog } from "posthog-js/react";
+import { track } from "@/lib/analytics";
 
 interface NewsletterFormProps {
   // 'block' is the homepage hero variant (default).
@@ -18,7 +18,6 @@ export default function NewsletterForm({ variant = "block", pitch, source }: New
   const [done, setDone]             = useState(false);
   const [error, setError]           = useState("");
   const [isPending, startTransition] = useTransition();
-  const posthog                      = usePostHog();
   const inputId                      = useId();
 
   function handleSubmit(e: React.FormEvent) {
@@ -31,7 +30,7 @@ export default function NewsletterForm({ variant = "block", pitch, source }: New
       } else {
         setDone(true);
         setEmail("");
-        posthog?.capture("newsletter_subscribe", source ? { source } : undefined);
+        track("newsletter_subscribe", { source });
       }
     });
   }

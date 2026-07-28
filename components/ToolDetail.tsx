@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { usePostHog } from "posthog-js/react";
+import { track } from "@/lib/analytics";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import ToolHumanNote, { type ToolHumanNoteData } from "@/components/ToolHumanNote";
@@ -240,7 +240,6 @@ function getYouTubeEmbedUrl(url: string): string {
 // ── Main Component ─────────────────────────────────────────────────────────────
 
 export default function ToolDetail({ tool }: { tool: ToolDetailData }) {
-  const posthog = usePostHog();
   const [, setHovered] = useState(false);
 
   const scores = [
@@ -370,7 +369,7 @@ export default function ToolDetail({ tool }: { tool: ToolDetailData }) {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn-primary w-full text-center py-4 mt-4"
-                  onClick={() => posthog?.capture("tool_visit_detail", { slug: tool.slug })}
+                  onClick={() => track("tool_visit_detail", { slug: tool.slug })}
                   onMouseEnter={() => setHovered(true)}
                   onMouseLeave={() => setHovered(false)}
                 >

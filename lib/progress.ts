@@ -2,7 +2,7 @@
 // Same pattern as lib/quiz-storage.ts and bookmarks — no account, no DB
 // writes, versioned shape, fail-silent, CustomEvent for cross-component sync.
 
-import posthog from "posthog-js";
+import { track } from "@/lib/analytics";
 
 export const PROGRESS_STORAGE_KEY = "aight_progress";
 export const PROGRESS_CHANGED_EVENT = "aight_progress_changed";
@@ -136,14 +136,6 @@ function localDay(d = new Date()): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
-function capture(event: string, props?: Record<string, unknown>): void {
-  try {
-    posthog?.capture?.(event, props);
-  } catch {
-    // analytics must never break progress
-  }
-}
-
 /**
  * Advance the streak for today and award the daily bonus on the first
  * action of the day. Returns the (possibly) mutated state.
@@ -156,7 +148,7 @@ function touchStreak(state: ProgressState): ProgressState {
   const continued = state.streak.lastDay === yesterday;
   const current = continued ? state.streak.current + 1 : 1;
 
-  if (continued) capture("streak_extended", { length: current });
+  if (continued) track("streak_extended", { length: current });
 
   return {
     ...state,
@@ -184,7 +176,7 @@ function awardBadges(state: ProgressState): ProgressState {
   if (tracksDone >= 1 && !has("through-line")) earned.push("through-line");
 
   if (earned.length === 0) return state;
-  for (const id of earned) capture("badge_earned", { badge: id });
+  for (const id of earned) track("badge_earned", { badge: id });
   return { ...state, badges: [...state.badges, ...earned] };
 }
 
@@ -214,7 +206,7 @@ export function completeLesson(slug: string, checksRight: number): ProgressState
   return mutate((s) => {
     const existing = s.lessons[slug] ?? { step: 0, checksRight: 0 };
     if (existing.completedAt) return s; // already done — no double XP
-    capture("lesson_completed", { slug, checksRight });
+    track("lesson_completed", { slug, checksRight });
     return {
       ...s,
       xp: s.xp + XP.lessonComplete,
@@ -229,7 +221,7 @@ export function completeLesson(slug: string, checksRight: number): ProgressState
 export function recordConceptRead(slug: string): ProgressState {
   return mutate((s) => {
     if (s.conceptsRead[slug]) return s;
-    capture("concept_read", { slug });
+    track("concept_read", { slug });
     return {
       ...s,
       xp: s.xp + XP.conceptRead,
@@ -251,7 +243,7 @@ export function recordConceptCheck(slug: string): ProgressState {
   return mutate((s) => {
     const checks = s.conceptChecks ?? {};
     if (checks[slug]) return s;
-    capture("concept_check_passed", { slug });
+    track("concept_check_passed", { slug });
     return {
       ...s,
       xp: s.xp + XP.conceptCheck,
@@ -270,7 +262,7 @@ export function completeTrack(slug: string): ProgressState {
   return mutate((s) => {
     const tracks = s.tracks ?? {};
     if (tracks[slug]) return s;
-    capture("track_completed", { slug });
+    track("track_completed", { slug });
     return {
       ...s,
       xp: s.xp + XP.trackComplete,
@@ -290,7 +282,7 @@ export function gradeReview(slug: string, remembered: boolean): ProgressState {
     const prevBox = reviews[slug]?.box ?? 0;
     const box = remembered ? Math.min(prevBox + 1, REVIEW_INTERVALS_DAYS.length - 1) : 0;
     const due = new Date(Date.now() + REVIEW_INTERVALS_DAYS[box] * 86_400_000).toISOString();
-    capture("review_graded", { slug, remembered, box });
+    track("review_graded", { slug, remembered, box });
     return {
       ...s,
       xp: s.xp + (remembered ? XP.review : 0),
