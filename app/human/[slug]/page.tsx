@@ -11,6 +11,13 @@ import type { JSX } from "react";
 
 type Props = { params: Promise<{ slug: string }> };
 
+// Every valid slug is enumerated by generateStaticParams below, so anything
+// else is genuinely not found. Without this, Next streams the shell with a 200
+// (this segment sits under a loading.tsx Suspense boundary) and the notFound()
+// thrown later cannot change the status — every typo'd slug returned HTTP 200
+// with a "Not Found" body, which Google will happily index.
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
   return getAllHumanEssays().map((e) => ({ slug: e.slug }));
 }

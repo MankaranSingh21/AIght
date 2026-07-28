@@ -11,6 +11,12 @@ const NAV_LINKS = [
   { href: "/learn",         label: "Learn"                   },
   { href: "/learn/paths",   label: "Fields"                  },
   { href: "/learn/map",     label: "Universe"                },
+  // Both of these were reachable only from the mobile menu — the desktop nav is
+  // deliberately capped at 7 slots, so desktop users had no route to them at
+  // all. Deliberately NOT added to sitemap.ts: like /bookmarks, they render
+  // entirely from localStorage and have no server-side content worth indexing.
+  { href: "/you",           label: "Your Progress"           },
+  { href: "/review",        label: "Review"                  },
   { href: "/workflows",     label: "Workflows"               },
   { href: "/use-cases",     label: "Use Cases"               },
   { href: "/signal",        label: "Signal Archive"          },

@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { usePostHog } from "posthog-js/react";
+import { track } from "@/lib/analytics";
 import { MagicCard } from "@/components/ui/magic-card";
 import { BorderBeam } from "@/components/ui/border-beam";
 import { clsx, type ClassValue } from "clsx";
@@ -64,7 +64,7 @@ function toggleBookmark(slug: string): boolean {
   return idx === -1;
 }
 
-/** Derive a bare domain (clay.com) from a tool's homepage URL, for Clearbit logos. */
+/** Derive a bare domain (clay.com) from a tool's homepage URL, for the favicon lookup. */
 function logoDomain(url?: string | null): string | null {
   if (!url) return null;
   try {
@@ -75,9 +75,15 @@ function logoDomain(url?: string | null): string | null {
 }
 
 /**
- * Small tool logo for the card header. Sourced from Clearbit (already an allowed
- * image domain in next.config.mjs). Clearbit 404s for unknown domains, so on error
- * we hide entirely and the card falls back to its text-only header.
+ * Small tool logo for the card header.
+ *
+ * Was Clearbit; that API is dead — logo.clearbit.com no longer resolves at all
+ * (connection failure, not a 404), so all 27+ logos on /tools were broken image
+ * requests. Google's favicon service needs no key, has no rate limit, and is
+ * already CDN-cached.
+ *
+ * Note the container is inside the `ok` guard: previously only the <img> was
+ * hidden on error, leaving an empty bordered 26px square painted on every card.
  */
 function ToolLogo({ url, accentColor }: { url?: string | null; accentColor: string }) {
   const domain = logoDomain(url);
@@ -89,7 +95,7 @@ function ToolLogo({ url, accentColor }: { url?: string | null; accentColor: stri
       style={{ width: 26, height: 26, boxShadow: `0 0 0 1px ${accentColor}14` }}
     >
       <Image
-        src={`https://logo.clearbit.com/${domain}`}
+        src={`https://www.google.com/s2/favicons?domain=${domain}&sz=64`}
         alt=""
         width={26}
         height={26}
@@ -220,7 +226,6 @@ function CardFooter({
   onBookmark: (e: React.MouseEvent) => void;
   updatedAt?: string;
 }) {
-  const posthog = usePostHog();
   const dateStr = updatedAt ? new Date(updatedAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : null;
 
   return (
@@ -279,10 +284,7 @@ function CardFooter({
             rel="noopener noreferrer"
             onClick={(e) => {
               e.stopPropagation();
-              posthog?.capture("tool_visit_from_card", {
-                tool_slug: slug,
-                tool_name: name,
-              });
+              track("tool_visit_from_card", { slug, name });
             }}
             className="font-sans text-[11px] font-bold text-inverse px-3 py-1 rounded-sm no-underline whitespace-nowrap"
             style={{ backgroundColor: accentColor }}
@@ -329,10 +331,18 @@ export default function ToolCard({
 }: ToolCardProps) {
   const showNew = isNew(created_at) && status === "stable";
   const stale = isStale(updated_at);
+  // Mirrors the conditions under which StatusBadge renders something rather than
+  // null. Used to reserve space for it in the card header — see the header row.
+  const hasStatusBadge =
+    !is_sponsored &&
+    (status === "rising" ||
+      status === "beta" ||
+      status === "deprecated" ||
+      showNew ||
+      stale);
   const [bookmarked, setBookmarked] = useState(false);
   const [pressed, setPressed] = useState(false);
   const [hovered, setHovered] = useState(false);
-  const posthog = usePostHog();
   const router = useRouter();
 
   const scores = [utility_score, privacy_score, speed_score, cost_score, transparency_score];
@@ -349,11 +359,7 @@ export default function ToolCard({
     e.stopPropagation();
     const next = toggleBookmark(slug);
     setBookmarked(next);
-    posthog?.capture(next ? "tool_bookmarked" : "tool_unbookmarked", {
-      tool_slug: slug,
-      tool_name: name,
-      tool_category: category,
-    });
+    track(next ? "tool_bookmarked" : "tool_unbookmarked", { slug, name, category });
   }
 
   const accentColor =
@@ -419,7 +425,17 @@ export default function ToolCard({
             className="flex-col flex-1"
           >
             <div className="flex flex-col flex-1 p-5 gap-2">
-              <div className="flex items-start justify-between gap-4 mb-1">
+              {/*
+                The status badge is absolutely positioned at top-2.5 right-2.5 and
+                reserves no space in this row, so it used to paint straight over
+                the "AIght Score" label (~47px of overlap on desktop, worse at
+                375px). Reserve the badge's width on the right instead of moving
+                the badge, so the category on the left keeps its full width.
+              */}
+              <div
+                className="flex items-start justify-between gap-4 mb-1"
+                style={hasStatusBadge ? { paddingRight: 72 } : undefined}
+              >
                 <span className="flex items-center gap-2 min-w-0">
                   <ToolLogo url={url} accentColor={accentColor} />
                   <span

@@ -56,6 +56,11 @@ export default function Navbar() {
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
+    // Sync once on mount, not only on the next scroll event. Anchor links and
+    // browser scroll restoration both land the page at a non-zero offset without
+    // ever firing a scroll event, which left the nav transparent sitting on top
+    // of the content it is supposed to float above.
+    onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
