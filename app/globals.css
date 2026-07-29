@@ -78,6 +78,9 @@
     --text-3xl:  2rem;
     --text-4xl:  2.75rem;
     --text-5xl:  3.75rem;
+    /* Display tier — section headings and hero only. Never for UI or body. */
+    --text-6xl:  5rem;      /* 80px */
+    --text-7xl:  6.75rem;   /* 108px */
 
     /* ── Spacing — 8px base ───────────────────────────────────── */
     --space-1:  0.25rem;
@@ -182,6 +185,37 @@
     line-height: 1.2;
     letter-spacing: -0.02em;
   }
+
+  /*
+   * Section heading — the display tier for major page sections.
+   *
+   * DESIGN_SYSTEM.md assigns Fraunces to "large display headings ... section
+   * headings on editorial pages", but every homepage section was rendering its
+   * <h2> as `font-sans text-3xl md:text-4xl font-semibold` — Plus Jakarta Sans
+   * at 32-36px, the UI font. That is what made the page read flat despite an
+   * 84px hero: there was no display tier between the hero and body copy.
+   *
+   * Fluid 44px → 76px. Tighter tracking than the hero because these sit next
+   * to body copy and need to feel set, not shouted.
+   */
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.75rem, 5.4vw, 4.75rem);
+    font-weight: 700;
+    line-height: 1.03;
+    letter-spacing: -0.035em;
+    color: var(--text-primary);
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  /* Optional second clause, set in Fraunces italic — one per section maximum. */
+  .section-title em {
+    font-style: italic;
+    font-weight: 300;
+    color: var(--text-secondary);
+  }
+
 
   .mono {
     font-family: var(--font-mono);
@@ -684,21 +718,38 @@
     }
   }
 
-  /* ── Section divider — section number marginalia + gradient rule ──── */
+  /* ── Section divider — display numeral + label + gradient rule ──────
+   *
+   * Was a single 10px mono line, which gave the page no structural weight
+   * between sections. The numeral is now set in Fraunces at display scale so
+   * each break reads as a chapter mark; the label stays small mono beside it,
+   * so the pairing carries hierarchy rather than just shouting.
+   */
   .section-divider {
     position: relative;
     display: flex;
-    align-items: center;
-    gap: var(--space-6);
+    align-items: baseline;
+    gap: clamp(14px, 2vw, 26px);
     padding: 0 clamp(24px, 5vw, 80px);
-    margin-top: var(--space-12);
+    margin-top: var(--space-20);
+    margin-bottom: var(--space-4);
+  }
+  .section-divider .section-numeral {
+    font-family: var(--font-display);
+    font-size: clamp(2.25rem, 4.4vw, 3.5rem);
+    font-weight: 900;
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    color: var(--accent-primary);
+    opacity: 0.9;
+    flex-shrink: 0;
   }
   .section-divider .section-number {
     font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.18em;
+    font-size: 11px;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: rgba(245, 239, 224, 0.32);
+    color: rgba(245, 239, 224, 0.42);
     flex-shrink: 0;
   }
   .section-divider .section-rule {

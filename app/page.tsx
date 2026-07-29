@@ -200,7 +200,7 @@ async function SignalSection() {
                 <p style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(245,239,224,0.30)", margin: "0 0 12px" }}>
                   latest
                 </p>
-                <h2 className="font-sans text-3xl md:text-4xl font-semibold text-primary" style={{ letterSpacing: "-0.02em", lineHeight: 1.1 }}>
+                <h2 className="section-title">
                   From the archive
                 </h2>
                 <p className="font-serif italic text-secondary mt-4" style={{ fontSize: 15, lineHeight: 1.65, maxWidth: "28ch" }}>
@@ -255,7 +255,7 @@ async function ToolsSection() {
               <p style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(245,239,224,0.30)", margin: "0 0 8px" }}>
                 {error ? "the archive is briefly offline" : "warming up the archive"}
               </p>
-              <h2 className="font-sans text-3xl md:text-4xl font-semibold text-primary" style={{ letterSpacing: "-0.02em", lineHeight: 1.1 }}>
+              <h2 className="section-title">
                 Tools making waves
               </h2>
             </div>
@@ -287,7 +287,7 @@ async function ToolsSection() {
               <p style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(245,239,224,0.30)", margin: "0 0 8px" }}>
                 recently added
               </p>
-              <h2 className="font-sans text-3xl md:text-4xl font-semibold text-primary" style={{ letterSpacing: "-0.02em", lineHeight: 1.1 }}>
+              <h2 className="section-title">
                 Tools making waves
               </h2>
             </div>
@@ -397,7 +397,7 @@ export default async function Home() {
                         <p style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(245,239,224,0.30)", margin: "0 0 8px" }}>
                           concepts
                         </p>
-                        <h2 className="font-sans text-3xl md:text-4xl font-semibold text-primary" style={{ letterSpacing: "-0.02em", lineHeight: 1.1 }}>
+                        <h2 className="section-title">
                           Understand the tools you use
                         </h2>
                       </div>
@@ -469,7 +469,7 @@ export default async function Home() {
                         <p style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(245,239,224,0.30)", margin: "0 0 8px" }}>
                           field guides
                         </p>
-                        <h2 className="font-sans text-3xl md:text-4xl font-semibold text-primary" style={{ letterSpacing: "-0.02em", lineHeight: 1.1 }}>
+                        <h2 className="section-title">
                           AI in your field
                         </h2>
                       </div>
@@ -527,7 +527,7 @@ export default async function Home() {
                         }}>
                           The work that doesn&rsquo;t compress
                         </p>
-                        <h2 className="font-sans text-3xl md:text-4xl font-semibold text-primary" style={{ letterSpacing: "-0.02em", lineHeight: 1.1 }}>
+                        <h2 className="section-title">
                           What only the human can do.
                         </h2>
                       </div>

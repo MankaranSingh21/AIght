@@ -78,7 +78,7 @@ export default function Hero({ totalTools, latestTool, latestConcept }: HeroProp
 
       <div
         className="relative mx-auto flex flex-col items-center text-center"
-        style={{ maxWidth: 880, zIndex: 2 }}
+        style={{ maxWidth: 1120, zIndex: 2 }}
       >
         {/* Eyebrow pill */}
         <motion.div
@@ -98,13 +98,13 @@ export default function Hero({ totalTools, latestTool, latestConcept }: HeroProp
 
         {/* Headline — static first line, rotating second line */}
         <motion.div style={{ y: headlineY, opacity: headlineOp }}>
-          <h1 className="m-0 mb-8 leading-[1.06]">
+          <h1 className="m-0 mb-10 leading-[0.98]">
             <motion.span
               custom={1}
               variants={LINE_VARIANTS}
               initial="hidden"
               animate="visible"
-              className="block font-display text-[44px] sm:text-[60px] md:text-[72px] lg:text-[84px] font-black text-primary tracking-[-0.03em]"
+              className="block font-display text-[46px] sm:text-[66px] md:text-[88px] lg:text-[108px] font-black text-primary tracking-[-0.04em]"
             >
               The <span className="underline-grow">signal</span>
             </motion.span>
@@ -113,7 +113,7 @@ export default function Hero({ totalTools, latestTool, latestConcept }: HeroProp
               variants={LINE_VARIANTS}
               initial="hidden"
               animate="visible"
-              className="block font-display text-[32px] sm:text-[44px] md:text-[54px] lg:text-[62px] font-black italic text-accent tracking-[-0.03em]"
+              className="block font-display text-[34px] sm:text-[48px] md:text-[64px] lg:text-[78px] font-black italic text-accent tracking-[-0.04em]"
             >
               <HeroRotator phrases={ROTATING_LINES} />
             </motion.span>
@@ -125,7 +125,7 @@ export default function Hero({ totalTools, latestTool, latestConcept }: HeroProp
           variants={FADE_UP(0)}
           initial="hidden"
           animate="visible"
-          className="font-serif text-lg leading-relaxed text-secondary max-w-[52ch] mb-10"
+          className="font-serif text-lg md:text-xl leading-relaxed text-secondary max-w-[54ch] mb-12"
         >
           A literary, anti-hype archive of AI tools worth your attention.
           We do the deep dives so you don&apos;t have to. No sponsored rankings,
@@ -156,7 +156,7 @@ export default function Hero({ totalTools, latestTool, latestConcept }: HeroProp
         >
           {heroStats.map(({ end, suffix, label }) => (
             <div key={label}>
-              <div className="font-display text-3xl font-bold text-primary mb-1">
+              <div className="font-display text-4xl md:text-5xl font-black text-primary mb-1.5">
                 <CountUp end={end} suffix={suffix} />
               </div>
               <div className="font-mono text-[10px] font-medium tracking-[0.12em] uppercase text-muted">{label}</div>

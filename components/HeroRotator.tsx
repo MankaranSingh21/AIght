@@ -39,19 +39,31 @@ export default function HeroRotator({ phrases, className }: HeroRotatorProps) {
         <span
           key={p}
           aria-hidden
-          style={{ gridArea: '1 / 1', visibility: 'hidden' }}
+          style={{ gridArea: '1 / 1', visibility: 'hidden', placeSelf: 'center' }}
         >
           {p}
         </span>
       ))}
-      <AnimatePresence mode="popLayout" initial={false}>
+      {/*
+        NOT mode="popLayout". popLayout yanks the exiting element out of layout
+        flow by absolutely positioning it, at which point `gridArea` no longer
+        places it in the shared cell — it resolves against the padding box
+        instead. The outgoing and incoming phrases then sit at different offsets
+        and you see both at once, smeared over each other. It was already
+        visible at mobile sizes and became obvious once the headline grew.
+
+        Default (sync) mode keeps both spans in grid cell 1/1 for the duration
+        of the swap, which is exactly what a crossfade wants: same position,
+        one fading out as the other fades in.
+      */}
+      <AnimatePresence initial={false}>
         <motion.span
           key={phrases[index]}
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
+          exit={{ opacity: 0, y: -8 }}
           transition={{ duration: 0.45, ease: SPRING_EASE }}
-          style={{ gridArea: '1 / 1' }}
+          style={{ gridArea: '1 / 1', placeSelf: 'center' }}
         >
           {phrases[index]}
         </motion.span>
