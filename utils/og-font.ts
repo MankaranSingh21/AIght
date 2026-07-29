@@ -8,7 +8,16 @@
  * `format('truetype')`. Modern UAs always get woff2; the IE UA gets EOT.
  *
  * Returns null on any failure so callers fall back to system fonts.
+ *
+ * Both fetches are awaited and time-limited on purpose. These run at BUILD time
+ * for every opengraph-image route, so a slow or unreachable Google host must
+ * degrade to a system font rather than take the deploy down with it — which is
+ * exactly what used to happen: the second fetch was `return`ed instead of
+ * `await`ed, so its rejection escaped this try/catch entirely and an ETIMEDOUT
+ * aborted the whole build with "Error occurred prerendering page".
  */
+const FONT_FETCH_TIMEOUT_MS = 8000;
+
 export async function loadGoogleFont(
   family: string,
   weight: 400 | 700 = 700
@@ -17,6 +26,7 @@ export async function loadGoogleFont(
     const css = await fetch(
       `https://fonts.googleapis.com/css?family=${encodeURIComponent(family)}:${weight}`,
       {
+        signal: AbortSignal.timeout(FONT_FETCH_TIMEOUT_MS),
         headers: {
           // Firefox 3 supports @font-face but predates woff/woff2 → Google
           // returns a plain TTF kit URL with format('truetype').
@@ -35,7 +45,11 @@ export async function loadGoogleFont(
     // Defensive: skip non-TTF formats Satori can't parse.
     if (/\.(woff2?|eot)(\?|$)/i.test(url)) return null;
 
-    return fetch(url).then((r) => r.arrayBuffer());
+    // `return await`, not `return` — see the note above. Without the await the
+    // promise leaves this scope before the catch can ever see it reject.
+    return await fetch(url, {
+      signal: AbortSignal.timeout(FONT_FETCH_TIMEOUT_MS),
+    }).then((r) => r.arrayBuffer());
   } catch {
     return null;
   }
