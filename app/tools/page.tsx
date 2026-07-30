@@ -85,15 +85,7 @@ export default async function ToolsArchivePage() {
             }}>
               every tool we&apos;ve found worth your time
             </p>
-            <h1 style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "clamp(40px, 6vw, 72px)",
-              fontWeight: 900,
-              color: "#F5EFE0",
-              letterSpacing: "-0.03em",
-              lineHeight: 1,
-              margin: "0 0 20px",
-            }}>
+            <h1 className="page-title" style={{ marginBottom: 20 }}>
               The Full Archive
             </h1>
             <p style={{

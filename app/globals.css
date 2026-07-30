@@ -216,6 +216,28 @@
     color: var(--text-secondary);
   }
 
+  /*
+   * Page title — the <h1> on any top-level page.
+   *
+   * There were SIX different definitions of this across the site, all inline:
+   *   /learn, /tools        clamp(40px, 6vw, 72px)
+   *   /signal, /learn/map   clamp(36px, 5vw, 56px)
+   *   /about, /human        var(--text-4xl)  → 44px
+   * so the same structural element rendered anywhere from 44px to 72px and
+   * nothing felt systematic. One definition now, giving a clean descending
+   * hierarchy: hero 108 → page title 88 → section title 76 → body.
+   */
+  .page-title {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 6.6vw, 5.5rem);
+    font-weight: 900;
+    line-height: 1.0;
+    letter-spacing: -0.038em;
+    color: var(--text-primary);
+    margin: 0;
+    text-wrap: balance;
+  }
+
 
   .mono {
     font-family: var(--font-mono);

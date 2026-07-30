@@ -39,17 +39,7 @@ export default function AboutPage() {
         </p>
 
         {/* Headline */}
-        <h1
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "var(--text-4xl)",
-            fontWeight: 700,
-            letterSpacing: "-0.03em",
-            lineHeight: 1.1,
-            color: "var(--text-primary)",
-            marginBottom: "var(--space-10)",
-          }}
-        >
+        <h1 className="page-title" style={{ marginBottom: "var(--space-10)" }}>
           The signal beneath the noise
         </h1>
 

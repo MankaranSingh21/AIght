@@ -58,17 +58,7 @@ export default async function MapPage() {
           >
             The universe
           </p>
-          <h1
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "clamp(36px, 5vw, 56px)",
-              fontWeight: 900,
-              color: "#F5EFE0",
-              letterSpacing: "-0.03em",
-              lineHeight: 1.05,
-              margin: "0 0 14px",
-            }}
-          >
+          <h1 className="page-title" style={{ marginBottom: 14 }}>
             Every field, every concept, every tool &mdash; and where you fit.
           </h1>
           <p

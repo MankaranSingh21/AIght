@@ -45,7 +45,7 @@ export default async function SignalPage() {
           <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(245,239,224,0.30)', marginBottom: 12 }}>
             Signal
           </p>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(36px, 5vw, 56px)', fontWeight: 900, color: '#F5EFE0', letterSpacing: '-0.03em', lineHeight: 1.05, margin: '0 0 16px' }}>
+          <h1 className="page-title" style={{ marginBottom: 16 }}>
             From the archive
           </h1>
           <p style={{ fontFamily: 'var(--font-editorial)', fontSize: 16, lineHeight: 1.8, color: 'rgba(245,239,224,0.55)', maxWidth: '52ch' }}>
