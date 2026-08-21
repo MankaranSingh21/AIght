@@ -48,7 +48,7 @@ export default async function SignalPage() {
           <h1 className="page-title" style={{ marginBottom: 16 }}>
             From the archive
           </h1>
-          <p style={{ fontFamily: 'var(--font-editorial)', fontSize: 16, lineHeight: 1.8, color: 'rgba(245,239,224,0.55)', maxWidth: '52ch' }}>
+          <p className="page-lead">
             Honest writing about AI tools and what they mean. No hype, no
             sponsored takes. Just signal.
           </p>

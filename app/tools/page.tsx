@@ -88,14 +88,7 @@ export default async function ToolsArchivePage() {
             <h1 className="page-title" style={{ marginBottom: 20 }}>
               The Full Archive
             </h1>
-            <p style={{
-              fontFamily: "var(--font-editorial)",
-              fontSize: 17,
-              lineHeight: 1.8,
-              color: "rgba(245,239,224,0.55)",
-              maxWidth: "52ch",
-              margin: 0,
-            }}>
+            <p className="page-lead">
               {tools.length} tools and counting. No sponsored rankings. No hustle energy.
               Every tool here got used before it got listed — nothing earns a
               card on its spec sheet alone. Click any card for the full breakdown.

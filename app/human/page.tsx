@@ -64,17 +64,7 @@ export default function HumanIndexPage() {
             The work that doesn&rsquo;t compress.
           </h1>
 
-          <p
-            style={{
-              fontFamily: "var(--font-editorial)",
-              fontStyle: "italic",
-              fontSize: "var(--text-lg)",
-              color: "var(--text-secondary)",
-              maxWidth: "52ch",
-              lineHeight: 1.65,
-              marginBottom: "var(--space-10)",
-            }}
-          >
+          <p className="page-lead">
             Short essays on the human work AI tools quietly need us to keep
             doing. Taste, care, originality, context. The things that get
             harder to spot exactly when they become more valuable.

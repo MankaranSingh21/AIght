@@ -61,17 +61,7 @@ export default async function MapPage() {
           <h1 className="page-title" style={{ marginBottom: 14 }}>
             Every field, every concept, every tool &mdash; and where you fit.
           </h1>
-          <p
-            style={{
-              fontFamily: "var(--font-editorial)",
-              fontStyle: "italic",
-              fontSize: 17,
-              color: "rgba(245,239,224,0.55)",
-              lineHeight: 1.8,
-              maxWidth: "60ch",
-              marginBottom: 18,
-            }}
-          >
+          <p className="page-lead">
             {`${fields} fields, ${concepts} concepts, ${tools} tools \u2014 drawn as orbits, with the ideas everything else rests on at the centre. Hover a node to light up what it connects to. Take the quiz to overlay your own path.`}
           </p>
           <div style={{ display: "flex", gap: 18, flexWrap: "wrap", alignItems: "center" }}>

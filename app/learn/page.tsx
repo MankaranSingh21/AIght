@@ -89,15 +89,7 @@ export default function LearnPage() {
           <h1 className="page-title" style={{ marginBottom: 20 }}>
             Understand the tools you use
           </h1>
-          <p style={{
-            fontFamily: "var(--font-editorial)",
-            fontSize: 17,
-            lineHeight: 1.8,
-            color: "rgba(245,239,224,0.55)",
-            maxWidth: "52ch",
-            fontStyle: "italic",
-            margin: 0,
-          }}>
+          <p className="page-lead">
             No jargon for its own sake. No sales copy dressed up as explanation.
             Just honest accounts of how these things actually work.
           </p>

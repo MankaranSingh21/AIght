@@ -227,6 +227,29 @@
    * nothing felt systematic. One definition now, giving a clean descending
    * hierarchy: hero 108 → page title 88 → section title 76 → body.
    */
+  /*
+   * Page lead — the standfirst under a .page-title.
+   *
+   * With page titles now at 88px, the paragraph beneath them was 16-17px: an
+   * 88 → 17 cliff with nothing in between, which is why the pages read as a
+   * headline followed by fine print rather than as an article. Like .page-title
+   * this had four inline definitions (17 / 17 / 16 / --text-lg) doing the same
+   * structural job.
+   *
+   * Lora, because this is the reading voice; higher opacity than body metadata
+   * because a standfirst is content, not chrome.
+   */
+  .page-lead {
+    font-family: var(--font-editorial);
+    font-size: clamp(1.1875rem, 1.5vw, 1.4375rem);
+    line-height: 1.62;
+    letter-spacing: 0.005em;
+    color: rgba(245, 239, 224, 0.72);
+    max-width: 60ch;
+    margin: 0;
+  }
+  .page-lead em { font-style: italic; color: var(--text-primary); }
+
   .page-title {
     font-family: var(--font-display);
     font-size: clamp(3rem, 6.6vw, 5.5rem);
