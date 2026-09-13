@@ -12,16 +12,18 @@
  * Returns 404 until NEXT_PUBLIC_ADSENSE_ID is set, which is the honest state:
  * an ads.txt naming no seller is worse than none at all.
  */
+import { ADSENSE_PUBLISHER } from "@/lib/adsense";
+
 export const dynamic = "force-static";
 export const revalidate = 86400;
 
 export function GET() {
-  const pub = process.env.NEXT_PUBLIC_ADSENSE_ID; // e.g. pub-1234567890123456
-  if (!pub) return new Response("Not found", { status: 404 });
+  // Normalised in lib/adsense.ts — this field needs the bare `pub-…` form, and
+  // the ID Google gives you in the ad snippet is the `ca-pub-…` form.
+  if (!ADSENSE_PUBLISHER) return new Response("Not found", { status: 404 });
 
-  const id = pub.startsWith("pub-") ? pub : `pub-${pub}`;
   // f08c47fec0942fa0 is Google's fixed certification-authority ID.
-  const body = `google.com, ${id}, DIRECT, f08c47fec0942fa0\n`;
+  const body = `google.com, ${ADSENSE_PUBLISHER}, DIRECT, f08c47fec0942fa0\n`;
 
   return new Response(body, {
     headers: {

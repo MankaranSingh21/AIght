@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { ADSENSE_CLIENT } from "@/lib/adsense";
 
 /**
  * A single contextual AdSense unit.
@@ -30,7 +31,7 @@ export default function AdSlot({
   label?: string;
   minHeight?: number;
 }) {
-  const pub = process.env.NEXT_PUBLIC_ADSENSE_ID;
+  const pub = ADSENSE_CLIENT;
   const pushed = useRef(false);
 
   useEffect(() => {
@@ -76,7 +77,7 @@ export default function AdSlot({
       <ins
         className="adsbygoogle"
         style={{ display: "block", minHeight }}
-        data-ad-client={pub.startsWith("ca-") ? pub : `ca-${pub}`}
+        data-ad-client={pub}
         data-ad-slot={slot}
         data-ad-format="auto"
         data-full-width-responsive="true"

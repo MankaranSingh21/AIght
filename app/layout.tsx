@@ -3,6 +3,7 @@ import { Plus_Jakarta_Sans, Fraunces, Lora, JetBrains_Mono, Caveat } from "next/
 import Navbar from "@/components/Navbar";
 import GlobalEffects from "@/components/GlobalEffects";
 import AnalyticsProvider from "./providers/AnalyticsProvider";
+import { ADSENSE_CLIENT } from "@/lib/adsense";
 import "./globals.css";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -101,6 +102,57 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        {/*
+          AdSense loader — a literal <script> in the document head, on purpose.
+
+          next/script with strategy="afterInteractive" emits only a
+          <link rel="preload" as="script"> into the HTML and injects the real
+          tag client-side after hydration. That is fine for serving ads, but
+          AdSense OWNERSHIP VERIFICATION looks for this snippet in the markup,
+          and betting verification on the crawler executing hydration is a bad
+          bet. This renders exactly the snippet Google hands you.
+
+          `async` keeps it off the critical path, so this costs nothing that
+          next/script was buying.
+        */}
+        {ADSENSE_CLIENT && (
+          <>
+            {/*
+              Non-personalised flag.
+
+              Set inline rather than via an afterInteractive next/script, which
+              would only run after hydration. Note Next hoists <script src> tags
+              above inline ones in <head>, so this does NOT win on document
+              order — the guarantee comes from two other facts:
+
+                - the loader is `async`, so it cannot execute before it has been
+                  fetched, while this executes during parse with no round-trip;
+                - an ad is only REQUESTED when AdSlot calls adsbygoogle.push({})
+                  from a useEffect, which is after hydration and therefore long
+                  after this has run.
+
+              That ordering is what keeps the claim on /about and /privacy — that
+              ads are contextual, not personalised — actually true.
+
+              ⚠️ This holds only while ad requests come from our own AdSlot.
+              Auto ads, enabled in the AdSense dashboard, inject units without
+              going through push() and bypass both this flag's guarantee and the
+              deliberate placement rules in DESIGN_SYSTEM.md. Leave Auto ads off.
+            */}
+            <script
+              dangerouslySetInnerHTML={{
+                __html:
+                  "window.adsbygoogle=window.adsbygoogle||[];" +
+                  "window.adsbygoogle.requestNonPersonalizedAds=1;",
+              }}
+            />
+            <script
+              async
+              src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`}
+              crossOrigin="anonymous"
+            />
+          </>
+        )}
       </head>
       <body
         className={`${plusJakartaSans.variable} ${fraunces.variable} ${lora.variable} ${jetbrainsMono.variable} ${caveat.variable} antialiased`}

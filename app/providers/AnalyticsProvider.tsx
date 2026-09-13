@@ -53,10 +53,7 @@ export default function AnalyticsProvider({
   // the other — so neither may short-circuit the other's setup.
   if (!GA_MEASUREMENT_ID) {
     return (
-      <>
-        <AdSenseScript />
-        {children}
-      </>
+      <>{children}</>
     );
   }
 
@@ -98,8 +95,6 @@ export default function AnalyticsProvider({
         `}
       </Script>
 
-      <AdSenseScript />
-
       <Suspense fallback={null}>
         <PageviewTracker />
       </Suspense>
@@ -108,37 +103,3 @@ export default function AnalyticsProvider({
   );
 }
 
-/**
- * Loads the AdSense library, once, for the whole site.
- *
- * Kept next to the GA setup on purpose: both depend on the Consent Mode v2
- * defaults declared above, and splitting them across files is how the ordering
- * quietly breaks later.
- *
- * `requestNonPersonalizedAds = 1` is set before the library loads, so the very
- * first request is non-personalised rather than the flag arriving a beat late.
- * This is what keeps the contextual-advertising claim on /about and /privacy
- * true; it moves together with that copy or not at all.
- *
- * Renders nothing when NEXT_PUBLIC_ADSENSE_ID is unset — the pre-approval state.
- */
-function AdSenseScript() {
-  const pub = process.env.NEXT_PUBLIC_ADSENSE_ID;
-  if (!pub) return null;
-  const client = pub.startsWith("ca-") ? pub : `ca-${pub}`;
-
-  return (
-    <>
-      <Script id="adsense-npa" strategy="afterInteractive">
-        {`window.adsbygoogle = window.adsbygoogle || [];
-          window.adsbygoogle.requestNonPersonalizedAds = 1;`}
-      </Script>
-      <Script
-        id="adsense-src"
-        strategy="afterInteractive"
-        crossOrigin="anonymous"
-        src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${client}`}
-      />
-    </>
-  );
-}
