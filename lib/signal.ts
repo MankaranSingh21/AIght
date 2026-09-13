@@ -128,7 +128,7 @@ export const EDITOR_POSTS: SignalPost[] = [
  * case.
  *
  * Note the feed itself is healthy: it returns 200 with six items. They are
- * personal writing (poetry, books, life) rather than AI, so isRelevant()
+ * personal writing (poetry, books, life) rather than AI. Those posts are now
  * correctly filters them out. The empty result is accurate, not a failure.
  */
 
@@ -170,45 +170,21 @@ type RssItem = {
 // The Medium account also publishes personal essays (poetry, books, life).
 // Only items tagged or titled with AI/tech terms belong in Signal; everything
 // else is filtered out and the AI-themed fallbacks take over when nothing passes.
-const RELEVANT_TERMS = [
-  "ai",
-  "artificial-intelligence",
-  "artificial intelligence",
-  "machine-learning",
-  "machine learning",
-  "llm",
-  "gpt",
-  "claude",
-  "gemini",
-  "agents",
-  "agentic",
-  "prompt",
-  "rag",
-  "mcp",
-  "model",
-  "tooling",
-  "software",
-  "tech",
-  "technology",
-  "developer",
-  "programming",
-];
 
-const RELEVANT_TITLE_RE = new RegExp(
-  `\\b(${RELEVANT_TERMS.map((t) => t.replace(/[- ]/g, "[- ]")).join("|")})\\b`,
-  "i"
-);
 
-function isRelevant(item: RssItem): boolean {
-  const rawCats = item.category ?? [];
-  const cats = (Array.isArray(rawCats) ? rawCats : [rawCats]).map((c) =>
-    String(c).toLowerCase()
-  );
-  return (
-    cats.some((c) => RELEVANT_TERMS.includes(c)) ||
-    RELEVANT_TITLE_RE.test(String(item.title ?? ""))
-  );
-}
+/*
+ * No topic filter.
+ *
+ * There used to be an isRelevant() gate that only admitted posts whose title or
+ * Medium tags matched AI terms. It worked exactly as written — and that was the
+ * problem. Moon's Medium is a personal writing blog (poetry, books, dreams), so
+ * the filter excluded everything, the feed looked empty, and three fabricated
+ * posts were shipped to cover the gap.
+ *
+ * The heading on /signal is "From Medium", which promises Moon's writing, not
+ * AI writing. So show the writing. An off-topic essay under an honest heading is
+ * fine; an invented one under any heading is not.
+ */
 
 export async function getSignalPosts(limit?: number): Promise<SignalPost[]> {
   try {
@@ -226,7 +202,7 @@ export async function getSignalPosts(limit?: number): Promise<SignalPost[]> {
     };
 
     const raw = parsed?.rss?.channel?.item ?? [];
-    const items: RssItem[] = (Array.isArray(raw) ? raw : [raw]).filter(isRelevant);
+    const items: RssItem[] = Array.isArray(raw) ? raw : [raw];
 
     const posts: SignalPost[] = items.map((item) => {
       const rawDescription =
