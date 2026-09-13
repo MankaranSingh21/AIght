@@ -171,7 +171,10 @@ export default async function MoonAuthorPage() {
             }}
           />
 
-          {/* Recent essays section */}
+          {/* Recent essays — only when the Medium feed actually yields
+              AI-relevant posts. Previously this always rendered, because the
+              feed fell back to three fabricated entries. */}
+          {essays.length > 0 && (
           <section style={{ marginBottom: "var(--space-12)" }}>
             <p
               style={{
@@ -257,6 +260,7 @@ export default async function MoonAuthorPage() {
               </a>
             </div>
           </section>
+          )}
 
           {/* Recent concept additions */}
           <section>
