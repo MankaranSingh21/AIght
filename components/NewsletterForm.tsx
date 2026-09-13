@@ -10,7 +10,7 @@ interface NewsletterFormProps {
   // used on the quiz report and the bookmarks page.
   variant?: "block" | "inline";
   pitch?: string;     // Heading line shown above the form in inline variant.
-  source?: string;    // PostHog attribution — e.g. 'quiz_report', 'bookmarks'.
+  source?: string;    // analytics attribution — e.g. 'quiz_report', 'bookmarks'.
 }
 
 export default function NewsletterForm({ variant = "block", pitch, source }: NewsletterFormProps) {

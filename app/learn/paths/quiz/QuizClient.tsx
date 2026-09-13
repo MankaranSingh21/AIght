@@ -1984,6 +1984,10 @@ function QuizPageInner({ preFieldSlug, humanEssays }: QuizPageInnerProps) {
   }
 
   function advance() {
+    // Every advance is one completed question. Without this the funnel had a
+    // start and an end and nothing in between, so there was no way to see
+    // where people abandon the quiz.
+    track('quiz_step_completed', { step: answeredCount + 1, total: totalQuestions });
     navigate(() => {
       if (questionIdx < currentSection.questions.length - 1) {
         setQuestionIdx(q => q + 1);
@@ -2080,7 +2084,10 @@ function QuizPageInner({ preFieldSlug, humanEssays }: QuizPageInnerProps) {
 
   if (screen === 'intro') return (
     <IntroScreen
-      onStart={() => setScreen('quiz')}
+      onStart={() => {
+        track('quiz_started');
+        setScreen('quiz');
+      }}
       hasStoredResult={hasStoredResult}
       onClearStored={() => { clearQuizResult(); setHasStoredResult(false); }}
     />

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import CompareViewTracker from "@/components/CompareViewTracker";
 import { createPublicClient } from "@/utils/supabase/public";
 import Footer from "@/components/Footer";
 import CompareSearch from "@/components/CompareSearch";
@@ -324,12 +325,15 @@ export default async function ComparePage({ searchParams }: { searchParams: SP }
 
   return (
     <>
+      {/* Fires compare_viewed — this page is a server component, so the
+          report has to come from a client boundary. Renders nothing. */}
+      <CompareViewTracker a={toolA.slug} b={toolB.slug} />
       <main style={{
         minHeight: "calc(100vh - 64px)",
         background: "var(--bg-base)",
         padding: "var(--space-16) var(--space-8)",
       }}>
-        {/* Inside <main> so externally injected scripts (PostHog) can't occupy
+        {/* Inside <main> so externally injected scripts (analytics) can't occupy
             this hydration slot — first-child <script> tags collide with them. */}
         <script
           key="compare-jsonld"

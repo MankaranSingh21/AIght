@@ -92,11 +92,22 @@ export default function PrivacyPage() {
             </p>
             <h3 style={subHeadingStyle}>Usage &amp; Analytics Data</h3>
             <p style={bodyStyle}>
-              We use <strong style={{ color: '#F5EFE0', fontWeight: 600 }}>PostHog</strong> for product
-              analytics. This may collect anonymised event data such as pages visited,
-              features used, and session duration. We do not collect device
-              fingerprints or sell analytics data. You can opt out via your
-              browser&rsquo;s &ldquo;Do Not Track&rdquo; header.
+              We use <strong style={{ color: '#F5EFE0', fontWeight: 600 }}>Google Analytics 4</strong>{' '}
+              to understand how the site is used. It sets cookies (<code>_ga</code>,{' '}
+              <code>_ga_*</code>) and collects data such as pages visited, events like
+              starting the quiz or opening a tool, approximate location derived from your
+              IP address, and browser and device type. Google does not store your IP
+              address. We do not sell analytics data and we do not collect device
+              fingerprints.
+            </p>
+            <p style={bodyStyle}>
+              In the EEA, the UK and Switzerland, analytics and advertising storage
+              default to <strong style={{ color: '#F5EFE0', fontWeight: 600 }}>denied</strong>{' '}
+              under Google Consent Mode v2, so those cookies are not written unless you
+              consent. You can opt out anywhere with the{' '}
+              <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener noreferrer" style={{ color: '#AAFF4D', textDecoration: 'underline', textUnderlineOffset: 2 }}>Google Analytics opt-out add-on</a>,{' '}
+              or by blocking analytics in your browser &mdash; the site works exactly the
+              same either way.
             </p>
           </section>
 
@@ -122,7 +133,7 @@ export default function PrivacyPage() {
             <div style={{ marginTop: 20, borderRadius: 12, border: '1px solid rgba(245,239,224,0.07)', background: 'rgba(255,250,240,0.03)', padding: 24, display: 'flex', flexDirection: 'column', gap: 20 }}>
               {[
                 { name: 'Supabase', desc: <>Hosts our database. Newsletter subscriber emails are stored on Supabase infrastructure. See <a href="https://supabase.com/privacy" target="_blank" rel="noopener noreferrer" style={{ color: '#AAFF4D', textDecoration: 'underline', textUnderlineOffset: 2 }}>supabase.com/privacy</a>.</> },
-                { name: 'PostHog', desc: 'Provides anonymised product analytics. No personally identifiable information beyond session metadata is transmitted.' },
+                { name: 'Google Analytics 4', desc: <>Provides usage analytics and sets cookies. Governed by Google&rsquo;s <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" style={{ color: '#AAFF4D', textDecoration: 'underline', textUnderlineOffset: 2 }}>privacy policy</a>. Consent Mode v2 is enabled, defaulting to denied in the EEA, UK and Switzerland.</> },
                 { name: 'Microlink', desc: 'Used to fetch website screenshots for tool cards. Only publicly available tool URLs are sent to this service.' },
               ].map(({ name, desc }) => (
                 <div key={name}>

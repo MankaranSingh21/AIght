@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect, useRef } from "react";
+import { track } from "@/lib/analytics";
 import dynamic from "next/dynamic";
 import ToolCard from "./ToolCard";
 import type { ToolCardProps } from "./ToolCard";
@@ -97,6 +98,39 @@ export default function ToolsClient({ tools, initialCategory = "all" }: Props) {
 
     return result;
   }, [tools, query, activeCategory, difficulty, pricing, risk, isOpenSource, sort]);
+
+  // ── Analytics ──────────────────────────────────────────────────────────
+  // `query` is the debounced value, so this fires once per settled search
+  // rather than once per keystroke. Result count is the useful half: a search
+  // returning nothing is a content gap, not just a page view.
+  const lastSearch = useRef<string | null>(null);
+  useEffect(() => {
+    const q = query.trim();
+    if (!q || q === lastSearch.current) return;
+    lastSearch.current = q;
+    track("tools_searched", { query: q, results: filteredAndSortedTools.length });
+  }, [query, filteredAndSortedTools.length]);
+
+  // One event per facet the reader actually changed. Compared against a
+  // snapshot so the initial render (and any URL-seeded category) is not
+  // reported as a deliberate filter action.
+  const lastFacets = useRef<Record<string, string> | null>(null);
+  useEffect(() => {
+    const facets: Record<string, string> = {
+      category: activeCategory,
+      difficulty,
+      pricing,
+      risk,
+      open_source: String(isOpenSource),
+      sort,
+    };
+    const prev = lastFacets.current;
+    lastFacets.current = facets;
+    if (!prev) return; // first run — seeded state, not a user action
+    for (const [facet, value] of Object.entries(facets)) {
+      if (prev[facet] !== value) track("tools_filtered", { facet, value });
+    }
+  }, [activeCategory, difficulty, pricing, risk, isOpenSource, sort]);
 
   const isEmpty = filteredAndSortedTools.length === 0;
 

@@ -7,18 +7,34 @@
 //
 // Rules that hold everywhere:
 //   - Analytics must NEVER break a user flow. Every call is wrapped.
-//   - A missing PostHog key is a no-op, not an error. The site ran for months
-//     shipping posthog-js with no token, logging an init error on every page.
+//   - A missing measurement ID is a silent no-op, not an error. The site once
+//     shipped posthog-js with no token for months, logging an init error to
+//     every visitor's console on every page load.
 //   - Event names are a closed union. Adding one means adding it here.
+//   - No vendor SDK is imported here. That is why moving from PostHog to GA4
+//     changed two files rather than every call site.
 
-import posthog from "posthog-js";
+// GA4 is loaded by AnalyticsProvider via next/script. gtag is attached to
+// window by that script; this module never imports a vendor SDK, which is why
+// swapping PostHog out for GA4 touched two files instead of eight.
+type GtagFn = (
+  command: "event" | "config" | "js" | "consent",
+  targetOrName: string | Date,
+  params?: Record<string, unknown>,
+) => void;
 
-/** True when PostHog has a key and can actually send. */
+declare global {
+  interface Window {
+    gtag?: GtagFn;
+    dataLayer?: unknown[];
+  }
+}
+
+export const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_ID;
+
+/** True when a measurement ID is configured and gtag is on the page. */
 export function analyticsEnabled(): boolean {
-  return (
-    typeof window !== "undefined" &&
-    Boolean(process.env.NEXT_PUBLIC_POSTHOG_KEY)
-  );
+  return typeof window !== "undefined" && Boolean(GA_MEASUREMENT_ID);
 }
 
 // ── Event taxonomy ───────────────────────────────────────────────────────
@@ -67,7 +83,13 @@ type PropsFor<N extends AnalyticsEventName> = Extract<
  *
  * Fail-silent by design — this preserves the guarantee that lib/progress.ts
  * already relied on: a broken or blocked analytics call must never interrupt
- * XP, streaks, or navigation.
+ * XP, streaks, or navigation. Ad and analytics blockers are common on a site
+ * with this audience, so `window.gtag` being undefined is the normal case, not
+ * an error case.
+ *
+ * NOTE for GA4: custom event parameters (slug, name, category, ...) only appear
+ * in reports after they are registered as custom dimensions in the GA4 UI
+ * (Admin → Custom definitions). Events will still be collected before that.
  */
 export function track<N extends AnalyticsEventName>(
   name: N,
@@ -75,21 +97,28 @@ export function track<N extends AnalyticsEventName>(
 ): void {
   if (!analyticsEnabled()) return;
   try {
-    posthog?.capture?.(name, props as Record<string, unknown> | undefined);
+    window.gtag?.("event", name, (props ?? {}) as Record<string, unknown>);
   } catch {
-    // Blocked by an extension, quota, offline — never surface to the user.
+    // Blocked by an extension, offline — never surface to the user.
   }
 }
 
 /**
- * Route-change pageview. The provider sets `capture_pageview: false` because
- * posthog-js's automatic pageview does not understand App Router client
- * navigation; we send this instead.
+ * Route-change pageview.
+ *
+ * The provider configures gtag with `send_page_view: false` so GA4 never fires
+ * its own automatic pageview. gtag's built-in page_view does not understand App
+ * Router client navigation, and leaving it on alongside this would double-count
+ * the first load of every session.
  */
 export function trackPageview(url: string): void {
   if (!analyticsEnabled()) return;
   try {
-    posthog?.capture?.("$pageview", { $current_url: url });
+    window.gtag?.("event", "page_view", {
+      page_path: url,
+      page_location: window.location.href,
+      page_title: document.title,
+    });
   } catch {
     // ignore
   }

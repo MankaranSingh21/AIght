@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Fraunces, Lora, JetBrains_Mono, Caveat } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import GlobalEffects from "@/components/GlobalEffects";
-import PostHogProvider from "./providers/PostHogProvider";
+import AnalyticsProvider from "./providers/AnalyticsProvider";
 import "./globals.css";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -105,12 +105,12 @@ export default function RootLayout({
       <body
         className={`${plusJakartaSans.variable} ${fraunces.variable} ${lora.variable} ${jetbrainsMono.variable} ${caveat.variable} antialiased`}
       >
-        <PostHogProvider>
+        <AnalyticsProvider>
           {/* Global ambient effects — particle canvas + custom cursor */}
           <GlobalEffects />
           <Navbar />
           {children}
-        </PostHogProvider>
+        </AnalyticsProvider>
       </body>
     </html>
   );

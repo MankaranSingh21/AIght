@@ -67,7 +67,7 @@ export default function LearnPage() {
   return (
     <>
     <main style={{ minHeight: "100vh", position: "relative", zIndex: 1 }}>
-      {/* JSON-LD lives inside <main> to avoid the PostHog script-injection
+      {/* JSON-LD lives inside <main> to avoid the analytics script-injection
           hydration collision (see Session 33 fix on /compare + /signal). */}
       <script
         type="application/ld+json"

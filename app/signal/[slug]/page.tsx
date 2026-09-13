@@ -156,7 +156,7 @@ export default async function SignalPostPage({ params }: Props) {
   return (
     <>
       <main style={{ minHeight: "100vh", background: "var(--bg-base)" }}>
-        {/* Inside <main> so externally injected scripts (PostHog) can't occupy
+        {/* Inside <main> so externally injected scripts (analytics) can't occupy
             this hydration slot — first-child <script> tags collide with them. */}
         <script
           key="signal-jsonld"
