@@ -115,9 +115,23 @@ export default function AboutPage() {
               fontStyle: "italic",
             }}
           >
-            No ads. No sponsored placements. No affiliate links. If that ever
-            changes, you&rsquo;ll see it disclosed clearly — not hidden in a
-            footnote.
+            No sponsored placements. No affiliate links. Nothing in this archive
+            is ranked, included, or written up because someone paid for it &mdash;
+            that part isn&rsquo;t for sale and won&rsquo;t be.
+          </p>
+
+          <p
+            style={{
+              marginBottom: "var(--space-6)",
+              color: "var(--text-secondary)",
+              fontStyle: "italic",
+            }}
+          >
+            The site does carry advertising. It&rsquo;s contextual &mdash; matched to
+            the page, not to you. Advertisers don&rsquo;t get your reading history,
+            and nothing you do here is used to target you. Ads pay for hosting;
+            they don&rsquo;t touch the rankings. Said plainly here rather than
+            hidden in a footnote, as promised.
           </p>
         </div>
 

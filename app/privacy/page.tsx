@@ -118,8 +118,10 @@ export default function PrivacyPage() {
               <li>To improve the Service by understanding how features are used in aggregate.</li>
             </ul>
             <p style={{ ...bodyStyle, marginTop: 14 }}>
-              We will never use your data to train AI models, serve advertisements,
-              or share it with data brokers.
+              We will never use your data to train AI models or share it with data
+              brokers. The site carries contextual advertising &mdash; matched to the
+              content of the page, not to you. Your browsing data is not used to
+              target ads, and we do not request personalised advertising.
             </p>
           </section>
 

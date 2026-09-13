@@ -17,6 +17,7 @@ import PullquoteMargin from "@/components/learn/PullquoteMargin";
 import CodeBlock from "@/components/learn/CodeBlock";
 import ReadingProgressBar from "@/components/learn/ReadingProgressBar";
 import ConceptReadTracker from "@/components/learn/ConceptReadTracker";
+import AdSlot from "@/components/AdSlot";
 import ConceptHeader3DClient from "@/components/learn/ConceptHeader3DClient";
 import ArticleReveal from "@/components/learn/ArticleReveal";
 import MarginNote from "@/components/learn/MarginNote";
@@ -828,6 +829,14 @@ export default async function LearnConceptPage({ params }: Props) {
             Browse tools →
           </Link>
         </div>
+
+        {/*
+          One contextual unit, at the very end of the article — after the reader
+          has finished, never interrupting the piece. DESIGN_SYSTEM.md governs
+          this page too, and its word is "intentional".
+          Renders nothing until both NEXT_PUBLIC_ADSENSE_ID and the slot id exist.
+        */}
+        <AdSlot slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_ARTICLE} />
       </EditorialLayout>
     </main>
   );
