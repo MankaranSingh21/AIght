@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import ToolCard from "@/components/ToolCard";
 
 // This is a Server Component — the interactive showcases are isolated as Client Components below.
@@ -8,6 +9,20 @@ export const metadata = {
 };
 
 export default function DesignSystemPage() {
+  // Internal tool — 404 in production.
+  //
+  // It was publicly reachable (200) despite being Disallow'd in robots.txt,
+  // which stops crawling but not a person following a link. Two reasons that
+  // matters: it renders `bg-parchment` / `text-espresso` / `bg-forest`, tokens
+  // from the abandoned Ghibli-green direction that DESIGN_SYSTEM.md explicitly
+  // says not to revert to — so a public page shows a dead visual language — and
+  // its copy ("Every vibe check in one place... if it slaps here, it slaps
+  // everywhere") contradicts the tone rules in that same document.
+  //
+  // A live style guide in a retired design system also reads to an ad reviewer
+  // as an unfinished page, which is a needless risk during AdSense review.
+  if (process.env.NODE_ENV === "production") notFound();
+
   return (
     <main className="min-h-screen bg-parchment text-espresso">
       {/* Header */}
